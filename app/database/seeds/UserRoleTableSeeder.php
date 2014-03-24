@@ -12,6 +12,7 @@ class UserRoleTableSeeder extends Seeder
         $users = User::whereIn('id', [1, 2, 3])->get();
         $users->get(2)->roles()->attach(Role::ROLE_ORGANIZATION);
         $users->get(1)->roles()->attach(Role::ROLE_CANDIDATE);
+        $users->get(0)->roles()->attach(Role::ROLE_CANDIDATE);
 
     }
 }
