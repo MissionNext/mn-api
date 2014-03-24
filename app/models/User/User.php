@@ -53,6 +53,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
         return $this->belongsToMany(static::prefix_ns.'\Field\Organization', 'organization_profile','user_id','field_id')->withPivot('value');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function agencyFields()
+    {
+
+        return $this->belongsToMany(static::prefix_ns.'\Field\Agency', 'agency_profile','user_id','field_id')->withPivot('value');
+    }
+
 	/**
 	 * Get the unique identifier for the user.
 	 *

@@ -6,12 +6,12 @@ namespace MissionNext\Models\Field;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\ModelInterface;
 
-class Organization extends BaseField implements ModelInterface
+class Agency extends BaseField implements ModelInterface
 {
 
-    protected $table = 'organization_fields';
+    protected $table = 'agency_fields';
 
-    protected $roleType = BaseDataModel::ORGANIZATION;
+    protected $roleType = BaseDataModel::AGENCY;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -19,7 +19,7 @@ class Organization extends BaseField implements ModelInterface
     public function users()
     {
 
-        return $this->belongsToMany('User', 'organization_profile', 'field_id', 'user_id')->withPivot('value');
+        return $this->belongsToMany('User', 'agency_profile', 'field_id', 'user_id')->withPivot('value');
     } //@TODO first fields_id because Candiate is Field entity
 
     /**
@@ -28,7 +28,7 @@ class Organization extends BaseField implements ModelInterface
     public function choices()
     {
 
-        return $this->hasMany(static::prefix_ns . '\Dictionary\Organization', 'field_id');
+        return $this->hasMany(static::prefix_ns . '\Dictionary\Agency', 'field_id');
     }
 
     /**
@@ -37,7 +37,7 @@ class Organization extends BaseField implements ModelInterface
     public function dataModels()
     {
 
-        return $this->belongsToMany(static::prefix_ns . '\DataModel\AppDataModel', 'data_model_organization_fields', 'field_id', 'data_model_id');
+        return $this->belongsToMany(static::prefix_ns . '\DataModel\AppDataModel', 'data_model_agency_fields', 'field_id', 'data_model_id');
     }
 
 

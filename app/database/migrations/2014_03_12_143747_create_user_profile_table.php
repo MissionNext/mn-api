@@ -29,6 +29,7 @@ class CreateUserProfileTable extends Migration
 
        $create(BaseDataModel::CANDIDATE);
        $create(BaseDataModel::ORGANIZATION);
+       $create(BaseDataModel::AGENCY);
 
     }
 
@@ -45,6 +46,7 @@ class CreateUserProfileTable extends Migration
 
        $drop(BaseDataModel::CANDIDATE);
        $drop(BaseDataModel::ORGANIZATION);
+       $drop(BaseDataModel::AGENCY);
     }
 
 }

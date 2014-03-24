@@ -18,9 +18,13 @@ class DataModelFieldSeeder extends Seeder
                     ->candidateFields()
                     ->sync([ 1, 2, 3, 4, 5 ]);
 
-        $application->DM(BaseDataModel::CANDIDATE)
+        $application->DM(BaseDataModel::ORGANIZATION)
             ->organizationFields()
             ->sync([ 1, 2, 3 ]);
+
+        $application->DM(BaseDataModel::AGENCY)
+        ->agencyFields()
+        ->sync([ 1, 2, 3, 4 ]);
 
     }
 }

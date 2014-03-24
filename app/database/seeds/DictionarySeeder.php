@@ -7,6 +7,7 @@ class DictionarySeeder extends Seeder
         DB::statement("SET foreign_key_checks = 0");
         DB::table("candidate_dictionary")->truncate();
         DB::table("organization_dictionary")->truncate();
+        DB::table("agency_dictionary")->truncate();
         DB::statement("SET foreign_key_checks = 1");
 
 
@@ -49,17 +50,22 @@ class DictionarySeeder extends Seeder
             )
         ));
 
-//        $choice = new ChoiceValue(array('value' => 'Banana Republic'));
-//
-//
-//        /** @var  $field Field */
-//        $field = Field::find(2);
-//
-//        $field->choices()->save($choice);
+        DB::table('agency_dictionary')->insert(array(
+            array(
+                "field_id" => 2,
+                "value" => "India",
+            ),
+            array(
+                "field_id" => 2,
+                "value" => "Japan",
+            ),
+            array(
+                "field_id" => 2,
+                "value" => "Italy",
+            ),
 
-//        $choice = ChoiceValue::find(1);
-//        $choice->field()->associate(Field::find(1));
-//        $choice->save();
+        ));
+
 
     }
 }

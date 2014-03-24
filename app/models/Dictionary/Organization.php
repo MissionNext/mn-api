@@ -3,7 +3,6 @@
 namespace MissionNext\Models\Dictionary;
 
 use MissionNext\Models\ModelInterface;
-use MissionNext\Models\DataModel\BaseDataModel;
 
 
 class Organization extends BaseDictionary implements ModelInterface {

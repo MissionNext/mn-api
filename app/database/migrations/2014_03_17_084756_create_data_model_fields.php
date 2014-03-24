@@ -33,6 +33,7 @@ class CreateDataModelFields extends Migration
     {
       $this->createModelToFields(BaseDataModel::CANDIDATE);
       $this->createModelToFields(BaseDataModel::ORGANIZATION);
+      $this->createModelToFields(BaseDataModel::AGENCY);
     }
 
     /**

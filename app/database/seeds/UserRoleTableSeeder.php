@@ -9,10 +9,9 @@ class UserRoleTableSeeder extends Seeder
         DB::statement("SET foreign_key_checks = 0");
         DB::table("user_roles")->truncate();
         DB::statement("SET foreign_key_checks = 1");
-        $users = User::whereIn('id', [1, 2, 3])->get();
-        $users->get(2)->roles()->attach(Role::ROLE_ORGANIZATION);
-        $users->get(1)->roles()->attach(Role::ROLE_CANDIDATE);
-        $users->get(0)->roles()->attach(Role::ROLE_CANDIDATE);
+        User::find(3)->roles()->attach(Role::ROLE_ORGANIZATION);
+        User::find(2)->roles()->attach(Role::ROLE_CANDIDATE);
+        User::find(1)->roles()->attach(Role::ROLE_AGENCY);
 
     }
 }

@@ -50,6 +50,15 @@ class AppDataModel extends BaseDataModel implements ModelInterface
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function agencyFields()
+    {
+
+        return $this->belongsToMany(static::prefix_ns . '\Field\Agency', 'data_model_agency_fields', 'data_model_id', 'field_id');
+    }
+
+    /**
      * @return Builder
      */
     public function fieldsExp()

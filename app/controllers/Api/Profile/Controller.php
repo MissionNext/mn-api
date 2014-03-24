@@ -2,6 +2,7 @@
 namespace Api\Profile;
 
 use Api\BaseController;
+use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Models\Field\FieldStrategy;
 use MissionNext\Models\User\User as UserModel;
@@ -84,7 +85,8 @@ class Controller extends BaseController {
         $request = Request::instance();
         $hash = $request->request->all();
         if (empty($hash)){
-            throw new \Exception("No hash values", 10);
+
+            throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
         $mapping = [];
         $fieldNames = array_keys($hash);
@@ -92,7 +94,8 @@ class Controller extends BaseController {
         $fieldModelMethod = FieldStrategy::getModelMethod();
         $fields = $fieldModel::whereIn('symbol_key', $fieldNames)->get();
         if ($fields->count() !== count($hash)){
-            throw new \Exception("Wrong field name(s)", 11);
+
+            throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
         }
         foreach($fields as $field){
            if (isset($hash[$field->symbol_key])){

@@ -24,7 +24,7 @@ class FieldStrategy
     public static function getModelName()
     {
 
-       return  "MissionNext\\Models\\Field\\".ucfirst(SecurityContext::role());
+        return "MissionNext\\Models\\Field\\" . ucfirst(SecurityContext::role());
     }
 
     /**
@@ -33,7 +33,6 @@ class FieldStrategy
     public static function getModelMethod()
     {
 
-       return SecurityContext::role()."Fields";
+        return SecurityContext::role() . "Fields";
     }
-
 } 
