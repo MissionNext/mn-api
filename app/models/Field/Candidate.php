@@ -12,7 +12,7 @@ class Candidate extends BaseField implements ModelInterface
 
     protected $table = 'candidate_fields';
 
-
+    protected $role = BaseDataModel::CANDIDATE;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -39,48 +39,6 @@ class Candidate extends BaseField implements ModelInterface
     {
 
         return $this->belongsToMany(static::prefix_ns . '\DataModel\AppDataModel', 'data_model_candidate_fields', 'field_id', 'data_model_id');
-    }
-
-    /**
-     * @param $query
-     * @return Builder
-     */
-    public function scopeFieldsExp($query)
-    {
-
-        return $this
-            ->select('candidate_fields.id',
-                'field_types.name as type',
-                'candidate_fields.symbol_key',
-                'candidate_fields.name',
-                \DB::raw('GROUP_CONCAT(candidate_dictionary.value) as choices'))
-            ->leftJoin('field_types', 'field_types.id', '=', 'candidate_fields.type')
-            ->leftJoin('candidate_dictionary', 'candidate_dictionary.field_id', '=', 'candidate_fields.id')
-            ->groupBy('symbol_key')
-            ->orderBy('id');
-    }
-
-    /**
-     * @param $query
-     * @param AppDataModel $dm
-     * @return Builder
-     */
-    public function scopeModelFieldsExp($query, AppDataModel $dm)
-    {
-
-        return $this
-
-            ->select('candidate_fields.id',
-                'field_types.name as type',
-                'candidate_fields.symbol_key',
-                'candidate_fields.name',
-                \DB::raw('GROUP_CONCAT(candidate_dictionary.value) as choices'))
-            ->leftJoin('data_model_candidate_fields', 'candidate_fields.id', '=', 'data_model_candidate_fields.field_id')
-            ->leftJoin('field_types', 'field_types.id', '=', 'candidate_fields.type')
-            ->leftJoin('candidate_dictionary', 'candidate_dictionary.field_id', '=', 'candidate_fields.id')
-            ->where('data_model_candidate_fields.data_model_id', '=', $dm->id)
-            ->groupBy('symbol_key')
-            ->orderBy('id');
     }
 
 } 
