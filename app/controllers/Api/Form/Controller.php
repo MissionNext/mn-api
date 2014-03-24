@@ -97,11 +97,13 @@ class Controller extends BaseController
 
         $form = $forms->first();
 
+
         if (!$form) {
 
             return new RestResponse(null);
         }
         $groupFields = array_fetch($form->fields()->get()->toArray(), 'symbol_key');
+
         $returnData = !empty($groupFields)
               ?  $this->fieldsChoicesArr($dm->fieldsExp()->whereIn("symbol_key", $groupFields)->get())
               :  null;

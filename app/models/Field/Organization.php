@@ -46,6 +46,7 @@ class Organization extends BaseField implements ModelInterface
     public function scopeFieldsExp($query)
     {
 
+
         return $this
             ->select('organization_fields.id',
                 'field_types.name as type',
@@ -74,7 +75,7 @@ class Organization extends BaseField implements ModelInterface
                 'organization_fields.name',
                 \DB::raw('GROUP_CONCAT(organization_dictionary.value) as choices'))
             ->leftJoin('data_model_organization_fields', 'organization_fields.id', '=', 'data_model_organization_fields.field_id')
-            ->leftJoin('field_types', 'field_types.id', '=', 'candidate_fields.type')
+            ->leftJoin('field_types', 'field_types.id', '=', 'organization_fields.type')
             ->leftJoin('organization_dictionary', 'organization_dictionary.field_id', '=', 'organization_fields.id')
             ->where('data_model_organization_fields.data_model_id', '=', $dm->id)
             ->groupBy('symbol_key')

@@ -61,7 +61,7 @@ class Controller extends BaseController {
 	 */
 	public function show($id)
 	{
-        
+
 		return new RestResponse(UserModel::find($id));
 	}
 
