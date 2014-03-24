@@ -11,7 +11,7 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
 
     public $timestamps = false;
 
-    protected $role = null;
+    protected $roleType = null;
 
     /**
      * The database table used by the model.
@@ -37,7 +37,7 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
      */
     public function scopeFieldsExp($query)
     {
-        $role = $this->role;
+        $role = $this->roleType;
 
 
         return $this
@@ -59,7 +59,7 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
      */
     public function scopeModelFieldsExp($query, AppDataModel $dm)
     {
-        $role = $this->role;
+        $role = $this->roleType;
 
         return $this
 

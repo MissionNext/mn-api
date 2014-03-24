@@ -12,7 +12,7 @@ class Candidate extends BaseField implements ModelInterface
 
     protected $table = 'candidate_fields';
 
-    protected $role = BaseDataModel::CANDIDATE;
+    protected $roleType = BaseDataModel::CANDIDATE;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
