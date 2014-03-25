@@ -5,14 +5,13 @@ use MissionNext\Models\Dictionary\Agency as AgDictionary;
 use MissionNext\Models\Role\Role;
 use MissionNext\Models\User\User;
 
-class UserProfileSeeder extends Seeder
+class UserProfileSeeder extends BaseSeeder
 {
     public function run()
     {
-        DB::statement("SET foreign_key_checks = 0");
-        DB::table("candidate_profile")->truncate();
-        DB::table("organization_profile")->truncate();
-        DB::statement("SET foreign_key_checks = 1");
+        DB::statement($this->getDbStatement()->truncateTable("candidate_profile"));
+        DB::statement($this->getDbStatement()->truncateTable("organization_profile"));
+
         /** @var  $candidate User */
         $candidate = Role::find(Role::ROLE_CANDIDATE)->users()->first();
         /** @var  $org User */

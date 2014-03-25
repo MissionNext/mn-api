@@ -39,6 +39,17 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
     {
         $role = $this->roleType;
 
+//        return dd(\DB::select(
+//            "select c_f.symbol_key, c_f.id, f_t.name as type,
+//                string_agg(c_d.value, ','  ORDER BY c_d.value) as choices
+//                      from candidate_fields as c_f
+//                   left join field_types as f_t on f_t.id = c_f.type
+//                   left join candidate_dictionary as c_d on c_d.field_id = c_f.id
+//                   group by  c_f.id, f_t.name
+//
+//
+//        "));
+
 
         return $this
             ->select($role.'_fields.id',

@@ -3,7 +3,7 @@
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\DataModel\AppDataModel;
 
-class ApplicationSeeder extends Seeder {
+class ApplicationSeeder extends BaseSeeder {
 
     /**
      * Run the database seeds.
@@ -12,10 +12,8 @@ class ApplicationSeeder extends Seeder {
      */
     public function run()
     {
-        DB::statement("SET foreign_key_checks = 0");
-        DB::table("application")->truncate();
-        DB::table("app_data_model")->truncate();
-        DB::statement("SET foreign_key_checks = 1");
+        DB::statement($this->getDbStatement()->truncateTable("application"));
+        DB::statement($this->getDbStatement()->truncateTable("app_data_model"));
 
         $application1 = new Application();
         $application1->private_key = "654321";

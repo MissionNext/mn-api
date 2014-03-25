@@ -3,14 +3,13 @@
 /**
  * Class UserTableSeeder
  */
-class UserTableSeeder extends Seeder
+class UserTableSeeder extends BaseSeeder
 {
     public function run()
     {
-        $dateTime = (new DateTime)->format("Y:m:d H:i:s");
-        DB::statement("SET foreign_key_checks = 0");
-        DB::table("users")->truncate();
-        DB::statement("SET foreign_key_checks = 1");
+        $dateTime = (new DateTime)->format("Y-m-d H:i:s");
+        DB::statement($this->getDbStatement()->truncateTable("users"));
+
         DB::table('users')->insert(array(
             array('email' => 'admin@example.com', 'password' =>  Hash::make('123456'),
                   'username' => 'admin',

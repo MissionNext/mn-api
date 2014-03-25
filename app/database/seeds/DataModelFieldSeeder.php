@@ -3,14 +3,13 @@
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\DataModel\BaseDataModel;
 
-class DataModelFieldSeeder extends Seeder
+class DataModelFieldSeeder extends BaseSeeder
 {
     public function run()
     {
-        DB::statement("SET foreign_key_checks = 0");
-        DB::table("data_model_candidate_fields")->truncate();
-        DB::table("data_model_organization_fields")->truncate();
-        DB::statement("SET foreign_key_checks = 1");
+        DB::statement($this->getDbStatement()->truncateTable("data_model_candidate_fields"));
+        DB::statement($this->getDbStatement()->truncateTable("data_model_organization_fields"));
+
         /** @var  $application Application */
         $application = Application::find(1);
 

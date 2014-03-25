@@ -1,21 +1,33 @@
 <?php
 
-class DatabaseSeeder extends Seeder {
-
-	/**
-	 * Run the database seeds.
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
-		Eloquent::unguard();
 
 
+class DatabaseSeeder extends BaseSeeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        Eloquent::unguard(); // allows mass assignment
+
+        $dbStatement = $this->getDbStatement();
+        DB::statement($dbStatement->foreignKeyChecksOff());
+
+        $this->runSeeders();
+
+        DB::statement($dbStatement->foreignKeyChecksOn());
+
+    }
+
+    private function runSeeders()
+    {
         $this->call('ApplicationSeeder');
         $this->command->info('Application table seeded!');
 
-		$this->call('UserTableSeeder');
+        $this->call('UserTableSeeder');
         $this->command->info('User table seeded!');
 
         $this->call('RoleTableSeeder');
@@ -41,6 +53,6 @@ class DatabaseSeeder extends Seeder {
 
         $this->call('UserProfileSeeder');
         $this->command->comment('UserProfileSeeder table seeded!');
-	}
+    }
 
 }

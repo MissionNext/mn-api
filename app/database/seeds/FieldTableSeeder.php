@@ -1,15 +1,14 @@
 <?php
 
 
-class FieldTableSeeder extends Seeder
+class FieldTableSeeder extends BaseSeeder
 {
         public function run()
         {
-            DB::statement("SET foreign_key_checks = 0");
-            DB::table("candidate_fields")->truncate();
-            DB::table("organization_fields")->truncate();
-            DB::table("agency_fields")->truncate();
-            DB::statement("SET foreign_key_checks = 1");
+            DB::statement($this->getDbStatement()->truncateTable("candidate_fields"));
+            DB::statement($this->getDbStatement()->truncateTable("organization_fields"));
+            DB::statement($this->getDbStatement()->truncateTable("agency_fields"));
+
 
             DB::table('candidate_fields')->insert(array(
 

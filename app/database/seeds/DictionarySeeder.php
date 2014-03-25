@@ -1,14 +1,15 @@
 <?php
 
-class DictionarySeeder extends Seeder
+class DictionarySeeder extends BaseSeeder
 {
     public function run()
     {
-        DB::statement("SET foreign_key_checks = 0");
-        DB::table("candidate_dictionary")->truncate();
-        DB::table("organization_dictionary")->truncate();
-        DB::table("agency_dictionary")->truncate();
-        DB::statement("SET foreign_key_checks = 1");
+
+        DB::statement($this->getDbStatement()->truncateTable("agency_dictionary"));
+        DB::statement($this->getDbStatement()->truncateTable("organization_dictionary"));
+        DB::statement($this->getDbStatement()->truncateTable("candidate_dictionary"));
+
+
 
 
 

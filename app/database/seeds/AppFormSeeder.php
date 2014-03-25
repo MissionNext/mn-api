@@ -4,16 +4,13 @@ use MissionNext\Models\Form\AppForm;
 use MissionNext\Models\Form\FormGroup;
 use MissionNext\Models\Field\FieldGroup;
 
-class AppFormSeeder extends Seeder
+class AppFormSeeder extends BaseSeeder
 {
     public function run()
     {
-
-        DB::statement("SET foreign_key_checks = 0");
-        DB::table("app_forms")->truncate();
-        DB::table("form_groups")->truncate();
-        DB::table("group_fields")->truncate();
-        DB::statement("SET foreign_key_checks = 1");
+        DB::statement($this->getDbStatement()->truncateTable("app_forms"));
+        DB::statement($this->getDbStatement()->truncateTable("form_groups"));
+        DB::statement($this->getDbStatement()->truncateTable("group_fields"));
         /** @var  $application Application */
         return;
         $application = Application::find(1);
