@@ -10,6 +10,7 @@ use MissionNext\Api\Response\RestResponse;
 
 class ErrorProvider extends ServiceProvider
 {
+    
     public function register()
     {
         App::error(function(Exception $exception, $code)

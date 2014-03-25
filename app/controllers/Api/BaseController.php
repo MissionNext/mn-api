@@ -13,13 +13,20 @@ use MissionNext\Models\Application\Application as AppModel;
 
 class BaseController extends Controller
 {
-
+    /**
+     * Set filters
+     */
     public function __construct()
     {
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
     }
 
+    /**
+     * @param Collection $fields
+     *
+     * @return Collection
+     */
     protected function fieldsChoicesArr(Collection $fields)
     {
 

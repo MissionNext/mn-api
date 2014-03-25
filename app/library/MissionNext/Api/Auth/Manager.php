@@ -11,6 +11,13 @@ class Manager
     /** @var  Token */
     private $token;
 
+    /**
+     * @param Token $token
+     *
+     * @return Token
+     *
+     * @throws \MissionNext\Api\Exceptions\AuthenticationException
+     */
     public function authenticate(Token $token)
     {
         $current_timestamp = time();
@@ -43,6 +50,11 @@ class Manager
         return $token;
     }
 
+    /**
+     * @param $application
+     *
+     * @return bool
+     */
     protected function validateHash($application)
     {
         $hash = strtr(base64_encode(

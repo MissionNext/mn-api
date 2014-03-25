@@ -22,6 +22,11 @@ final class RestData
 
     }
 
+    /**
+     * @param $data
+     *
+     * @param $status
+     */
     private function set($data, $status)
     {
         $this->data = $data;

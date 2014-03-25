@@ -84,6 +84,12 @@ class Controller extends BaseController
 
     }
 
+    /**
+     * @param $type
+     * @param $formName
+     *
+     * @return RestResponse
+     */
     public function getIndex($type, $formName)
     {
 

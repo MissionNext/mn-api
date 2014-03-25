@@ -13,16 +13,29 @@ class Listener
     /** @var Manager */
     protected $authManager;
 
+    /**
+     * @param Request $request
+     *
+     * @return $this
+     */
     public function setRequest(Request $request)
     {
         $this->request = $request;
+
+        return $this;
     }
 
+    /**
+     * @param Manager $authManager
+     */
     public function __construct(Manager $authManager)
     {
         $this->authManager = $authManager;
     }
 
+    /**
+     * Handle authentication
+     */
     public function handle()
     {
         $request = $this->request;

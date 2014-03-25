@@ -3,6 +3,7 @@
 namespace MissionNext\Api\Exceptions;
 
 
-class AuthenticationException extends \Exception {
+class AuthenticationException extends \Exception
+{
 
 } 

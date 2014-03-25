@@ -26,11 +26,21 @@ class RestResponse extends JsonResponse
 
     }
 
+    /**
+     * @param array $data
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|void
+     */
     public function setData($data = [])
     {
         parent::setData($this->getResponseData($data));
     }
 
+    /**
+     * @param \Exception $e
+     *
+     * @return $this
+     */
     public function setErrorData(\Exception $e)
     {
         $responseData = RestData::setData(["error" =>

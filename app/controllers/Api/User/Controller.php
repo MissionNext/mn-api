@@ -3,8 +3,11 @@ namespace Api\User;
 
 use Api\BaseController;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
+use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
+use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Models\Role\Role;
 
@@ -29,7 +32,7 @@ class Controller extends BaseController
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return RestResponse
      */
     public function create()
     {
@@ -37,18 +40,27 @@ class Controller extends BaseController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @return RestResponse
+     *
+     * @throws \MissionNext\Api\Exceptions\UserException
      */
     public function store()
     {
+        $roleName = Input::get('role');
+        if (!RouteSecurityFilter::isAllowedRole($roleName)){
+
+            throw new UserException("Role '{$roleName}' doesn't exists", UserException::ON_CREATE);
+        }
+
         $user = new UserModel;
-        $user->password = Hash::make(Request::get('password'));
-        $user->email = Request::get('email');
-        $user->username = Request::get('username');
+        $user->password = Hash::make(Input::get('password'));
+        $user->email = Input::get('email');
+        $user->username = Input::get('username');
         $user->save();
-        $user->roles()->attach(Role::ROLE_CANDIDATE);
+
+        $role = Role::whereRole( $roleName )->firstOrFail();
+
+        $user->roles()->attach($role->id);
 
         return new RestResponse($user);
     }
@@ -57,7 +69,8 @@ class Controller extends BaseController
      * Display the specified resource.
      *
      * @param  int $id
-     * @return Response
+     *
+     * @return RestResponse
      */
     public function show($id)
     {
@@ -69,7 +82,8 @@ class Controller extends BaseController
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     * @return Response
+     *
+     * @return RestResponse
      */
     public function edit($id)
     {
@@ -80,7 +94,8 @@ class Controller extends BaseController
      * Update the specified resource in storage.
      *
      * @param  int $id
-     * @return Response
+     *
+     * @return RestResponse
      */
     public function update($id)
     {
@@ -99,7 +114,8 @@ class Controller extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  int $id
-     * @return Response
+     *
+     * @return RestResponse
      */
     public function destroy($id)
     {

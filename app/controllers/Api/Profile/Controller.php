@@ -18,7 +18,7 @@ class Controller extends BaseController
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return RestResponse
      */
     public function index()
     {
@@ -28,7 +28,7 @@ class Controller extends BaseController
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return RestResponse
      */
     public function create()
     {
@@ -38,7 +38,7 @@ class Controller extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @return Response
+     * @return RestResponse
      */
     public function store()
     {
@@ -49,6 +49,7 @@ class Controller extends BaseController
      * Display the specified resource.
      *
      * @param  int $id
+     *
      * @return RestResponse
      */
     public function show($id)
@@ -120,6 +121,7 @@ class Controller extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  int $id
+     *
      * @return Response
      */
     public function destroy($id)

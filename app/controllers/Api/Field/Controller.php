@@ -15,6 +15,7 @@ class Controller extends BaseController {
 
     /**
      * @param $type
+     *
      * @return RestResponse
      */
     public function getIndex($type)
@@ -23,6 +24,11 @@ class Controller extends BaseController {
         return new RestResponse($this->fieldsChoicesArr(FieldStrategy::fields()->get()));
 	}
 
+    /**
+     * @param $type
+     *
+     * @return RestResponse
+     */
     public function getModel($type)
     {
         $application = $this->getApp();
@@ -31,7 +37,11 @@ class Controller extends BaseController {
     }
 
 
-
+    /**
+     * @param $type
+     *
+     * @return RestResponse
+     */
     public function postModel($type)
     {
         $fields =  Input::get("fields", []);
