@@ -3,6 +3,7 @@ namespace MissionNext\Models\Field;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Query\Builder;
+use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\ModelInterface;
 
@@ -41,7 +42,7 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
 
 //        return dd(\DB::select(
 //            "select c_f.symbol_key, c_f.id, f_t.name as type,
-//                string_agg(c_d.value, ','  ORDER BY c_d.value) as choices
+//                group_concat(c_d.value) as choices
 //                      from candidate_fields as c_f
 //                   left join field_types as f_t on f_t.id = c_f.type
 //                   left join candidate_dictionary as c_d on c_d.field_id = c_f.id
@@ -56,11 +57,11 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
                 'field_types.name as type',
                 $role.'_fields.symbol_key',
                 $role.'_fields.name',
-                \DB::raw('GROUP_CONCAT('.$role.'_dictionary.value) as choices'))
+                \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")))
             ->leftJoin('field_types', 'field_types.id', '=', $role.'_fields.type')
             ->leftJoin($role.'_dictionary', $role.'_dictionary.field_id', '=', $role.'_fields.id')
-            ->groupBy('symbol_key')
-            ->orderBy('id');
+            ->groupBy($role.'_fields.id', 'field_types.name')
+            ->orderBy($role.'_fields.id');
     }
 
     /**
@@ -78,13 +79,13 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
                 'field_types.name as type',
                 $role.'_fields.symbol_key',
                 $role.'_fields.name',
-                \DB::raw('GROUP_CONCAT('.$role.'_dictionary.value) as choices'))
+                \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")))
             ->leftJoin('data_model_'.$role.'_fields', $role.'_fields.id', '=', 'data_model_'.$role.'_fields.field_id')
             ->leftJoin('field_types', 'field_types.id', '=', $role.'_fields.type')
             ->leftJoin($role.'_dictionary', $role.'_dictionary.field_id', '=', $role.'_fields.id')
             ->where('data_model_'.$role.'_fields.data_model_id', '=', $dm->id)
-            ->groupBy('symbol_key')
-            ->orderBy('id');
+            ->groupBy($role.'_fields.id', 'field_types.name')
+            ->orderBy($role.'_fields.id');
     }
 
 } 

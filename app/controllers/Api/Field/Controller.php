@@ -47,7 +47,8 @@ class Controller extends BaseController {
         $fields =  Input::get("fields", []);
 
         $application = $this->getApp();
-        $mFields = $application->modelFields();
+        $mFields = $application->modelFields()
+        ;
         count($fields)
             ? $mFields->sync($fields)
             : $mFields->detach();

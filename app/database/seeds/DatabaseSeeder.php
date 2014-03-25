@@ -1,7 +1,5 @@
 <?php
 
-
-
 class DatabaseSeeder extends BaseSeeder
 {
     /**
@@ -14,6 +12,7 @@ class DatabaseSeeder extends BaseSeeder
         Eloquent::unguard(); // allows mass assignment
 
         $dbStatement = $this->getDbStatement();
+
         DB::statement($dbStatement->foreignKeyChecksOff());
 
         $this->runSeeders();
