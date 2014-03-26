@@ -5,7 +5,6 @@ use Illuminate\Support\ServiceProvider;
 use MissionNext\Api\Auth\Listener;
 use MissionNext\Api\Auth\Manager;
 use MissionNext\Api\Auth\Token;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use MissionNext\Filter\RouteSecurityFilter;
 
@@ -18,7 +17,6 @@ class SecurityProvider extends ServiceProvider
      */
     public function register()
     {
-
         $this->app->singleton('rest.token', function () {
 
             return new Token();
