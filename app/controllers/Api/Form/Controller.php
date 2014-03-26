@@ -151,6 +151,7 @@ class Controller extends BaseController
             $groups[$symbolKey]["order"] = $data["form_group"]["order"];
             $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
             $groups[$symbolKey]["fields"][$key]["name"] = $data["name"];
+            $groups[$symbolKey]["fields"][$key]["choices"] = $data["choices"] ?: [];
             $groups[$symbolKey]["fields"][$key]["order"] = $data["order"];
             $groups[$symbolKey]["fields"][$key]["id"] = $data["id"];
         }

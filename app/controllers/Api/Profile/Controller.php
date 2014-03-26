@@ -64,7 +64,7 @@ class Controller extends BaseController
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     * @return Response
+     * @return RestResponse
      */
     public function edit($id)
     {
@@ -122,7 +122,7 @@ class Controller extends BaseController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return RestResponse
      */
     public function destroy($id)
     {

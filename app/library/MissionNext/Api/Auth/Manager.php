@@ -36,8 +36,7 @@ class Manager
             return new SecurityContext($token);
         });
 
-
-        if (($current_timestamp - $token->created) > 30) {
+        if (($current_timestamp - $token->created) > 60 ){//@TODO fix timestamp authentication
             throw new AuthenticationException("Timedout", 1);
         } elseif ( ($current_timestamp < $token->created) && !App::environment('local') ) {
             throw new AuthenticationException("Invalid timestamp", 2);
