@@ -20,7 +20,7 @@ class RestResponse extends JsonResponse
         $rawData = $data instanceof ArrayableInterface ? $data->toArray() : $data;
 
         return
-            $data instanceof Collection && $data->count()
+            count($data) > 1
                 ? RestData::setData(['list' => $rawData])
                 : RestData::setData($rawData);
 

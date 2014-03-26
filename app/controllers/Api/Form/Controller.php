@@ -3,15 +3,10 @@ namespace Api\Form;
 
 use Api\BaseController;
 use MissionNext\Api\Exceptions\FormGroupsException;
-use MissionNext\Api\Response\RestData;
 use MissionNext\Api\Response\RestResponse;
-use Illuminate\Support\Facades\Input;
-use MissionNext\ModelObservers\FormGroupObserve;
-use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Field\FieldGroup;
 use MissionNext\Models\Form\AppForm;
 use MissionNext\Models\Form\BaseForm;
-use MissionNext\Models\Form\FormGroup;
 use MissionNext\Models\DataModel\AppDataModel;
 use Illuminate\Support\Facades\Request;
 
@@ -53,7 +48,6 @@ class Controller extends BaseController
             $timestamp = (new \DateTime)->format("Y-m-d H:i:s");
 
             $groupSymbolKeys = array_fetch($reqGroups, "symbol_key");
-
             $groupsInsert = array_map(function ($group) use ($form, $timestamp) {
                 return [
                     "symbol_key" => $group["symbol_key"],
@@ -117,7 +111,6 @@ class Controller extends BaseController
         return new RestResponse($formGroups);
 
 
-
     }
 
     /**
@@ -144,13 +137,29 @@ class Controller extends BaseController
 
             return new RestResponse(null);
         }
-        $groupFields = array_fetch($form->fields()->get()->toArray(), 'symbol_key');
+        $viewFields = $form->fields()->with("formGroup")->orderBy("symbol_key")->get()->toArray();
+        $groupFields = array_fetch($viewFields, 'symbol_key');
+        $modelFields = $this->fieldsChoicesArr($dm->fieldsExp()->whereIn("symbol_key", $groupFields)->orderBy("symbol_key")->get())->toArray();
+        $mergedData = array_replace_recursive($modelFields, $viewFields);
 
-        $returnData = !empty($groupFields)
-            ? $this->fieldsChoicesArr($dm->fieldsExp()->whereIn("symbol_key", $groupFields)->get())
-            : null;
+        $groups = [];
+        foreach ($mergedData as $key => $data) {
+            $symbolKey = $data["form_group"]["symbol_key"];
+            $groups[$symbolKey]["symbol_key"] = $data["form_group"]["symbol_key"];
+            $groups[$symbolKey]["id"] = $data["form_group"]["id"];
+            $groups[$symbolKey]["name"] = $data["form_group"]["name"];
+            $groups[$symbolKey]["order"] = $data["form_group"]["order"];
+            $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
+            $groups[$symbolKey]["fields"][$key]["name"] = $data["name"];
+            $groups[$symbolKey]["fields"][$key]["order"] = $data["order"];
+            $groups[$symbolKey]["fields"][$key]["id"] = $data["id"];
+        }
+        $groups = array_values($groups);
+        foreach($groups as $key=>$group){
+            $groups[$key]["fields"] = array_values($groups[$key]["fields"]);
+        }
 
-        return new RestResponse($returnData);
+        return new RestResponse($groups);
     }
 
 
