@@ -8,7 +8,6 @@ use MissionNext\Models\ModelInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface, ModelInterface
 {
-
 	/**
 	 * The database table used by the model.
 	 *

@@ -3,27 +3,37 @@
 namespace MissionNext\Api\Response;
 
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Contracts\ArrayableInterface;
-use StdClass;
+use MissionNext\Api\Exceptions\ResponseDataException;
+use Illuminate\Database\Eloquent\Model;
 
 class RestResponse extends JsonResponse
 {
     /**
      * @param array $data
      *
-     * @return StdClass
+     * @return RestData
+     *
+     * @throws \MissionNext\Api\Exceptions\ResponseDataException
      */
     protected function getResponseData($data = [])
     {
-        $rawData = $data instanceof ArrayableInterface ? $data->toArray() : $data;
+        if ($data instanceof Relation) {
 
-        return
-            count($data) > 1
-                ? RestData::setData(['list' => $rawData])
-                : RestData::setData($rawData);
+            throw new ResponseDataException($data);
+        }
 
+        $rawData = $data;
+        if ($data instanceof Collection) {
+            $rawData = ["list" => $data->toArray()];
+        } elseif ($data instanceof Model) {
+            $rawData = $data->toArray();
+        }
+
+        return RestData::setData($rawData);
     }
 
     /**

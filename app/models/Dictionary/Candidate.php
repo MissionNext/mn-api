@@ -2,6 +2,7 @@
 namespace MissionNext\Models\Dictionary;
 
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\Field\Candidate as CandidateField;
 
 class Candidate extends BaseDictionary implements ModelInterface {
 
@@ -9,6 +10,6 @@ class Candidate extends BaseDictionary implements ModelInterface {
 
     public function field()
     {
-        return $this->belongsTo(static::prefix_ns.'\Field\Candidate', 'field_id');
+        return $this->belongsTo(CandidateField::class, 'field_id');
     }
 }

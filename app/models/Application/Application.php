@@ -31,7 +31,7 @@ class Application extends Eloquent implements ModelInterface
     public function dataModels()
     {
 
-        return $this->hasMany(static::prefix_ns . '\DataModel\AppDataModel', 'app_id');
+        return $this->hasMany(AppDataModel::class, 'app_id');
     }
 
     /**
