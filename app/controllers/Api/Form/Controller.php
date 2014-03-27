@@ -108,7 +108,7 @@ class Controller extends BaseController
         }
 
 
-        return new RestResponse($formGroups);
+        return new RestResponse(["list" => $formGroups]);
 
 
     }
@@ -150,6 +150,7 @@ class Controller extends BaseController
             $groups[$symbolKey]["name"] = $data["form_group"]["name"];
             $groups[$symbolKey]["order"] = $data["form_group"]["order"];
             $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
+            $groups[$symbolKey]["fields"][$key]["type"] = $data["type"];
             $groups[$symbolKey]["fields"][$key]["name"] = $data["name"];
             $groups[$symbolKey]["fields"][$key]["choices"] = $data["choices"] ?: [];
             $groups[$symbolKey]["fields"][$key]["order"] = $data["order"];
@@ -160,7 +161,7 @@ class Controller extends BaseController
             $groups[$key]["fields"] = array_values($groups[$key]["fields"]);
         }
 
-        return new RestResponse($groups);
+        return new RestResponse(["list" => $groups]);
     }
 
 

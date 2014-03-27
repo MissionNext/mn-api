@@ -38,6 +38,31 @@ class FieldTableSeeder extends BaseSeeder
                     "name" => "Occupation",
                     "type" => 3,
                 ),
+                array(
+                    "symbol_key" => "skype_handle",
+                    "name" => "Skype Handle",
+                    "type" => 3,
+                ),
+                array(
+                    "symbol_key" => "day_phone",
+                    "name" => "Day Phone",
+                    "type" => 3,
+                ),
+                array(
+                    "symbol_key" => "eve_phone",
+                    "name" => "Eve Phone",
+                    "type" => 3,
+                ),
+                array(
+                    "symbol_key" => "mobile_phone",
+                    "name" => "Mobile phone",
+                    "type" => 3,
+                ),
+                array(
+                    "symbol_key" => "best_way_to_contact",
+                    "name" => "Best way to contact",
+                    "type" => 2,
+                ),
             ));
 
             DB::table('organization_fields')->insert(array(

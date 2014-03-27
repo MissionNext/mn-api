@@ -29,7 +29,15 @@ class DictionarySeeder extends BaseSeeder
             array(
                 "field_id" => 2,
                 "value" => "Mexico",
-            )
+            ),
+            array(
+                "field_id" => 10,
+                "value" => "By email",
+            ),
+            array(
+                "field_id" => 10,
+                "value" => "By phone",
+            ),
         ));
 
         DB::table('organization_dictionary')->insert(array(
