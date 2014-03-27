@@ -4,7 +4,7 @@ namespace Api\Field;
 use Api\BaseController;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
-use MissionNext\Models\Field\FieldStrategy;
+use MissionNext\Models\Field\FieldFactory;
 
 /**
  * Class Controller
@@ -21,7 +21,7 @@ class Controller extends BaseController {
     public function getIndex($type)
 	{
 
-        return new RestResponse($this->fieldsChoicesArr(FieldStrategy::fields()->get()));
+        return new RestResponse($this->fieldsChoicesArr(FieldFactory::roleBasedModel()->fieldsExp()->get()));
 	}
 
     /**
@@ -32,6 +32,7 @@ class Controller extends BaseController {
     public function getModel($type)
     {
         $application = $this->getApp();
+        dd($application->dataModels()->first()->agencyFields());
 
         return new RestResponse($this->fieldsChoicesArr($application->modelFieldsExp()->get()));
     }
@@ -47,12 +48,11 @@ class Controller extends BaseController {
         $fields =  Input::get("fields", []);
 
         $application = $this->getApp();
-        $mFields = $application->modelFields()
-        ;
+        $mFields = $application->modelFields();
+
         count($fields)
             ? $mFields->sync($fields)
             : $mFields->detach();
-        $mFields->get();
 
         return new RestResponse($mFields->get());
     }

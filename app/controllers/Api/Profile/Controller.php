@@ -4,12 +4,11 @@ namespace Api\Profile;
 use Api\BaseController;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
-use MissionNext\Models\Field\FieldStrategy;
+use MissionNext\Models\Field\FieldFactory;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Models\Profile;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as Req;
-use MissionNext\Models\Field\Candidate as CanFields;
 
 
 class Controller extends BaseController
@@ -92,9 +91,7 @@ class Controller extends BaseController
         }
         $mapping = [];
         $fieldNames = array_keys($hash);
-        $fieldModel = FieldStrategy::getModelName();
-        $fieldModelMethod = FieldStrategy::getModelMethod();
-        $fields = $fieldModel::whereIn('symbol_key', $fieldNames)->get();
+        $fields = FieldFactory::roleBasedModel()->whereIn('symbol_key', $fieldNames)->get();
         if ($fields->count() !== count($hash)) {
 
             throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
@@ -105,8 +102,8 @@ class Controller extends BaseController
             }
         }
         foreach ($mapping as $key => $map) {
-            $user->$fieldModelMethod()->detach($key, $map);
-            $user->$fieldModelMethod()->attach($key, $map);
+            FieldFactory::fieldsOfModel($user)->detach($key, $map);
+            FieldFactory::fieldsOfModel($user)->attach($key, $map);
         }
         if (!empty($mapping)) {
             $user->touch();
@@ -132,8 +129,8 @@ class Controller extends BaseController
     protected function generateProfile(UserModel $user)
     {
         $profile = new Profile();
-        $fieldModelMethod = FieldStrategy::getModelMethod();
-        $user->$fieldModelMethod->each(function ($field) use ($profile) {
+        $fields = FieldFactory::fieldsOfModel($user);
+        $fields->get()->each(function ($field) use ($profile) {
             $key = $field->symbol_key;
             $profile->$key = $field->pivot->value;
         });

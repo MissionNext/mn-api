@@ -6,6 +6,8 @@ use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\DataModel\AppDataModel;
 use Illuminate\Database\Eloquent\Builder;
+use MissionNext\Models\User\User as UserModel;
+use MissionNext\Models\Dictionary\Candidate as CandidateDictionary;
 
 class Candidate extends BaseField implements ModelInterface
 {
@@ -20,7 +22,7 @@ class Candidate extends BaseField implements ModelInterface
     public function users()
     {
 
-        return $this->belongsToMany('User', 'candidate_profile', 'field_id', 'user_id')->withPivot('value');
+        return $this->belongsToMany(UserModel::class, 'candidate_profile', 'field_id', 'user_id')->withPivot('value');
     } //@TODO first fields_id because Candiate is Field entity
 
     /**
@@ -29,7 +31,7 @@ class Candidate extends BaseField implements ModelInterface
     public function choices()
     {
 
-        return $this->hasMany(static::prefix_ns . '\Dictionary\Candidate', 'field_id');
+        return $this->hasMany(CandidateDictionary::class, 'field_id');
     }
 
     /**
@@ -38,7 +40,7 @@ class Candidate extends BaseField implements ModelInterface
     public function dataModels()
     {
 
-        return $this->belongsToMany(static::prefix_ns . '\DataModel\AppDataModel', 'data_model_candidate_fields', 'field_id', 'data_model_id');
+        return $this->belongsToMany(AppDataModel::class, 'data_model_candidate_fields', 'field_id', 'data_model_id');
     }
 
 } 
