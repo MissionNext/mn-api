@@ -160,6 +160,7 @@ class Controller extends BaseController
         foreach($groups as $key=>$group){
             $groups[$key]["fields"] = array_values($groups[$key]["fields"]);
         }
+        lay lya lys
 
         return new RestResponse(["list" => $groups]);
     }
