@@ -9,6 +9,7 @@ use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application as AppModel;
+use MissionNext\Repos\User\UserRepository;
 
 
 class BaseController extends Controller
@@ -32,7 +33,7 @@ class BaseController extends Controller
 
         return $fields->each(function ($field) {
 
-           $field->choices = $field->choices ? explode(",", $field->choices) : null;
+            $field->choices = $field->choices ? explode(",", $field->choices) : null;
 
             return $field;
         });
@@ -68,9 +69,19 @@ class BaseController extends Controller
     /**
      * @return  []
      */
-    protected function getLogQueries(){
+    protected function getLogQueries()
+    {
 
         return DB::getQueryLog();
+    }
+
+    /**
+     * @return UserRepository
+     */
+    protected function userRepository()
+    {
+
+        return new UserRepository();
     }
 
 } 

@@ -4,31 +4,95 @@ namespace MissionNext\Models\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Support\Facades\Hash;
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\Role\Role as RoleModel;
 use MissionNext\Models\Field\Candidate as CandidateField;
 use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
+use MissionNext\Models\Role\Role;
 
 class User extends Eloquent implements UserInterface, RemindableInterface, ModelInterface
 {
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'users';
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array('password');
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = array('password');
 
     protected $guarded = array('id', 'password');
 
     protected $fillable = array('username', 'email');
+
+    /**
+     * @var UserObserver
+     */
+    private $observer;
+
+    /**
+     * @return UserObserver
+     */
+    public function observer()
+    {
+
+
+        return $this->observer;
+    }
+
+    /**
+     * @param $email
+     *
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @param $username
+     *
+     * @return $this
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+
+    }
+
+    /**
+     * @param $password
+     *
+     * @return $this
+     */
+    public function setPassword($password)
+    {
+        $this->password = Hash::make($password);
+
+        return $this;
+    }
+
+    public function setRole(Role $role)
+    {
+        $this->observer = (new UserObserver())->setRole($role);
+        User::observe($this->observer);
+
+        return $this;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -44,7 +108,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
     public function candidateFields()
     {
 
-        return $this->belongsToMany(CandidateField::class, 'candidate_profile','user_id','field_id')->withPivot('value');
+        return $this->belongsToMany(CandidateField::class, 'candidate_profile', 'user_id', 'field_id')->withPivot('value');
     }
 
     /**
@@ -53,7 +117,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
     public function organizationFields()
     {
 
-        return $this->belongsToMany(OrganizationField::class, 'organization_profile','user_id','field_id')->withPivot('value');
+        return $this->belongsToMany(OrganizationField::class, 'organization_profile', 'user_id', 'field_id')->withPivot('value');
     }
 
     /**
@@ -62,38 +126,38 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
     public function agencyFields()
     {
 
-        return $this->belongsToMany(AgencyField::class, 'agency_profile','user_id','field_id')->withPivot('value');
+        return $this->belongsToMany(AgencyField::class, 'agency_profile', 'user_id', 'field_id')->withPivot('value');
     }
 
-	/**
-	 * Get the unique identifier for the user.
-	 *
-	 * @return mixed
-	 */
-	public function getAuthIdentifier()
-	{
-		return $this->getKey();
-	}
+    /**
+     * Get the unique identifier for the user.
+     *
+     * @return mixed
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
 
-	/**
-	 * Get the password for the user.
-	 *
-	 * @return string
-	 */
-	public function getAuthPassword()
-	{
-		return $this->password;
-	}
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
 
-	/**
-	 * Get the e-mail address where password reminders are sent.
-	 *
-	 * @return string
-	 */
-	public function getReminderEmail()
-	{
-		return $this->email;
-	}
+    /**
+     * Get the e-mail address where password reminders are sent.
+     *
+     * @return string
+     */
+    public function getReminderEmail()
+    {
+        return $this->email;
+    }
 
     /**
      * Find out if user has a specific role
