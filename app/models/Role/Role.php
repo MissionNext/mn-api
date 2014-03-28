@@ -3,6 +3,7 @@ namespace MissionNext\Models\Role;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\User\User as UserModel;
 
 class Role extends Eloquent implements ModelInterface
 {
@@ -22,6 +23,6 @@ class Role extends Eloquent implements ModelInterface
      */
     public function users()
     {
-        return $this->belongsToMany(static::prefix_ns.'\User\User', 'user_roles');
+        return $this->belongsToMany(UserModel::class, 'user_roles');
     }
 } 

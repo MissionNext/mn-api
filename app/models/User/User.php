@@ -5,6 +5,10 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\Role\Role as RoleModel;
+use MissionNext\Models\Field\Candidate as CandidateField;
+use MissionNext\Models\Field\Organization as OrganizationField;
+use MissionNext\Models\Field\Agency as AgencyField;
 
 class User extends Eloquent implements UserInterface, RemindableInterface, ModelInterface
 {
@@ -31,7 +35,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
      */
     public function roles()
     {
-        return $this->belongsToMany(static::prefix_ns.'\Role\Role', 'user_roles', 'user_id', 'role_id');
+        return $this->belongsToMany(RoleModel::class, 'user_roles', 'user_id', 'role_id');
     }
 
     /**
@@ -40,7 +44,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
     public function candidateFields()
     {
 
-        return $this->belongsToMany(static::prefix_ns.'\Field\Candidate', 'candidate_profile','user_id','field_id')->withPivot('value');
+        return $this->belongsToMany(CandidateField::class, 'candidate_profile','user_id','field_id')->withPivot('value');
     }
 
     /**
@@ -49,7 +53,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
     public function organizationFields()
     {
 
-        return $this->belongsToMany(static::prefix_ns.'\Field\Organization', 'organization_profile','user_id','field_id')->withPivot('value');
+        return $this->belongsToMany(OrganizationField::class, 'organization_profile','user_id','field_id')->withPivot('value');
     }
 
     /**
@@ -58,7 +62,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
     public function agencyFields()
     {
 
-        return $this->belongsToMany(static::prefix_ns.'\Field\Agency', 'agency_profile','user_id','field_id')->withPivot('value');
+        return $this->belongsToMany(AgencyField::class, 'agency_profile','user_id','field_id')->withPivot('value');
     }
 
 	/**

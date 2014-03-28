@@ -32,7 +32,6 @@ class Controller extends BaseController {
     public function getModel($type)
     {
         $application = $this->getApp();
-        dd($application->dataModels()->first()->agencyFields());
 
         return new RestResponse($this->fieldsChoicesArr($application->modelFieldsExp()->get()));
     }

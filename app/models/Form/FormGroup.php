@@ -3,6 +3,8 @@ namespace MissionNext\Models\Form;
 
 
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\Form\AppForm;
+use MissionNext\Models\Field\FieldGroup;
 
 class FormGroup extends BaseForm implements ModelInterface
 {
@@ -14,12 +16,12 @@ class FormGroup extends BaseForm implements ModelInterface
     public function form()
     {
 
-        return $this->belongsTo(static::prefix_ns.'\Form\AppForm');
+        return $this->belongsTo(AppForm::class);
     }
 
     public function fields(){
 
-        return $this->hasMany(static::prefix_ns.'\Field\FieldGroup', 'group_id');
+        return $this->hasMany(FieldGroup::class, 'group_id');
     }
 
 } 

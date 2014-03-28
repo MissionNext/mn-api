@@ -3,6 +3,7 @@ namespace MissionNext\Models\Field;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\Form\FormGroup;
 
 class FieldGroup extends Eloquent implements ModelInterface
 {
@@ -14,7 +15,7 @@ class FieldGroup extends Eloquent implements ModelInterface
     public function formGroup()
     {
 
-        return $this->belongsTo(static::prefix_ns.'\Form\FormGroup', 'group_id');
+        return $this->belongsTo(FormGroup::class, 'group_id');
     }
 
 } 

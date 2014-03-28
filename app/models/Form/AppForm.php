@@ -1,8 +1,10 @@
 <?php
 namespace MissionNext\Models\Form;
 
-
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\DataModel\AppDataModel;
+use MissionNext\Models\Form\FormGroup;
+use MissionNext\Models\Field\FieldGroup;
 
 class AppForm extends BaseForm implements ModelInterface
 {
@@ -17,7 +19,7 @@ class AppForm extends BaseForm implements ModelInterface
     public function dataModel()
     {
 
-        return $this->belongsTo(static::prefix_ns.'\DataModel\AppDataModel');
+        return $this->belongsTo(AppDataModel::class);
     }
 
     /**
@@ -26,7 +28,7 @@ class AppForm extends BaseForm implements ModelInterface
     public function groups()
     {
 
-        return $this->hasMany(static::prefix_ns.'\Form\FormGroup', 'form_id');
+        return $this->hasMany(FormGroup::class, 'form_id');
     }
 
     /**
@@ -35,7 +37,7 @@ class AppForm extends BaseForm implements ModelInterface
     public function fields()
     {
 
-        return $this->hasManyThrough(static::prefix_ns.'\Field\FieldGroup', static::prefix_ns.'\Form\FormGroup', 'form_id', 'group_id');
+        return $this->hasManyThrough(FieldGroup::class, static::prefix_ns.'\Form\FormGroup', 'form_id', 'group_id');
     }
 
 } 

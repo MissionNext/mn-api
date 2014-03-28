@@ -23,7 +23,7 @@ class RouteSecurityFilter
         $user_id = Route::input('user', Route::input('profile', null));
         $role = Route::input('type');
 
-        $role = $user_id ? UserModel::find($user_id)->roles()->first()->role : $role;
+        $role = $user_id ? UserModel::findOrFail($user_id)->roles()->first()->role : $role;
 
         if (static::isAllowedRole($role)){
 
