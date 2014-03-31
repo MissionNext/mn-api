@@ -108,9 +108,9 @@ class BaseController extends Controller
      */
     protected function updateUserProfile(UserModel $user, array $profileData = null)
     {
-        if (empty($profileData)) {
+        if (empty($profileData)){
 
-            throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
+            return $user;
         }
         $mapping = [];
         $fieldNames = array_keys($profileData);

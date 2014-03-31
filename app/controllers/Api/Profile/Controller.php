@@ -73,6 +73,7 @@ class Controller extends BaseController
     /**
      * @param $id
      * @return RestResponse
+     * @throws \MissionNext\Api\Exceptions\ProfileException
      */
     public function update($id)
     {
@@ -82,6 +83,10 @@ class Controller extends BaseController
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
+        if (empty($hash)) {
+
+            throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
+        }
 
         return new RestResponse( $this->generateProfile($this->updateUserProfile($user, $hash)) );
     }
