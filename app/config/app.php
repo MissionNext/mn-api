@@ -106,6 +106,7 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
+        'MissionNext\Provider\RoutingProvider',
         'MissionNext\Provider\SecurityProvider',
         'MissionNext\Provider\ErrorProvider',
 	),

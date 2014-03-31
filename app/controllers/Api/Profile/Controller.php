@@ -72,10 +72,7 @@ class Controller extends BaseController
 
     /**
      * @param $id
-     *
      * @return RestResponse
-     *
-     * @throws \Exception
      */
     public function update($id)
     {
@@ -85,33 +82,8 @@ class Controller extends BaseController
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
-        if (empty($hash)) {
 
-            throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
-        }
-        $mapping = [];
-        $fieldNames = array_keys($hash);
-        $fields = FieldFactory::roleBasedModel()->whereIn('symbol_key', $fieldNames)->get();
-        if ($fields->count() !== count($hash)) {
-
-            throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
-        }
-        foreach ($fields as $field) {
-            if (isset($hash[$field->symbol_key])) {
-                $mapping[$field->id] = ["value" => $hash[$field->symbol_key]];
-            }
-        }
-        foreach ($mapping as $key => $map) {
-            FieldFactory::fieldsOfModel($user)->detach($key, $map);
-            FieldFactory::fieldsOfModel($user)->attach($key, $map);
-        }
-        if (!empty($mapping)) {
-            $user->touch();
-        }
-        // $user->fields()->sync($mapping); // delete fields that are not in mappings, update and insert what's new
-        // dd( $queries = \DB::getQueryLog());
-
-        return new RestResponse($this->generateProfile($user));
+        return new RestResponse( $this->generateProfile($this->updateUserProfile($user, $hash)) );
     }
 
     /**
@@ -124,18 +96,6 @@ class Controller extends BaseController
     public function destroy($id)
     {
         //
-    }
-
-    protected function generateProfile(UserModel $user)
-    {
-        $profile = new Profile();
-        $fields = FieldFactory::fieldsOfModel($user);
-        $fields->get()->each(function ($field) use ($profile) {
-            $key = $field->symbol_key;
-            $profile->$key = $field->pivot->value;
-        });
-
-        return $profile;
     }
 
 }

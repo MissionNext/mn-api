@@ -5,7 +5,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
+use MissionNext\Models\EloquentObservable;
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\ModelObservable;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\Role\Role as RoleModel;
 use MissionNext\Models\Field\Candidate as CandidateField;
@@ -13,7 +15,7 @@ use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
 
-class User extends Eloquent implements UserInterface, RemindableInterface, ModelInterface
+class User extends ModelObservable implements UserInterface, RemindableInterface, ModelInterface
 {
 
     /**
@@ -34,20 +36,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
 
     protected $fillable = array('username', 'email');
 
-    /**
-     * @var UserObserver
-     */
-    private $observer;
 
-    /**
-     * @return UserObserver
-     */
-    public function observer()
-    {
-
-
-        return $this->observer;
-    }
 
     /**
      * @param $email
@@ -86,10 +75,16 @@ class User extends Eloquent implements UserInterface, RemindableInterface, Model
         return $this;
     }
 
+
     public function setRole(Role $role)
     {
-        $this->observer = (new UserObserver())->setRole($role);
-        User::observe($this->observer);
+        $this->onSaved(function ($user) {
+            /** @var $user User */
+            $user->roles()->attach($user->observer()->getRole());
+
+        });
+
+        User::observe($this->setObserver( (new UserObserver())->setRole($role) ));
 
         return $this;
     }

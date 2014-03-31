@@ -5,10 +5,12 @@ use Api\BaseController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
+use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Filter\RouteSecurityFilter;
+use MissionNext\Models\Field\FieldFactory;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Models\Role\Role;
 use MissionNext\Repos\User\UserRepository;
@@ -50,6 +52,8 @@ class Controller extends BaseController
      */
     public function store()
     {
+        /** @var  $req \Symfony\Component\HttpFoundation\Request */
+        $profileData = Input::except("timestamp","username","password","email","role");
         $roleName = Input::get('role');
         if (!RouteSecurityFilter::isAllowedRole($roleName)){
 
@@ -63,7 +67,7 @@ class Controller extends BaseController
         $user->setRole(Role::whereRole( $roleName )->firstOrFail());
         $user->save();
 
-        return new RestResponse($user);
+        return new RestResponse($this->updateUserProfile($user, $profileData));
     }
 
     /**

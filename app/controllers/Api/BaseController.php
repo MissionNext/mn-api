@@ -5,10 +5,14 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\DB;
+use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application as AppModel;
+use MissionNext\Models\Field\FieldFactory;
+use MissionNext\Models\Profile;
+use MissionNext\Models\User\User as UserModel;
 use MissionNext\Repos\User\UserRepository;
 
 
@@ -82,6 +86,53 @@ class BaseController extends Controller
     {
 
         return new UserRepository();
+    }
+
+    protected function generateProfile(UserModel $user)
+    {
+        $profile = new Profile();
+        $fields = FieldFactory::fieldsOfModel($user);
+        $fields->get()->each(function ($field) use ($profile) {
+            $key = $field->symbol_key;
+            $profile->$key = $field->pivot->value;
+        });
+
+        return $profile;
+    }
+
+    /**
+     * @param UserModel $user
+     * @param array $profileData
+     * @return UserModel
+     * @throws \MissionNext\Api\Exceptions\ProfileException
+     */
+    protected function updateUserProfile(UserModel $user, array $profileData = null)
+    {
+        if (empty($profileData)) {
+
+            throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
+        }
+        $mapping = [];
+        $fieldNames = array_keys($profileData);
+        $fields = FieldFactory::roleBasedModel()->whereIn('symbol_key', $fieldNames)->get();
+        if ($fields->count() !== count($profileData)) {
+
+            throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
+        }
+        foreach ($fields as $field) {
+            if (isset($profileData[$field->symbol_key])) {
+                $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]];
+            }
+        }
+        foreach ($mapping as $key => $map) {
+            FieldFactory::fieldsOfModel($user)->detach($key, $map);
+            FieldFactory::fieldsOfModel($user)->attach($key, $map);
+        }
+        if (!empty($mapping)) {
+            $user->touch();
+        }
+
+        return $user;
     }
 
 } 
