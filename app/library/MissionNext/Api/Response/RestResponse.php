@@ -7,8 +7,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Contracts\ArrayableInterface;
+use Illuminate\Support\MessageBag;
 use MissionNext\Api\Exceptions\ResponseDataException;
 use Illuminate\Database\Eloquent\Model;
+use MissionNext\Api\Exceptions\ValidationException;
 
 class RestResponse extends JsonResponse
 {
@@ -27,13 +29,17 @@ class RestResponse extends JsonResponse
         }
 
         $rawData = $data;
+        $status = RestData::SUCCESS;
         if ($data instanceof Collection) {
             $rawData = ["list" => $data->toArray()];
         } elseif ($data instanceof Model) {
             $rawData = $data->toArray();
+        } elseif ($data instanceof ValidationException){
+            $rawData = $data->getErrorBag()->getMessages();
+            $status = RestData::VALIDATION_ERROR;
         }
 
-        return RestData::setData($rawData);
+        return RestData::setData($rawData, $status);
     }
 
     /**

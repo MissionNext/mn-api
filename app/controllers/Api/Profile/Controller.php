@@ -77,7 +77,6 @@ class Controller extends BaseController
      */
     public function update($id)
     {
-        //@TODO uses only candidate profile
         /** @var  $user UserModel */
         $user = UserModel::findOrFail($id);
         /** @var  $request Req */

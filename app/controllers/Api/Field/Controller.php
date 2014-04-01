@@ -45,12 +45,16 @@ class Controller extends BaseController {
     public function postModel($type)
     {
         $fields =  Input::get("fields", []);
+        $sync = [];
+        foreach($fields as $field){
+            $sync[$field["id"]] = ["constraints"=>$field["constraints"]];
+        }
 
         $application = $this->getApp();
         $mFields = $application->modelFields();
 
         count($fields)
-            ? $mFields->sync($fields)
+            ? $mFields->sync($sync)
             : $mFields->detach();
 
         return new RestResponse($mFields->get());

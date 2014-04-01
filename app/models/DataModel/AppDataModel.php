@@ -42,7 +42,7 @@ class AppDataModel extends BaseDataModel implements ModelInterface
     public function candidateFields()
     {
 
-        return $this->belongsToMany(CandidateField::class, 'data_model_candidate_fields', 'data_model_id', 'field_id');
+        return $this->belongsToMany(CandidateField::class, 'data_model_candidate_fields', 'data_model_id', 'field_id')->withPivot('constraints');
     }
 
     /**
@@ -51,7 +51,7 @@ class AppDataModel extends BaseDataModel implements ModelInterface
     public function organizationFields()
     {
 
-        return $this->belongsToMany(OrganizationField::class, 'data_model_organization_fields', 'data_model_id', 'field_id');
+        return $this->belongsToMany(OrganizationField::class, 'data_model_organization_fields', 'data_model_id', 'field_id')->withPivot('constraints');
     }
 
     /**
@@ -60,7 +60,7 @@ class AppDataModel extends BaseDataModel implements ModelInterface
     public function agencyFields()
     {
 
-        return $this->belongsToMany(AgencyField::class, 'data_model_agency_fields', 'data_model_id', 'field_id');
+        return $this->belongsToMany(AgencyField::class, 'data_model_agency_fields', 'data_model_id', 'field_id')->withPivot('constraints');
     }
 
     /**

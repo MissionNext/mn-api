@@ -65,7 +65,6 @@ class Controller extends BaseController
         $user->setEmail(Input::get('email'));
         $user->setUsername(Input::get('username'));
         $user->setRole(Role::whereRole( $roleName )->firstOrFail());
-        $user->save();
 
         return new RestResponse($this->updateUserProfile($user, $profileData));
     }

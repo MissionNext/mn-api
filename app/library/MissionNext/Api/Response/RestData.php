@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\App;
 
 final class RestData
 {
+    const ERROR = 0,
+          SUCCESS = 1,
+          VALIDATION_ERROR = 2;
 
     public  $data,
             $status = 1;

@@ -14,6 +14,8 @@ class CreateDataModelFields extends Migration
             $table->foreign("data_model_id")->references('id')->on('app_data_model')->onDelete('cascade');
             $table->unsignedInteger('field_id');
             $table->foreign("field_id")->references('id')->on($role . '_fields')->onDelete('cascade');
+
+            $table->string('constraints')->nullable();
         });
     }
 
@@ -45,6 +47,7 @@ class CreateDataModelFields extends Migration
     {
        $this->dropModelToFields(BaseDataModel::CANDIDATE);
        $this->dropModelToFields(BaseDataModel::ORGANIZATION);
+       $this->dropModelToFields(BaseDataModel::AGENCY);
     }
 
 }

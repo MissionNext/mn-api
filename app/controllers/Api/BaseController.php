@@ -3,9 +3,13 @@ namespace Api;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\ProfileException;
+use MissionNext\Api\Exceptions\ValidationException;
+use MissionNext\Api\Response\RestResponse;
 use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
@@ -103,7 +107,9 @@ class BaseController extends Controller
     /**
      * @param UserModel $user
      * @param array $profileData
+     * 
      * @return UserModel
+     * @throws \MissionNext\Api\Exceptions\ValidationException
      * @throws \MissionNext\Api\Exceptions\ProfileException
      */
     protected function updateUserProfile(UserModel $user, array $profileData = null)
@@ -114,16 +120,30 @@ class BaseController extends Controller
         }
         $mapping = [];
         $fieldNames = array_keys($profileData);
-        $fields = FieldFactory::roleBasedModel()->whereIn('symbol_key', $fieldNames)->get();
+        $fields = $this->getApp()->modelFields()->whereIn('symbol_key', $fieldNames)->get();
         if ($fields->count() !== count($profileData)) {
 
             throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
         }
+        $constraints = [];
+        $validationData = [];
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
+                $validationData[$field->symbol_key] = $profileData[$field->symbol_key];
+                $constraints[$field->symbol_key] = $field->pivot->constraints;
                 $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]];
             }
         }
+        /** @var  $validator \Illuminate\Validation\Validator */
+        $validator = Validator::make(
+            $validationData,
+            $constraints
+        );
+        if ($validator->fails())
+        {
+            throw new ValidationException($validator->messages());
+        }
+        $user->save();
         foreach ($mapping as $key => $map) {
             FieldFactory::fieldsOfModel($user)->detach($key, $map);
             FieldFactory::fieldsOfModel($user)->attach($key, $map);

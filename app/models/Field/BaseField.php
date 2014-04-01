@@ -60,8 +60,8 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
                 \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")))
             ->leftJoin('field_types', 'field_types.id', '=', $role.'_fields.type')
             ->leftJoin($role.'_dictionary', $role.'_dictionary.field_id', '=', $role.'_fields.id')
-            ->groupBy($role.'_fields.id', 'field_types.name')
-            ->orderBy($role.'_fields.id');
+            ->groupBy($role.'_fields.id', 'field_types.name');
+           // ->orderBy($role.'_fields.id');
     }
 
     /**
@@ -79,13 +79,14 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
                 'field_types.name as type',
                 $role.'_fields.symbol_key',
                 $role.'_fields.name',
+                'data_model_'.$role.'_fields.constraints',
                 \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")))
             ->leftJoin('data_model_'.$role.'_fields', $role.'_fields.id', '=', 'data_model_'.$role.'_fields.field_id')
             ->leftJoin('field_types', 'field_types.id', '=', $role.'_fields.type')
             ->leftJoin($role.'_dictionary', $role.'_dictionary.field_id', '=', $role.'_fields.id')
             ->where('data_model_'.$role.'_fields.data_model_id', '=', $dm->id)
-            ->groupBy($role.'_fields.id', 'field_types.name')
-            ->orderBy($role.'_fields.id');
+            ->groupBy($role.'_fields.id', 'field_types.name', 'data_model_'.$role.'_fields.constraints');
+            //->orderBy($role.'_fields.id');
     }
 
 } 
