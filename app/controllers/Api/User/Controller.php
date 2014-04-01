@@ -5,8 +5,10 @@ use Api\BaseController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Exceptions\UserException;
+use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Filter\RouteSecurityFilter;
@@ -47,11 +49,33 @@ class Controller extends BaseController
 
     /**
      * @return RestResponse
-     *
      * @throws \MissionNext\Api\Exceptions\UserException
+     * @throws \MissionNext\Api\Exceptions\ValidationException
      */
     public function store()
     {
+        $validationData = [ "password" => Input::get("password"),
+            "email" =>  Input::get("email"),
+            "role" => Input::get("role"),
+            "username" => Input::get("username"),
+        ];
+
+        $constraints = [
+            "password" => "required|between:3,100",
+            "email" => "required|unique:users,email|email",
+            "role" => "exists:roles,role",
+            "username" => "required|unique:users,username"
+        ];
+        /** @var  $validator \Illuminate\Validation\Validator */
+        $validator = Validator::make(
+            $validationData,
+            $constraints
+        );
+        if ($validator->fails())
+        {
+            throw new ValidationException($validator->messages());
+        }
+
         /** @var  $req \Symfony\Component\HttpFoundation\Request */
         $profileData = Input::except("timestamp","username","password","email","role");
         $roleName = Input::get('role');

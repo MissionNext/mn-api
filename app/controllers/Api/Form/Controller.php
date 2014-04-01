@@ -41,9 +41,80 @@ class Controller extends BaseController
 
         $form = $dm->forms()->whereSymbolKey($formName)->first();
 
-        $formGroups = [];
+        if ($form) {
+            $form->groups()->delete();
+        } else {
 
-        $syncGroupFields = function (array $reqGroups, BaseForm $form) use (&$formGroups) {
+            $form = new AppForm();
+            $form->setName($formName)
+                ->setSymbolKey($formName)
+                ->dataModel()->associate($dm);
+
+            $form->save();
+        }
+
+
+        return new RestResponse(["list" => $this->syncGroupFields($reqGroups, $form)]);
+
+    }
+
+    /**
+     * @param $type
+     * @param $formName
+     *
+     * @return RestResponse
+     */
+    public function getIndex($type, $formName)
+    {
+
+        $application = $this->securityContext()->getApp();
+        /** @var  $dm AppDataModel */
+        $dm = $application->DM();
+
+        $forms = $dm->forms()->whereSymbolKey($formName)->get();
+
+        /** @var  $form AppForm */
+
+        $form = $forms->first();
+
+        if (!$form) {
+
+            return new RestResponse(null);
+        }
+        $viewFields = $form->fields()->with("formGroup")->orderBy("symbol_key")->get()->toArray();
+        $groupFields = array_fetch($viewFields, 'symbol_key');
+        $modelFields = $this->fieldsChoicesArr($dm->fieldsExp()->whereIn("symbol_key", $groupFields)->orderBy("symbol_key")->get())->toArray();
+        $mergedData = array_replace_recursive($modelFields, $viewFields);
+        $groups = [];
+        foreach ($mergedData as $key => $data) {
+            $symbolKey = $data["form_group"]["symbol_key"];
+            $groups[$symbolKey]["symbol_key"] = $data["form_group"]["symbol_key"];
+            $groups[$symbolKey]["id"] = $data["form_group"]["id"];
+            $groups[$symbolKey]["name"] = $data["form_group"]["name"];
+            $groups[$symbolKey]["order"] = $data["form_group"]["order"];
+            $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
+            $groups[$symbolKey]["fields"][$key]["type"] = $data["type"];
+            $groups[$symbolKey]["fields"][$key]["name"] = $data["name"];
+            $groups[$symbolKey]["fields"][$key]["choices"] = $data["choices"] ?: [];
+            $groups[$symbolKey]["fields"][$key]["order"] = $data["order"];
+            $groups[$symbolKey]["fields"][$key]["id"] = $data["id"];
+        }
+        $groups = array_values($groups);
+        foreach($groups as $key=>$group){
+            $groups[$key]["fields"] = array_values($groups[$key]["fields"]);
+        }
+
+        return new RestResponse(["list" => $groups]);
+    }
+
+    /**
+     * @param array $reqGroups
+     * @param BaseForm $form
+     *
+     * @return array
+     */
+    protected function syncGroupFields(array $reqGroups, BaseForm $form){
+
 
             $timestamp = (new \DateTime)->format("Y-m-d H:i:s");
 
@@ -85,83 +156,6 @@ class Controller extends BaseController
 
             return $formGroups;
 
-        };
-
-
-        if ($form) {
-            $form->groups()->delete();
-
-            $syncGroupFields($reqGroups, $form);
-
-        } else {
-
-            $form = new AppForm();
-            $form->setName($formName)
-                ->setSymbolKey($formName)
-                ->dataModel()->associate($dm);
-
-            $form->save();
-
-            $syncGroupFields($reqGroups, $form);
-
-
-        }
-
-
-        return new RestResponse(["list" => $formGroups]);
-
-
-    }
-
-    /**
-     * @param $type
-     * @param $formName
-     *
-     * @return RestResponse
-     */
-    public function getIndex($type, $formName)
-    {
-
-        $application = $this->securityContext()->getApp();
-        /** @var  $dm AppDataModel */
-        $dm = $application->DM();
-
-        $forms = $dm->forms()->whereSymbolKey($formName)->get();
-
-        /** @var  $form AppForm */
-
-        $form = $forms->first();
-
-
-        if (!$form) {
-
-            return new RestResponse(null);
-        }
-        $viewFields = $form->fields()->with("formGroup")->orderBy("symbol_key")->get()->toArray();
-        $groupFields = array_fetch($viewFields, 'symbol_key');
-        $modelFields = $this->fieldsChoicesArr($dm->fieldsExp()->whereIn("symbol_key", $groupFields)->orderBy("symbol_key")->get())->toArray();
-        $mergedData = array_replace_recursive($modelFields, $viewFields);
-
-        $groups = [];
-        foreach ($mergedData as $key => $data) {
-            $symbolKey = $data["form_group"]["symbol_key"];
-            $groups[$symbolKey]["symbol_key"] = $data["form_group"]["symbol_key"];
-            $groups[$symbolKey]["id"] = $data["form_group"]["id"];
-            $groups[$symbolKey]["name"] = $data["form_group"]["name"];
-            $groups[$symbolKey]["order"] = $data["form_group"]["order"];
-            $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
-            $groups[$symbolKey]["fields"][$key]["type"] = $data["type"];
-            $groups[$symbolKey]["fields"][$key]["name"] = $data["name"];
-            $groups[$symbolKey]["fields"][$key]["choices"] = $data["choices"] ?: [];
-            $groups[$symbolKey]["fields"][$key]["order"] = $data["order"];
-            $groups[$symbolKey]["fields"][$key]["id"] = $data["id"];
-        }
-        $groups = array_values($groups);
-        foreach($groups as $key=>$group){
-            $groups[$key]["fields"] = array_values($groups[$key]["fields"]);
-        }
-
-        return new RestResponse(["list" => $groups]);
     }
 
 

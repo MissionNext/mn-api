@@ -107,7 +107,7 @@ class BaseController extends Controller
     /**
      * @param UserModel $user
      * @param array $profileData
-     * 
+     *
      * @return UserModel
      * @throws \MissionNext\Api\Exceptions\ValidationException
      * @throws \MissionNext\Api\Exceptions\ProfileException
@@ -130,7 +130,7 @@ class BaseController extends Controller
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
                 $validationData[$field->symbol_key] = $profileData[$field->symbol_key];
-                $constraints[$field->symbol_key] = $field->pivot->constraints;
+                $constraints[$field->symbol_key] = $field->pivot->constraints ?: "";
                 $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]];
             }
         }
@@ -139,14 +139,22 @@ class BaseController extends Controller
             $validationData,
             $constraints
         );
+
         if ($validator->fails())
         {
             throw new ValidationException($validator->messages());
         }
+
         $user->save();
         foreach ($mapping as $key => $map) {
             FieldFactory::fieldsOfModel($user)->detach($key, $map);
-            FieldFactory::fieldsOfModel($user)->attach($key, $map);
+            if (is_array($map['value'])){
+                foreach($map['value'] as $val){
+                    FieldFactory::fieldsOfModel($user)->attach($key,["value" => $val]);
+                }
+            }else{
+                FieldFactory::fieldsOfModel($user)->attach($key, $map);
+            }
         }
         if (!empty($mapping)) {
             $user->touch();

@@ -1,5 +1,5 @@
 <?php
-
+use MissionNext\Models\Field\FieldType;
 
 class FieldTableSeeder extends BaseSeeder
 {
@@ -13,55 +13,89 @@ class FieldTableSeeder extends BaseSeeder
             DB::table('candidate_fields')->insert(array(
 
                 array(
+                    "id" => 1,
                     "symbol_key" => "birth_date",
                     "name" => "Birth date",
-                    "type" => 1,
+                    "type" => FieldType::DATE,
                 ),
 
                 array(
+                    "id" => 2,
                     "symbol_key" => "country",
                     "name" => "Country",
-                    "type" => 2,
+                    "type" => FieldType::SELECT,
                 ),
                 array(
+                    "id" => 3,
                     "symbol_key" => "zip_code",
                     "name" => "Zip Code",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
                 ),
                 array(
+                    "id" => 4,
                     "symbol_key" => "hobby",
                     "name" => "Hobby",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
                 ),
                 array(
+                    "id" => 5,
                     "symbol_key" => "occupation",
                     "name" => "Occupation",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
                 ),
                 array(
+                    "id" => 6,
                     "symbol_key" => "skype_handle",
                     "name" => "Skype Handle",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
                 ),
                 array(
+                    "id" => 7,
                     "symbol_key" => "day_phone",
                     "name" => "Day Phone",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
                 ),
                 array(
+                    "id" => 8,
                     "symbol_key" => "eve_phone",
                     "name" => "Eve Phone",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
                 ),
                 array(
+                    "id" => 9,
                     "symbol_key" => "mobile_phone",
                     "name" => "Mobile phone",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
                 ),
                 array(
+                    "id" => 10,
                     "symbol_key" => "best_way_to_contact",
                     "name" => "Best way to contact",
-                    "type" => 2,
+                    "type" => FieldType::SELECT,
+                ),
+                array(
+                    "id" => 11,
+                    "symbol_key" => "about_me",
+                    "name" => "About me",
+                    "type" => FieldType::TEXT,
+                ),
+                array(
+                    "id" => 12,
+                    "symbol_key" => "agree_with_terms",
+                    "name" => "Agree with terms of services",
+                    "type" => FieldType::BOOLEAN,
+                ),
+                array(
+                    "id" => 13,
+                    "symbol_key" => "favourite_movies",
+                    "name" => "Favourite movies",
+                    "type" => FieldType::CHECKBOX_MULTIPLE,
+                ),
+                array(
+                    "id" => 14,
+                    "symbol_key" => "gender",
+                    "name" => "gender",
+                    "type" => FieldType::RADIO,
                 ),
             ));
 

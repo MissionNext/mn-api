@@ -38,6 +38,27 @@ class DictionarySeeder extends BaseSeeder
                 "field_id" => 10,
                 "value" => "By phone",
             ),
+            array(
+                "field_id" => 10,
+                "value" => "By phone",
+            ),
+            array(
+                "field_id" => 13,
+                "value" => "Bamby",
+            ),
+            array(
+                "field_id" => 13,
+                "value" => "Buratino",
+            ),
+            array(
+                "field_id" => 14,
+                "value" => "male",
+            ),
+            array(
+                "field_id" => 14,
+                "value" => "female",
+            ),
+
         ));
 
         DB::table('organization_dictionary')->insert(array(
