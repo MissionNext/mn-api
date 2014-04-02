@@ -150,8 +150,8 @@ class Controller extends BaseController
                         );
                 }, $group["fields"]);
 
-                FieldGroup::insert($fieldsToIns);
 
+                FieldGroup::insert($fieldsToIns);
             }
 
             return $formGroups;

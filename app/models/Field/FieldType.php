@@ -16,6 +16,13 @@ class FieldType extends Eloquent implements ModelInterface
           BOOLEAN = 7,
           CHECKBOX_MULTIPLE = 8;
 
+    private static $multipleTypes = [FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX_MULTIPLE ];
+
+    public static function isMultiple($typeId){
+
+        return in_array($typeId , static::$multipleTypes);
+    }
+
     public $timestamps = false;
 
     protected $table = 'field_types';

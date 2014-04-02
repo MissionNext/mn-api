@@ -16,7 +16,7 @@ class FieldTypeSeeder extends BaseSeeder
             array(
                 "id" => FieldType::SELECT,
                 "name" => "select",
-                "multiple" => true,
+                "multiple" => false,
 
             ),
             array(
@@ -38,7 +38,7 @@ class FieldTypeSeeder extends BaseSeeder
             array(
                 "id" => FieldType::RADIO,
                 "name" => "radio",
-                "multiple" => true,
+                "multiple" => false,
             ),
             array(
                 "id" => FieldType::BOOLEAN,

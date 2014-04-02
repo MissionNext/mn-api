@@ -15,6 +15,7 @@ use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application as AppModel;
 use MissionNext\Models\Field\FieldFactory;
+use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\Profile;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Repos\User\UserRepository;
@@ -98,7 +99,11 @@ class BaseController extends Controller
         $fields = FieldFactory::fieldsOfModel($user);
         $fields->get()->each(function ($field) use ($profile) {
             $key = $field->symbol_key;
-            $profile->$key = $field->pivot->value;
+            if (isset($profile->$key)) {
+                $profile->$key = array_merge($profile->$key, [$field->pivot->value]);
+            } else {
+                $profile->$key = FieldType::isMultiple($field->type) ? [$field->pivot->value] : $field->pivot->value;
+            }
         });
 
         return $profile;
@@ -114,7 +119,23 @@ class BaseController extends Controller
      */
     protected function updateUserProfile(UserModel $user, array $profileData = null)
     {
-        if (empty($profileData)){
+//        $validationData = ["birth_date" => "2014-01-01"];
+//        // $constraints = ["birth_date" => "after: + 20 years"]; // date must be in the future greater than now + ?
+//        // $constraints = ["birth_date" => "before: - 18 years"]; // age must be greater than > ?
+//       // $constraints = ["birth_date" => "before:now|after:1980-01-01"];
+//        $constraints = ["birth_date" => "after:now|before:2020-01-01"];
+//
+//        $validator = Validator::make(
+//            $validationData,
+//            $constraints
+//        );
+//
+//        if ($validator->fails()) {
+//            throw new ValidationException($validator->messages());
+//        }
+//
+//        dd("ok");
+        if (empty($profileData)) {
 
             return $user;
         }
@@ -130,7 +151,7 @@ class BaseController extends Controller
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
                 $validationData[$field->symbol_key] = $profileData[$field->symbol_key];
-                $constraints[$field->symbol_key] = $field->pivot->constraints ?: "";
+                $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
                 $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]];
             }
         }
@@ -140,19 +161,18 @@ class BaseController extends Controller
             $constraints
         );
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             throw new ValidationException($validator->messages());
         }
 
         $user->save();
         foreach ($mapping as $key => $map) {
             FieldFactory::fieldsOfModel($user)->detach($key, $map);
-            if (is_array($map['value'])){
-                foreach($map['value'] as $val){
-                    FieldFactory::fieldsOfModel($user)->attach($key,["value" => $val]);
+            if (is_array($map['value'])) {
+                foreach ($map['value'] as $val) {
+                    FieldFactory::fieldsOfModel($user)->attach($key, ["value" => $val]);
                 }
-            }else{
+            } else {
                 FieldFactory::fieldsOfModel($user)->attach($key, $map);
             }
         }

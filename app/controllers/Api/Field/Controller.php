@@ -5,6 +5,7 @@ use Api\BaseController;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
 use MissionNext\Models\Field\FieldFactory;
+use MissionNext\Repos\Field\FieldRepository;
 
 /**
  * Class Controller
@@ -20,8 +21,9 @@ class Controller extends BaseController {
      */
     public function getIndex($type)
 	{
+        $repo = new FieldRepository();
 
-        return new RestResponse($this->fieldsChoicesArr(FieldFactory::roleBasedModel()->fieldsExp()->get()));
+        return new RestResponse($repo->fieldsExpanded()->get());
 	}
 
     /**
