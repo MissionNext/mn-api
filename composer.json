@@ -20,7 +20,8 @@
         },
         "psr-4": {
             "MissionNext\\Repos\\": "app/repos",
-            "MissionNext\\Models\\": "app/models"
+            "MissionNext\\Models\\": "app/models",
+            "MissionNext\\Validators\\": "app/validators"
         }
 	},
 	"scripts": {

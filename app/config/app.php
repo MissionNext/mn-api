@@ -109,7 +109,9 @@ return array(
         'MissionNext\Provider\RoutingProvider',
         'MissionNext\Provider\SecurityProvider',
         'MissionNext\Provider\ErrorProvider',
-	),
+        'MissionNext\Provider\MiscProvider',
+
+    ),
 
 	/*
 	|--------------------------------------------------------------------------

@@ -69,6 +69,8 @@ return array(
 	),
 	"unique"               => "The :attribute has already been taken.",
 	"url"                  => "The :attribute format is invalid.",
+    "ymd_more_than"        => ":attribute less than :required_years years :required_months months :required_days days from now",
+    "ymd_less_than"        => ":attribute more than :required_years years :required_months months :required_days days from now",
 
 	/*
 	|--------------------------------------------------------------------------
@@ -94,6 +96,8 @@ return array(
 	|
 	*/
 
-	'attributes' => array(),
+	'attributes' => array(
+        "birth_date" => "Birth date",
+    ),
 
 );

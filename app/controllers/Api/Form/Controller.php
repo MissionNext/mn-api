@@ -34,12 +34,14 @@ class Controller extends BaseController
 
         $reqGroups = Request::instance()->request->get("groups");
 
-        if (count($reqGroups) < 1) {
-
-            throw new FormGroupsException("No groups specified", FormGroupsException::ON_CREATE);
-        }
-
         $form = $dm->forms()->whereSymbolKey($formName)->first();
+
+        if (count($reqGroups) < 1 && $form) {
+
+            $form->groups()->delete();
+
+            return new RestResponse($form);
+        }
 
         if ($form) {
             $form->groups()->delete();
@@ -77,7 +79,7 @@ class Controller extends BaseController
 
         $form = $forms->first();
 
-        if (!$form) {
+        if (!$form || !$form->fields()->count()) {
 
             return new RestResponse(null);
         }

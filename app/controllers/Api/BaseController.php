@@ -4,12 +4,10 @@ namespace Api;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\MessageBag;
 use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Exceptions\ValidationException;
-use MissionNext\Api\Response\RestResponse;
 use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
@@ -18,18 +16,38 @@ use MissionNext\Models\Field\FieldFactory;
 use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\Profile;
 use MissionNext\Models\User\User as UserModel;
+use MissionNext\Repos\Field\FieldRepository;
+use MissionNext\Repos\Field\FieldRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
+use MissionNext\Validators\ValidatorResolver;
 
 
 class BaseController extends Controller
 {
+    /** @var \MissionNext\Repos\Field\FieldRepository */
+    private $fieldRepo;
+
     /**
      * Set filters
      */
-    public function __construct()
+    public function __construct(ValidatorResolver $valResolver, FieldRepositoryInterface $fieldRepo)
     {
+        $this->fieldRepo = $fieldRepo;
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
+        $this->beforeFilter(function () use ($fieldRepo) {
+            $fieldRepo->setSecurityContext(FSecurityContext::getInstance());
+        });
+
+    }
+
+    /**
+     * @return FieldRepository
+     */
+    public function fieldRepo()
+    {
+
+        return $this->fieldRepo;
     }
 
     /**
@@ -119,22 +137,6 @@ class BaseController extends Controller
      */
     protected function updateUserProfile(UserModel $user, array $profileData = null)
     {
-//        $validationData = ["birth_date" => "2014-01-01"];
-//        // $constraints = ["birth_date" => "after: + 20 years"]; // date must be in the future greater than now + ?
-//        // $constraints = ["birth_date" => "before: - 18 years"]; // age must be greater than > ?
-//       // $constraints = ["birth_date" => "before:now|after:1980-01-01"];
-//        $constraints = ["birth_date" => "after:now|before:2020-01-01"];
-//
-//        $validator = Validator::make(
-//            $validationData,
-//            $constraints
-//        );
-//
-//        if ($validator->fails()) {
-//            throw new ValidationException($validator->messages());
-//        }
-//
-//        dd("ok");
         if (empty($profileData)) {
 
             return $user;

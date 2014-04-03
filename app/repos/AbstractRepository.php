@@ -14,9 +14,11 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $model;
 
 
-    public function __construct(){
-
+    public function __construct()
+    {
         $this->model = new $this->modelClassName;
+
+
     }
 
     public function create(array $attributes)

@@ -21,9 +21,8 @@ class Controller extends BaseController {
      */
     public function getIndex($type)
 	{
-        $repo = new FieldRepository();
 
-        return new RestResponse($repo->fieldsExpanded()->get());
+        return new RestResponse($this->fieldRepo()->fieldsExpanded()->get());
 	}
 
     /**
@@ -33,9 +32,9 @@ class Controller extends BaseController {
      */
     public function getModel($type)
     {
-        $application = $this->getApp();
 
-        return new RestResponse($this->fieldsChoicesArr($application->modelFieldsExp()->get()));
+        return new RestResponse($this->fieldRepo()->modelFieldsExpanded($this->getApp()->DM())->get());
+
     }
 
 

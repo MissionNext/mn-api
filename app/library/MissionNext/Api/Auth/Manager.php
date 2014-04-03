@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\App;
 use MissionNext\Api\Exceptions\AuthenticationException;
 use MissionNext\Models\Application\Application;
 
+
 class Manager
 {
     /** @var  Token */
@@ -35,7 +36,6 @@ class Manager
 
             return new SecurityContext($token);
         });
-
         if (($current_timestamp - $token->created) > 60 ){//@TODO fix timestamp authentication
             throw new AuthenticationException("Timedout", 1);
         } elseif ( ($current_timestamp < $token->created) && !App::environment('local') ) {
