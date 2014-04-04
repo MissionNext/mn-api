@@ -44,7 +44,9 @@ class Controller extends BaseController
         }
 
         if ($form) {
+
             $form->groups()->delete();
+
         } else {
 
             $form = new AppForm();

@@ -34,7 +34,7 @@ class Controller extends BaseController
     {
 
 
-        return new RestResponse($this->userRepository()->all());
+        return new RestResponse($this->userRepo()->all());
     }
 
     /**
@@ -83,14 +83,15 @@ class Controller extends BaseController
 
             throw new UserException("Role '{$roleName}' doesn't exists", UserException::ON_CREATE);
         }
-        $userRep = $this->userRepository();
+        $userRep = $this->userRepo();
         $user = $userRep->getModel();
         $user->setPassword(Input::get('password'));
         $user->setEmail(Input::get('email'));
         $user->setUsername(Input::get('username'));
         $user->setRole(Role::whereRole( $roleName )->firstOrFail());
+        $this->updateUserProfile($user, $profileData);
 
-        return new RestResponse($this->updateUserProfile($user, $profileData));
+        return new RestResponse($user);
     }
 
     /**
@@ -103,7 +104,7 @@ class Controller extends BaseController
     public function show($id)
     {
 
-        return new RestResponse(UserModel::find($id));
+        return new RestResponse($this->userRepo()->find($id));
     }
 
     /**
@@ -127,7 +128,7 @@ class Controller extends BaseController
      */
     public function update($id)
     {
-        $user = UserModel::findOrFail($id);
+        $user = $this->userRepo()->find($id);
         $data = Request::only(["username", "email", "password"]);
         $filteredData = array_filter($data);
         foreach ($filteredData as $prop => $val) {
@@ -147,7 +148,7 @@ class Controller extends BaseController
      */
     public function destroy($id)
     {
-        $user = UserModel::findOrFail($id);
+        $user = $this->userRepo()->find($id);
         $user->delete();
 
         return new RestResponse($user);

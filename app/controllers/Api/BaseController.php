@@ -19,6 +19,7 @@ use MissionNext\Models\User\User as UserModel;
 use MissionNext\Repos\Field\FieldRepository;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
+use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Validators\ValidatorResolver;
 
 
@@ -26,15 +27,19 @@ class BaseController extends Controller
 {
     /** @var \MissionNext\Repos\Field\FieldRepository */
     private $fieldRepo;
+    /** @var \MissionNext\Repos\User\UserRepositoryInterface  */
+    private $userRepo;
 
     /**
      * Set filters
      */
-    public function __construct(ValidatorResolver $valResolver, FieldRepositoryInterface $fieldRepo)
+    public function __construct(ValidatorResolver $valResolver, FieldRepositoryInterface $fieldRepo, UserRepositoryInterface $userRepo)
     {
         $this->fieldRepo = $fieldRepo;
+        $this->userRepo = $userRepo;
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
+
         $this->beforeFilter(function () use ($fieldRepo) {
             $fieldRepo->setSecurityContext(FSecurityContext::getInstance());
         });
@@ -44,10 +49,19 @@ class BaseController extends Controller
     /**
      * @return FieldRepository
      */
-    public function fieldRepo()
+    protected function fieldRepo()
     {
 
         return $this->fieldRepo;
+    }
+
+    /**
+     * @return UserRepository
+     */
+    protected function userRepo()
+    {
+
+        return  $this->userRepo;
     }
 
     /**
@@ -102,19 +116,11 @@ class BaseController extends Controller
         return DB::getQueryLog();
     }
 
-    /**
-     * @return UserRepository
-     */
-    protected function userRepository()
-    {
-
-        return new UserRepository();
-    }
-
     protected function generateProfile(UserModel $user)
     {
         $profile = new Profile();
-        $fields = FieldFactory::fieldsOfModel($user);
+        $fields = $this->fieldRepo()->profileFields($user);
+
         $fields->get()->each(function ($field) use ($profile) {
             $key = $field->symbol_key;
             if (isset($profile->$key)) {
@@ -125,6 +131,46 @@ class BaseController extends Controller
         });
 
         return $profile;
+    }
+
+    /**
+     * @param array $profileData
+     *
+     * @return Collection
+     * @throws \MissionNext\Api\Exceptions\ValidationException
+     * @throws \MissionNext\Api\Exceptions\ProfileException
+     */
+    protected function validateProfileData(array $profileData)
+    {
+        $fieldNames = array_keys($profileData);
+        /** @var  $fields Collection */
+        $fields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $fieldNames)->get();
+
+        if ($fields->count() !== count($profileData)) {
+
+            throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
+        }
+
+        $constraints = [];
+        $validationData = [];
+
+        foreach ($fields as $field) {
+            if (isset($profileData[$field->symbol_key])) {
+                $validationData[$field->symbol_key] = $profileData[$field->symbol_key];
+                $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
+            }
+        }
+        /** @var  $validator \Illuminate\Validation\Validator */
+        $validator = Validator::make(
+            $validationData,
+            $constraints
+        );
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator->messages());
+        }
+
+        return $fields;
     }
 
     /**
@@ -141,41 +187,26 @@ class BaseController extends Controller
 
             return $user;
         }
-        $mapping = [];
-        $fieldNames = array_keys($profileData);
-        $fields = $this->getApp()->modelFields()->whereIn('symbol_key', $fieldNames)->get();
-        if ($fields->count() !== count($profileData)) {
 
-            throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
-        }
-        $constraints = [];
-        $validationData = [];
+        $fields = $this->validateProfileData($profileData);
+        $mapping = [];
+
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
-                $validationData[$field->symbol_key] = $profileData[$field->symbol_key];
-                $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
                 $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]];
-            }
-        }
-        /** @var  $validator \Illuminate\Validation\Validator */
-        $validator = Validator::make(
-            $validationData,
-            $constraints
-        );
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator->messages());
+            }//@TODO if example favourite_movies[] = '', no errors;
         }
 
-        $user->save();
+        $user->save(); //@TODO SAVE USER other place
+
         foreach ($mapping as $key => $map) {
-            FieldFactory::fieldsOfModel($user)->detach($key, $map);
+            $this->fieldRepo()->profileFields($user)->detach($key, $map);
             if (is_array($map['value'])) {
                 foreach ($map['value'] as $val) {
-                    FieldFactory::fieldsOfModel($user)->attach($key, ["value" => $val]);
+                    $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $val]);
                 }
             } else {
-                FieldFactory::fieldsOfModel($user)->attach($key, $map);
+                $this->fieldRepo()->profileFields($user)->attach($key, $map);
             }
         }
         if (!empty($mapping)) {

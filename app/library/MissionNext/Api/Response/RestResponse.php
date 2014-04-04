@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Contracts\ArrayableInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
 use MissionNext\Api\Exceptions\ResponseDataException;
 use Illuminate\Database\Eloquent\Model;

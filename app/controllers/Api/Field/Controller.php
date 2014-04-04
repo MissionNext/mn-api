@@ -33,7 +33,7 @@ class Controller extends BaseController {
     public function getModel($type)
     {
 
-        return new RestResponse($this->fieldRepo()->modelFieldsExpanded($this->getApp()->DM())->get());
+        return new RestResponse($this->fieldRepo()->modelFieldsExpanded()->get());
 
     }
 
@@ -51,8 +51,7 @@ class Controller extends BaseController {
             $sync[$field["id"]] = ["constraints"=>$field["constraints"]];
         }
 
-        $application = $this->getApp();
-        $mFields = $application->modelFields();
+        $mFields = $this->fieldRepo()->modelFields();
 
         count($fields)
             ? $mFields->sync($sync)

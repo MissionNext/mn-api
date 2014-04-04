@@ -3,9 +3,11 @@
 namespace MissionNext\Repos\Field;
 
 
+use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\Field\BaseField;
 use MissionNext\Repos\RepositoryInterface;
+use MissionNext\Models\User\User as UserModel;
 
 interface FieldRepositoryInterface extends  RepositoryInterface {
 
@@ -14,8 +16,14 @@ interface FieldRepositoryInterface extends  RepositoryInterface {
      */
     public function getModel();
 
+    public function setSecurityContext(SecurityContext $securityContext);
+
     public function fieldsExpanded();
 
-    public function modelFieldsExpanded(AppDataModel $dm);
+    public function modelFieldsExpanded();
+
+    public function modelFields();
+
+    public function profileFields(UserModel $user);
 
 } 

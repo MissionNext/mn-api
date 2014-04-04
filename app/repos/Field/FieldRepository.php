@@ -3,14 +3,9 @@ namespace MissionNext\Repos\Field;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use MissionNext\Api\Exceptions\SecurityContextException;
 use MissionNext\DB\SqlStatement\Sql;
-use MissionNext\Models\DataModel\AppDataModel;
-use MissionNext\Models\DataModel\BaseDataModel;
-use MissionNext\Models\Field\Agency;
 use MissionNext\Models\Field\BaseField;
-use MissionNext\Models\Field\Candidate;
-use MissionNext\Models\Field\Organization;
+use MissionNext\Models\User\User as UserModel;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Api\Auth\SecurityContext as SecContext;
 use stdClass;
@@ -32,23 +27,9 @@ class FieldRepository extends AbstractRepository implements FieldRepositoryInter
         return $this;
     }
 
-    protected  function currentFieldModel()
+    protected function currentFieldModel()
     {
-
-        switch ($this->securityContext->role()) {
-            case BaseDataModel::CANDIDATE:
-                $this->modelClassName = Candidate::class;
-                break;
-            case BaseDataModel::AGENCY:
-                $this->modelClassName = Agency::class;
-                break;
-            case BaseDataModel::ORGANIZATION:
-                $this->modelClassName = Organization::class;
-                break;
-            default:
-                throw new SecurityContextException($this->securityContext->role()." role doesn't exists");
-
-        }
+        $this->modelClassName = Field::currentFieldModel($this->securityContext);
 
         $this->model = new $this->modelClassName;
 
@@ -89,13 +70,14 @@ class FieldRepository extends AbstractRepository implements FieldRepositoryInter
     }
 
     /**
-     * @param AppDataModel $dm
      *
      * @return FieldDataTransformer
      */
-    public function modelFieldsExpanded(AppDataModel $dm)
+    public function modelFieldsExpanded()
     {
         $role = $this->securityContext->role();
+
+        $dm = $this->securityContext->getApp()->DM();
 
         $builder =  $this->model
 
@@ -113,6 +95,30 @@ class FieldRepository extends AbstractRepository implements FieldRepositoryInter
 
         return
             new FieldDataTransformer($builder, new FieldChoiceTransformStrategy() );
+    }
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function modelFields()
+    {
+        $role = $this->securityContext->role(); // or this->model->roleType
+        $dm = $this->securityContext->getApp()->DM();
+
+        return $dm->belongsToMany($this->modelClassName, 'data_model_'.$role.'_fields', 'data_model_id', 'field_id')->withPivot('constraints');
+    }
+
+    /**
+     * @param UserModel $user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function profileFields(UserModel $user)
+    {
+        $role = $this->securityContext->role(); // or this->model->roleType
+
+        return $user->belongsToMany($this->modelClassName, $role.'_profile', 'user_id', 'field_id')->withPivot('value');
     }
 
 } 

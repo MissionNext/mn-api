@@ -4,9 +4,7 @@ namespace Api\Profile;
 use Api\BaseController;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
-use MissionNext\Models\Field\FieldFactory;
 use MissionNext\Models\User\User as UserModel;
-use MissionNext\Models\Profile;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as Req;
 
@@ -53,10 +51,9 @@ class Controller extends BaseController
      */
     public function show($id)
     {
-        /** @var  $user UserModel */
-        $user = UserModel::findOrFail($id);
+        $profileFieldsQuery = $this->fieldRepo()->profileFields($this->userRepo()->find($id));
 
-        return new RestResponse($this->generateProfile($user));
+        return new RestResponse($this->userRepo()->profileStructure($profileFieldsQuery->get()));
     }
 
     /**
@@ -78,7 +75,7 @@ class Controller extends BaseController
     public function update($id)
     {
         /** @var  $user UserModel */
-        $user = UserModel::findOrFail($id);
+        $user = $this->userRepo()->find($id);
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
@@ -86,8 +83,9 @@ class Controller extends BaseController
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
+        $this->updateUserProfile($user, $hash);
 
-        return new RestResponse( $this->generateProfile($this->updateUserProfile($user, $hash)) );
+        return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user)->get()));
     }
 
     /**
