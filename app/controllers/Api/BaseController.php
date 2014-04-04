@@ -18,8 +18,12 @@ use MissionNext\Models\Profile;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Repos\Field\FieldRepository;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
+use MissionNext\Repos\Form\FormRepository;
+use MissionNext\Repos\Form\FormRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
+use MissionNext\Repos\ViewField\ViewFieldRepository;
+use MissionNext\Repos\ViewField\ViewFieldRepositoryInterface;
 use MissionNext\Validators\ValidatorResolver;
 
 
@@ -29,14 +33,25 @@ class BaseController extends Controller
     private $fieldRepo;
     /** @var \MissionNext\Repos\User\UserRepositoryInterface  */
     private $userRepo;
+    /** @var \MissionNext\Repos\ViewField\ViewFieldRepositoryInterface  */
+    private $viewFieldRepo;
+
+    private $formRepo;
 
     /**
      * Set filters
      */
-    public function __construct(ValidatorResolver $valResolver, FieldRepositoryInterface $fieldRepo, UserRepositoryInterface $userRepo)
+    public function __construct(ValidatorResolver $valResolver,
+                                FieldRepositoryInterface $fieldRepo,
+                                UserRepositoryInterface $userRepo,
+                                ViewFieldRepositoryInterface $viewFieldRepo,
+                                FormRepositoryInterface $formRepo
+    )
     {
         $this->fieldRepo = $fieldRepo;
         $this->userRepo = $userRepo;
+        $this->viewFieldRepo = $viewFieldRepo;
+        $this->formRepo = $formRepo;
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
 
@@ -62,6 +77,19 @@ class BaseController extends Controller
     {
 
         return  $this->userRepo;
+    }
+    /** @return ViewFieldRepository */
+    protected function viewFieldRepo()
+    {
+
+        return $this->viewFieldRepo;
+    }
+
+    /** @return FormRepository */
+    protected function formRepo()
+    {
+
+        return $this->formRepo;
     }
 
     /**

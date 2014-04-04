@@ -48,14 +48,24 @@ class Controller extends BaseController {
         $fields =  Input::get("fields", []);
         $sync = [];
         foreach($fields as $field){
-            $sync[$field["id"]] = ["constraints"=>$field["constraints"]];
+            $sync[ $field["id"] ] = ["constraints" => $field["constraints"]];
         }
 
         $mFields = $this->fieldRepo()->modelFields();
+        $idsBeforSync = $mFields->getRelatedIds();
 
         count($fields)
             ? $mFields->sync($sync)
             : $mFields->detach();
+
+        $idsAfterSync = $mFields->getRelatedIds();
+
+        $viewIdsToRemove = array_diff($idsBeforSync, $idsAfterSync);
+        if (!empty($viewIdsToRemove)){
+            $symbol_keys =  $this->fieldRepo()->getModel()->whereIn('id', $viewIdsToRemove)->lists('symbol_key');
+           // !count($symbol_keys) ?: dd($this->viewFieldRepo()->getModel()->whereIn("symbol_keys", $symbol_keys)->get()->toArray(), $this->getLogQueries());
+
+        }//@TODO get forms from current datamodel get viewFields remove nedded
 
         return new RestResponse($mFields->get());
     }

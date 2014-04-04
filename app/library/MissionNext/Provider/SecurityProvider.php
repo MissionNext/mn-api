@@ -4,6 +4,7 @@ namespace MissionNext\Provider;
 use Illuminate\Support\ServiceProvider;
 use MissionNext\Api\Auth\Listener;
 use MissionNext\Api\Auth\Manager;
+use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\Route;
 use MissionNext\Filter\RouteSecurityFilter;
@@ -38,6 +39,7 @@ class SecurityProvider extends ServiceProvider
 
             return $instance;
         });
+
 
         $this->filters();
     }

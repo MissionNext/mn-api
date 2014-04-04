@@ -169,9 +169,8 @@ class Controller extends BaseController
             $arrV[] = current($searchByData);
             next($searchByData);
         }
-        $users = UserModel::whereRaw($str, $arrV)->get();
 
-        return new RestResponse($users);
+        return new RestResponse($this->userRepo()->getModel()->whereRaw($str, $arrV)->get());
     }
 
     /**
@@ -181,7 +180,7 @@ class Controller extends BaseController
     {
         $password = Request::input('password');
         $username = Request::input('username');
-        $user = UserModel::whereUsername($username)->first();
+        $user = $this->userRepo()->getModel()->whereUsername($username)->first();
         $user && !Hash::check($password, $user->password) && $user = null;
 
         return new RestResponse($user);
