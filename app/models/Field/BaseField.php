@@ -29,7 +29,7 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
     public function type()
     {
 
-        return $this->belongsTo(static::prefix_ns.'\Field\FieldType', 'type');
+        return $this->belongsTo(FieldType::class, 'type');
     }
 
     /**

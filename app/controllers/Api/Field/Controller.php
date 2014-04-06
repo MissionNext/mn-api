@@ -21,7 +21,7 @@ class Controller extends BaseController {
      */
     public function getIndex($type)
 	{
-        
+
         return new RestResponse($this->fieldRepo()->fieldsExpanded()->get());
 	}
 

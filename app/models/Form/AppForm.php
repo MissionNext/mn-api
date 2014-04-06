@@ -37,7 +37,7 @@ class AppForm extends BaseForm implements ModelInterface
     public function fields()
     {
 
-        return $this->hasManyThrough(FieldGroup::class, static::prefix_ns.'\Form\FormGroup', 'form_id', 'group_id');
+        return $this->hasManyThrough(FieldGroup::class, FormGroup::class, 'form_id', 'group_id');
     }
 
 } 

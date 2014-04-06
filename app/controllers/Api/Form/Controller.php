@@ -85,6 +85,8 @@ class Controller extends BaseController
 
             return new RestResponse(null);
         }
+        $form->fields()->get();
+       // dd(\DB::select('select "group_fields".*, "app_forms"."data_model_id", "app_data_model".* from "group_fields" inner join "form_groups" on "form_groups"."id" = "group_fields"."group_id" inner join "app_forms" on "app_forms"."id" = "form_groups"."form_id"  inner join "app_data_model" on   "app_data_model"."id" = "app_forms"."data_model_id" where "app_forms"."data_model_id" = ? and  "group_fields"."symbol_key" =?',array(2,'birth_date')));
         $viewFields = $form->fields()->with("formGroup")->orderBy("symbol_key")->get()->toArray();
         $groupFields = array_fetch($viewFields, 'symbol_key');
         $modelFields = $this->fieldRepo()->modelFieldsExpanded()->whereIn("symbol_key", $groupFields)->orderBy("symbol_key")->get()->toArray();
@@ -122,8 +124,6 @@ class Controller extends BaseController
      */
     protected function syncGroupFields(array $reqGroups, BaseForm $form)
     {
-
-
         $timestamp = (new \DateTime)->format("Y-m-d H:i:s");
 
         $groupSymbolKeys = array_fetch($reqGroups, "symbol_key");
