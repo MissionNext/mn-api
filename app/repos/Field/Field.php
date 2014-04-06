@@ -21,7 +21,7 @@ abstract class Field
      *
      * @throws \MissionNext\Api\Exceptions\SecurityContextException
      */
-    public static function currentFieldModel(SecurityContext $securityContext)
+    public static function currentFieldModelName(SecurityContext $securityContext)
     {
         static::$secContext = $securityContext;
 
@@ -36,7 +36,7 @@ abstract class Field
                 $modelClassName = Organization::class;
                 break;
             default:
-                $modelClassName = \stdClass::class;
+                throw new SecurityContextException("Undefined role ".$securityContext->role());
 
         }
 

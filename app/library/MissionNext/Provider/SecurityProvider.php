@@ -33,6 +33,12 @@ class SecurityProvider extends ServiceProvider
             return new Listener($app->make('rest.manager'));
         });
 
+        $this->app->bind('security_context', function($app){
+
+            return (new SecurityContext())->setToken($app->make('rest.token'));
+
+        });
+
         $this->app->bind('rest.listener.sync', function ($app) {
             $instance = $app->make('rest.listener');
             $instance->setRequest($app->make('request'));

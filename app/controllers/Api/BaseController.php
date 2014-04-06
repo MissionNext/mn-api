@@ -55,10 +55,6 @@ class BaseController extends Controller
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
 
-        $this->beforeFilter(function () use ($fieldRepo) {
-            $fieldRepo->setSecurityContext(FSecurityContext::getInstance());
-        });
-
     }
 
     /**

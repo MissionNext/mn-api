@@ -21,13 +21,6 @@ abstract class AbstractContext
      */
     protected $token;
 
-    /**
-     * @param AbstractToken $token
-     */
-    public function __construct(AbstractToken $token)
-    {
-        $this->token = $token;
-    }
 
     /**
      * @return AbstractToken
@@ -36,6 +29,18 @@ abstract class AbstractContext
     {
 
         return $this->token;
+    }
+
+    /**
+     * @param AbstractToken $token
+     *
+     * @return $this
+     */
+    public function setToken(AbstractToken $token)
+    {
+        $this->token = $token;
+
+        return $this;
     }
 
     /**

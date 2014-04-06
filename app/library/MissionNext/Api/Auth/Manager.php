@@ -5,6 +5,7 @@ namespace MissionNext\Api\Auth;
 use Illuminate\Support\Facades\App;
 use MissionNext\Api\Exceptions\AuthenticationException;
 use MissionNext\Models\Application\Application;
+use MissionNext\Facade\SecurityContext as FSecContext;
 
 
 class Manager
@@ -31,11 +32,11 @@ class Manager
         }
 
         $token->setApp($application);
-        App::instance('rest.token', $token);
-        App::bind('security_context', function($app) use ($token){
 
-            return new SecurityContext($token);
-        });
+        App::instance('rest.token', $token);
+
+        FSecContext::setToken($token);
+
         if (($current_timestamp - $token->created) > 60 ){//@TODO fix timestamp authentication
             throw new AuthenticationException("Timedout", 1);
         } elseif ( ($current_timestamp < $token->created) && !App::environment('local') ) {
