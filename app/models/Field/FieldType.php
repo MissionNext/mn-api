@@ -18,9 +18,16 @@ class FieldType extends Eloquent implements ModelInterface
 
     private static $multipleTypes = [FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX_MULTIPLE ];
 
+    private static $dictionaryTypes = [ self::SELECT, self::SELECT_MULTIPLE, self::RADIO, self::CHECKBOX_MULTIPLE ];
+
     public static function isMultiple($typeId){
 
         return in_array($typeId , static::$multipleTypes);
+    }
+
+    public static function hasDictionary($typeId){
+
+        return in_array($typeId, static::$dictionaryTypes);
     }
 
     public $timestamps = false;

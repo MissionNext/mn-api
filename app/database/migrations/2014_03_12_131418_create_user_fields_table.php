@@ -15,6 +15,7 @@ class CreateUserFieldsTable extends Migration
             $table->string('name', 60);
             $table->unsignedInteger('type');
             $table->foreign("type")->references('id')->on('field_types');
+            $table->string('default_value')->nullable();
         });
     }
 

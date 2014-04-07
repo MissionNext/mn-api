@@ -22,7 +22,7 @@ abstract class BaseField extends Eloquent implements IField, ModelInterface
     protected $table = 'fields';
 
 
-    protected $fillable = array('name', 'multiple', 'symbol_key');
+    protected $fillable = array('name', 'multiple', 'symbol_key', 'default_value');
 
 
 

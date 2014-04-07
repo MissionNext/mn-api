@@ -74,7 +74,6 @@ class Controller extends BaseController
         $application = $this->securityContext()->getApp();
         /** @var  $dm AppDataModel */
         $dm = $application->DM();
-
         $forms = $dm->forms()->whereSymbolKey($formName)->get();
 
         /** @var  $form AppForm */

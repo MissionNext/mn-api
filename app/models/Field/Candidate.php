@@ -34,6 +34,7 @@ class Candidate extends BaseField implements ModelInterface
         return $this->hasMany(CandidateDictionary::class, 'field_id');
     }
 
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

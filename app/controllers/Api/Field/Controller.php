@@ -2,8 +2,10 @@
 namespace Api\Field;
 
 use Api\BaseController;
+use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
+use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\Field\FieldFactory;
 use MissionNext\Repos\Field\FieldRepository;
 
@@ -24,6 +26,38 @@ class Controller extends BaseController {
 
         return new RestResponse($this->fieldRepo()->fieldsExpanded()->get());
 	}
+
+    /**
+     * @param $type
+     *
+     * @return RestResponse
+     */
+    public function postIndex($type)
+    {
+        /** @var  $request \Symfony\Component\HttpFoundation\Request */
+        $request = Request::instance()->request;
+
+        $fields = $request->has("fields") ? $request->get("fields") : [];
+
+        return new RestResponse($this->fieldRepo()->addFields($fields));
+    }
+
+    /**
+     * @param $type
+     *
+     * @return RestResponse
+     */
+    public function putIndex($type)
+    {
+        /** @var  $request \Symfony\Component\HttpFoundation\Request */
+        $request = Request::instance()->request;
+
+        $fields = $request->has("fields") ? $request->get("fields") : [];
+
+
+
+        return new RestResponse($this->fieldRepo()->updateFields($fields));
+    }
 
     /**
      * @param $type
@@ -52,6 +86,7 @@ class Controller extends BaseController {
         }
 
         $mFields = $this->fieldRepo()->modelFields();
+
         $idsBeforSync = $mFields->getRelatedIds();
 
         count($fields)
@@ -61,9 +96,10 @@ class Controller extends BaseController {
         $idsAfterSync = $mFields->getRelatedIds();
 
         $viewIdsToRemove = array_diff($idsBeforSync, $idsAfterSync);
+
         if (!empty($viewIdsToRemove)){
             $symbol_keys =  $this->fieldRepo()->getModel()->whereIn('id', $viewIdsToRemove)->lists('symbol_key');
-           // !count($symbol_keys) ?: dd($this->viewFieldRepo()->getModel()->whereIn("symbol_keys", $symbol_keys)->get()->toArray(), $this->getLogQueries());
+            $this->viewFieldRepo()->deleteByDMSymbolKeys($this->getApp()->DM(), $symbol_keys);
 
         }//@TODO get forms from current datamodel get viewFields remove nedded
 

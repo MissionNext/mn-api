@@ -4,6 +4,7 @@ namespace MissionNext\Models\DataModel;
 use Illuminate\Database\Query\Builder;
 use MissionNext\Models\Field\FieldFactory;
 use MissionNext\Models\Field\FieldGroup;
+use MissionNext\Models\Form\FormGroup;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\Form\AppForm;
