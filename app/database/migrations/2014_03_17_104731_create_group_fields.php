@@ -18,7 +18,8 @@ class CreateGroupFields extends Migration {
             $table->smallInteger('order')->nullable();
             $table->text('meta')->nullable();
             $table->unsignedInteger('group_id');
-            $table->foreign("group_id")->references('id')->on('form_groups')->onDelete('cascade');;
+            $table->foreign("group_id")->references('id')->on('form_groups')->onDelete('cascade');
+            $table->unique(['symbol_key', 'group_id']);
             $table->timestamps();
 		});
 	}

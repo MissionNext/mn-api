@@ -5,9 +5,8 @@ use MissionNext\DB\SqlStatement\RepositoryInterface\IViewFieldRepository;
 use MissionNext\Models\DataModel\AppDataModel;
 class ViewFieldRepositoryMysql extends Mysql implements IViewFieldRepository {
 
-    public function deleteByDMSymbolKeys(AppDataModel $dm, array $symbolKeys)
+    public function deleteByDMSymbolKeys(AppDataModel $dm, $symbolKeys)
     {
-        $strSymbolKeys ="'".implode("','", $symbolKeys)."'";
 
         return "DELETE group_fields
                         FROM group_fields
@@ -15,7 +14,7 @@ class ViewFieldRepositoryMysql extends Mysql implements IViewFieldRepository {
                         INNER JOIN app_forms ON app_forms.id = form_groups.form_id
                         INNER JOIN app_data_model ON app_data_model.id = app_forms.data_model_id
                         WHERE app_data_model.id = {$dm->id}
-                        AND group_fields.symbol_key IN ($strSymbolKeys)";
+                        AND group_fields.symbol_key IN ($symbolKeys)";
 
     }
 

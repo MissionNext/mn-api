@@ -115,8 +115,7 @@ class Controller extends BaseController {
         if (!empty($viewIdsToRemove)){
             $symbol_keys =  $this->fieldRepo()->getModel()->whereIn('id', $viewIdsToRemove)->lists('symbol_key');
             $this->viewFieldRepo()->deleteByDMSymbolKeys($this->getApp()->DM(), $symbol_keys);
-
-        }//@TODO get forms from current datamodel get viewFields remove nedded
+        }
 
         return new RestResponse($mFields->get());
     }

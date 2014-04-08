@@ -6,5 +6,5 @@ use MissionNext\Models\DataModel\AppDataModel;
 
 interface IViewFieldRepository
 {
-    public function deleteByDMSymbolKeys(AppDataModel $dm, array $symbolKeys);
+    public function deleteByDMSymbolKeys(AppDataModel $dm, $symbolKeys);
 } 

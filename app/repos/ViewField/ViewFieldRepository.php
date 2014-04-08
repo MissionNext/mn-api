@@ -42,8 +42,9 @@ class ViewFieldRepository extends AbstractRepository implements ViewFieldReposit
      */
     public function deleteByDMSymbolKeys(AppDataModel $dm, array $symbolKeys)
     {
+        $strSymbolKeys ="'".implode("','", $symbolKeys)."'";
 
-        return DB::update(DB::raw(Sql::getDbStatement($this)->deleteByDMSymbolKeys($dm, $symbolKeys)));
+        return DB::statement(Sql::getDbStatement($this)->deleteByDMSymbolKeys($dm, $strSymbolKeys));
     }
 
 

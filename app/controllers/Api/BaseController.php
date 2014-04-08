@@ -184,6 +184,8 @@ class BaseController extends Controller
                 $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
             }
         }
+
+       // dd($validationData, $constraints);
         /** @var  $validator \Illuminate\Validation\Validator */
         $validator = Validator::make(
             $validationData,

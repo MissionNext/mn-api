@@ -98,6 +98,7 @@ return array(
 
 	'attributes' => array(
         "birth_date" => "Birth date",
+        "first_name" => "Fiirst Name",
     ),
 
 );
