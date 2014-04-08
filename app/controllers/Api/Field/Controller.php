@@ -54,10 +54,25 @@ class Controller extends BaseController {
 
         $fields = $request->has("fields") ? $request->get("fields") : [];
 
-
-
         return new RestResponse($this->fieldRepo()->updateFields($fields));
     }
+
+    /**
+     * @param $type
+     *
+     * @return RestResponse
+     */
+    public function deleteIndex($type)
+    {
+        /** @var  $request \Symfony\Component\HttpFoundation\Request */
+        $query = Request::instance()->query;
+
+        $ids = $query->has("ids") ? $query->get("ids") : [];
+
+        return new RestResponse($this->fieldRepo()->deleteFields($ids));
+    }
+
+
 
     /**
      * @param $type

@@ -18,7 +18,7 @@ class CreateAppForms extends Migration {
             $table->string("symbol_key", 60);
             $table->string("name", 60);
             $table->unsignedInteger('data_model_id');
-            $table->foreign("data_model_id")->references('id')->on('app_data_model');
+            $table->foreign("data_model_id")->references('id')->on('app_data_model')->onDelete('cascade');
             $table->unique(['symbol_key', 'data_model_id']);
 			$table->timestamps();
 		});

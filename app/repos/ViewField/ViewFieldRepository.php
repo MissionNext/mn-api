@@ -3,6 +3,7 @@
 namespace MissionNext\Repos\ViewField;
 
 
+use Illuminate\Support\Facades\DB;
 use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\Field\FieldGroup;
@@ -25,6 +26,7 @@ class ViewFieldRepository extends AbstractRepository implements ViewFieldReposit
     public function viewFieldsToRemove(AppDataModel $dm, array $symbolKeys ){
 
         return   $this->model
+            ->select("group_fields.symbol_key", "group_fields.group_id")
             ->leftJoin('form_groups', 'form_groups.id', '=', 'group_fields.group_id')
             ->leftJoin('app_forms', 'app_forms.id', '=', 'form_groups.form_id')
             ->leftJoin('app_data_model', 'app_data_model.id', '=', 'app_forms.data_model_id')
@@ -36,16 +38,12 @@ class ViewFieldRepository extends AbstractRepository implements ViewFieldReposit
      * @param AppDataModel $dm
      * @param array $symbolKeys
      *
-     * @return boolean
+     * @return integer
      */
     public function deleteByDMSymbolKeys(AppDataModel $dm, array $symbolKeys)
     {
-        $tableName = $this->getModel()->getTable();
 
-        $strSymbolKeys = implode(",", $symbolKeys);
-
-        return \DB::statement(Sql::getDbStatement($this)->deleteByDMSymbolKeys() , [ $dm->id, $strSymbolKeys ]);
-
+        return DB::update(DB::raw(Sql::getDbStatement($this)->deleteByDMSymbolKeys($dm, $symbolKeys)));
     }
 
 

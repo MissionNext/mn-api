@@ -76,7 +76,7 @@ class FieldTableSeeder extends BaseSeeder
                 array(
                     "symbol_key" => "favourite_movies",
                     "name" => "Favourite movies",
-                    "type" => FieldType::CHECKBOX_MULTIPLE,
+                    "type" => FieldType::CHECKBOX,
                 ),
                 array(
                     "symbol_key" => "gender",

@@ -12,7 +12,7 @@ class CreateChoiceValuesTable extends Migration
         Schema::create($role . '_dictionary', function (Blueprint $table) use ($role) {
             $table->increments('id');
             $table->unsignedInteger('field_id');
-            $table->foreign("field_id")->references('id')->on($role . '_fields');
+            $table->foreign("field_id")->references('id')->on($role . '_fields')->onDelete('cascade');
             $table->string("value")->nullable();
         });
 

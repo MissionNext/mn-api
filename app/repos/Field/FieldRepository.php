@@ -8,6 +8,7 @@ use MissionNext\Api\Exceptions\FieldException;
 use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\Field\Candidate;
 use MissionNext\Models\User\User as UserModel;
+use MissionNext\Repos\ViewField\ViewFieldRepository;
 
 
 class FieldRepository extends AbstractFieldRepository
@@ -146,7 +147,6 @@ class FieldRepository extends AbstractFieldRepository
         foreach ($fields as $field) {
             $this->getModel()->where("id", "=", $field["id"])
                 ->update(["name" => $field["name"],
-                    "symbol_key" => $field["symbol_key"],
                     "default_value" => $field["default_value"],
                 ]);
 
@@ -164,6 +164,29 @@ class FieldRepository extends AbstractFieldRepository
         $role = $this->securityContext->role();
 
         return $this->fieldsExpanded()->whereIn("{$role}_fields.id", $ids)->get();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     *
+     * @throws \MissionNext\Api\Exceptions\FieldException
+     */
+    public function deleteFields(array $ids)
+    {
+       $symbol_keys = $this->getModel()->whereIn("id", $ids)->lists('symbol_key');
+
+       if (count($symbol_keys) !== count($ids)){
+
+           throw new FieldException("Specified ids have not related records", FieldException::ON_DELETE);
+       }
+
+       $viewFieldRepo = new ViewFieldRepository();
+       $viewFieldRepo->deleteByDMSymbolKeys($this->securityContext->getApp()->DM(), $symbol_keys);
+       $this->getModel()->destroy($ids);
+
+       return $this->fieldsExpanded()->get();
     }
 
 } 

@@ -46,7 +46,7 @@ class FieldTypeSeeder extends BaseSeeder
                 "multiple" => false,
             ),
             array(
-                "id" => FieldType::CHECKBOX_MULTIPLE,
+                "id" => FieldType::CHECKBOX,
                 "name" => "checkbox",
                 "multiple" => true,
             ),

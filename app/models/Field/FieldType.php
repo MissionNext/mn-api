@@ -14,11 +14,11 @@ class FieldType extends Eloquent implements ModelInterface
           TEXT  = 5,
           RADIO = 6,
           BOOLEAN = 7,
-          CHECKBOX_MULTIPLE = 8;
+          CHECKBOX = 8;
 
-    private static $multipleTypes = [FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX_MULTIPLE ];
+    private static $multipleTypes = [FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX ];
 
-    private static $dictionaryTypes = [ self::SELECT, self::SELECT_MULTIPLE, self::RADIO, self::CHECKBOX_MULTIPLE ];
+    private static $dictionaryTypes = [ self::SELECT, self::SELECT_MULTIPLE, self::RADIO, self::CHECKBOX ];
 
     public static function isMultiple($typeId){
 

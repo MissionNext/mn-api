@@ -17,7 +17,7 @@ class CreateAppDataModelTable extends Migration {
 			$table->increments('id');
 			$table->string('type',60);
             $table->unsignedInteger('app_id')->nullable();
-            $table->foreign('app_id')->references('id')->on('application');
+            $table->foreign('app_id')->references('id')->on('application')->onDelete('cascade');
 		});
 	}
 

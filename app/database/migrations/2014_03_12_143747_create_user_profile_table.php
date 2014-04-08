@@ -20,7 +20,7 @@ class CreateUserProfileTable extends Migration
                 $table->foreign("user_id")->references('id')->on('users')->onDelete('cascade');
 
                 $table->unsignedInteger('field_id');
-                $table->foreign("field_id")->references('id')->on($role . '_fields');
+                $table->foreign("field_id")->references('id')->on($role . '_fields')->onDelete('cascade');
 
                 $table->string('value')->nullable();
             });

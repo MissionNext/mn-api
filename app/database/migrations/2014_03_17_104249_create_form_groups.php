@@ -20,7 +20,7 @@ class CreateFormGroups extends Migration {
             $table->smallInteger('order')->nullable();
             $table->text('meta')->nullable();
             $table->unsignedInteger('form_id');
-            $table->foreign("form_id")->references('id')->on('app_forms');
+            $table->foreign("form_id")->references('id')->on('app_forms')->onDelete('cascade');
             $table->timestamps();
 		});
 	}
