@@ -3,7 +3,7 @@
 
 namespace MissionNext\Api\Auth;
 
-use MissionNext\Facade\SecurityContext;
+use MissionNext\Facade\SecurityContext as FS;
 
 class SecurityContextResolver extends ObjectResolver
 {
@@ -14,7 +14,7 @@ class SecurityContextResolver extends ObjectResolver
      */
     public function __construct(ISecurityContextAware $class)
     {
-        $class->setSecurityContext(SecurityContext::getInstance());
+        $class->setSecurityContext(FS::getInstance());
         $this->resolvedObject = $class;
     }
 

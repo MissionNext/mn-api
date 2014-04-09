@@ -28,9 +28,9 @@ $env = $app->detectEnvironment(function(){
       'localhost.mission-next' => 'local',
       'apimisionnext.masterofcode.com' => 'stage'
     );
-
-    if(isset($hosts[$_SERVER['SERVER_NAME']])){
-        return $hosts[$_SERVER['SERVER_NAME']];
+    $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
+    if(isset($hosts[$serverName])){
+        return $hosts[$serverName];
     }
 
 });

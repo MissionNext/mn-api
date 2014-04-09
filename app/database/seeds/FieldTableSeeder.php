@@ -9,7 +9,6 @@ class FieldTableSeeder extends BaseSeeder
             DB::statement($this->getDbStatement()->truncateTable("organization_fields"));
             DB::statement($this->getDbStatement()->truncateTable("agency_fields"));
 
-
             DB::table('candidate_fields')->insert(array(
 
                 array(

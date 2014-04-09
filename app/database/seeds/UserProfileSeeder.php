@@ -33,6 +33,5 @@ class UserProfileSeeder extends BaseSeeder
         $agency->agencyFields()->attach(2, array('value' => $choiceAg->value));
 
 
-
     }
 }

@@ -15,6 +15,7 @@ final class RestData
     public  $data,
             $status = 1;
 
+
     /** @var RestData */
     private static $instance = null;
 

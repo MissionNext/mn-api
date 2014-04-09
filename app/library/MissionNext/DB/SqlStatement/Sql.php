@@ -6,6 +6,10 @@ use MissionNext\DB\SqlStatement\RepositoryInterface\IViewFieldRepository;
 use MissionNext\Repos\AbstractRepository;
 
 class Sql {
+
+    const MYSQL = "mysql",
+          PostgreSQL = "pgsql",
+          SQLITE  = "sqlite";
     /**
      * @var SqlStatement
      */
@@ -28,16 +32,19 @@ class Sql {
         $class = $baseName."Mysql";
 
         switch (DB::getDefaultConnection()) {
-            case "mysql":
+            case self::MYSQL:
                 $class = $baseName."Mysql";
                 static::$dbStatement = new $class;
                 break;
-            case "pgsql":
+            case self::PostgreSQL:
                 $class = $baseName."Postgre";
                 static::$dbStatement = new $class;
                 break;
+            case self::SQLITE:
+                $class = $baseName."Sqlite";
+                static::$dbStatement = new $class;
             default:
-                static::$dbStatement = $class;
+                static::$dbStatement = new $class;
         }
 
         return static::$dbStatement;

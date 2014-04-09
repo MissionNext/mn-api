@@ -3,6 +3,7 @@ namespace Api\Field;
 
 use Api\BaseController;
 use Illuminate\Support\Facades\Request;
+use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
 
@@ -20,7 +21,6 @@ class Controller extends BaseController {
      */
     public function getIndex($type)
 	{
-
         return new RestResponse($this->fieldRepo()->fieldsExpanded()->get());
 	}
 
@@ -33,7 +33,6 @@ class Controller extends BaseController {
     {
         /** @var  $request \Symfony\Component\HttpFoundation\Request */
         $request = Request::instance()->request;
-
         $fields = $request->has("fields") ? $request->get("fields") : [];
 
         return new RestResponse($this->fieldRepo()->addFields($fields));
