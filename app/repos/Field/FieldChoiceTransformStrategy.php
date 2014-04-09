@@ -8,6 +8,19 @@ use MissionNext\Repos\TransformDataStrategy;
 
 class FieldChoiceTransformStrategy extends TransformDataStrategy {
 
+    private $transformFieldName = "choices";
+
+    /**
+     * @param $fieldName
+     *
+     * @return $this
+     */
+    public function setTransformFieldName($fieldName)
+    {
+        $this->transformFieldName =    $fieldName;
+
+        return $this;
+    }
     /**
      * @param Collection $dataCollection
      *
@@ -17,7 +30,8 @@ class FieldChoiceTransformStrategy extends TransformDataStrategy {
     {
         return $dataCollection->each(function ($field) {
 
-            $field->choices = $field->choices ? explode(",", $field->choices) : null;
+            $field->{$this->transformFieldName} =
+                 $field->{$this->transformFieldName} ? explode(",", $field->{$this->transformFieldName}) : null;
 
             return $field;
         });

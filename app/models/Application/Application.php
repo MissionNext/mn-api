@@ -35,24 +35,6 @@ class Application extends Eloquent implements ModelInterface
     }
 
     /**
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function modelFieldsExp()
-    {
-
-        return $this->DM()->fieldsExp();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function modelFields()
-    {
-
-        return $this->DM()->fields();
-    }
-
-    /**
      * @param null $type
      * @return AppDataModel
      */

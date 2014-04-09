@@ -2,7 +2,6 @@
 namespace MissionNext\Models\DataModel;
 
 use Illuminate\Database\Query\Builder;
-use MissionNext\Models\Field\FieldFactory;
 use MissionNext\Models\Field\FieldGroup;
 use MissionNext\Models\Form\FormGroup;
 use MissionNext\Models\ModelInterface;
@@ -63,25 +62,6 @@ class AppDataModel extends BaseDataModel implements ModelInterface
     {
 
         return $this->belongsToMany(AgencyField::class, 'data_model_agency_fields', 'data_model_id', 'field_id')->withPivot('constraints');
-    }
-
-    /**
-     * @return Builder
-     */
-    public function fieldsExp()
-    {
-
-        return FieldFactory::roleBasedModel()->modelFieldsExp($this);
-    }
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function fields()
-    {
-
-        return FieldFactory::fieldsOfModel($this);
     }
 
 } 

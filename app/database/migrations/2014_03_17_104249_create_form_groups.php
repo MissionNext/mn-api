@@ -19,6 +19,7 @@ class CreateFormGroups extends Migration {
             $table->string("name", 60);
             $table->smallInteger('order')->nullable();
             $table->text('meta')->nullable();
+            $table->string('depends_on', 60)->nullable();
             $table->unsignedInteger('form_id');
             $table->foreign("form_id")->references('id')->on('app_forms')->onDelete('cascade');
             $table->unique(['symbol_key', 'form_id']);

@@ -5,9 +5,6 @@ use Api\BaseController;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
-use MissionNext\DB\SqlStatement\Sql;
-use MissionNext\Models\Field\FieldFactory;
-use MissionNext\Repos\Field\FieldRepository;
 
 /**
  * Class Controller

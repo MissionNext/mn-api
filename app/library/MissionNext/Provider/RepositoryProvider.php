@@ -9,6 +9,8 @@ use MissionNext\Repos\Field\FieldRepositoryInterface;
 use Illuminate\Support\Facades\App;
 use MissionNext\Repos\Form\FormRepository;
 use MissionNext\Repos\Form\FormRepositoryInterface;
+use MissionNext\Repos\FormGroup\FormGroupRepository;
+use MissionNext\Repos\FormGroup\FormGroupRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
@@ -39,6 +41,11 @@ class RepositoryProvider extends ServiceProvider
         App::bind(FormRepositoryInterface::class, function(){
 
             return new FormRepository();
+        });
+
+        App::bind(FormGroupRepositoryInterface::class, function(){
+
+            return (new SecurityContextResolver( new FormGroupRepository()))->getResolvedObject();
         });
 
     }

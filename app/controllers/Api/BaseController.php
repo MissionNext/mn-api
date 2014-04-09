@@ -12,7 +12,6 @@ use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application as AppModel;
-use MissionNext\Models\Field\FieldFactory;
 use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\Profile;
 use MissionNext\Models\User\User as UserModel;
@@ -20,6 +19,8 @@ use MissionNext\Repos\Field\FieldRepository;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
 use MissionNext\Repos\Form\FormRepository;
 use MissionNext\Repos\Form\FormRepositoryInterface;
+use MissionNext\Repos\FormGroup\FormGroupRepository;
+use MissionNext\Repos\FormGroup\FormGroupRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
@@ -35,8 +36,10 @@ class BaseController extends Controller
     private $userRepo;
     /** @var \MissionNext\Repos\ViewField\ViewFieldRepositoryInterface  */
     private $viewFieldRepo;
-
+    /** @var \MissionNext\Repos\Form\FormRepositoryInterface  */
     private $formRepo;
+    /** @var \MissionNext\Repos\FormGroup\FormGroupRepositoryInterface  */
+    private $formGroupRepo;
 
     /**
      * Set filters
@@ -45,13 +48,15 @@ class BaseController extends Controller
                                 FieldRepositoryInterface $fieldRepo,
                                 UserRepositoryInterface $userRepo,
                                 ViewFieldRepositoryInterface $viewFieldRepo,
-                                FormRepositoryInterface $formRepo
+                                FormRepositoryInterface $formRepo,
+                                FormGroupRepositoryInterface $formGroupRepo
     )
     {
         $this->fieldRepo = $fieldRepo;
         $this->userRepo = $userRepo;
         $this->viewFieldRepo = $viewFieldRepo;
         $this->formRepo = $formRepo;
+        $this->formGroupRepo = $formGroupRepo;
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
 
@@ -88,20 +93,11 @@ class BaseController extends Controller
         return $this->formRepo;
     }
 
-    /**
-     * @param Collection $fields
-     *
-     * @return Collection
-     */
-    protected function fieldsChoicesArr(Collection $fields)
+    /** @return FormGroupRepository */
+    protected function formGroupRepo()
     {
 
-        return $fields->each(function ($field) {
-
-            $field->choices = $field->choices ? explode(",", $field->choices) : null;
-
-            return $field;
-        });
+        return $this->formGroupRepo;
     }
 
     /**
@@ -140,23 +136,6 @@ class BaseController extends Controller
         return DB::getQueryLog();
     }
 
-    protected function generateProfile(UserModel $user)
-    {
-        $profile = new Profile();
-        $fields = $this->fieldRepo()->profileFields($user);
-
-        $fields->get()->each(function ($field) use ($profile) {
-            $key = $field->symbol_key;
-            if (isset($profile->$key)) {
-                $profile->$key = array_merge($profile->$key, [$field->pivot->value]);
-            } else {
-                $profile->$key = FieldType::isMultiple($field->type) ? [$field->pivot->value] : $field->pivot->value;
-            }
-        });
-
-        return $profile;
-    }
-
     /**
      * @param array $profileData
      *
@@ -167,10 +146,24 @@ class BaseController extends Controller
     protected function validateProfileData(array $profileData)
     {
         $fieldNames = array_keys($profileData);
+        $dependentFields = $this->formGroupRepo()->dependentFields()->get();
+
+     // dd($dependentFields->toArray());
+        foreach($dependentFields as $field){
+            $ownerField = $field->depends_on;
+            if (isset($profileData[$ownerField])){
+                $ownerFieldValue = $profileData[$ownerField];
+                if (!$ownerFieldValue) {
+                    $fieldNames = array_diff($fieldNames, $field->symbol_keys);
+                }
+            }
+        }
+       // dd($fieldNames);
         /** @var  $fields Collection */
         $fields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $fieldNames)->get();
 
-        if ($fields->count() !== count($profileData)) {
+
+        if ($fields->count() !== count($fieldNames)) {
 
             throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
         }

@@ -99,6 +99,7 @@ class Controller extends BaseController
             $groups[$symbolKey]["symbol_key"] = $data["form_group"]["symbol_key"];
             $groups[$symbolKey]["id"] = $data["form_group"]["id"];
             $groups[$symbolKey]["name"] = $data["form_group"]["name"];
+            $groups[$symbolKey]["depends_on"] = $data["form_group"]["depends_on"];
             $groups[$symbolKey]["order"] = $data["form_group"]["order"];
             $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
             $groups[$symbolKey]["fields"][$key]["type"] = $data["type"];
@@ -124,7 +125,6 @@ class Controller extends BaseController
     protected function syncGroupFields(array $reqGroups, BaseForm $form)
     {
         $timestamp = (new \DateTime)->format("Y-m-d H:i:s");
-
         $groupSymbolKeys = array_fetch($reqGroups, "symbol_key");
         $groupsInsert = array_map(function ($group) use ($form, $timestamp) {
             return [
@@ -132,6 +132,7 @@ class Controller extends BaseController
                 "name" => $group["name"],
                 "order" => $group["order"],
                 "form_id" => $form->id,
+                "depends_on" => $group["depends_on"],
                 "created_at" => $timestamp,
                 "updated_at" => $timestamp,
             ];

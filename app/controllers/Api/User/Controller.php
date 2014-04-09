@@ -2,20 +2,15 @@
 namespace Api\User;
 
 use Api\BaseController;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Filter\RouteSecurityFilter;
-use MissionNext\Models\Field\FieldFactory;
-use MissionNext\Models\User\User as UserModel;
 use MissionNext\Models\Role\Role;
-use MissionNext\Repos\User\UserRepository;
 
 /**
  * Class Controller
