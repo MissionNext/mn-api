@@ -34,7 +34,7 @@ class FieldRepository extends AbstractFieldRepository
             ->groupBy($role . '_fields.id', 'field_types.name');
 
         return
-            new FieldDataTransformer($builder, new FieldChoiceTransformStrategy());
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','default_value']));
 
     }
 
@@ -64,7 +64,7 @@ class FieldRepository extends AbstractFieldRepository
             ->groupBy($role . '_fields.id', 'field_types.name', 'data_model_' . $role . '_fields.constraints');
 
         return
-            new FieldDataTransformer($builder, new FieldChoiceTransformStrategy());
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','default_value']));
     }
 
     /**

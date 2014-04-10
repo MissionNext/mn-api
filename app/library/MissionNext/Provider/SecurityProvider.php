@@ -55,8 +55,8 @@ class SecurityProvider extends ServiceProvider
      */
     protected function filters()
     {
-        Route::filter(RouteSecurityFilter::ROLE, 'MissionNext\Filter\RouteSecurityFilter@'.RouteSecurityFilter::ROLE_M);
-        Route::filter(RouteSecurityFilter::AUTHORIZE, 'MissionNext\Filter\RouteSecurityFilter@'.RouteSecurityFilter::AUTHORIZE_M);
+        Route::filter(RouteSecurityFilter::ROLE, RouteSecurityFilter::class.'@'.RouteSecurityFilter::ROLE_M);
+        Route::filter(RouteSecurityFilter::AUTHORIZE,  RouteSecurityFilter::class.'@'.RouteSecurityFilter::AUTHORIZE_M);
 
         return $this;
     }

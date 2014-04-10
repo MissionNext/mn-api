@@ -1,6 +1,7 @@
 <?php
 use Mockery as m;
 use MissionNext\Facade\SecurityContext as FS;
+use MissionNext\Api\Auth\SecurityContext as SC;
 
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
@@ -10,10 +11,19 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected $routePrefix = '';
 
     protected $applicationKey = '123456';
+    /** @var  \MissionNext\Api\Auth\SecurityContext */
+    private $securityContext;
 
     protected function setRole($role)
     {
-        FS::getInstance()->getToken()->setRoles([$role]);
+        $this->securityContext->getToken()->setRoles([$role]);
+    }
+
+    private function setSecurityContext(SC $securityContext)
+    {
+        $this->securityContext = $securityContext;
+
+        return $this;
     }
 
     public function call()
@@ -61,7 +71,16 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $securityContext->getToken()
             ->setApp(\MissionNext\Models\Application\Application::wherePublicKey($this->applicationKey)->first());
         $this->routePrefix = \MissionNext\Routing\Routing::API_PREFIX;
+        $this->setSecurityContext($securityContext);
+    }
 
+    /**
+     * @return SC
+     */
+    protected function securityContext()
+    {
+
+        return $this->securityContext;
     }
 
     public function setUpDb()

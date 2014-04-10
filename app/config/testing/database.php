@@ -51,6 +51,18 @@ return array(
             'database' => ':memory:',
             'prefix'   => '',
         ),
+
+
+        'pgsql' => array(
+            'driver'   => 'pgsql',
+            'host'     => 'localhost',
+            'database' => 'mission_next_test',
+            'username' => 'postgres',
+            'password' => 'bigpups',
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+        ),
     ),
 
     /*

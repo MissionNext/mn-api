@@ -63,21 +63,70 @@ class FieldControllerTest extends TestCase
                             "default_value" => '',
                             "choices"=> '',
                            ];
+
         $paramams["fields"][] = [
                              "symbol_key" => "my_movies",
                              "name" => "My Movies",
                              "type" => FieldType::CHECKBOX,
                              "default_value" => "terminator,bamby",
                              "choices" => "terminator,lolo,bamby",
-                                ];
+                           ];
 
         $response =  $this->call('POST', $agency.'/field', $paramams);
+
         $responseData = $response->getData();
 
         $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
-        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
         $this->assertEquals("new_date", $responseData->data->list[0]->symbol_key);
         $this->assertEquals("my_movies", $responseData->data->list[1]->symbol_key);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+    /** @see Api\Field\Controller::postIndex */
+    public function testOrganizationPostIndex()
+    {
+        $organization = BaseDataModel::ORGANIZATION;
+        $this->setRole($organization);
+        $paramams = [];
+
+        $paramams["fields"][] = [
+            "symbol_key" => "state",
+            "name" => "State",
+            "type" => FieldType::CHECKBOX,
+            "default_value" => 'in_progress',
+            "choices"=> 'in_progress,ready',
+        ];
+
+        $response =  $this->call('POST', $organization.'/field', $paramams);
+
+        $responseData = $response->getData();
+
+        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
+        $this->assertEquals("state", $responseData->data->list[0]->symbol_key);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+    /** @see Api\Field\Controller::postIndex */
+    public function testCandidatePostIndex()
+    {
+        $candidate = BaseDataModel::CANDIDATE;
+        $this->setRole($candidate);
+        $paramams = [];
+
+        $paramams["fields"][] = [
+            "symbol_key" => "is_married",
+            "name" => "Is married",
+            "type" => FieldType::BOOLEAN,
+            "default_value" => true,
+            "choices"=> '',
+        ];
+
+        $response =  $this->call('POST', $candidate.'/field', $paramams);
+
+        $responseData = $response->getData();
+
+        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
+        $this->assertEquals("is_married", $responseData->data->list[0]->symbol_key);
         $this->assertTrue((bool)$responseData->status);
     }
 } 

@@ -105,8 +105,9 @@ class Controller extends BaseController
             $groups[$symbolKey]["fields"][$key]["type"] = $data["type"];
             $groups[$symbolKey]["fields"][$key]["name"] = $data["name"];
             $groups[$symbolKey]["fields"][$key]["choices"] = $data["choices"] ? : [];
+            $groups[$symbolKey]["fields"][$key]["default_value"] = $data["default_value"];
             $groups[$symbolKey]["fields"][$key]["order"] = $data["order"];
-            $groups[$symbolKey]["fields"][$key]["id"] = $data["id"];
+            $groups[$symbolKey]["fields"][$key]["id"] = $data["id"];//@TODO default_value to array
         }
         $groups = array_values($groups);
         foreach ($groups as $key => $group) {

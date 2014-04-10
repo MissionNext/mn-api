@@ -8,7 +8,7 @@ use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\Form\FormGroup;
 use MissionNext\Repos\AbstractRepository;
-use MissionNext\Repos\Field\FieldChoiceTransformStrategy;
+use MissionNext\Repos\Field\FieldToArrayTransformStrategy;
 use MissionNext\Repos\Field\FieldDataTransformer;
 
 class FormGroupRepository extends AbstractRepository implements FormGroupRepositoryInterface, ISecurityContextAware
@@ -49,7 +49,7 @@ class FormGroupRepository extends AbstractRepository implements FormGroupReposit
             ->groupBy('form_groups.depends_on');
 
         return
-            new FieldDataTransformer($builder, (new FieldChoiceTransformStrategy())->setTransformFieldName('symbol_keys'));
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','symbol_keys']));
     }
 
 } 
