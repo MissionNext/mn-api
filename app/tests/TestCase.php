@@ -11,6 +11,11 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     protected $applicationKey = '123456';
 
+    protected function setRole($role)
+    {
+        FS::getInstance()->getToken()->setRoles([$role]);
+    }
+
     public function call()
     {
         $args = func_get_args();
@@ -40,17 +45,23 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         if ($this->useDatabase) {
             $this->setUpDb();
         }
+        $this->setApp();
+    }
+
+    public function teardown()
+    {
+        m::close();
+    }
+
+    protected function setApp()
+    {
         /** @var  $securityContext \MissionNext\Api\Auth\SecurityContext */
         $securityContext = FS::getInstance();
         $securityContext->setToken(new \MissionNext\Api\Auth\Token());
         $securityContext->getToken()
             ->setApp(\MissionNext\Models\Application\Application::wherePublicKey($this->applicationKey)->first());
         $this->routePrefix = \MissionNext\Routing\Routing::API_PREFIX;
-    }
 
-    public function teardown()
-    {
-        m::close();
     }
 
     public function setUpDb()

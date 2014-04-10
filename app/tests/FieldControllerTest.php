@@ -1,6 +1,7 @@
 <?php
 use MissionNext\Facade\SecurityContext as FS;
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Models\Field\FieldType;
 
 /**
  * Class FieldControllerTest
@@ -8,12 +9,13 @@ use MissionNext\Models\DataModel\BaseDataModel;
  */
 class FieldControllerTest extends TestCase
 {
+
     /** @see Api\Field\Controller::getIndex */
    public function testCandidateGetIndex()
    {
       $candidate = BaseDataModel::CANDIDATE;
 
-      FS::getInstance()->getToken()->setRoles([$candidate]);
+      $this->setRole($candidate);
       $response =  $this->call('GET', $candidate.'/field');
       $responseData = $response->getData();
 
@@ -26,7 +28,7 @@ class FieldControllerTest extends TestCase
     {
         $organization = BaseDataModel::ORGANIZATION;
 
-        FS::getInstance()->getToken()->setRoles([$organization]);
+        $this->setRole($organization);
         $response =  $this->call('GET', $organization.'/field');
         $responseData = $response->getData();
 
@@ -39,7 +41,7 @@ class FieldControllerTest extends TestCase
     {
         $agency = BaseDataModel::AGENCY;
 
-        FS::getInstance()->getToken()->setRoles([$agency]);
+        $this->setRole($agency);
         $response =  $this->call('GET', $agency.'/field');
         $responseData = $response->getData();
 
@@ -51,18 +53,23 @@ class FieldControllerTest extends TestCase
     public function testAgencyPostIndex()
     {
         $agency = BaseDataModel::AGENCY;
-
-        FS::getInstance()->getToken()->setRoles([$agency]);
+        $this->setRole($agency);
         $paramams = [];
 
         $paramams["fields"][] = [
                             "symbol_key" => "new_date",
                             "name" => "New date",
-                            "type" => \MissionNext\Models\Field\FieldType::DATE,
+                            "type" => FieldType::DATE,
                             "default_value" => '',
                             "choices"=> '',
-
                            ];
+        $paramams["fields"][] = [
+                             "symbol_key" => "my_movies",
+                             "name" => "My Movies",
+                             "type" => FieldType::CHECKBOX,
+                             "default_value" => "terminator,bamby",
+                             "choices" => "terminator,lolo,bamby",
+                                ];
 
         $response =  $this->call('POST', $agency.'/field', $paramams);
         $responseData = $response->getData();
@@ -70,6 +77,7 @@ class FieldControllerTest extends TestCase
         $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
         $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
         $this->assertEquals("new_date", $responseData->data->list[0]->symbol_key);
+        $this->assertEquals("my_movies", $responseData->data->list[1]->symbol_key);
         $this->assertTrue((bool)$responseData->status);
     }
 } 
