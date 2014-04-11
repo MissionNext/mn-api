@@ -1,5 +1,4 @@
 <?php
-use MissionNext\Facade\SecurityContext as FS;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Field\FieldType;
 
@@ -26,6 +25,7 @@ class FieldControllerTest extends TestCase
     /** @see Api\Field\Controller::getIndex */
     public function testOrganizationGetIndex()
     {
+        $this->useDatabase = false;
         $organization = BaseDataModel::ORGANIZATION;
 
         $this->setRole($organization);
@@ -117,16 +117,184 @@ class FieldControllerTest extends TestCase
             "symbol_key" => "is_married",
             "name" => "Is married",
             "type" => FieldType::BOOLEAN,
-            "default_value" => true,
-            "choices"=> '',
+            "default_value" => 'yes',
+            "choices"=> 'yes,no',
         ];
 
         $response =  $this->call('POST', $candidate.'/field', $paramams);
+
 
         $responseData = $response->getData();
 
         $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
         $this->assertEquals("is_married", $responseData->data->list[0]->symbol_key);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+    /** @see Api\Field\Controller::putIndex */
+    public function testCandidatePutIndex()
+    {
+        $candidate = BaseDataModel::CANDIDATE;
+        $this->setRole($candidate);
+        $paramams = [];
+        $paramams["fields"][] = [
+            "id" => 2,
+            "name" => "Select Country",
+            "default_value" => "Greece",
+            "choices"=> 'Greece,Spain',
+        ];
+
+        $response =  $this->call('PUT', $candidate.'/field', $paramams);
+
+        $responseData = $response->getData();
+
+        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
+        $this->assertEquals("Select Country", $responseData->data->list[0]->name);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+    /** @see Api\Field\Controller::putIndex */
+    public function testOrganizationPutIndex()
+    {
+        $organization = BaseDataModel::ORGANIZATION;
+        $this->setRole($organization);
+        $paramams = [];
+        $paramams["fields"][] = [
+            "id" => 2,
+            "name" => "My birth date",
+            "default_value" => "",
+            "choices"=> '',
+        ];
+        $paramams["fields"][] = [
+            "id" => 3,
+            "name" => "Zippy",
+            "default_value" => "1111111",
+            "choices"=> '',
+        ];
+
+        $response =  $this->call('PUT', $organization.'/field', $paramams);
+
+        $responseData = $response->getData();
+
+        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
+        $this->assertEquals("Zippy", $responseData->data->list[1]->name);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+    /** @see Api\Field\Controller::putIndex */
+    public function testAgencyPutIndex()
+    {
+       // App::register(\MissionNext\Provider\ErrorProvider::class);
+        $agency = BaseDataModel::AGENCY;
+        $this->setRole($agency);
+        $paramams = [];
+        $paramams["fields"][] = [
+            "id" => 3,
+            "name" => "FirstN",
+            "default_value" => "Bob",
+            "choices"=> '',
+        ];
+        $paramams["fields"][] = [
+            "id" => 4,
+            "name" => "LastN",
+            "default_value" => "Dod",
+            "choices"=> '',
+        ];
+
+        $response =  $this->call('PUT', $agency.'/field', $paramams);
+
+        $responseData = $response->getData();
+
+        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
+        $this->assertEquals("Dod", $responseData->data->list[1]->default_value[0]);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+
+    /**
+     * @see Api\Field\Controller::putIndex
+     * @expectedException \MissionNext\Api\Exceptions\SecurityContextException
+     */
+    public function testFailurePutIndex()
+    {
+        $agency = BaseDataModel::AGENCY;
+       // $this->setRole($agency);
+        $paramams = [];
+        $paramams["fields"][] = [
+            "id" => 3,
+            "name" => "FirstN",
+            "default_value" => "Bob",
+            "choices"=> '',
+        ];
+
+        $this->call('PUT', $agency.'/field', $paramams);
+    }
+
+    /**
+     * @see Api\Field\Controller::deleteIndex
+     *
+     */
+    public function testDeleteIndex()
+    {
+        $candidate = BaseDataModel::CANDIDATE;
+        $this->setRole($candidate);
+        $response =  $this->call('DELETE', $candidate.'/field?ids[]=1&ids[]=2');
+
+        $this->assertNotContains([1, 2], array_fetch($response->getData()->data->list, 'id'));
+        $this->assertTrue((bool)$response->getData()->status);
+
+    }
+
+    /**
+     * @see Api\Field\Controller::postModel
+     *
+     */
+    public function testPostModelIndex()
+    {
+        $agency = BaseDataModel::AGENCY;
+        $this->setRole($agency);
+        $paramams = [];
+        $paramams["fields"][] = [
+            "id" => 1,
+            "constraints" => "date",
+        ];
+        $paramams["fields"][] = [
+            "id" => 2,
+            "constraints" => "",
+        ];
+        $paramams["fields"][] = [
+            "id" => 3,
+            "constraints" => "",
+        ];
+        $paramams["fields"][] = [
+            "id" => 4,
+            "constraints" => "",
+        ];
+
+        $response =  $this->call('POST', $agency.'/field/model', $paramams);
+
+        $responseData = $response->getData();
+
+        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
+        $this->assertEquals("date", $responseData->data->list[0]->pivot->constraints);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+    /**
+     * @see Api\Field\Controller::getModel
+     *
+     */
+    public function testGetModelIndex()
+    {
+        $agency = BaseDataModel::AGENCY;
+        $this->setRole($agency);
+
+
+        $response =  $this->call('GET', $agency.'/field/model');
+
+        $responseData = $response->getData();
+
+        $this->assertGreaterThan( 2,  count($responseData->data->list) );
         $this->assertTrue((bool)$responseData->status);
     }
 } 

@@ -32,7 +32,7 @@ abstract class AbstractRepository implements RepositoryInterface
      *
      * @return Collection
      */
-    public function all($columns = array('*'))
+    public function all($columns = array('*'))//@TODO Boot current field model
     {
         return call_user_func_array("{$this->modelClassName}::all", array($columns));
     }

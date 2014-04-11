@@ -39,8 +39,9 @@ class Routing
 
             Route::pattern('type', '[A-Za-z_-]+');
             Route::pattern('form', '[A-Za-z_-]+');
-            Route::controller('{type}/field', FieldController::class);
-
+            Route::controller('{type}/field', FieldController::class, [
+               'getModel' => 'model.fields.get'
+            ]);
             Route::controller('{type}/{form}/form', FormController::class);
 
             Route::resource(static::RESOURCE_PROFILE, ProfileController::class);

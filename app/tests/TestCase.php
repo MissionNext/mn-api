@@ -65,6 +65,12 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     protected function setApp()
     {
+      //@TODO Authorezid request
+//        Route::enableFilters();
+//        App::register(\MissionNext\Provider\RoutingProvider::class);
+//        App::register(\MissionNext\Provider\SecurityProvider::class);
+//        App::register(\MissionNext\Provider\ErrorProvider::class);
+//        App::register(\MissionNext\Provider\RepositoryProvider::class);
         /** @var  $securityContext \MissionNext\Api\Auth\SecurityContext */
         $securityContext = FS::getInstance();
         $securityContext->setToken(new \MissionNext\Api\Auth\Token());

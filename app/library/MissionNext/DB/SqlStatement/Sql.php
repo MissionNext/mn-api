@@ -4,6 +4,7 @@ namespace MissionNext\DB\SqlStatement;
 use Illuminate\Support\Facades\DB;
 use MissionNext\DB\SqlStatement\RepositoryInterface\IViewFieldRepository;
 use MissionNext\Repos\AbstractRepository;
+use MissionNext\Repos\ViewField\ViewFieldRepository;
 
 class Sql {
 
@@ -22,10 +23,10 @@ class Sql {
      */
     public static  function  getDbStatement(AbstractRepository $repo = null)
     {
-        if (static::$dbStatement instanceof SqlStatement){
-
-            return static::$dbStatement;
-        }
+//        if (static::$dbStatement instanceof SqlStatement){
+//
+//            return static::$dbStatement;
+//        }//@TODO when getting statement more than one times during request
 
         $baseName = __NAMESPACE__.'\\'.class_basename($repo);
 

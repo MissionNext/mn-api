@@ -29,7 +29,7 @@ class RouteSecurityFilter
      */
     public function role(Router $route, LRequest $request)
     {
-
+        //dd($route);
         $user_id = Route::input('user', Route::input('profile', null));
         $role = Route::input('type');
 

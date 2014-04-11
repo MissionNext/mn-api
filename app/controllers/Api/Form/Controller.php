@@ -100,6 +100,7 @@ class Controller extends BaseController
             $groups[$symbolKey]["id"] = $data["form_group"]["id"];
             $groups[$symbolKey]["name"] = $data["form_group"]["name"];
             $groups[$symbolKey]["depends_on"] = $data["form_group"]["depends_on"];
+            $groups[$symbolKey]["is_outer_dependent"] = $data["form_group"]["is_outer_dependent"];
             $groups[$symbolKey]["order"] = $data["form_group"]["order"];
             $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
             $groups[$symbolKey]["fields"][$key]["type"] = $data["type"];
@@ -134,6 +135,7 @@ class Controller extends BaseController
                 "order" => $group["order"],
                 "form_id" => $form->id,
                 "depends_on" => $group["depends_on"],
+                "is_outer_dependent" => $group["is_outer_dependent"],
                 "created_at" => $timestamp,
                 "updated_at" => $timestamp,
             ];
