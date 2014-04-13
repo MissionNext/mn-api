@@ -11,26 +11,32 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected $routePrefix = '';
 
     protected $applicationKey = '123456';
-    /** @var  \MissionNext\Api\Auth\SecurityContext */
-    private $securityContext;
+    protected $applicationPrivateKey = '654321';
 
-    protected function setRole($role)
+    /**
+     * @param $method
+     * @param $uri
+     * @param array $parameters
+     * @param array $urlParams
+     * @param array $files
+     * @param null $content
+     * @return \MissionNext\Api\Response\RestResponse
+     */
+    public function authorizedCall($method, $uri, array $parameters = [], array $urlParams = [], array $files = [], $content = null)
     {
-        $this->securityContext->getToken()->setRoles([$role]);
-    }
+        $currentTimestamp = time();
+        $urlParams['timestamp'] = $currentTimestamp;
+        $query = http_build_query($urlParams);
 
-    private function setSecurityContext(SC $securityContext)
-    {
-        $this->securityContext = $securityContext;
+        $uri = $this->routePrefix.'/'.$uri.'?'.$query;
 
-        return $this;
-    }
+        $hash = strtr(base64_encode(
+            hash_hmac('sha1', '/'.$uri,
+                base64_decode(strtr($this->applicationPrivateKey, '-_', '+/')), true)), '+/', '-_');
 
-    public function call()
-    {
-        $args = func_get_args();
-        $args[1] = $this->routePrefix . '/' . $args[1];
-        call_user_func_array(array($this->client, 'request'), $args);
+        $server = ['HTTP_X-Auth'=>$this->applicationKey,'HTTP_X-Auth-Hash' => $hash];
+
+        $this->client->request( $method, $uri, $parameters, $files, $server, $content);
 
         return $this->client->getResponse();
     }
@@ -66,28 +72,17 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected function setApp()
     {
       //@TODO Authorezid request
-//        Route::enableFilters();
-//        App::register(\MissionNext\Provider\RoutingProvider::class);
-//        App::register(\MissionNext\Provider\SecurityProvider::class);
-//        App::register(\MissionNext\Provider\ErrorProvider::class);
-//        App::register(\MissionNext\Provider\RepositoryProvider::class);
+        $this->app['router']->enableFilters();
+        $this->app->register(\MissionNext\Provider\RoutingProvider::class);
+        $this->app->register(\MissionNext\Provider\SecurityProvider::class);
+        $this->app->register(\MissionNext\Provider\ErrorProvider::class);
+        $this->app->register(\MissionNext\Provider\RepositoryProvider::class);
         /** @var  $securityContext \MissionNext\Api\Auth\SecurityContext */
-        $securityContext = FS::getInstance();
-        $securityContext->setToken(new \MissionNext\Api\Auth\Token());
-        $securityContext->getToken()
-            ->setApp(\MissionNext\Models\Application\Application::wherePublicKey($this->applicationKey)->first());
+
         $this->routePrefix = \MissionNext\Routing\Routing::API_PREFIX;
-        $this->setSecurityContext($securityContext);
     }
 
-    /**
-     * @return SC
-     */
-    protected function securityContext()
-    {
 
-        return $this->securityContext;
-    }
 
     public function setUpDb()
     {

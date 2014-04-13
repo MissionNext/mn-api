@@ -14,8 +14,7 @@ class FieldControllerTest extends TestCase
    {
       $candidate = BaseDataModel::CANDIDATE;
 
-      $this->setRole($candidate);
-      $response =  $this->call('GET', $candidate.'/field');
+      $response =  $this->authorizedCall('GET', $candidate.'/field');
       $responseData = $response->getData();
 
       $this->assertGreaterThan(2, count($responseData->data->list));
@@ -25,11 +24,9 @@ class FieldControllerTest extends TestCase
     /** @see Api\Field\Controller::getIndex */
     public function testOrganizationGetIndex()
     {
-        $this->useDatabase = false;
         $organization = BaseDataModel::ORGANIZATION;
 
-        $this->setRole($organization);
-        $response =  $this->call('GET', $organization.'/field');
+        $response =  $this->authorizedCall('GET', $organization.'/field');
         $responseData = $response->getData();
 
         $this->assertGreaterThan(2, count($responseData->data->list));
@@ -41,8 +38,7 @@ class FieldControllerTest extends TestCase
     {
         $agency = BaseDataModel::AGENCY;
 
-        $this->setRole($agency);
-        $response =  $this->call('GET', $agency.'/field');
+        $response =  $this->authorizedCall('GET', $agency.'/field');
         $responseData = $response->getData();
 
         $this->assertGreaterThan(2, count($responseData->data->list));
@@ -53,7 +49,6 @@ class FieldControllerTest extends TestCase
     public function testAgencyPostIndex()
     {
         $agency = BaseDataModel::AGENCY;
-        $this->setRole($agency);
         $paramams = [];
 
         $paramams["fields"][] = [
@@ -72,7 +67,7 @@ class FieldControllerTest extends TestCase
                              "choices" => "terminator,lolo,bamby",
                            ];
 
-        $response =  $this->call('POST', $agency.'/field', $paramams);
+        $response =  $this->authorizedCall('POST', $agency.'/field', $paramams);
 
         $responseData = $response->getData();
 
@@ -86,7 +81,6 @@ class FieldControllerTest extends TestCase
     public function testOrganizationPostIndex()
     {
         $organization = BaseDataModel::ORGANIZATION;
-        $this->setRole($organization);
         $paramams = [];
 
         $paramams["fields"][] = [
@@ -97,7 +91,7 @@ class FieldControllerTest extends TestCase
             "choices"=> 'in_progress,ready',
         ];
 
-        $response =  $this->call('POST', $organization.'/field', $paramams);
+        $response =  $this->authorizedCall('POST', $organization.'/field', $paramams);
 
         $responseData = $response->getData();
 
@@ -110,7 +104,6 @@ class FieldControllerTest extends TestCase
     public function testCandidatePostIndex()
     {
         $candidate = BaseDataModel::CANDIDATE;
-        $this->setRole($candidate);
         $paramams = [];
 
         $paramams["fields"][] = [
@@ -121,7 +114,7 @@ class FieldControllerTest extends TestCase
             "choices"=> 'yes,no',
         ];
 
-        $response =  $this->call('POST', $candidate.'/field', $paramams);
+        $response =  $this->authorizedCall('POST', $candidate.'/field', $paramams);
 
 
         $responseData = $response->getData();
@@ -135,7 +128,6 @@ class FieldControllerTest extends TestCase
     public function testCandidatePutIndex()
     {
         $candidate = BaseDataModel::CANDIDATE;
-        $this->setRole($candidate);
         $paramams = [];
         $paramams["fields"][] = [
             "id" => 2,
@@ -144,7 +136,7 @@ class FieldControllerTest extends TestCase
             "choices"=> 'Greece,Spain',
         ];
 
-        $response =  $this->call('PUT', $candidate.'/field', $paramams);
+        $response =  $this->authorizedCall('PUT', $candidate.'/field', $paramams);
 
         $responseData = $response->getData();
 
@@ -157,7 +149,6 @@ class FieldControllerTest extends TestCase
     public function testOrganizationPutIndex()
     {
         $organization = BaseDataModel::ORGANIZATION;
-        $this->setRole($organization);
         $paramams = [];
         $paramams["fields"][] = [
             "id" => 2,
@@ -172,7 +163,7 @@ class FieldControllerTest extends TestCase
             "choices"=> '',
         ];
 
-        $response =  $this->call('PUT', $organization.'/field', $paramams);
+        $response =  $this->authorizedCall('PUT', $organization.'/field', $paramams);
 
         $responseData = $response->getData();
 
@@ -186,7 +177,6 @@ class FieldControllerTest extends TestCase
     {
        // App::register(\MissionNext\Provider\ErrorProvider::class);
         $agency = BaseDataModel::AGENCY;
-        $this->setRole($agency);
         $paramams = [];
         $paramams["fields"][] = [
             "id" => 3,
@@ -201,7 +191,7 @@ class FieldControllerTest extends TestCase
             "choices"=> '',
         ];
 
-        $response =  $this->call('PUT', $agency.'/field', $paramams);
+        $response =  $this->authorizedCall('PUT', $agency.'/field', $paramams);
 
         $responseData = $response->getData();
 
@@ -213,12 +203,11 @@ class FieldControllerTest extends TestCase
 
     /**
      * @see Api\Field\Controller::putIndex
-     * @expectedException \MissionNext\Api\Exceptions\SecurityContextException
+     * @expectedException \MissionNext\Api\Exceptions\AuthenticationException
      */
     public function testFailurePutIndex()
     {
         $agency = BaseDataModel::AGENCY;
-       // $this->setRole($agency);
         $paramams = [];
         $paramams["fields"][] = [
             "id" => 3,
@@ -226,8 +215,9 @@ class FieldControllerTest extends TestCase
             "default_value" => "Bob",
             "choices"=> '',
         ];
+        $this->applicationKey = 'failure';
 
-        $this->call('PUT', $agency.'/field', $paramams);
+        $this->authorizedCall('PUT', $agency.'/field', $paramams);
     }
 
     /**
@@ -237,8 +227,8 @@ class FieldControllerTest extends TestCase
     public function testDeleteIndex()
     {
         $candidate = BaseDataModel::CANDIDATE;
-        $this->setRole($candidate);
-        $response =  $this->call('DELETE', $candidate.'/field?ids[]=1&ids[]=2');
+        $ids = ['ids' => [ 1, 2]];
+        $response =  $this->authorizedCall('DELETE', $candidate.'/field',[], $ids);
 
         $this->assertNotContains([1, 2], array_fetch($response->getData()->data->list, 'id'));
         $this->assertTrue((bool)$response->getData()->status);
@@ -252,7 +242,6 @@ class FieldControllerTest extends TestCase
     public function testPostModelIndex()
     {
         $agency = BaseDataModel::AGENCY;
-        $this->setRole($agency);
         $paramams = [];
         $paramams["fields"][] = [
             "id" => 1,
@@ -271,7 +260,7 @@ class FieldControllerTest extends TestCase
             "constraints" => "",
         ];
 
-        $response =  $this->call('POST', $agency.'/field/model', $paramams);
+        $response =  $this->authorizedCall('POST', $agency.'/field/model', $paramams);
 
         $responseData = $response->getData();
 
@@ -287,10 +276,8 @@ class FieldControllerTest extends TestCase
     public function testGetModelIndex()
     {
         $agency = BaseDataModel::AGENCY;
-        $this->setRole($agency);
 
-
-        $response =  $this->call('GET', $agency.'/field/model');
+        $response =  $this->authorizedCall('GET', $agency.'/field/model');
 
         $responseData = $response->getData();
 
