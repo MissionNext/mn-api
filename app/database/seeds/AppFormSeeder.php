@@ -12,54 +12,72 @@ class AppFormSeeder extends BaseSeeder
         DB::statement($this->getDbStatement()->truncateTable("form_groups"));
         DB::statement($this->getDbStatement()->truncateTable("group_fields"));
         /** @var  $application Application */
-        return;
+        if (!App::environment('testing')) {
+          return;
+        }
         $application = Application::find(1);
-        $canDM = $application->candidateDMs()->first();
+        $canDM = $application->DM(\MissionNext\Models\DataModel\BaseDataModel::CANDIDATE);
 
         $appForm1 = new AppForm();
         $appForm1->dataModel()->associate($canDM);
-        $appForm1->symbol_key = "registration";
-        $appForm1->name = "Registration";
+        $appForm1->symbol_key = "profile";
+        $appForm1->name = "profile";
         $appForm1->save();
 
-        $appForm2 = new AppForm();
-        $appForm2->dataModel()->associate($canDM);
-        $appForm2->symbol_key = "some_info";
-        $appForm2->name = "Some information";
-        $appForm2->save();
-
-
         $formGroup1 = new FormGroup();
-        $formGroup1->symbol_key = "group_1";
+        $formGroup1->symbol_key = "group_one";
         $formGroup1->name = "First Group";
         $formGroup1->order = 1;
+        $formGroup1->depends_on = null;
+        $formGroup1->is_outer_dependent = false;
         $formGroup1->form()->associate($appForm1);
         $formGroup1->save();
 
-        $fieldGroup1 = new FieldGroup();
-        $fieldGroup1->symbol_key = "birth_date";
-        $fieldGroup1->order = 1;
-        $fieldGroup1->formGroup()->associate($formGroup1);
-        $fieldGroup1->save();
+        $fieldsToIns = [
 
-        $fieldGroup2 = new FieldGroup();
-        $fieldGroup2->symbol_key = "country";
-        $fieldGroup2->order = 2;
-        $fieldGroup2->formGroup()->associate($formGroup1);
-        $fieldGroup2->save();
+                array(
+                    "group_id" => $formGroup1->id,
+                    "symbol_key" => "birth_date",
+                    "order" => 1,
+                    "created_at" => (new DateTime())->format("Y-m-d"),
+                    "updated_at" => (new DateTime())->format("Y-m-d")
+                ),
+            array(
+                "group_id" => $formGroup1->id,
+                "symbol_key" => "country",
+                "order" => 1,
+                "created_at" => (new DateTime())->format("Y-m-d"),
+                "updated_at" => (new DateTime())->format("Y-m-d")
+            )
+            ];
+
+
+
+        FieldGroup::insert($fieldsToIns);
+
+
 
         $formGroup2 = new FormGroup();
-        $formGroup2->symbol_key = "some_group";
-        $formGroup2->name = "Some Group";
-        $formGroup2->order = 1;
-        $formGroup2->form()->associate($appForm2);
+        $formGroup2->symbol_key = "group_two";
+        $formGroup2->name = "Second Group";
+        $formGroup2->order = 2;
+        $formGroup1->depends_on = "birth_date";
+        $formGroup1->is_outer_dependent = 1;
+        $formGroup2->form()->associate($appForm1);
         $formGroup2->save();
 
-        $fieldGroup4 = new FieldGroup();
-        $fieldGroup4->symbol_key = "hobby";
-        $fieldGroup4->order = 1;
-        $fieldGroup4->formGroup()->associate($formGroup2);
-        $fieldGroup4->save();
+        $fieldsToIns = [
+
+            array(
+                "group_id" => $formGroup1->id,
+                "symbol_key" => "hobby",
+                "order" => 1,
+                "created_at" => (new DateTime())->format("Y-m-d"),
+                "updated_at" => (new DateTime())->format("Y-m-d")
+            ),
+
+        ];
+        FieldGroup::insert($fieldsToIns);
 
     }
 }

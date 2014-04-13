@@ -150,7 +150,7 @@ class Controller extends BaseController
 
         foreach ($formGroups as $group) {
 
-            $fieldsToIns = array_map(function ($field) use ($timestamp, $group) {
+            $fieldsToIns = array_map(function ($field) use ($timestamp, $group) { //@TODO cannot be associated field_group has no id
                 return
                     array(
                         "group_id" => $group["id"],
