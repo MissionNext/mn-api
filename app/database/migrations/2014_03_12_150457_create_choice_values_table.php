@@ -35,6 +35,7 @@ class CreateChoiceValuesTable extends Migration
        $this->createDictionary(BaseDataModel::CANDIDATE);
        $this->createDictionary(BaseDataModel::ORGANIZATION);
        $this->createDictionary(BaseDataModel::AGENCY);
+       $this->createDictionary(BaseDataModel::JOB);
     }
 
     /**
@@ -47,6 +48,7 @@ class CreateChoiceValuesTable extends Migration
        $this->dropDictionary(BaseDataModel::CANDIDATE);
        $this->dropDictionary(BaseDataModel::ORGANIZATION);
        $this->dropDictionary(BaseDataModel::AGENCY);
+       $this->dropDictionary(BaseDataModel::JOB);
     }
 
 }

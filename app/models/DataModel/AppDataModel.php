@@ -4,6 +4,7 @@ namespace MissionNext\Models\DataModel;
 use Illuminate\Database\Query\Builder;
 use MissionNext\Models\Field\FieldGroup;
 use MissionNext\Models\Form\FormGroup;
+use MissionNext\Models\Job\JobField;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\Form\AppForm;
@@ -62,6 +63,15 @@ class AppDataModel extends BaseDataModel implements ModelInterface
     {
 
         return $this->belongsToMany(AgencyField::class, 'data_model_agency_fields', 'data_model_id', 'field_id')->withPivot('constraints');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function jobFields()
+    {
+
+        return $this->belongsToMany(JobField::class, 'data_model_job_fields', 'data_model_id', 'field_id')->withPivot('constraints');
     }
 
 } 

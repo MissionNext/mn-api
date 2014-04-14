@@ -9,6 +9,7 @@ class DataModelFieldSeeder extends BaseSeeder
     {
         DB::statement($this->getDbStatement()->truncateTable("data_model_candidate_fields"));
         DB::statement($this->getDbStatement()->truncateTable("data_model_organization_fields"));
+        DB::statement($this->getDbStatement()->truncateTable("data_model_job_fields"));
 
         /** @var  $application Application */
         $application = Application::find(1);
@@ -21,9 +22,15 @@ class DataModelFieldSeeder extends BaseSeeder
             ->organizationFields()
             ->sync([ 1, 2, 3 ]);
 
+
         $application->DM(BaseDataModel::AGENCY)
         ->agencyFields()
         ->sync([ 1, 2, 3, 4 ]);
+
+
+        $application->DM(BaseDataModel::JOB)
+            ->jobFields()
+            ->sync([ 1, 2, 3, 4, 5 ]);
 
     }
 }

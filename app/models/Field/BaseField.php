@@ -7,7 +7,7 @@ use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\ModelInterface;
 
-abstract class BaseField extends Eloquent implements IField, ModelInterface
+abstract class BaseField extends Eloquent
 {
 
     public $timestamps = false;

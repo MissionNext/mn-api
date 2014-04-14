@@ -9,6 +9,7 @@ use MissionNext\Models\Field\FieldType;
 class FieldControllerTest extends TestCase
 {
 
+
     /** @see Api\Field\Controller::getIndex */
    public function testCandidateGetIndex()
    {
@@ -92,6 +93,29 @@ class FieldControllerTest extends TestCase
         ];
 
         $response =  $this->authorizedCall('POST', $organization.'/field', $paramams);
+
+        $responseData = $response->getData();
+
+        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
+        $this->assertEquals("state", $responseData->data->list[0]->symbol_key);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+    /** @see Api\Field\Controller::postIndex */
+    public function testJobPostIndex()
+    {
+        $job = BaseDataModel::JOB;
+        $paramams = [];
+
+        $paramams["fields"][] = [
+            "symbol_key" => "state",
+            "name" => "State",
+            "type" => FieldType::CHECKBOX,
+            "default_value" => 'in_progress',
+            "choices"=> 'in_progress,ready',
+        ];
+
+        $response =  $this->authorizedCall('POST', $job.'/field', $paramams);
 
         $responseData = $response->getData();
 
@@ -266,6 +290,44 @@ class FieldControllerTest extends TestCase
 
         $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
         $this->assertEquals("date", $responseData->data->list[0]->pivot->constraints);
+        $this->assertTrue((bool)$responseData->status);
+    }
+
+    /**
+     * @see Api\Field\Controller::postModel
+     *
+     */
+    public function testPostJobModelIndex()
+    {
+        $job = BaseDataModel::JOB;
+        $paramams = [];
+        $paramams["fields"][] = [
+            "id" => 1,
+            "constraints" => "required",
+        ];
+        $paramams["fields"][] = [
+            "id" => 2,
+            "constraints" => "required|min:3",
+        ];
+        $paramams["fields"][] = [
+            "id" => 3,
+            "constraints" => "required|min:3",
+        ];
+        $paramams["fields"][] = [
+            "id" => 4,
+            "constraints" => "required",
+        ];
+        $paramams["fields"][] = [
+            "id" => 5,
+            "constraints" => "required",
+        ];
+
+        $response =  $this->authorizedCall('POST', $job.'/field/model', $paramams);
+
+        $responseData = $response->getData();
+
+        $this->assertEquals(count($paramams["fields"]), count($responseData->data->list));
+        $this->assertEquals("required", $responseData->data->list[0]->pivot->constraints);
         $this->assertTrue((bool)$responseData->status);
     }
 

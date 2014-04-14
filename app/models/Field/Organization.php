@@ -9,7 +9,7 @@ use MissionNext\Models\User\User as UserModel;
 use MissionNext\Models\Dictionary\Organization as OrganizationDictionary;
 use MissionNext\Models\DataModel\AppDataModel;
 
-class Organization extends BaseField implements ModelInterface
+class Organization extends BaseField implements ModelInterface, IRoleField
 {
 
     protected $table = 'organization_fields';

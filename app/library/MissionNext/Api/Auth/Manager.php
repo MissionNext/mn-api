@@ -37,7 +37,7 @@ class Manager
 
         FSecContext::setToken($token);
 
-        if (($current_timestamp - $token->created) > 60 ){//@TODO fix timestamp authentication
+        if (($current_timestamp - $token->created) > 120 ){//@TODO fix timestamp authentication
             throw new AuthenticationException("Timedout", 1);
         } elseif ( ($current_timestamp < $token->created) && !App::environment('local') ) {
             throw new AuthenticationException("Invalid timestamp", 2);

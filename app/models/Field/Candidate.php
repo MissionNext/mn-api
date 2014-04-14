@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Models\Dictionary\Candidate as CandidateDictionary;
 
-class Candidate extends BaseField implements ModelInterface
+class Candidate extends BaseField implements ModelInterface, IRoleField
 {
 
     protected $table = 'candidate_fields';

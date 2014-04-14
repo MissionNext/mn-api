@@ -9,6 +9,9 @@ class BaseDataModel extends Eloquent
     const ORGANIZATION = "organization";
     const AGENCY = "agency";
 
+    const JOB = "job";
+
+
     public static function createCandidate()
     {
 
@@ -25,6 +28,12 @@ class BaseDataModel extends Eloquent
     {
 
         return static::create(["type" => self::AGENCY]);
+    }
+
+    public static function createJob()
+    {
+
+        return static::create(["type" => self::JOB]);
     }
 
 } 

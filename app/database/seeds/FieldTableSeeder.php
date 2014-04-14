@@ -8,6 +8,37 @@ class FieldTableSeeder extends BaseSeeder
             DB::statement($this->getDbStatement()->truncateTable("candidate_fields"));
             DB::statement($this->getDbStatement()->truncateTable("organization_fields"));
             DB::statement($this->getDbStatement()->truncateTable("agency_fields"));
+            DB::statement($this->getDbStatement()->truncateTable("job_fields"));
+
+            DB::table('job_fields')->insert(array(
+
+                array(
+                    "symbol_key" => "job_title",
+                    "name" => "Job title",
+                    "type" => FieldType::SELECT,
+                ),
+
+                array(
+                    "symbol_key" => "second_title",
+                    "name" => "Second Title",
+                    "type" => FieldType::INPUT,
+                ),
+                array(
+                    "symbol_key" => "job_location",
+                    "name" => "Job location",
+                    "type" => FieldType::INPUT,
+                ),
+                array(
+                    "symbol_key" => "world_region",
+                    "name" => "World region",
+                    "type" => FieldType::SELECT,
+                ),
+                array(
+                    "symbol_key" => "position_type",
+                    "name" => "Position Type",
+                    "type" => FieldType::SELECT,
+                ),
+            ));
 
             DB::table('candidate_fields')->insert(array(
 

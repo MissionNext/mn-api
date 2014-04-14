@@ -36,6 +36,7 @@ class CreateDataModelFields extends Migration
       $this->createModelToFields(BaseDataModel::CANDIDATE);
       $this->createModelToFields(BaseDataModel::ORGANIZATION);
       $this->createModelToFields(BaseDataModel::AGENCY);
+      $this->createModelToFields(BaseDataModel::JOB);
     }
 
     /**
@@ -48,6 +49,7 @@ class CreateDataModelFields extends Migration
        $this->dropModelToFields(BaseDataModel::CANDIDATE);
        $this->dropModelToFields(BaseDataModel::ORGANIZATION);
        $this->dropModelToFields(BaseDataModel::AGENCY);
+       $this->dropModelToFields(BaseDataModel::JOB);
     }
 
 }

@@ -8,6 +8,8 @@ use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Field\Agency;
 use MissionNext\Models\Field\Candidate;
 use MissionNext\Models\Field\Organization;
+use MissionNext\Models\Job\Job;
+use MissionNext\Models\Job\JobField;
 
 abstract class Field
 {
@@ -34,6 +36,9 @@ abstract class Field
                 break;
             case BaseDataModel::ORGANIZATION:
                 $modelClassName = Organization::class;
+                break;
+            case BaseDataModel::JOB:
+                $modelClassName = JobField::class;
                 break;
             default:
                 throw new SecurityContextException("Undefined role ".$securityContext->role());

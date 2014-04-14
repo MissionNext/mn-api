@@ -30,6 +30,9 @@ class TestDatabaseSeeder extends BaseSeeder
         $this->call('UserTableSeeder');
         $this->command->info('User table seeded!');
 
+        $this->call('JobTableSeeder');
+        $this->command->info('Job table seeded!');
+
         $this->call('RoleTableSeeder');
         $this->command->info('Role table seeded!');
 

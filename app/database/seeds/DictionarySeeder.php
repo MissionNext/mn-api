@@ -8,9 +8,48 @@ class DictionarySeeder extends BaseSeeder
         DB::statement($this->getDbStatement()->truncateTable("agency_dictionary"));
         DB::statement($this->getDbStatement()->truncateTable("organization_dictionary"));
         DB::statement($this->getDbStatement()->truncateTable("candidate_dictionary"));
+        DB::statement($this->getDbStatement()->truncateTable("job_dictionary"));
 
 
+        DB::table('job_dictionary')->insert(array(
+            array(
+                "field_id" => 1,
+                "value" => "Arts - Performing",
+            ),
+            array(
+                "field_id" => 1,
+                "value" => "Administrator",
+            ),
+            array(
+                "field_id" => 1,
+                "value" => "Art Teacher",
+            ),
+            array(
+                "field_id" => 4,
+                "value" => "Africa",
+            ),
+            array(
+                "field_id" => 4,
+                "value" => "Americas",
+            ),
+            array(
+                "field_id" => 4,
+                "value" => "Americas",
+            ),
+            array(
+                "field_id" => 5,
+                "value" => "Administration",
+            ),
+            array(
+                "field_id" => 5,
+                "value" => "Arts - Performing",
+            ),
+            array(
+                "field_id" => 5,
+                "value" => "Arts - Visual",
+            ),
 
+        ));
 
 
         DB::table('candidate_dictionary')->insert(array(

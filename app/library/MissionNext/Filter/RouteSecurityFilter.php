@@ -20,7 +20,7 @@ class RouteSecurityFilter
     const ROLE = 'role';
     const ROLE_M = 'role';
 
-    static public $ALLOWED_ROLES = [BaseDataModel::AGENCY, BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION];
+    static public $ALLOWED_ROLES = [BaseDataModel::AGENCY, BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, BaseDataModel::JOB];
 
     /**
      * @param Router $route

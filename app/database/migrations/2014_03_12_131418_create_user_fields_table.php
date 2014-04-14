@@ -34,6 +34,7 @@ class CreateUserFieldsTable extends Migration
         $this->createFieldsTable(BaseDataModel::CANDIDATE);
         $this->createFieldsTable(BaseDataModel::ORGANIZATION);
         $this->createFieldsTable(BaseDataModel::AGENCY);
+        $this->createFieldsTable(BaseDataModel::JOB);
     }
 
     /**
@@ -46,6 +47,7 @@ class CreateUserFieldsTable extends Migration
         $this->dropFieldsTable(BaseDataModel::CANDIDATE);
         $this->dropFieldsTable(BaseDataModel::ORGANIZATION);
         $this->dropFieldsTable(BaseDataModel::AGENCY);
+        $this->dropFieldsTable(BaseDataModel::JOB);
     }
 
 }

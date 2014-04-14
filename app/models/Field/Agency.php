@@ -9,7 +9,7 @@ use MissionNext\Models\User\User as UserModel;
 use MissionNext\Models\Dictionary\Agency as AgencyDictionary;
 use MissionNext\Models\DataModel\AppDataModel;
 
-class Agency extends BaseField implements ModelInterface
+class Agency extends BaseField implements ModelInterface, IRoleField
 {
 
     protected $table = 'agency_fields';

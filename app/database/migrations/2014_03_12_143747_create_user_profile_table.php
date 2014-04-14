@@ -13,11 +13,12 @@ class CreateUserProfileTable extends Migration
      */
     public function up()
     {
-       $create =  function ($role)
+       $create =  function ($role, $isJob = false)
         {
-            Schema::create($role . '_profile', function (Blueprint $table) use ($role) {
-                $table->unsignedInteger('user_id');
-                $table->foreign("user_id")->references('id')->on('users')->onDelete('cascade');
+            $name = $isJob ? "job" : "user";
+            Schema::create($role . '_profile', function (Blueprint $table) use ($role, $name) {
+                $table->unsignedInteger($name.'_id');
+                $table->foreign($name."_id")->references('id')->on($name.'s')->onDelete('cascade');
 
                 $table->unsignedInteger('field_id');
                 $table->foreign("field_id")->references('id')->on($role . '_fields')->onDelete('cascade');
@@ -30,6 +31,7 @@ class CreateUserProfileTable extends Migration
        $create(BaseDataModel::CANDIDATE);
        $create(BaseDataModel::ORGANIZATION);
        $create(BaseDataModel::AGENCY);
+       $create(BaseDataModel::JOB, true);
 
     }
 
@@ -47,6 +49,7 @@ class CreateUserProfileTable extends Migration
        $drop(BaseDataModel::CANDIDATE);
        $drop(BaseDataModel::ORGANIZATION);
        $drop(BaseDataModel::AGENCY);
+       $drop(BaseDataModel::JOB);
     }
 
 }
