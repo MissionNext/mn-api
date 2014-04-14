@@ -1,18 +1,19 @@
 <?php
-namespace Api\Field;
+namespace MissionNext\Controllers\Api\Field;
 
-use Api\BaseController;
+
 use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
+use MissionNext\Controllers\Api\BaseController;
 
 /**
  * Class Controller
- * @package Api\Profile
- * @description Field Controller
+ * @package MissionNext\Controllers\Api\Field
  */
-class Controller extends BaseController {
+class Controller extends BaseController
+{
 
     /**
      * @param $type
@@ -20,9 +21,9 @@ class Controller extends BaseController {
      * @return RestResponse
      */
     public function getIndex($type)
-	{
+    {
         return new RestResponse($this->fieldRepo()->fieldsExpanded()->get());
-	}
+    }
 
     /**
      * @param $type
@@ -69,7 +70,6 @@ class Controller extends BaseController {
     }
 
 
-
     /**
      * @param $type
      *
@@ -90,10 +90,10 @@ class Controller extends BaseController {
      */
     public function postModel($type)
     {
-        $fields =  Input::get("fields", []);
+        $fields = Input::get("fields", []);
         $sync = [];
-        foreach($fields as $field){
-            $sync[ $field["id"] ] = ["constraints" => $field["constraints"]];
+        foreach ($fields as $field) {
+            $sync[$field["id"]] = ["constraints" => $field["constraints"]];
         }
 
         $mFields = $this->fieldRepo()->modelFields();
@@ -108,8 +108,8 @@ class Controller extends BaseController {
 
         $viewIdsToRemove = array_diff($idsBeforSync, $idsAfterSync);
 
-        if (!empty($viewIdsToRemove)){
-            $symbol_keys =  $this->fieldRepo()->getModel()->whereIn('id', $viewIdsToRemove)->lists('symbol_key');
+        if (!empty($viewIdsToRemove)) {
+            $symbol_keys = $this->fieldRepo()->getModel()->whereIn('id', $viewIdsToRemove)->lists('symbol_key');
             $this->viewFieldRepo()->deleteByDMSymbolKeys($this->getApp()->DM(), $symbol_keys);
         }
 

@@ -6,6 +6,7 @@ namespace MissionNext\Repos\Field;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\Field\BaseField;
+use MissionNext\Models\ProfileInterface;
 use MissionNext\Repos\RepositoryInterface;
 use MissionNext\Models\User\User as UserModel;
 
@@ -24,6 +25,6 @@ interface FieldRepositoryInterface extends  RepositoryInterface {
 
     public function modelFields();
 
-    public function profileFields(UserModel $user);
+    public function profileFields(ProfileInterface $user);
 
 } 

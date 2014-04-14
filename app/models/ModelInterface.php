@@ -1,9 +1,11 @@
 <?php
-
 namespace MissionNext\Models;
 
-interface ModelInterface {
+use Illuminate\Database\Eloquent\Model;
+/** @see Model  */
+interface ModelInterface
+{
 
-    const prefix_ns = 'MissionNext\Models';
+    public function save();
 
 }

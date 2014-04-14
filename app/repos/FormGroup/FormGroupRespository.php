@@ -37,7 +37,7 @@ class FormGroupRepository extends AbstractRepository implements FormGroupReposit
      */
     public function dependentFields()
     {
-        $dm = $this->securityContext->getApp()->DM();
+       $dm = $this->securityContext->getApp()->DM();
 
        $builder =   $this->getModel()
             ->select('form_groups.depends_on', \DB::raw(Sql::getDbStatement()->groupConcat('group_fields.symbol_key','symbol_keys')) )

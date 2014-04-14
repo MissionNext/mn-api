@@ -32,8 +32,8 @@ class ApplicationSeeder extends BaseSeeder {
         $application2->save();
         $application2->dataModels()->save(AppDataModel::createCandidate());
         $application2->dataModels()->save(AppDataModel::createOrganization());
+        $application2->dataModels()->save(AppDataModel::createAgency());
         $application2->dataModels()->save(AppDataModel::createJob());
-
 
     }
 

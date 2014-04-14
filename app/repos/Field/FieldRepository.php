@@ -6,7 +6,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\FieldException;
 use MissionNext\DB\SqlStatement\Sql;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Field\Candidate;
+use MissionNext\Models\ProfileInterface;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
 
@@ -80,15 +82,16 @@ class FieldRepository extends AbstractFieldRepository
     }
 
     /**
-     * @param UserModel $user
+     * @param ProfileInterface $user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function profileFields(UserModel $user)
+    public function profileFields(ProfileInterface $user)
     {
         $role = $this->securityContext->role(); // or this->model->roleType
+        $userName = $role === BaseDataModel::JOB ? BaseDataModel::JOB : "user";
 
-        return $user->belongsToMany($this->getModelClassName(), $role . '_profile', 'user_id', 'field_id')->withPivot('value');
+        return $user->belongsToMany($this->getModelClassName(), $role . '_profile', $userName.'_id', 'field_id')->withPivot('value');
     }
 
     /**

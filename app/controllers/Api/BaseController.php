@@ -1,5 +1,5 @@
 <?php
-namespace Api;
+namespace MissionNext\Controllers\Api;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
@@ -14,6 +14,7 @@ use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application as AppModel;
 use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\Profile;
+use MissionNext\Models\ProfileInterface;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Repos\Field\FieldRepository;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
@@ -21,6 +22,8 @@ use MissionNext\Repos\Form\FormRepository;
 use MissionNext\Repos\Form\FormRepositoryInterface;
 use MissionNext\Repos\FormGroup\FormGroupRepository;
 use MissionNext\Repos\FormGroup\FormGroupRepositoryInterface;
+use MissionNext\Repos\User\JobRepository;
+use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
@@ -40,6 +43,8 @@ class BaseController extends Controller
     private $formRepo;
     /** @var \MissionNext\Repos\FormGroup\FormGroupRepositoryInterface  */
     private $formGroupRepo;
+    /** @var \MissionNext\Repos\User\JobRepositoryInterface  */
+    private $jobRepo;
 
     /**
      * Set filters
@@ -49,7 +54,8 @@ class BaseController extends Controller
                                 UserRepositoryInterface $userRepo,
                                 ViewFieldRepositoryInterface $viewFieldRepo,
                                 FormRepositoryInterface $formRepo,
-                                FormGroupRepositoryInterface $formGroupRepo
+                                FormGroupRepositoryInterface $formGroupRepo,
+                                JobRepositoryInterface $jobRepo
     )
     {
         $this->fieldRepo = $fieldRepo;
@@ -57,6 +63,7 @@ class BaseController extends Controller
         $this->viewFieldRepo = $viewFieldRepo;
         $this->formRepo = $formRepo;
         $this->formGroupRepo = $formGroupRepo;
+        $this->jobRepo = $jobRepo;
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
 
@@ -78,6 +85,14 @@ class BaseController extends Controller
     {
 
         return  $this->userRepo;
+    }
+    /**
+     * @return JobRepository
+     */
+    protected function jobRepo()
+    {
+
+        return  $this->jobRepo;
     }
     /** @return ViewFieldRepository */
     protected function viewFieldRepo()
@@ -188,26 +203,26 @@ class BaseController extends Controller
         if ($validator->fails()) {
             throw new ValidationException($validator->messages());
         }
-
         return $fields;
     }
 
     /**
-     * @param UserModel $user
+     * @param ProfileInterface $user
      * @param array $profileData
      *
-     * @return UserModel
-     * @throws \MissionNext\Api\Exceptions\ValidationException
-     * @throws \MissionNext\Api\Exceptions\ProfileException
+     * @return ProfileInterface
      */
-    protected function updateUserProfile(UserModel $user, array $profileData = null)
+    protected function updateUserProfile(ProfileInterface $user, array $profileData = null)
     {
         if (empty($profileData)) {
+
+            $user->save();
 
             return $user;
         }
 
         $fields = $this->validateProfileData($profileData);
+        $user->save();
         $mapping = [];
 
         foreach ($fields as $field) {
@@ -215,8 +230,6 @@ class BaseController extends Controller
                 $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]];
             }//@TODO if example favourite_movies[] = '', no errors;
         }
-
-        $user->save(); //@TODO SAVE USER other place
 
         foreach ($mapping as $key => $map) {
             $this->fieldRepo()->profileFields($user)->detach($key, $map);

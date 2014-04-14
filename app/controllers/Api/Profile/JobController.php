@@ -1,6 +1,7 @@
 <?php
-namespace MissionNext\Controllers\Api\Profile;
 
+
+namespace MissionNext\Controllers\Api\Profile;
 
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
@@ -9,11 +10,7 @@ use MissionNext\Models\User\User as UserModel;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as Req;
 
-/**
- * Class Controller
- * @package MissionNext\Controllers\Api\Profile
- */
-class Controller extends BaseController
+class JobController extends BaseController
 {
 
     /**
@@ -25,10 +22,11 @@ class Controller extends BaseController
      */
     public function show($id)
     {
-        $profileFieldsQuery = $this->fieldRepo()->profileFields($this->userRepo()->find($id));
+        $profileFieldsQuery = $this->fieldRepo()->profileFields($this->jobRepo()->find($id));
 
-        return new RestResponse($this->userRepo()->profileStructure($profileFieldsQuery->get()));
+        return new RestResponse($this->jobRepo()->profileStructure($profileFieldsQuery->get()));
     }
+
 
     /**
      * @param $id
@@ -37,8 +35,7 @@ class Controller extends BaseController
      */
     public function update($id)
     {
-        /** @var  $user UserModel */
-        $user = $this->userRepo()->find($id);
+        $job = $this->jobRepo()->find($id);
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
@@ -46,9 +43,9 @@ class Controller extends BaseController
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
-        $this->updateUserProfile($user, $hash);
+        $this->updateUserProfile($job, $hash);
 
-        return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user)->get()));
+        return new RestResponse( $this->jobRepo()->profileStructure($this->fieldRepo()->profileFields($job)->get()));
     }
 
     /**

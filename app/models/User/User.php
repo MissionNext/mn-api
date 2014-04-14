@@ -9,13 +9,14 @@ use MissionNext\Models\EloquentObservable;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\ModelObservable;
 use MissionNext\Models\Observers\UserObserver;
+use MissionNext\Models\ProfileInterface;
 use MissionNext\Models\Role\Role as RoleModel;
 use MissionNext\Models\Field\Candidate as CandidateField;
 use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
 
-class User extends ModelObservable implements UserInterface, RemindableInterface, ModelInterface
+class User extends ModelObservable implements UserInterface, RemindableInterface, ProfileInterface
 {
 
     /**
