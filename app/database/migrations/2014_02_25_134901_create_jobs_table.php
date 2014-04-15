@@ -15,8 +15,10 @@ class CreateJobsTable extends Migration {
 		Schema::create('jobs', function(Blueprint $table)
 		{
             $table->increments('id');
-            $table->string('name')->nullable()->default(NULL);
+            $table->string('name')->nullable();
             $table->string('symbol_key', 60)->unique();
+            $table->unsignedInteger('organization_id');
+            $table->foreign("organization_id")->references('id')->on('users');
             $table->timestamps();
 		});
 	}

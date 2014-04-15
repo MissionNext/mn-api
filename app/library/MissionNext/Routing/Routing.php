@@ -4,6 +4,7 @@ namespace MissionNext\Routing;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\User\UserController;
 use MissionNext\Controllers\Api\Profile\Controller as ProfileController;
 use MissionNext\Controllers\Api\Field\Controller as FieldController;
@@ -37,6 +38,9 @@ class Routing
             Route::pattern('form', '[A-Za-z_-]+');
             Route::controller('{type}/field', FieldController::class, [
                 'getModel' => 'model.fields.get'
+            ]);
+            Route::controller('{type}/matching/config', ConfigController::class, [
+
             ]);
 
             Route::resource(static::RESOURCE_JOB_PROFILE, JobProfileController::class,

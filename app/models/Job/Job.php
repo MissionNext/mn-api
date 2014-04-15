@@ -4,6 +4,7 @@ namespace MissionNext\Models\Job;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\ModelObservable;
 use MissionNext\Models\ProfileInterface;
+use MissionNext\Models\User\User as UserModel;
 
 class Job extends ModelObservable implements ProfileInterface
 {
@@ -27,6 +28,15 @@ class Job extends ModelObservable implements ProfileInterface
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function organization()
+    {
+
+      return $this->belongsTo(UserModel::class, 'organization_id', 'id');
+    }
+
+    /**
      * @param $symbolKey
      *
      * @return $this
@@ -34,6 +44,18 @@ class Job extends ModelObservable implements ProfileInterface
     public function setSymbolKey($symbolKey)
     {
         $this->symbol_key = $symbolKey;
+
+        return $this;
+    }
+
+    /**
+     * @param UserModel $organization
+     *
+     * @return $this
+     */
+    public function setOrganization(UserModel $organization)
+    {
+        $this->organization()->associate($organization);
 
         return $this;
     }

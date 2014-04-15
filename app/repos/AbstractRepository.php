@@ -17,8 +17,6 @@ abstract class AbstractRepository implements RepositoryInterface
     public function __construct()
     {
         $this->model = new $this->modelClassName;
-
-
     }
 
     public function create(array $attributes)
@@ -45,6 +43,12 @@ abstract class AbstractRepository implements RepositoryInterface
     public function destroy($ids)
     {
         return call_user_func_array("{$this->modelClassName}::destroy", array($ids));
+    }
+
+    public function with($string)
+    {
+
+        return call_user_func_array("{$this->modelClassName}::destroy", array($string));
     }
 
 } 

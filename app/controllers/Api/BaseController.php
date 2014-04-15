@@ -22,6 +22,8 @@ use MissionNext\Repos\Form\FormRepository;
 use MissionNext\Repos\Form\FormRepositoryInterface;
 use MissionNext\Repos\FormGroup\FormGroupRepository;
 use MissionNext\Repos\FormGroup\FormGroupRepositoryInterface;
+use MissionNext\Repos\Matching\ConfigRepository;
+use MissionNext\Repos\Matching\ConfigRepositoryInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
@@ -45,6 +47,8 @@ class BaseController extends Controller
     private $formGroupRepo;
     /** @var \MissionNext\Repos\User\JobRepositoryInterface  */
     private $jobRepo;
+    /** @var \MissionNext\Repos\Matching\ConfigRepositoryInterface  */
+    private $matchingConfigRepo;
 
     /**
      * Set filters
@@ -55,7 +59,8 @@ class BaseController extends Controller
                                 ViewFieldRepositoryInterface $viewFieldRepo,
                                 FormRepositoryInterface $formRepo,
                                 FormGroupRepositoryInterface $formGroupRepo,
-                                JobRepositoryInterface $jobRepo
+                                JobRepositoryInterface $jobRepo,
+                                ConfigRepositoryInterface $matchingConfigRepo
     )
     {
         $this->fieldRepo = $fieldRepo;
@@ -64,6 +69,7 @@ class BaseController extends Controller
         $this->formRepo = $formRepo;
         $this->formGroupRepo = $formGroupRepo;
         $this->jobRepo = $jobRepo;
+        $this->matchingConfigRepo = $matchingConfigRepo;
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
 
@@ -76,6 +82,15 @@ class BaseController extends Controller
     {
 
         return $this->fieldRepo;
+    }
+
+    /**
+     * @return ConfigRepository
+     */
+    protected function matchingConfigRepo()
+    {
+
+        return $this->matchingConfigRepo;
     }
 
     /**

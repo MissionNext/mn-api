@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
+use MissionNext\Models\User\User;
+
 /**
  * Class JobController
  * @package MissionNext\Controllers\Api
@@ -23,7 +25,7 @@ class JobController extends BaseController
     public function index()
     {
 
-        return new RestResponse($this->jobRepo()->all());
+        return new RestResponse($this->jobRepo()->getModel()->with('organization')->get());
     }
 
 
@@ -34,14 +36,16 @@ class JobController extends BaseController
      */
     public function store()
     {
-        $validationData = [ "name" => Input::get("name"),
+        $validationData = [
+            "name" => Input::get("name"),
             "symbol_key" =>  Input::get("symbol_key"),
-
+            "organization_id" => Input::get("organization_id")
         ];
 
         $constraints = [
             "name" => "required|between:3,100",
             "symbol_key" => "required|unique:jobs,symbol_key",
+            "organization_id" => "required|integer|exists:users,id"
         ];
         /** @var  $validator \Illuminate\Validation\Validator */
         $validator = Validator::make(
@@ -54,12 +58,15 @@ class JobController extends BaseController
         }
 
         /** @var  $req \Symfony\Component\HttpFoundation\Request */
-        $profileData = Input::except("timestamp","name","symbol_key");
+        $profileData = Input::except("timestamp","name","symbol_key","organization_id");
+        /** @var  $organization User */
+        $organization = $this->userRepo()->getModel()->findOrFail(Input::get('organization_id'));
 
         $jobRepo = $this->jobRepo();
         $job = $jobRepo->getModel();
         $job->setName(Input::get("name"))
-            ->setSymbolKey(Input::get("symbol_key"));
+            ->setSymbolKey(Input::get("symbol_key"))
+            ->setOrganization($organization);
 
         $this->updateUserProfile($job, $profileData);
 
@@ -76,7 +83,7 @@ class JobController extends BaseController
     public function show($id)
     {
 
-        return new RestResponse($this->jobRepo()->find($id));
+        return new RestResponse($this->jobRepo()->getModel()->with('organization')->find($id));
     }
 
     /**
@@ -89,7 +96,7 @@ class JobController extends BaseController
     public function update($id)
     {
         $user = $this->userRepo()->find($id);
-        $data = Request::only(["name", "symbol_key"]);
+        $data = Request::only(["name", "symbol_key", "organization_id"]);
         $filteredData = array_filter($data);
         foreach ($filteredData as $prop => $val) {
             $user->$prop = $val;
@@ -119,7 +126,7 @@ class JobController extends BaseController
      */
     public function find()
     {
-        $searchByData = Request::only(["name", "symbol_key"]);
+        $searchByData = Request::only(["name", "symbol_key", "organization_id"]);
         $searchByData = array_filter($searchByData);
         $str = '';
         $arrV = [];

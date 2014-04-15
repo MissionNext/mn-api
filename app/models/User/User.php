@@ -6,6 +6,7 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
 use MissionNext\Models\EloquentObservable;
+use MissionNext\Models\Job\Job;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\ModelObservable;
 use MissionNext\Models\Observers\UserObserver;
@@ -123,6 +124,15 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     {
 
         return $this->belongsToMany(AgencyField::class, 'agency_profile', 'user_id', 'field_id')->withPivot('value');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function jobs()
+    {
+
+       return $this->hasMany(Job::class, 'organization_id', 'id');
     }
 
     /**
