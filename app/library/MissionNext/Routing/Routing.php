@@ -57,6 +57,10 @@ class Routing
                 'names' => ['store' => static::ROUTE_CREATE_JOB], 'except' => ['create','edit']
             ]);
 
+            Route::group(array('prefix' => static::RESOURCE_JOB), function () {
+                Route::post('find', JobController::class.'@find');
+            });
+
             Route::group(array('prefix' => static::RESOURCE_USER), function () {
                 Route::post('find', UserController::class.'@find');
                 Route::post('check', UserController::class.'@check');
