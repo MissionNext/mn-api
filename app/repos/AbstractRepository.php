@@ -4,6 +4,7 @@ namespace MissionNext\Repos;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use MissionNext\Models\ModelInterface;
 
 abstract class AbstractRepository implements RepositoryInterface
 {
@@ -45,10 +46,14 @@ abstract class AbstractRepository implements RepositoryInterface
         return call_user_func_array("{$this->modelClassName}::destroy", array($ids));
     }
 
+    /**
+     * @param $string
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
     public function with($string)
     {
 
-        return call_user_func_array("{$this->modelClassName}::destroy", array($string));
+        return call_user_func_array("{$this->modelClassName}::with", array($string));
     }
 
 } 

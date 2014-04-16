@@ -18,6 +18,8 @@ class SecurityProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(EventProvider::class);
+
         $this->app->singleton('rest.token', function () {
 
             return new Token();

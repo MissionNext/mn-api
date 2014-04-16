@@ -2,18 +2,11 @@
 
 namespace MissionNext\Models\Matching;
 
-use MissionNext\Facade\SecurityContext;
-use MissionNext\Models\DataModel\BaseDataModel;
-use MissionNext\Models\Job\JobField;
-use MissionNext\Models\ModelInterface;
-use MissionNext\Models\ModelObservable;
 use MissionNext\Models\Application\Application as AppModel;
 use MissionNext\Models\Field\Candidate as CandidateFieldModel;
-use MissionNext\Models\Field\Organization as OrgFieldModel;
 
-class Config extends ModelObservable implements ModelInterface
+class Config extends BaseConfig
 {
-    protected $table = '';
 
     public $timestamps = false;
 
@@ -24,21 +17,11 @@ class Config extends ModelObservable implements ModelInterface
           MATCHING_LESS = 5,
           MATCHING_LIKE = 6;
 
-    /**
-     * @var array
-     */
-    private $matchingFieldModelNames =
-        [
-            BaseDataModel::JOB => JobField::class ,
-            BaseDataModel::ORGANIZATION => OrgFieldModel::class
-        ];
+
 
     protected $fillable = array('weight', 'matching_type');
 
-    public function __construct(array $attributes = array()){
-         parent::__construct($attributes);
-         $this->table = 'matching_'.SecurityContext::getInstance()->role().'_config';
-    }
+
 
     /**
      * @param $matchingType
@@ -70,16 +53,16 @@ class Config extends ModelObservable implements ModelInterface
     public function matchingField()
     {
 
-        return $this->belongsTo($this->matchingFieldModelName(), SecurityContext::getInstance()->role().'_field_id', 'id');
+        return $this->belongsTo($this->matchingFieldModelName(), $this->role.'_field_id', 'id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function candidateField()
+    public function mainField()
     {
 
-        return $this->belongsTo(CandidateFieldModel::class, 'candidate_field_id', 'id');
+        return $this->belongsTo(CandidateFieldModel::class, 'main_field_id', 'id');
     }
 
     /**
@@ -91,13 +74,5 @@ class Config extends ModelObservable implements ModelInterface
         return $this->belongsTo(AppModel::class, 'app_id', 'id');
     }
 
-    /**
-     * @return string
-     */
-    protected function matchingFieldModelName()
-    {
-
-        return $this->matchingFieldModelNames[SecurityContext::getInstance()->role()];
-    }
 
 } 

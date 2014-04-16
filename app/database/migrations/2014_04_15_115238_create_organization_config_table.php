@@ -14,8 +14,8 @@ class CreateOrganizationConfigTable extends Migration {
             $table->increments('id');
             $table->unsignedInteger('app_id');
             $table->foreign('app_id')->references('id')->on('application')->onDelete('cascade');
-            $table->unsignedInteger('candidate_field_id');
-            $table->foreign("candidate_field_id")->references('id')->on('candidate_fields')->onDelete('cascade');
+            $table->unsignedInteger('main_field_id');
+            $table->foreign("main_field_id")->references('id')->on('candidate_fields')->onDelete('cascade');
             $table->unsignedInteger($field.'_field_id');
             $table->foreign($field."_field_id")->references('id')->on($field.'_fields')->onDelete('cascade');
             $table->tinyInteger("weight")->default(0);

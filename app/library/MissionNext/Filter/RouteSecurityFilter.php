@@ -3,13 +3,16 @@
 namespace MissionNext\Filter;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Route as Router;
 use MissionNext\Api\Exceptions\SecurityContextException;
+use MissionNext\Events;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\User\User as UserModel;
 use Illuminate\Http\Request as LRequest;
+use MissionNext\Provider\EventProvider;
 use MissionNext\Routing\Routing;
 
 class RouteSecurityFilter
@@ -45,6 +48,9 @@ class RouteSecurityFilter
                 throw new SecurityContextException("'$role' role doesn't exists", SecurityContextException::ON_SET_ROLE);
             }
         }
+
+        Event::fire(Events::FILTER_ROLE, [SecurityContext::getInstance()]);
+
     }
 
     public function authorize($route, $request)

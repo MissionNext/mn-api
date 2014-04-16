@@ -70,6 +70,7 @@ class BaseController extends Controller
         $this->formGroupRepo = $formGroupRepo;
         $this->jobRepo = $jobRepo;
         $this->matchingConfigRepo = $matchingConfigRepo;
+
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
 

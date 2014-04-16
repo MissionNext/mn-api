@@ -13,6 +13,8 @@ interface RepositoryInterface {
 
     public function find($id, $columns = array('*'));
 
+    public function with($string);
+
     public function destroy($ids);
 
     /**
