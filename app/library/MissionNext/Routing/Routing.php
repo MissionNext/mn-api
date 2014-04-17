@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\User\UserController;
-use MissionNext\Controllers\Api\Profile\Controller as ProfileController;
+use MissionNext\Controllers\Api\Profile\UserController as UserProfileController;
 use MissionNext\Controllers\Api\Field\Controller as FieldController;
 use MissionNext\Controllers\Api\Form\Controller as FormController;
 use MissionNext\Controllers\Api\JobController;
@@ -68,7 +68,7 @@ class Routing
 
 
 
-            Route::resource(static::RESOURCE_PROFILE, ProfileController::class,
+            Route::resource(static::RESOURCE_PROFILE, UserProfileController::class,
                 [  'except' => ['index','create', 'store', 'edit'] ]
             );
 

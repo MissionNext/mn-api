@@ -4,7 +4,6 @@ namespace MissionNext\DB\SqlStatement;
 use Illuminate\Support\Facades\DB;
 use MissionNext\DB\SqlStatement\RepositoryInterface\IViewFieldRepository;
 use MissionNext\Repos\AbstractRepository;
-use MissionNext\Repos\ViewField\ViewFieldRepository;
 
 class Sql {
 

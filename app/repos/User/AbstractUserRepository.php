@@ -6,6 +6,7 @@ namespace MissionNext\Repos\User;
 
 use MissionNext\Models\ProfileInterface;
 use MissionNext\Repos\AbstractRepository;
+use MyProject\Proxies\__CG__\stdClass;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Support\Collection;
 use MissionNext\Models\Profile;
@@ -38,6 +39,7 @@ abstract class AbstractUserRepository extends AbstractRepository
      */
     public function profileStructure(Collection $fields)
     {
+
         $profile = new Profile();
 
         $fields->each(function ($field) use ($profile) {
@@ -48,7 +50,7 @@ abstract class AbstractUserRepository extends AbstractRepository
                 $profile->$key = FieldType::isMultiple($field->type) ? [$field->pivot->value] : $field->pivot->value;
             }
         });
-
+        $profile->userData = $this->getModel()->toArray();
         return $profile;
 
     }

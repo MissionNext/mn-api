@@ -38,6 +38,23 @@ class FieldTableSeeder extends BaseSeeder
                     "name" => "Position Type",
                     "type" => FieldType::SELECT,
                 ),
+                array(
+                    "symbol_key" => "subject_speciality",
+                    "name" => "Subject Speciality",
+                    "type" => FieldType::SELECT,
+                ),
+                array(
+                    "symbol_key" => "alternate_speciality",
+                    "name" => "Alternate Speciality",
+                    "type" => FieldType::SELECT,
+                ),
+                array(
+                    "symbol_key" => "job_comment",
+                    "name" => "Job Comment",
+                    "type" => FieldType::TEXT,
+                ),
+
+
             ));
 
             DB::table('candidate_fields')->insert(array(
@@ -126,32 +143,42 @@ class FieldTableSeeder extends BaseSeeder
                 array(
                     "symbol_key" => "country",
                     "name" => "Country",
-                    "type" => 2,
+                    "type" => FieldType::DATE,
                 ),
                 array(
                     "symbol_key" => "zip_code",
                     "name" => "Zip Code",
-                    "type" => 3,
+                    "type" =>  FieldType::INPUT,
                 ),
                 array(
                     "symbol_key" => "hobby",
                     "name" => "Hobby",
-                    "type" => 3,
+                    "type" =>  FieldType::INPUT,
                 ),
                 array(
                     "symbol_key" => "occupation",
                     "name" => "Occupation",
-                    "type" => 3,
+                    "type" =>  FieldType::INPUT,
                 ),
                 array(
                     "symbol_key" => "first_name",
                     "name" => "First name",
-                    "type" => 3,
+                    "type" =>  FieldType::INPUT,
                 ),
                 array(
                     "symbol_key" => "last_name",
                     "name" => "Last name",
-                    "type" => 3,
+                    "type" =>  FieldType::INPUT,
+                ),
+                array(
+                    "symbol_key" => "favourite_movies",
+                    "name" => "Favourite movies",
+                    "type" => FieldType::CHECKBOX,
+                ),
+                array(
+                    "symbol_key" => "gender",
+                    "name" => "gender",
+                    "type" => FieldType::RADIO,
                 ),
 
             ));
@@ -161,25 +188,46 @@ class FieldTableSeeder extends BaseSeeder
                 array(
                     "symbol_key" => "birth_date",
                     "name" => "Birth date",
-                    "type" => 1,
+                    "type" => FieldType::DATE,
                 ),
 
                 array(
                     "symbol_key" => "country",
                     "name" => "Country",
-                    "type" => 2,
+                    "type" => FieldType::SELECT,
                 ),
 
                 array(
                     "symbol_key" => "first_name",
                     "name" => "First name",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
                 ),
 
                 array(
                     "symbol_key" => "last_name",
                     "name" => "Last name",
-                    "type" => 3,
+                    "type" => FieldType::INPUT,
+                ),
+
+                array(
+                    "symbol_key" => "about_me",
+                    "name" => "About me",
+                    "type" => FieldType::TEXT,
+                ),
+                array(
+                    "symbol_key" => "agree_with_terms",
+                    "name" => "Agree with terms of services",
+                    "type" => FieldType::BOOLEAN,
+                ),
+                array(
+                    "symbol_key" => "favourite_movies",
+                    "name" => "Favourite movies",
+                    "type" => FieldType::CHECKBOX,
+                ),
+                array(
+                    "symbol_key" => "gender",
+                    "name" => "gender",
+                    "type" => FieldType::RADIO,
                 ),
 
 

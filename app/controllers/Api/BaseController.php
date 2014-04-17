@@ -238,6 +238,7 @@ class BaseController extends Controller
         }
 
         $fields = $this->validateProfileData($profileData);
+
         $user->save();
         $mapping = [];
 

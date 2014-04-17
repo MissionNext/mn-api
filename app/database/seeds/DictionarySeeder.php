@@ -48,6 +48,22 @@ class DictionarySeeder extends BaseSeeder
                 "field_id" => 5,
                 "value" => "Arts - Visual",
             ),
+            array(
+                "field_id" => 6,
+                "value" => "Bible",
+            ),
+            array(
+                "field_id" => 6,
+                "value" => "Computer & Keyboarding",
+            ),
+            array(
+                "field_id" => 7,
+                "value" => "English",
+            ),
+            array(
+                "field_id" => 7,
+                "value" => "ESL",
+            ),
 
         ));
 

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Request;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Role\Role;
+use MissionNext\Validators\User as UserValidator;
 
 /**
  * Class UserController
@@ -48,26 +49,11 @@ class UserController extends BaseController
      */
     public function store()
     {
-        $validationData = [ "password" => Input::get("password"),
-            "email" =>  Input::get("email"),
-            "role" => Input::get("role"),
-            "username" => Input::get("username"),
-        ];
+        $userValidator = new UserValidator( Request::instance() );
 
-        $constraints = [
-            "password" => "required|between:3,100",
-            "email" => "required|unique:users,email|email",
-            "role" => "exists:roles,role",
-            "username" => "required|unique:users,username"
-        ];
-        /** @var  $validator \Illuminate\Validation\Validator */
-        $validator = Validator::make(
-            $validationData,
-            $constraints
-        );
-        if ($validator->fails())
+        if (!$userValidator->passes())
         {
-            throw new ValidationException($validator->messages());
+            throw new ValidationException($userValidator->getErrors());
         }
 
         /** @var  $req \Symfony\Component\HttpFoundation\Request */
@@ -115,17 +101,25 @@ class UserController extends BaseController
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
+     * @param $id
      *
      * @return RestResponse
+     *
+     * @throws \MissionNext\Api\Exceptions\ValidationException
      */
     public function update($id)
     {
         $user = $this->userRepo()->find($id);
         $data = Request::only(["username", "email", "password"]);
         $filteredData = array_filter($data);
+
+        $modelValidator = new UserValidator(Request::instance());
+
+        if (!$modelValidator->passes()){
+
+            throw new ValidationException($modelValidator->getErrors());
+        }
+
         foreach ($filteredData as $prop => $val) {
             $user->$prop = $prop === "password" ? Hash::make($val) : $val;
         }

@@ -9,6 +9,7 @@ use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Models\User\User;
+use MissionNext\Validators\Job as JobValidator;
 
 /**
  * Class JobController
@@ -36,25 +37,11 @@ class JobController extends BaseController
      */
     public function store()
     {
-        $validationData = [
-            "name" => Input::get("name"),
-            "symbol_key" =>  Input::get("symbol_key"),
-            "organization_id" => Input::get("organization_id")
-        ];
+        $jobValidator = new JobValidator(Request::instance());
 
-        $constraints = [
-            "name" => "required|between:3,100",
-            "symbol_key" => "required|unique:jobs,symbol_key",
-            "organization_id" => "required|integer|exists:users,id"
-        ];
-        /** @var  $validator \Illuminate\Validation\Validator */
-        $validator = Validator::make(
-            $validationData,
-            $constraints
-        );
-        if ($validator->fails())
+        if (!$jobValidator->passes())
         {
-            throw new ValidationException($validator->messages());
+            throw new ValidationException($jobValidator->getErrors());
         }
 
         /** @var  $req \Symfony\Component\HttpFoundation\Request */
@@ -87,17 +74,23 @@ class JobController extends BaseController
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
+     * @param $id
      *
      * @return RestResponse
+     *
+     * @throws \MissionNext\Api\Exceptions\ValidationException
      */
     public function update($id)
     {
-        $user = $this->userRepo()->find($id);
+        $user = $this->jobRepo()->find($id);
         $data = Request::only(["name", "symbol_key", "organization_id"]);
         $filteredData = array_filter($data);
+        $jobValidator = new JobValidator(Request::instance());
+        if (!$jobValidator->passes()){
+
+            throw new ValidationException($jobValidator->getErrors());
+        }
+
         foreach ($filteredData as $prop => $val) {
             $user->$prop = $val;
         }
