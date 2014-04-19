@@ -54,7 +54,10 @@ class DatabaseSeeder extends BaseSeeder
         $this->command->info('AppFormSeeder table seeded!');
 
         $this->call('UserProfileSeeder');
-        $this->command->comment('UserProfileSeeder table seeded!');
+        $this->command->info('UserProfileSeeder table seeded!');
+
+        $this->call('UserCachedProfileSeeder');
+        $this->command->comment('UserCachedProfileSeeder table seeded!');
     }
 
 }
