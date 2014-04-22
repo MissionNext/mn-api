@@ -5,6 +5,7 @@ namespace MissionNext\Routing;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Matching\ConfigController;
+use MissionNext\Controllers\Api\Profile\SearchController;
 use MissionNext\Controllers\Api\User\UserController;
 use MissionNext\Controllers\Api\Profile\UserController as UserProfileController;
 use MissionNext\Controllers\Api\Field\Controller as FieldController;
@@ -71,6 +72,10 @@ class Routing
             Route::resource(static::RESOURCE_PROFILE, UserProfileController::class,
                 [  'except' => ['index','create', 'store', 'edit'] ]
             );
+
+            Route::controller('{type}/search', SearchController::class, [
+
+            ]);
 
         });
 

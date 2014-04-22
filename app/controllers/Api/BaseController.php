@@ -1,6 +1,7 @@
 <?php
 namespace MissionNext\Controllers\Api;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -50,6 +51,10 @@ class BaseController extends Controller
     private $jobRepo;
     /** @var \MissionNext\Repos\Matching\ConfigRepositoryInterface  */
     private $matchingConfigRepo;
+    /**
+     * @var \Illuminate\Http\Request
+     */
+    protected $request;
 
     /**
      * Set filters
@@ -61,9 +66,12 @@ class BaseController extends Controller
                                 FormRepositoryInterface $formRepo,
                                 FormGroupRepositoryInterface $formGroupRepo,
                                 JobRepositoryInterface $jobRepo,
-                                ConfigRepositoryInterface $matchingConfigRepo
+                                ConfigRepositoryInterface $matchingConfigRepo,
+                                Request $request
     )
+
     {
+        $this->request = $request;
         $this->fieldRepo = $fieldRepo;
         $this->userRepo = $userRepo;
         $this->viewFieldRepo = $viewFieldRepo;
