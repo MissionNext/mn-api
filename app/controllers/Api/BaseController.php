@@ -12,6 +12,7 @@ use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application as AppModel;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\Profile;
 use MissionNext\Models\ProfileInterface;
@@ -73,7 +74,6 @@ class BaseController extends Controller
 
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
-
     }
 
     /**
@@ -240,6 +240,7 @@ class BaseController extends Controller
         $fields = $this->validateProfileData($profileData);
 
         $user->save();
+
         $mapping = [];
 
         foreach ($fields as $field) {
@@ -260,6 +261,7 @@ class BaseController extends Controller
         }
         if (!empty($mapping)) {
             $user->touch();
+            $this->userRepo()->updateUserCachedData($user);
         }
 
         return $user;

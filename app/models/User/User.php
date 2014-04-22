@@ -4,6 +4,7 @@ namespace MissionNext\Models\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use MissionNext\Models\EloquentObservable;
 use MissionNext\Models\Job\Job;
@@ -16,6 +17,7 @@ use MissionNext\Models\Field\Candidate as CandidateField;
 use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
+use MissionNext\Repos\User\UserRepositoryInterface;
 
 class User extends ModelObservable implements UserInterface, RemindableInterface, ProfileInterface
 {
@@ -80,13 +82,13 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
     public function setRole(Role $role)
     {
-        $this->onSaved(function ($user) {
+        $this->onCreated(function ($user) {
             /** @var $user User */
-            $user->roles()->attach($user->observer()->getRole());
+            $user->roles()->sync([$user->observer()->getRole()->id]);
 
         });
 
-        User::observe($this->setObserver( (new UserObserver())->setRole($role) ));
+        User::observe($this->setObserver( (new UserObserver())->setRole($role)->setUserRepo(App::make(UserRepositoryInterface::class)) ));
 
         return $this;
     }

@@ -25,6 +25,8 @@ class UserProfileSeeder extends BaseSeeder
 
         $candidate->candidateFields()->attach(1, array('value' => "1990-11-11"));
         $candidate->candidateFields()->attach(2, array('value' => $choiceCan->value));
+        $candidate->candidateFields()->attach(13, array('value' => "Bamby"));
+        $candidate->candidateFields()->attach(13, array('value' => "Buration"));
 
         $org->organizationFields()->attach(1, array('value' => "1985-11-11"));
         $org->organizationFields()->attach(2, array('value' => $choiceOrg->value));

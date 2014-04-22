@@ -16,6 +16,8 @@ abstract class ModelObservable extends Model {
 
     private  $onSaved = [];
 
+    private $onCreated = [];
+
     /**
      * @return ModelObserverInterface
      */
@@ -56,12 +58,39 @@ abstract class ModelObservable extends Model {
     }
 
     /**
+     * @param callable $handler
+     *
      * @return array
+     *
+     * @throws \MissionNext\Api\Exceptions\ModelObservableException
+     */
+    public function onCreated(\Closure $handler)
+    {
+        if (is_callable($handler)) {
+            $this->onCreated[] = $handler;
+        } else {
+            throw new ModelObservableException("Attached handler is not callable ", ModelObservableException::ON_CREATED);
+        }
+
+        return $this->onCreated;
+    }
+
+    /**
+     * @return \Closure[]
      */
     public function getOnSaved()
     {
 
         return $this->onSaved;
+    }
+
+    /**
+     * @return \Closure[]
+     */
+    public function getOnCreated()
+    {
+
+        return $this->onCreated;
     }
 
 } 

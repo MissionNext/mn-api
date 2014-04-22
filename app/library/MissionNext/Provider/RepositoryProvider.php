@@ -26,40 +26,39 @@ class RepositoryProvider extends ServiceProvider
     public function register()
     {
 
-        App::bind(FieldRepositoryInterface::class, function(){
+        App::bind(FieldRepositoryInterface::class, function () {
 
             //@TODO based on condition return different model Repository
             return (new SecurityContextResolver(new FieldRepository()))->getResolvedObject();
         });
 
-        App::bind(UserRepositoryInterface::class, function(){
-
-            return new UserRepository();
+        App::bind(UserRepositoryInterface::class, function () {
+            return (new SecurityContextResolver(new UserRepository()))->getResolvedObject();
         });
 
-        App::bind(ViewFieldRepositoryInterface::class, function(){
+        App::bind(ViewFieldRepositoryInterface::class, function () {
 
             return new ViewFieldRepository();
         });
 
-        App::bind(FormRepositoryInterface::class, function(){
+        App::bind(FormRepositoryInterface::class, function () {
 
             return new FormRepository();
         });
 
-        App::bind(FormGroupRepositoryInterface::class, function(){
+        App::bind(FormGroupRepositoryInterface::class, function () {
 
-            return (new SecurityContextResolver( new FormGroupRepository()))->getResolvedObject();
+            return (new SecurityContextResolver(new FormGroupRepository()))->getResolvedObject();
         });
 
-        App::bind(JobRepositoryInterface::class, function(){
+        App::bind(JobRepositoryInterface::class, function () {
 
-            return new JobRepository();
+            return (new SecurityContextResolver(new JobRepository()))->getResolvedObject();
         });
 
-        App::bind(ConfigRepositoryInterface::class, function(){
+        App::bind(ConfigRepositoryInterface::class, function () {
 
-            return (new SecurityContextResolver( new ConfigRepository()))->getResolvedObject();
+            return (new SecurityContextResolver(new ConfigRepository()))->getResolvedObject();
         });
 
     }

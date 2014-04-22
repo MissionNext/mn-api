@@ -8,6 +8,7 @@ use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Repos\Field\FieldRepositoryInterface;
 
 /**
  * Class Controller
@@ -59,9 +60,14 @@ class Controller extends BaseController
 //        ");
 
         $statement = DB::select("
-        SELECT * FROM user_cached_profile  where ? <@  json_array_text(data->'profileData'->'alternate_speciality')
+        SELECT * FROM user_cached_profile  where ? <@  json_array_text(data->'profileData'->'favourite_movies')
 
-        ", ['{"\"pm\"","\"driver\""}']);
+        ", [addslashes('{"Buration"}')]);
+
+
+
+     //  dd();
+       // dd(json_encode();
 //        $statement = DB::select("
 //        SELECT json_array_text(data->'profileData'->'alternate_speciality')  FROM user_cached_profile  where user_id=3
 //
@@ -70,7 +76,8 @@ class Controller extends BaseController
 //        SELECT  data->'profileData'->>'alternate_speciality' FROM user_cached_profile
 //
 //        ");
-        //dd($statement);
+      //  dd($statement);
+
         return new RestResponse($this->fieldRepo()->fieldsExpanded()->get());
     }
 

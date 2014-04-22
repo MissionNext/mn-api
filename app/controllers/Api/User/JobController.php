@@ -2,13 +2,17 @@
 
 namespace MissionNext\Controllers\Api;
 
+use Illuminate\Support\Facades\App;
 use MissionNext\Controllers\Api\BaseController;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
+use MissionNext\Models\Job\Job;
+use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\User\User;
+use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Validators\Job as JobValidator;
 
 /**
@@ -54,6 +58,9 @@ class JobController extends BaseController
         $job->setName(Input::get("name"))
             ->setSymbolKey(Input::get("symbol_key"))
             ->setOrganization($organization);
+
+        $job::observe($job->setObserver( (new UserObserver())->setUserRepo(App::make(JobRepositoryInterface::class)) ) );
+
 
         $this->updateUserProfile($job, $profileData);
 
