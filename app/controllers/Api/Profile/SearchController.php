@@ -11,24 +11,29 @@ use MissionNext\Api\Exceptions\SearchProfileException;
 
 class SearchController extends BaseController
 {
+    /**
+     * @param $type
+     * @return RestResponse
+     * @throws \MissionNext\Api\Exceptions\SearchProfileException
+     */
     public function postIndex($type)
     {
         $profileSearch = $this->request->get("profileData");
         $bindings = [];
-        $query = "SELECT * FROM user_cached_profile";
-        $where = " WHERE ";
+        $query = "SELECT * FROM user_cached_profile  ";
+        $where = " WHERE ( ";
         if (!empty($profileSearch)) {
             foreach ($profileSearch as $fieldName => $value) {
 
                 if (is_array($value)) {
-                    $query .= $where . " ? <@ json_array_text(data->'profileData'->'{$fieldName}') ";
+                    $query .= $where . " ? && json_array_text(data->'profileData'->'{$fieldName}') ";
                     $bindings[] = addslashes(str_replace(["[", "]"], ["{", "}"], json_encode($value)));
                 } else {
                     $query .= $where . " ? = data->'profileData'->>'{$fieldName}' ";
                     $bindings[] = $value;
                 }
 
-                $where = " AND ";
+                $where = " OR ";
             }
         }
         $userSearch = $this->request->except("profileData", "timestamp");
@@ -40,15 +45,18 @@ class SearchController extends BaseController
             }
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
-            $query .= " AND type = ?";
+            $query .= " ) AND type = ?";
             $bindings[] = $this->securityContext()->role();
         } else {
-           throw new SearchProfileException("No search params specified");
+
+            throw new SearchProfileException("No search params specified");
         }
         //dd($query, $bindings);
-        return new RestResponse(array_map(function($d){
-             return json_decode($d);
-        },array_fetch(DB::select($query, $bindings), 'data')));
+
+        return new RestResponse(array_map(function ($d) {
+
+            return json_decode($d->data);
+        }, DB::select($query, $bindings) ));
 
     }
 }

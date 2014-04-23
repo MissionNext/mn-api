@@ -5,8 +5,9 @@ class UserCachedProfileSeeder extends BaseSeeder
 {
     public function run()
     {
+        return;
        DB::statement($this->getDbStatement()->truncateTable('user_cached_profile'));
-       return;
+
 
        $data = json_encode((object)['username' => 'user', 'email' => 'some@mail.ru', 'profileData' => ['date'=>'1990-11-11', 'favourite_movies' => ['candy','bamby']]]);
        DB::statement("INSERT INTO user_cached_profile VALUES (2, 'candidate', '{$data}',  '2001-11-11 20:00:00', '2001-12-12 09:00:00') ");
@@ -25,4 +26,4 @@ class UserCachedProfileSeeder extends BaseSeeder
 
 
     }
-} 
+}

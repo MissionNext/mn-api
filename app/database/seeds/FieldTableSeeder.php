@@ -53,7 +53,16 @@ class FieldTableSeeder extends BaseSeeder
                     "name" => "Job Comment",
                     "type" => FieldType::TEXT,
                 ),
-
+                array(
+                    "symbol_key" => "favourite_movies",
+                    "name" => "Favourite movies",
+                    "type" => FieldType::CHECKBOX,
+                ),
+                array(
+                    "symbol_key" => "birth_date",
+                    "name" => "Birth date",
+                    "type" => FieldType::DATE,
+                ),
 
             ));
 

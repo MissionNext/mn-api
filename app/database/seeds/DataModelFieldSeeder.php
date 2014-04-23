@@ -30,7 +30,7 @@ class DataModelFieldSeeder extends BaseSeeder
 
         $application->DM(BaseDataModel::JOB)
             ->jobFields()
-            ->sync([ 1, 2, 3, 4, 5 ]);
+            ->sync([ 1, 2, 3, 4, 5, 6, 7, 8, 9  ]);
 
     }
 }

@@ -11,7 +11,6 @@ use MissionNext\Models\Field\Organization as OrgFieldModel;
 
 class BaseConfig extends ModelObservable implements ModelInterface
 {
-    protected $sec_context;
 
     protected $table = ''; //must be empty string!!
 
@@ -29,6 +28,7 @@ class BaseConfig extends ModelObservable implements ModelInterface
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);
+
         $this->role = SecurityContext::getInstance()->role();
         $this->table  = $this->role ? 'matching_'.$this->role.'_config' : '' ;
     }

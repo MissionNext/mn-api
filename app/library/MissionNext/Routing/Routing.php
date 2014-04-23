@@ -12,6 +12,7 @@ use MissionNext\Controllers\Api\Field\Controller as FieldController;
 use MissionNext\Controllers\Api\Form\Controller as FormController;
 use MissionNext\Controllers\Api\JobController;
 use MissionNext\Controllers\Api\Profile\JobController as JobProfileController;
+use MissionNext\Controllers\Api\Matching\JobController as MatchJobController;
 
 class Routing
 {
@@ -37,6 +38,8 @@ class Routing
 
             Route::pattern('type', '[A-Za-z_-]+');
             Route::pattern('form', '[A-Za-z_-]+');
+            Route::pattern('candidate_id', '\d+');
+
             Route::controller('{type}/field', FieldController::class, [
                 'getModel' => 'model.fields.get'
             ]);
@@ -49,6 +52,8 @@ class Routing
             );
 
             Route::controller('{type}/{form}/form', FormController::class);
+
+            Route::controller('match/job/{candidate_id}', MatchJobController::class);
 
             Route::resource(static::RESOURCE_USER, UserController::class, [
                 'names' => ['store' => static::ROUTE_CREATE_USER]

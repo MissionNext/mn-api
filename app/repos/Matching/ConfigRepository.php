@@ -38,4 +38,19 @@ class ConfigRepository extends AbstractConfigRepository
         return $this->getModel();
     }
 
+    public function configByCandidate($role, $id)
+    {
+        return $this->getModel()
+            ->select($role.'_fields.symbol_key as '.$role.'_key',
+                    'candidate_fields.symbol_key as candidate_key',
+                     'weight', 'matching_type')
+            ->leftJoin($role.'_fields', $role.'_fields.id', '=' , $role.'_field_id' )
+            ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
+            ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
+            ->where('app_id','=', $this->sec_context->getApp()->id)
+            ->where('candidate_profile.user_id','=', $id)
+            ->distinct();
+
+    }
+
 } 
