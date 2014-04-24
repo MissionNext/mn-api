@@ -64,7 +64,7 @@ class MatchConfigSeeder extends BaseSeeder
             ],
             [
                 "matching_type" => Config::MATCHING_EQUAL,
-                "weight" => 5,
+                "weight" => 4,
                 "matching_field_id" => 10,
                 "main_field_id" => 1,
                 "app_id" => 1
@@ -85,6 +85,7 @@ class MatchConfigSeeder extends BaseSeeder
 
         $sc->getToken()->setRoles([BaseDataModel::CANDIDATE]);
         $userRep->insertUserCachedData($userRep->find(2));
+        $userRep->insertUserCachedData($userRep->find(4));
     }
 }
 

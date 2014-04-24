@@ -23,12 +23,29 @@ class SearchController extends BaseController
         $query = "SELECT * FROM user_cached_profile  ";
         $where = " WHERE ( ";
         if (!empty($profileSearch)) {
+            $expandedFields = $this->viewFieldRepo()->getModel()->whereRaw("CAST(meta->'search_options'->>'is_expanded' AS BOOLEAN) = true")->get()->toArray();
+            if (count($expandedFields)) {
+                $expandedFields = array_fetch($expandedFields, 'symbol_key');
+            }
+          //  dd($expandedFields);
+
             foreach ($profileSearch as $fieldName => $value) {
 
                 if (is_array($value)) {
-                    $query .= $where . " ? && json_array_text(data->'profileData'->'{$fieldName}') ";
-                    $bindings[] = addslashes(str_replace(["[", "]"], ["{", "}"], json_encode($value)));
+                    if (in_array($fieldName, $expandedFields)) {
+                       // dd($fieldName);
+                        foreach ($value as $val) {
+                            $query .= $where . " ? = data->'profileData'->>'{$fieldName}' ";
+                            $bindings[] = $val;
+                            $where = " OR ";
+                        }
+                    } else {
+                        $query .= $where . " ? && json_array_text(data->'profileData'->'{$fieldName}') ";
+                        $bindings[] = addslashes(str_replace(["[", "]"], ["{", "}"], json_encode($value)));
+                    }
+
                 } else {
+                    // var_dump($fieldName);
                     $query .= $where . " ? = data->'profileData'->>'{$fieldName}' ";
                     $bindings[] = $value;
                 }
@@ -51,12 +68,12 @@ class SearchController extends BaseController
 
             throw new SearchProfileException("No search params specified");
         }
-        //dd($query, $bindings);
+       // dd($query, $bindings);
 
         return new RestResponse(array_map(function ($d) {
 
             return json_decode($d->data);
-        }, DB::select($query, $bindings) ));
+        }, DB::select($query, $bindings)));
 
     }
 }

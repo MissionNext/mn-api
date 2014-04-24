@@ -23,6 +23,10 @@ class UserTableSeeder extends BaseSeeder
                 'username' => 'organizator',
                 'created_at'=>$dateTime, 'updated_at'=>$dateTime
             ),
+            array('email' => 'candidate1@example.com', 'password' =>  Hash::make('654321'),
+                'username' => 'candidate1',
+                'created_at'=>$dateTime, 'updated_at'=>$dateTime
+            ),
         ));
 
     }

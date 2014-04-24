@@ -23,6 +23,8 @@ class DatabaseSeeder extends BaseSeeder
 
     private function runSeeders()
     {
+//        $this->call('UserCachedProfileSeeder');
+//        return;
         $this->call('ApplicationSeeder');
         $this->command->info('Application table seeded!');
 

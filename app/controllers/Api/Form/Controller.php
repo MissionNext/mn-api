@@ -90,6 +90,7 @@ class Controller extends BaseController
         $modelFields = $this->fieldRepo()->modelFieldsExpanded()->whereIn("symbol_key", $groupFields)->orderBy("symbol_key")->get()->toArray();
         $mergedData = array_replace_recursive($modelFields, $viewFields);
         $groups = [];
+        //dd($groupFields, $modelFields);
         foreach ($mergedData as $key => $data) {
             if (!isset($data["id"])) {
                 continue;
@@ -107,6 +108,7 @@ class Controller extends BaseController
             $groups[$symbolKey]["fields"][$key]["choices"] = $data["choices"] ? : [];
             $groups[$symbolKey]["fields"][$key]["default_value"] = $data["default_value"];
             $groups[$symbolKey]["fields"][$key]["order"] = $data["order"];
+            $groups[$symbolKey]["fields"][$key]["meta"] = json_decode($data["meta"]);
             $groups[$symbolKey]["fields"][$key]["id"] = $data["id"];//@TODO default_value to array
         }
         $groups = array_values($groups);
@@ -150,11 +152,19 @@ class Controller extends BaseController
         foreach ($formGroups as $group) {
 
             $fieldsToIns = array_map(function ($field) use ($timestamp, $group) { //@TODO cannot be associated field_group has no id
+
+
+               $searchOptions =   ["search_options"=>["is_expanded" => false ]];
+               if  (isset($field["is_expanded"])){
+                  $searchOptions["search_options"]["is_expanded"] = (bool)$field["is_expanded"];
+               }
+
                 return
                     array(
                         "group_id" => $group["id"],
                         "symbol_key" => $field["symbol_key"],
                         "order" => $field["order"],
+                        "meta" => json_encode($searchOptions),
                         "created_at" => $timestamp,
                         "updated_at" => $timestamp,
                     );
