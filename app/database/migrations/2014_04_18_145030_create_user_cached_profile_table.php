@@ -14,13 +14,37 @@ class CreateUserCachedProfileTable extends Migration {
     public function up()
     {
         if (DB::getDefaultConnection() === \MissionNext\DB\SqlStatement\Sql::PostgreSQL) {
-            DB::statement("CREATE TABLE user_cached_profile
-              (user_id serial NOT NULL,
-               type VARCHAR (60),
+            DB::statement("
+               CREATE TABLE candidate_cached_profile
+              (id serial NOT NULL,
                data json,
                created_at timestamp without time zone NOT NULL,
                updated_at timestamp without time zone NOT NULL,
-               CONSTRAINT user_profile_user_id_type_unique UNIQUE  (user_id, type)
+               CONSTRAINT candidate_user_id_unique UNIQUE  (id)
+            )");
+            DB::statement("
+               CREATE TABLE organization_cached_profile
+              (id serial NOT NULL,
+               data json,
+               created_at timestamp without time zone NOT NULL,
+               updated_at timestamp without time zone NOT NULL,
+               CONSTRAINT organization_user_id_unique UNIQUE  (id)
+            )");
+            DB::statement("
+              CREATE TABLE agency_cached_profile
+              (id serial NOT NULL,
+               data json,
+               created_at timestamp without time zone NOT NULL,
+               updated_at timestamp without time zone NOT NULL,
+               CONSTRAINT agency_user_id_unique UNIQUE  (id)
+            )");
+            DB::statement("
+              CREATE TABLE job_cached_profile
+              (id serial NOT NULL,
+               data json,
+               created_at timestamp without time zone NOT NULL,
+               updated_at timestamp without time zone NOT NULL,
+               CONSTRAINT job_user_id_unique UNIQUE  (id)
             )");
 
            // DB::statement(" CREATE UNIQUE INDEX profile_data_symbol_key ON user_cached_profile ((data->'profileData'->>'symbol_key')) ");
@@ -36,7 +60,10 @@ class CreateUserCachedProfileTable extends Migration {
     public function down()
     {
         if (DB::getDefaultConnection() === \MissionNext\DB\SqlStatement\Sql::PostgreSQL) {
-            DB::statement("DROP TABLE IF EXISTS user_cached_profile");
+            DB::statement("DROP TABLE IF EXISTS candidate_cached_profile");
+            DB::statement("DROP TABLE IF EXISTS organization_cached_profile");
+            DB::statement("DROP TABLE IF EXISTS agency_cached_profile");
+            DB::statement("DROP TABLE IF EXISTS job_cached_profile");
         }
     }
 

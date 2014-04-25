@@ -56,7 +56,9 @@ class JobController extends BaseController
                         if (isset($canProfile[$candidateKey])) {
                             $jobValue = $canProfile[$candidateKey];
                             $canValue = $jobProfile[$jobKey];
-                           // dd($jobValue, $canValue);
+                            if ($job['id'] == 3) {
+                                var_dump("job_value =", $jobValue, "can_value=", $canValue);
+                            }
                             if (!is_array($jobValue)){
 
                                 $jobValue = [$jobValue];
@@ -93,7 +95,7 @@ class JobController extends BaseController
 
                 return !in_array($job["id"], $bannedJobIds);
             }));
-
+              exit;
             $tempJobData = $jobData;
             foreach ($configArr as $config) {
                 foreach ($jobData as $idx => $job) {

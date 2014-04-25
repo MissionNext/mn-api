@@ -20,7 +20,8 @@ class SearchController extends BaseController
     {
         $profileSearch = $this->request->get("profileData");
         $bindings = [];
-        $query = "SELECT * FROM user_cached_profile  ";
+        $tableName = $type.'_cached_profile';
+        $query = "SELECT * FROM {$tableName}  ";
         $where = " WHERE ( ";
         if (!empty($profileSearch)) {
             $expandedFields = $this->viewFieldRepo()->getModel()->whereRaw("CAST(meta->'search_options'->>'is_expanded' AS BOOLEAN) = true")->get()->toArray();
@@ -28,7 +29,7 @@ class SearchController extends BaseController
                 $expandedFields = array_fetch($expandedFields, 'symbol_key');
             }
           //  dd($expandedFields);
-
+           //  dd($profileSearch);
             foreach ($profileSearch as $fieldName => $value) {
 
                 if (is_array($value)) {
@@ -62,13 +63,13 @@ class SearchController extends BaseController
             }
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
-            $query .= " ) AND type = ?";
-            $bindings[] = $this->securityContext()->role();
-        } else {
+            $query .= " ) ";
+        }else{
 
             throw new SearchProfileException("No search params specified");
         }
-       // dd($query, $bindings);
+
+        //dd($query, $bindings);
 
         return new RestResponse(array_map(function ($d) {
 

@@ -6,6 +6,7 @@ namespace MissionNext\Repos\User;
 
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Auth\ISecurityContextAware;
+use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\ProfileInterface;
 use MissionNext\Repos\AbstractRepository;
@@ -87,18 +88,8 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
         $this->model = $user;
         $role = $this->securityContext->role(); // or this->model->roleType
         $userName = $role === BaseDataModel::JOB ? BaseDataModel::JOB : "user";
+
         return $this->profileStructure($user->belongsToMany(Field::currentFieldModelName($this->securityContext), $this->securityContext->role() . '_profile', $userName.'_id', 'field_id')->withPivot('value')->get());
-
-
-//        $model = $this->getModel()->find($id);
-//
-//        $role = $model->roles()->first()->role;
-//
-//        return $model
-//            ->select( "users.username", $role."_profile.value", $role."_fields.symbol_key")
-//            ->leftJoin($role."_profile", "users.id", '=', $role."_profile.user_id" )
-//            ->leftJoin($role."_fields", $role."_profile.field_id", '=', $role.'_fields.id')
-//            ->where("users.id" ,"=", $id);
 
     }
 
@@ -106,18 +97,23 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
     {
         $d = $this->profileData($user);
 
-        DB::statement("INSERT INTO {$this->userCacheTable} VALUES ({$user->id}, ?, '{$d->toJson()}' , ?, ?) "
-            ,[$this->securityContext->role(), $user->created_at, $user->updated_at]
-        );
+        $userCachedData = (new UserCachedData())->setType($this->securityContext->role());
+
+        $userCachedData->setUser($user)
+                       ->setProfileData($d);
+
+        $userCachedData->save();
+
     }
 
     public function updateUserCachedData(ProfileInterface $user)
     {
         $d = $this->profileData($user);
+        /** @var  $userCachedData UserCachedData */
+        $userCachedData = (new UserCachedData())->setType($this->securityContext->role())->find($user->id);
+        $userCachedData->setProfileData($d)
+                       ->save();
 
-        DB::statement("UPDATE {$this->userCacheTable} SET data = '{$d->toJson()}' ,
-             created_at = ?, updated_at = ? WHERE user_id = ? AND type = ? ",
-            [$user->created_at, $user->updated_at, $user->id, $this->securityContext->role()]);
     }
 
 } 

@@ -13,7 +13,10 @@ class MatchConfigSeeder extends BaseSeeder
     {
         DB::statement($this->getDbStatement()->truncateTable("matching_job_config"));
         DB::statement($this->getDbStatement()->truncateTable("matching_organization_config"));
-        DB::statement($this->getDbStatement()->truncateTable("user_cached_profile"));
+        DB::statement($this->getDbStatement()->truncateTable("organization_cached_profile"));
+        DB::statement($this->getDbStatement()->truncateTable("job_cached_profile"));
+        DB::statement($this->getDbStatement()->truncateTable("agency_cached_profile"));
+        DB::statement($this->getDbStatement()->truncateTable("candidate_cached_profile"));
         /** @var  $sc SecurityContext */
         $sc = Fsc::getInstance();
 
@@ -23,22 +26,22 @@ class MatchConfigSeeder extends BaseSeeder
         $configRep = (new \MissionNext\Repos\Matching\ConfigRepository())->setSecurityContext($sc);
         /**
          * (job_id, can_id)
-         * matching (2, 6), (3, 2), (5, 5), (6, 4), (9, 13), (10, 1)
+         * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1)
          */
 
         $configs = [
             [
               "matching_type" => Config::MATCHING_EQUAL,
-              "weight" => 5,
-              "matching_field_id" => 2,
-              "main_field_id" => 6,
+              "weight" => 4,
+              "matching_field_id" => 1, //"job_title" - select
+              "main_field_id" => 6, // skype_handle - input
               "app_id" => 1
             ],
             [
                 "matching_type" => Config::MATCHING_EQUAL,
                 "weight" => 5,
-                "matching_field_id" => 3,
-                "main_field_id" => 2,
+                "matching_field_id" => 3, // job_location - input - job
+                "main_field_id" => 2, // country - select - job
                 "app_id" => 1
             ],
             [
@@ -58,15 +61,15 @@ class MatchConfigSeeder extends BaseSeeder
             [
                 "matching_type" => Config::MATCHING_EQUAL,
                 "weight" => 5,
-                "matching_field_id" => 9,
-                "main_field_id" => 13,
+                "matching_field_id" => 2, //second_title - input - job
+                "main_field_id" => 13,//favourite_movies - checkbox - candidate
                 "app_id" => 1
             ],
             [
-                "matching_type" => Config::MATCHING_EQUAL,
+                "matching_type" => Config::MATCHING_LESS, //job less than candidate
                 "weight" => 4,
-                "matching_field_id" => 10,
-                "main_field_id" => 1,
+                "matching_field_id" => 10, //birth_date - date -job
+                "main_field_id" => 1, // birth_date - candidate
                 "app_id" => 1
             ],
 
