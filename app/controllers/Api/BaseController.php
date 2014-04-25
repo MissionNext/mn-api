@@ -269,7 +269,9 @@ class BaseController extends Controller
         }
         if (!empty($mapping)) {
             $user->touch();
+
             $this->userRepo()->updateUserCachedData($user);
+
         }
 
         return $user;

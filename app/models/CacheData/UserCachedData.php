@@ -4,15 +4,23 @@
 namespace MissionNext\Models\CacheData;
 
 
+use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\ModelInterface;
-use MissionNext\Models\ModelObservable;
 use MissionNext\Models\Profile;
 use MissionNext\Models\ProfileInterface;
+use Illuminate\Database\Eloquent\Model;
 
-class UserCachedData extends ModelObservable implements ModelInterface
+class UserCachedData extends Model implements ModelInterface
 {
     protected $fillable = array('user_id', 'data');
 
+
+    public function __construct( array $attr = [])
+    {
+        $this->table = SecurityContext::getInstance()->role()."_cached_profile";
+
+        parent::__construct($attr);
+    }
     /**
      * @param $type
      *
