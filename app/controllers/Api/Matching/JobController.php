@@ -28,10 +28,10 @@ class JobController extends BaseController
             return new RestResponse([]);
         }
 
-        $candidateData = DB::select("SELECT data FROM user_cached_profile WHERE user_id = ? AND type = ? ", [$candidate_id, BaseDataModel::CANDIDATE]);
+        $candidateData = DB::select("SELECT data FROM candidate_cached_profile WHERE id = ? ", [$candidate_id] );
         if (!empty($candidateData)) {
             $candidateData = json_decode($candidateData[0]->data, true);
-            $jobData = DB::select("SELECT data FROM user_cached_profile WHERE type = ? ", [BaseDataModel::JOB]);
+            $jobData = DB::select("SELECT data FROM job_cached_profile");
             $jobData = !empty($jobData) ? array_map(function ($d) {
                     return json_decode($d->data, true);
                 }, $jobData) : [];
@@ -56,9 +56,9 @@ class JobController extends BaseController
                         if (isset($canProfile[$candidateKey])) {
                             $jobValue = $canProfile[$candidateKey];
                             $canValue = $jobProfile[$jobKey];
-                            if ($job['id'] == 3) {
-                                var_dump("job_value =", $jobValue, "can_value=", $canValue);
-                            }
+//                            if ($job['id'] == 3) {
+//                                var_dump("job_value =", $jobValue, "can_value=", $canValue);
+//                            }
                             if (!is_array($jobValue)){
 
                                 $jobValue = [$jobValue];
@@ -95,7 +95,7 @@ class JobController extends BaseController
 
                 return !in_array($job["id"], $bannedJobIds);
             }));
-              exit;
+            //  exit;
             $tempJobData = $jobData;
             foreach ($configArr as $config) {
                 foreach ($jobData as $idx => $job) {

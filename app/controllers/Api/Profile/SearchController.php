@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Api\Exceptions\SearchProfileException;
+use MissionNext\Models\SearchData\SearchData;
 
 class SearchController extends BaseController
 {
@@ -51,7 +52,7 @@ class SearchController extends BaseController
                     $bindings[] = $value;
                 }
 
-                $where = " OR ";
+                $where = " AND ";
             }
         }
         $userSearch = $this->request->except("profileData", "timestamp");
@@ -77,4 +78,23 @@ class SearchController extends BaseController
         }, DB::select($query, $bindings)));
 
     }
+
+
+   public function postFor($search_type, $user_type, $user_id )
+   {
+       $search_data = $this->request->request->get("search_data");
+      // dd(json_encode($search_data));
+       $search_name = $this->request->request->get("search_name");
+       $search = SearchData::create([
+           "search_name"=> $search_name,
+           "search_type"=>$search_type,
+           "user_type"=>$user_type,
+           "user_id"=>$user_id,
+           "data" => json_encode($search_data)
+       ]);
+
+
+      return new RestResponse($search);
+
+   }
 }

@@ -169,8 +169,10 @@ class UserController extends BaseController
     {
         $password = Request::input('password');
         $username = Request::input('username');
-        $user = $this->userRepo()->getModel()->whereUsername($username)->first();
+        $user = $this->userRepo()->getModel()->with('roles')->whereUsername($username)->first();
         $user && !Hash::check($password, $user->password) && $user = null;
+        $user = $user->toArray();
+        $user['roles'] = $user['roles'][0]['role'];
 
         return new RestResponse($user);
     }
