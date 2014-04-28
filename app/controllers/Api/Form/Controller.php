@@ -129,6 +129,7 @@ class Controller extends BaseController
     {
         $timestamp = (new \DateTime)->format("Y-m-d H:i:s");
         $groupSymbolKeys = array_fetch($reqGroups, "symbol_key");
+
         $groupsInsert = array_map(function ($group) use ($form, $timestamp) {
             return [
                 "symbol_key" => $group["symbol_key"],
@@ -169,6 +170,8 @@ class Controller extends BaseController
                         "updated_at" => $timestamp,
                     );
             }, $group["fields"]);
+
+         //   print_r($fieldsToIns); exit;
 
 
             FieldGroup::insert($fieldsToIns);

@@ -3,6 +3,7 @@
 namespace MissionNext\Controllers\Api;
 
 use Illuminate\Support\Facades\App;
+use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Controllers\Api\BaseController;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -107,15 +108,18 @@ class JobController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     *
+     * @param $id
+     * @param $organizationId
      * @return RestResponse
+     * @throws \MissionNext\Api\Exceptions\UserException
      */
-    public function destroy($id)
+    public function delete($id, $organizationId)
     {
         $user = $this->jobRepo()->find($id);
+        if ($user->organization->id != $organizationId){
+
+            throw new UserException("Can't delete job, owner invalid");
+        }
         $user->delete();
 
         return new RestResponse($user);

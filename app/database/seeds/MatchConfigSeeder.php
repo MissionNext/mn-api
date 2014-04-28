@@ -41,7 +41,7 @@ class MatchConfigSeeder extends BaseSeeder
                 "matching_type" => Config::MATCHING_EQUAL,
                 "weight" => 5,
                 "matching_field_id" => 3, // job_location - input - job
-                "main_field_id" => 2, // country - select - job
+                "main_field_id" => 2, // country - select - candidate
                 "app_id" => 1
             ],
             [
@@ -61,7 +61,7 @@ class MatchConfigSeeder extends BaseSeeder
             [
                 "matching_type" => Config::MATCHING_EQUAL,
                 "weight" => 5,
-                "matching_field_id" => 2, //second_title - input - job
+                "matching_field_id" => 2, //favourite_movies - checkbox - job
                 "main_field_id" => 13,//favourite_movies - checkbox - candidate
                 "app_id" => 1
             ],
@@ -89,6 +89,9 @@ class MatchConfigSeeder extends BaseSeeder
         $sc->getToken()->setRoles([BaseDataModel::CANDIDATE]);
         $userRep->insertUserCachedData($userRep->find(2));
         $userRep->insertUserCachedData($userRep->find(4));
+
+        $sc->getToken()->setRoles([BaseDataModel::AGENCY]);
+        $userRep->insertUserCachedData($userRep->find(1));
     }
 }
 

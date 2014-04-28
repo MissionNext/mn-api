@@ -8,7 +8,11 @@ use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Api\Exceptions\SearchProfileException;
+use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\Field\Candidate;
+use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\SearchData\SearchData;
+use MissionNext\Repos\Field\Field;
 
 class SearchController extends BaseController
 {
@@ -21,13 +25,29 @@ class SearchController extends BaseController
      */
     public function search($searchType)
     {
+        SecurityContext::getInstance()->getToken()->setRoles([$searchType]);
+
         $profileSearch = $this->request->get("profileData");
+        $userSearch = $this->request->except("profileData", "timestamp");
+     //   dd($profileSearch);
+
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
         $query = "SELECT * FROM {$tableName}  ";
         $where = " WHERE ( ";
         if (!empty($profileSearch)) {
+
             $expandedFields = $this->viewFieldRepo()->getModel()->whereRaw("CAST(meta->'search_options'->>'is_expanded' AS BOOLEAN) = true")->get()->toArray();
+
+            $currentField =  Field::currentFieldModelName(SecurityContext::getInstance());
+
+            $inputFields =
+                array_fetch(
+                     (new $currentField)->where("type","=",FieldType::INPUT)->orWhere("type","=",FieldType::TEXT)->get()->toArray(),
+                      "symbol_key"
+            );
+
+
             if (count($expandedFields)) {
                 $expandedFields = array_fetch($expandedFields, 'symbol_key');
             }
@@ -37,7 +57,6 @@ class SearchController extends BaseController
 
                 if (is_array($value)) {
                     if (in_array($fieldName, $expandedFields)) {
-                       // dd($fieldName);
                         foreach ($value as $val) {
                             $query .= $where . " ? = data->'profileData'->>'{$fieldName}' ";
                             $bindings[] = $val;
@@ -49,20 +68,24 @@ class SearchController extends BaseController
                     }
 
                 } else {
-                    // var_dump($fieldName);
-                    $query .= $where . " ? = data->'profileData'->>'{$fieldName}' ";
-                    $bindings[] = $value;
+                    if (in_array($fieldName,$inputFields)){
+                        $query .= $where . " data->'profileData'->>'{$fieldName}' LIKE ?  ";
+                        $bindings[] = '%'.$value.'%';
+                    }else {
+                        $query .= $where . " ? = data->'profileData'->>'{$fieldName}' ";
+                        $bindings[] = $value;
+                    }
                 }
 
                 $where = " AND ";
             }
         }
-        $userSearch = $this->request->except("profileData", "timestamp");
+
         if (!empty($userSearch)) {
 
             foreach ($userSearch as $fN => $val) {
-                $query .= $where . " ? = data->>'{$fN}' ";
-                $bindings[] = $val;
+                $query .= $where . "  data->>'{$fN}'  LIKE ? ";
+                $bindings[] = '%'.$val.'%';
             }
         }
         if (!empty($profileSearch) || !empty($userSearch)) {

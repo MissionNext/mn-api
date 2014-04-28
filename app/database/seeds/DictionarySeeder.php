@@ -99,7 +99,7 @@ class DictionarySeeder extends BaseSeeder
             ),
             array(
                 "field_id" => 13,
-                "value" => "Bamby",
+                "value" => "(!)Bamby's",
             ),
             array(
                 "field_id" => 13,

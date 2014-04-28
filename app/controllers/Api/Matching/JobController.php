@@ -7,8 +7,11 @@ namespace MissionNext\Controllers\Api\Matching;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\Matching\Config;
+use MissionNext\Repos\Field\Field;
 
 class JobController extends BaseController
 {
@@ -44,6 +47,21 @@ class JobController extends BaseController
                 $maxMatching += $c->weight;
             });
 
+            SecurityContext::getInstance()->getToken()->setRoles([BaseDataModel::CANDIDATE]);
+            $candidateField = Field::currentFieldModelName(SecurityContext::getInstance());
+            $selectFieldTypes =  [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO ];
+            $selectCanFields = array_fetch((new $candidateField)->whereIn("type",
+               $selectFieldTypes )->get()->toArray(), 'symbol_key');
+            SecurityContext::getInstance()->getToken()->setRoles([BaseDataModel::JOB]);
+            $jobField = Field::currentFieldModelName(SecurityContext::getInstance());
+            $selectJobFields = array_fetch((new $jobField)->whereIn("type",
+                $selectFieldTypes )->get()->toArray(),'symbol_key');
+
+         //   dd($selectCanFields, $selectJobFields);
+
+
+
+
             //dd($configArr, $candidateData);
 
             foreach ($jobData as $k => $job) {
@@ -54,11 +72,9 @@ class JobController extends BaseController
                     $canProfile = $candidateData['profileData'];
                     if (isset($jobProfile[$jobKey])) {
                         if (isset($canProfile[$candidateKey])) {
-                            $jobValue = $canProfile[$candidateKey];
-                            $canValue = $jobProfile[$jobKey];
-//                            if ($job['id'] == 3) {
-//                                var_dump("job_value =", $jobValue, "can_value=", $canValue);
-//                            }
+                            $jobValue = $jobProfile[$jobKey];
+                            $canValue = $canProfile[$candidateKey];
+
                             if (!is_array($jobValue)){
 
                                 $jobValue = [$jobValue];
@@ -67,21 +83,48 @@ class JobController extends BaseController
 
                                 $canValue = [$canValue];
                             }
+//                            if ($job['id'] == 3) {
+//                                var_dump("job_key = $jobKey", "can_key = $candidateKey", "job_value =", $jobValue, "can_value=", $canValue, "weight = {$conf['weight']}");
+//                            }
+
+                            if (in_array($jobKey, $selectJobFields)){
+                                foreach($jobValue as $jV){
+                                    if (starts_with($jV,'(!)')){
+                                        $jobData[$k]["profileData"][$jobKey] =
+                                            ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
+                                        continue 2;
+                                    }
+                                }
+                            }
+
+                            if (in_array($candidateKey, $selectCanFields)){
+                                foreach($canValue as $cV){
+                                    if (starts_with($cV,'(!)')){
+                                        $jobData[$k]["profileData"][$jobKey] =
+                                            ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
+                                        continue 2;
+                                    }
+                                }
+                            }
+
+
+
 //                            array_walk($jobValue, function($val){
 //                                dd($val);
 //                            });
 //                            var_dump($jobValue, $canValue);
-                            if ($jobValue !== $canValue && $conf["weight"] == 5) {
+                            if ($canValue !== $jobValue   &&  $conf["weight"] == 5) {
+                               // var_dump($jobValue, $canValue);
                                 $bannedJobIds[] = $job["id"];
                                 continue;
                             }
 
-                            if ($jobValue !== $canValue) {
+                            if ($canValue !== $jobValue  ) {
                                 $jobData[$k]["profileData"][$jobKey] =
                                     ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => false, "weight" => $conf["weight"]];
                             }
 
-                            if ($jobValue === $canValue) {
+                            if ($canValue === $jobValue  ) {
                                 $jobData[$k]["profileData"][$jobKey] =
                                     ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
                             }
@@ -91,11 +134,12 @@ class JobController extends BaseController
                     }
                 }
             }
+
             $jobData = array_values(array_filter($jobData, function ($job) use ($bannedJobIds) {
 
                 return !in_array($job["id"], $bannedJobIds);
             }));
-            //  exit;
+
             $tempJobData = $jobData;
             foreach ($configArr as $config) {
                 foreach ($jobData as $idx => $job) {

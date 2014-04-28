@@ -45,12 +45,15 @@ class UserProfileSeeder extends BaseSeeder
         $job2->jobFields()->attach(2, ["value" => "Some title" ]);
         /** @var  $job3 Job */
         $job3 = Job::find(3);
-        $job3->jobFields()->attach(5, ["value" => "Administratorik" ]);
-        $job3->jobFields()->attach(6, ["value" => "Spanish" ]);
-        $job3->jobFields()->attach(2, ["value" => "Bamby" ]);
-        $job3->jobFields()->attach(3, ["value" => "location" ]);
+        $job3->jobFields()->attach(5, ["value" => "Administratorik" ]); //Administrator -
+        $job3->jobFields()->attach(6, ["value" => "Spanish" ]); //Spanish +
+        $job3->jobFields()->attach(2, ["value" => "Bamby's" ]); // (!)bamby +
+        $job3->jobFields()->attach(3, ["value" => "location" ]); //  +
         $job3->jobFields()->attach(4, ["value" => "Mexico" ]);
-        $job3->jobFields()->attach(10, ["value" => "1988-11-11" ]);
+        $job3->jobFields()->attach(10, ["value" => "1988-11-11" ]); //-
+        $job3->jobFields()->attach(1, ["value" => "Another title" ]); // +
+        $job3->jobFields()->attach(9, ["value" => "Bambys" ]);
+
         /** @var  $job4 Job */
         $job4 = Job::find(4);
         $job4->jobFields()->attach(5, ["value" => "Administratorik" ]);
@@ -86,14 +89,14 @@ class UserProfileSeeder extends BaseSeeder
        //4
         $candidate1->candidateFields()->attach(1, array('value' => "1977-11-11"));
         $candidate1->candidateFields()->attach(2, array('value' => "location" ));
-        $candidate1->candidateFields()->attach(13, array('value' => "Bamby"));
+        $candidate1->candidateFields()->attach(13, array('value' => "(!)Bamby"));
         $candidate1->candidateFields()->attach(13, array('value' => "Buratino"));
         $candidate1->candidateFields()->attach(5, array('value' => "Administrator"));
         $candidate1->candidateFields()->attach(4, array('value' => "Spanish"));
         $candidate1->candidateFields()->attach(6, array('value' => "Another title"));
         /**
          * (job_id, can_id)
-         * matching (2, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1)
+         * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1)
          */
 
 

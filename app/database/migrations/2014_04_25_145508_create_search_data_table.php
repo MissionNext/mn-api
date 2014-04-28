@@ -15,17 +15,12 @@ class CreateSearchDataTable extends Migration {
 		Schema::create('search_data', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('user_type', 30);
+			$table->string('user_type', 30)->index();
 			$table->string('search_name', 40);
-			$table->string('search_type', 30);
-			$table->integer('user_id');
+			$table->string('search_type', 30)->index();
+			$table->integer('user_id')->index();
             $table->text("data");
 			$table->timestamps();
-            //$table->create();
-
-
-            //\Illuminate\Support\Facades\DB::statement("CREATE INDEX search_data_user_id ON search_data USING user_id");
-
 		});
 	}
 

@@ -60,11 +60,12 @@ class Routing
             ]);
 
             Route::resource(static::RESOURCE_JOB, JobController::class, [
-                'names' => ['store' => static::ROUTE_CREATE_JOB], 'except' => ['create','edit']
+                'names' => ['store' => static::ROUTE_CREATE_JOB], 'except' => ['create','edit', 'destroy']
             ]);
 
             Route::group(array('prefix' => static::RESOURCE_JOB), function () {
                 Route::post('find', JobController::class.'@find');
+                Route::delete('{id}/{organization_id}', JobController::class.'@delete');
             });
 
             Route::group(array('prefix' => static::RESOURCE_USER), function () {
