@@ -13,15 +13,17 @@ use MissionNext\Models\SearchData\SearchData;
 class SearchController extends BaseController
 {
     /**
-     * @param $type
+     * @param $searchType
+     *
      * @return RestResponse
+     *
      * @throws \MissionNext\Api\Exceptions\SearchProfileException
      */
-    public function postIndex($type)
+    public function search($searchType)
     {
         $profileSearch = $this->request->get("profileData");
         $bindings = [];
-        $tableName = $type.'_cached_profile';
+        $tableName = $searchType.'_cached_profile';
         $query = "SELECT * FROM {$tableName}  ";
         $where = " WHERE ( ";
         if (!empty($profileSearch)) {
@@ -79,22 +81,60 @@ class SearchController extends BaseController
 
     }
 
-
-   public function postFor($search_type, $user_type, $user_id )
-   {
-       $search_data = $this->request->request->get("search_data");
+    /**
+     * @param $searchType
+     * @param $userType
+     * @param $userId
+     *
+     * @return RestResponse
+     */
+    public function postIndex($searchType, $userType, $userId )
+    {
+       $searchData = $this->request->request->get("search_data");
       // dd(json_encode($search_data));
-       $search_name = $this->request->request->get("search_name");
+       $searchName = $this->request->request->get("search_name");
        $search = SearchData::create([
-           "search_name"=> $search_name,
-           "search_type"=>$search_type,
-           "user_type"=>$user_type,
-           "user_id"=>$user_id,
-           "data" => json_encode($search_data)
+           "search_name"=> $searchName,
+           "search_type"=>$searchType,
+           "user_type"=>$userType,
+           "user_id"=>$userId,
+           "data" => json_encode($searchData)
        ]);
 
 
       return new RestResponse($search);
 
-   }
+    }
+
+    /**
+     * @param $searchType
+     * @param $userType
+     * @param $userId
+     *
+     * @return RestResponse
+     */
+    public function getIndex($searchType, $userType, $userId )
+    {
+        $data = SearchData::where("search_type","=",$searchType)
+                   ->where("user_type", "=", $userType)
+                   ->where("user_id", "=", $userId)
+                   ->get();
+
+        $data->each(function(&$d){
+            $d->data = json_decode($d->data);
+        });
+
+        return new RestResponse($data);
+    }
+
+    /**
+     * @param $searchId
+     *
+     * @return RestResponse
+     */
+    public function delete( $searchId )
+    {
+
+        return new RestResponse(SearchData::destroy($searchId));
+    }
 }

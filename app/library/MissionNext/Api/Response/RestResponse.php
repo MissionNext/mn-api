@@ -32,7 +32,7 @@ class RestResponse extends JsonResponse
         $rawData = $data;
         $status = RestData::SUCCESS;
         if ($data instanceof Collection) {
-            $rawData = ["list" => $data->toArray()];
+            $rawData =  $data->toArray();
         } elseif ($data instanceof Model) {
             $rawData = $data->toArray();
         } elseif ($data instanceof ValidationException){

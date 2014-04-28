@@ -78,7 +78,9 @@ class Routing
                 [  'except' => ['index','create', 'store', 'edit'] ]
             );
 
-            Route::controller('{type}/search', SearchController::class, [
+            Route::post('search/{searchType}', SearchController::class.'@search');
+            Route::delete('search/{searchId}', SearchController::class.'@delete');
+            Route::controller('search/{searchType}/for/{userType}/{id}', SearchController::class, [
 
             ]);
 

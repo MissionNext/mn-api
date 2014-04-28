@@ -57,7 +57,7 @@ class Controller extends BaseController
         }
 
 
-        return new RestResponse(["list" => $this->syncGroupFields($reqGroups, $form)]);
+        return new RestResponse( $this->syncGroupFields($reqGroups, $form) );
 
     }
 
@@ -116,7 +116,7 @@ class Controller extends BaseController
             $groups[$key]["fields"] = array_values($groups[$key]["fields"]);
         }
 
-        return new RestResponse(["list" => $groups]);
+        return new RestResponse( $groups );
     }
 
     /**
