@@ -4,6 +4,8 @@ namespace MissionNext\Routing;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use MissionNext\Controllers\Api\FolderNotes\FolderController;
+use MissionNext\Controllers\Api\FolderNotes\NoteController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Profile\SearchController;
 use MissionNext\Controllers\Api\User\UserController;
@@ -79,11 +81,14 @@ class Routing
                 [  'except' => ['index','create', 'store', 'edit'] ]
             );
 
-            Route::post('search/{searchType}', SearchController::class.'@search');
+//            Route::post('search/{searchType}', SearchController::class.'@search');
             Route::delete('search/{searchId}', SearchController::class.'@delete');
             Route::controller('search/{searchType}/for/{userType}/{id}', SearchController::class, [
 
             ]);
+
+            Route::controller('results/folder', FolderController::class, []);
+            Route::controller('results/notes', NoteController::class, []);
 
         });
 

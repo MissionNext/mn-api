@@ -10,6 +10,7 @@ use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Field\FieldType;
+use MissionNext\Models\FolderNotes\FolderNotes;
 use MissionNext\Models\Matching\Config;
 use MissionNext\Repos\Field\Field;
 
@@ -32,12 +33,23 @@ class JobController extends BaseController
         }
 
         $candidateData = DB::select("SELECT data FROM candidate_cached_profile WHERE id = ? ", [$candidate_id] );
+        $folderNotesTable = (new FolderNotes)->getTable();
+
         if (!empty($candidateData)) {
             $candidateData = json_decode($candidateData[0]->data, true);
-            $jobData = DB::select("SELECT data FROM job_cached_profile");
+            $jobData = DB::select("SELECT jc.data, fN.notes, fN.folder FROM job_cached_profile as jc
+             LEFT JOIN {$folderNotesTable} fN ON jc.id = fN.user_id
+                  AND fN.for_user_id = ? AND fN.user_type = ?
+            ",[$candidate_id, BaseDataModel::JOB]);
             $jobData = !empty($jobData) ? array_map(function ($d) {
-                    return json_decode($d->data, true);
+                   $data = json_decode($d->data, true);
+                   $data['notes'] = $d->notes;
+                   $data['folder'] = $d->folder;
+
+                   return $data;
                 }, $jobData) : [];
+
+            dd($jobData);
 
 
             $bannedJobIds = [];

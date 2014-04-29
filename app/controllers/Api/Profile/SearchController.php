@@ -11,6 +11,7 @@ use MissionNext\Api\Exceptions\SearchProfileException;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Field\Candidate;
 use MissionNext\Models\Field\FieldType;
+use MissionNext\Models\FolderNotes\FolderNotes;
 use MissionNext\Models\SearchData\SearchData;
 use MissionNext\Repos\Field\Field;
 
@@ -18,12 +19,13 @@ class SearchController extends BaseController
 {
     /**
      * @param $searchType
-     *
+     * @param $userType
+     * @param $userId
      * @return RestResponse
-     *
      * @throws \MissionNext\Api\Exceptions\SearchProfileException
+     * @throws \MissionNext\Api\Exceptions\SecurityContextException
      */
-    public function search($searchType)
+    public function postIndex($searchType, $userType, $userId)
     {
         SecurityContext::getInstance()->getToken()->setRoles([$searchType]);
 
@@ -33,11 +35,20 @@ class SearchController extends BaseController
 
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
-        $query = "SELECT * FROM {$tableName}  ";
+        $folderNotesTable = (new FolderNotes)->getTable();
+
+        $query = "SELECT  fN.folder as folderName, fN.notes, cP.data FROM {$tableName} as cP
+                  LEFT JOIN {$folderNotesTable} fN ON cP.id = fN.user_id
+                  AND fN.for_user_id = ? AND fN.user_type = ?
+                   ";
+        $bindings[] = $userId;
+        $bindings[] = $searchType;
         $where = " WHERE ( ";
         if (!empty($profileSearch)) {
 
-            $expandedFields = $this->viewFieldRepo()->getModel()->whereRaw("CAST(meta->'search_options'->>'is_expanded' AS BOOLEAN) = true")->get()->toArray();
+            $expandedFields = $this->viewFieldRepo()->getModel()->whereRaw(
+                "CAST(meta->'search_options'->>'is_expanded' AS BOOLEAN) = true"
+            )->get()->toArray();
 
             $currentField =  Field::currentFieldModelName(SecurityContext::getInstance());
 
@@ -89,17 +100,19 @@ class SearchController extends BaseController
             }
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
-            $query .= " ) ";
+            $query .= "  ) ";
         }else{
 
             throw new SearchProfileException("No search params specified");
         }
 
-        //dd($query, $bindings);
-
+       // dd($query, $bindings);
+     //    dd( DB::select($query, $bindings));
         return new RestResponse(array_map(function ($d) {
-
-            return json_decode($d->data);
+               $data = json_decode($d->data);
+               $data->notes = $d->notes;
+               $data->folder = $d->foldername;
+            return $data;
         }, DB::select($query, $bindings)));
 
     }
@@ -111,7 +124,7 @@ class SearchController extends BaseController
      *
      * @return RestResponse
      */
-    public function postIndex($searchType, $userType, $userId )
+    public function putIndex($searchType, $userType, $userId )
     {
        $searchData = $this->request->request->get("search_data");
       // dd(json_encode($search_data));
@@ -138,10 +151,7 @@ class SearchController extends BaseController
      */
     public function getIndex($searchType, $userType, $userId )
     {
-        $data = SearchData::where("search_type","=",$searchType)
-                   ->where("user_type", "=", $userType)
-                   ->where("user_id", "=", $userId)
-                   ->get();
+        $data = SearchData::findData($searchType, $userType, $userId)->get();
 
         $data->each(function(&$d){
             $d->data = json_decode($d->data);

@@ -3,13 +3,21 @@
 namespace MissionNext\Controllers\Api\FolderNotes;
 
 
-use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Models\FolderNotes\FolderNotes;
 
-class FolderController extends BaseController
+
+class FolderController extends Controller
 {
-    public function postIndex()
+    /**
+     * @param FolderNotes $fNotes
+     *
+     * @return FolderNotes
+     */
+    protected function setFolderNotes(FolderNotes $fNotes)
     {
+        $fNotes->setFolder($this->request->request->get("folder"));
+        $fNotes->save();
 
+        return $fNotes;
     }
-
 } 
