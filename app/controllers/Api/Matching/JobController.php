@@ -91,6 +91,9 @@ class JobController extends BaseController
 
                             $canValue = [$canValue];
                         }
+
+                        $jobValue = array_map('strtolower', $jobValue);
+                        $canValue = array_map('strtolower', $canValue);
 //                            if ($job['id'] == 3) {
 //                                var_dump("job_key = $jobKey", "can_key = $candidateKey", "job_value =", $jobValue, "can_value=", $canValue, "weight = {$conf['weight']}");
 //                            }
