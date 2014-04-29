@@ -49,7 +49,7 @@ class UserProfileSeeder extends BaseSeeder
         $job3->jobFields()->attach(6, ["value" => "Spanish" ]); //Spanish +
         $job3->jobFields()->attach(2, ["value" => "Bamby's" ]); // (!)bamby +
         $job3->jobFields()->attach(3, ["value" => "location" ]); //  +
-        $job3->jobFields()->attach(4, ["value" => "Mexico" ]);
+        $job3->jobFields()->attach(4, ["value" => "Mexico" ]); // not in config
         $job3->jobFields()->attach(10, ["value" => "1988-11-11" ]); //-
         $job3->jobFields()->attach(1, ["value" => "Another title" ]); // +
         $job3->jobFields()->attach(9, ["value" => "Bambys" ]);

@@ -24,15 +24,15 @@ class JobController extends BaseController
 
         $configRepo = $this->matchingConfigRepo()->setSecurityContext($this->securityContext());
         $config = $configRepo->configByCandidate(BaseDataModel::JOB, $candidate_id)->get();
-      //  dd($this->getLogQueries());
-       // dd($config->toArray());
+        //  dd($this->getLogQueries());
+        // dd($config->toArray());
 
-        if (!$config->count()){
+        if (!$config->count()) {
 
             return new RestResponse([]);
         }
 
-        $candidateData = DB::select("SELECT data FROM candidate_cached_profile WHERE id = ? ", [$candidate_id] );
+        $candidateData = DB::select("SELECT data FROM candidate_cached_profile WHERE id = ? ", [$candidate_id]);
         $folderNotesTable = (new FolderNotes)->getTable();
 
         if (!empty($candidateData)) {
@@ -40,41 +40,37 @@ class JobController extends BaseController
             $jobData = DB::select("SELECT jc.data, fN.notes, fN.folder FROM job_cached_profile as jc
              LEFT JOIN {$folderNotesTable} fN ON jc.id = fN.user_id
                   AND fN.for_user_id = ? AND fN.user_type = ?
-            ",[$candidate_id, BaseDataModel::JOB]);
+            ", [$candidate_id, BaseDataModel::JOB]);
             $jobData = !empty($jobData) ? array_map(function ($d) {
-                   $data = json_decode($d->data, true);
-                   $data['notes'] = $d->notes;
-                   $data['folder'] = $d->folder;
+                $data = json_decode($d->data, true);
+                $data['notes'] = $d->notes;
+                $data['folder'] = $d->folder;
 
-                   return $data;
-                }, $jobData) : [];
+                return $data;
+            }, $jobData) : [];
 
-            dd($jobData);
-
-
-            $bannedJobIds = [];
             $configArr = $config->toArray();
             $maxMatching = 0;
-            $config->each(function($c) use (&$maxMatching){
+            $config->each(function ($c) use (&$maxMatching) {
                 $maxMatching += $c->weight;
             });
 
             SecurityContext::getInstance()->getToken()->setRoles([BaseDataModel::CANDIDATE]);
             $candidateField = Field::currentFieldModelName(SecurityContext::getInstance());
-            $selectFieldTypes =  [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO ];
+            $selectFieldTypes = [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO];
             $selectCanFields = array_fetch((new $candidateField)->whereIn("type",
-               $selectFieldTypes )->get()->toArray(), 'symbol_key');
+                $selectFieldTypes)->get()->toArray(), 'symbol_key');
             SecurityContext::getInstance()->getToken()->setRoles([BaseDataModel::JOB]);
             $jobField = Field::currentFieldModelName(SecurityContext::getInstance());
             $selectJobFields = array_fetch((new $jobField)->whereIn("type",
-                $selectFieldTypes )->get()->toArray(),'symbol_key');
+                $selectFieldTypes)->get()->toArray(), 'symbol_key');
 
-         //   dd($selectCanFields, $selectJobFields);
-
-
+            //   dd($selectCanFields, $selectJobFields);
 
 
             //dd($configArr, $candidateData);
+            $tempJobData = $jobData;
+
 
             foreach ($jobData as $k => $job) {
                 foreach ($configArr as $conf) {
@@ -82,98 +78,91 @@ class JobController extends BaseController
                     $candidateKey = $conf['candidate_key'];
                     $jobProfile = $job['profileData'];
                     $canProfile = $candidateData['profileData'];
-                    if (isset($jobProfile[$jobKey])) {
-                        if (isset($canProfile[$candidateKey])) {
-                            $jobValue = $jobProfile[$jobKey];
-                            $canValue = $canProfile[$candidateKey];
+                    if (isset($jobProfile[$jobKey]) && isset($canProfile[$candidateKey])) {
 
-                            if (!is_array($jobValue)){
+                        $jobValue = $jobProfile[$jobKey];
+                        $canValue = $canProfile[$candidateKey];
 
-                                $jobValue = [$jobValue];
-                            }
-                            if (!is_array($canValue)){
+                        if (!is_array($jobValue)) {  /** convert  all values to array to compare */
 
-                                $canValue = [$canValue];
-                            }
+                            $jobValue = [$jobValue];
+                        }
+                        if (!is_array($canValue)) {
+
+                            $canValue = [$canValue];
+                        }
 //                            if ($job['id'] == 3) {
 //                                var_dump("job_key = $jobKey", "can_key = $candidateKey", "job_value =", $jobValue, "can_value=", $canValue, "weight = {$conf['weight']}");
 //                            }
-
-                            if (in_array($jobKey, $selectJobFields)){
-                                foreach($jobValue as $jV){
-                                    if (starts_with($jV,'(!)')){
-                                        $jobData[$k]["profileData"][$jobKey] =
-                                            ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
-                                        continue 2;
-                                    }
+                        /** if value starts with (!) any value  matches */
+                        if (in_array($jobKey, $selectJobFields)) {
+                            foreach ($jobValue as $jV) {
+                                if (starts_with($jV, '(!)')) {
+                                    $jobData[$k]["profileData"][$jobKey] =
+                                        ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
+                                    continue 2;
                                 }
                             }
-
-                            if (in_array($candidateKey, $selectCanFields)){
-                                foreach($canValue as $cV){
-                                    if (starts_with($cV,'(!)')){
-                                        $jobData[$k]["profileData"][$jobKey] =
-                                            ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
-                                        continue 2;
-                                    }
+                        }
+                        /** if value starts with (!) any value  matches */
+                        if (in_array($candidateKey, $selectCanFields)) {
+                            foreach ($canValue as $cV) {
+                                if (starts_with($cV, '(!)')) {
+                                    $jobData[$k]["profileData"][$jobKey] =
+                                        ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
+                                    continue 2;
                                 }
                             }
-
+                        }
 
 
 //                            array_walk($jobValue, function($val){
 //                                dd($val);
 //                            });
 //                            var_dump($jobValue, $canValue);
-                            if ($canValue !== $jobValue   &&  $conf["weight"] == 5) {
-                               // var_dump($jobValue, $canValue);
-                                $bannedJobIds[] = $job["id"];
-                                continue;
-                            }
-
-                            if ($canValue !== $jobValue  ) {
-                                $jobData[$k]["profileData"][$jobKey] =
-                                    ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => false, "weight" => $conf["weight"]];
-                            }
-
-                            if ($canValue === $jobValue  ) {
-                                $jobData[$k]["profileData"][$jobKey] =
-                                    ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
-                            }
-
-
+                        /** if weight 5 (must match) and value doesn't matches remove add to banned ids */
+                        if ($canValue !== $jobValue && $conf["weight"] == 5) {
+                            unset($tempJobData[$k]);
+                            continue;
                         }
-                    }
-                }
-            }
 
-            $jobData = array_values(array_filter($jobData, function ($job) use ($bannedJobIds) {
 
-                return !in_array($job["id"], $bannedJobIds);
-            }));
+                        if ($canValue !== $jobValue) {
+                            $jobData[$k]["profileData"][$jobKey] =
+                                ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => false, "weight" => $conf["weight"]];
+                        }
 
-            $tempJobData = $jobData;
-            foreach ($configArr as $config) {
-                foreach ($jobData as $idx => $job) {
-                    if (!isset($job['profileData'][$config['job_key']])) {
-                        if ($config['weight'] == 5) {
-                            unset($tempJobData[$idx]);
+                        if ($canValue === $jobValue) {
+                            $jobData[$k]["profileData"][$jobKey] =
+                                ["job_value" => $jobValue, "candidate_value" => $canValue, "matches" => true, "weight" => $conf["weight"]];
+                        }
+
+
+                    }elseif( !isset($jobProfile[$jobKey]) ){
+                        /** if in profile data no symbol key that is in match config and weight is 5, remove  element from match */
+
+                        if ($conf['weight'] == 5) {
+                            unset($tempJobData[$k]);
+                            continue;
                         } else {
-                            $jobData[$idx]['profileData'][$config['job_key']] =
-                                ["job_value" => null, "candidate_value" => null, "matches" => false, "weight" => $config["weight"]];
+                            $jobData[$k]["profileData"][$jobKey] =
+                                ["job_value" => null, "candidate_value" => null, "matches" => false, "weight" => $conf["weight"]];
                         }
                     }
                 }
             }
+
             $jobData = array_intersect_key($jobData, $tempJobData);
 
             foreach ($jobData as &$job) {
                 $job['matching_percentage'] = 0;
-                foreach ($job['profileData'] as &$prof) {
+                foreach ($job['profileData'] as $key=>&$prof) {
                     //  var_dump($prof);
                     if (isset($prof['matches']) && $prof['matches']) {
                         $job['matching_percentage'] += $prof['weight'];
-                    } elseif (!isset($prof['matches'])) { //@TODO job field not in matching config
+                    } elseif (!isset($prof['matches'])) {
+                        //dd($key);
+                    //@TODO job field not in matching config
                         $prof = ["job_value" => $prof, "candidate_value" => null];
                     }
                 }
