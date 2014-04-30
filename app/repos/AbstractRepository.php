@@ -26,6 +26,8 @@ abstract class AbstractRepository implements RepositoryInterface
         return call_user_func_array("{$this->modelClassName}::create", array($attributes));
     }
 
+
+
     /**
      * @param array $columns
      *
@@ -54,6 +56,16 @@ abstract class AbstractRepository implements RepositoryInterface
     {
 
         return call_user_func_array("{$this->modelClassName}::with", array($string));
+    }
+
+    /**
+     * @param null $select
+     * @return \Doctrine\DBAL\Query\QueryBuilder This QueryBuilder instance.
+     */
+    public function select($select = null)
+    {
+
+        return call_user_func_array("{$this->modelClassName}::select", array($select));
     }
 
 } 
