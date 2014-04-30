@@ -28,7 +28,7 @@ class CandidateJobs extends Matching
 
         $selectCanFields = $this->selectFieldsOfType(BaseDataModel::CANDIDATE);
         $selectJobFields = $this->selectFieldsOfType(BaseDataModel::JOB);
-    
+
         $tempJobData = $jobData;
 
         foreach ($jobData as $k => $job) {
