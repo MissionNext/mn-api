@@ -52,7 +52,8 @@ class UserProfileSeeder extends BaseSeeder
         $job3->jobFields()->attach(4, ["value" => "Mexico" ]); // not in config
         $job3->jobFields()->attach(10, ["value" => "1988-11-11" ]); //-
         $job3->jobFields()->attach(1, ["value" => "Another title" ]); // +
-        $job3->jobFields()->attach(9, ["value" => "Bambys" ]);
+        $job3->jobFields()->attach(9, ["value" => "Paraska" ]); // favourite movies
+        $job3->jobFields()->attach(9, ["value" => "Buryata" ]);
 
         /** @var  $job4 Job */
         $job4 = Job::find(4);
@@ -75,7 +76,7 @@ class UserProfileSeeder extends BaseSeeder
         $job5->jobFields()->attach(9, ["value" => "Buratino" ]);
         /**
          * (job_id, can_id)
-         * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1)
+         * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1), (9, 10)
          */
 
         $candidate->candidateFields()->attach(1, array('value' => "1990-11-11"));
@@ -94,9 +95,10 @@ class UserProfileSeeder extends BaseSeeder
         $candidate1->candidateFields()->attach(5, array('value' => "Administrator"));
         $candidate1->candidateFields()->attach(4, array('value' => "Spanish"));
         $candidate1->candidateFields()->attach(6, array('value' => "Another title"));
+        $candidate1->candidateFields()->attach(10, array('value' => "ParaSkaBB"));//best way to contact
         /**
          * (job_id, can_id)
-         * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1)
+         * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1), (9, 10)
          */
 
 

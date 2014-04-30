@@ -10,7 +10,7 @@ class UserCachedProfileSeeder extends BaseSeeder
         CREATE OR REPLACE FUNCTION json_array_text(_j json)
             RETURNS text[] AS
             $$
-            SELECT array_agg(elem::text)
+            SELECT array_agg(LOWER(elem::text))
             FROM json_array_elements(_j) AS elem
             $$
             LANGUAGE sql IMMUTABLE"

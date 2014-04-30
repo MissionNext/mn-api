@@ -23,8 +23,7 @@ class DatabaseSeeder extends BaseSeeder
 
     private function runSeeders()
     {
-//        $this->call('UserCachedProfileSeeder');
-//        return;
+
         $this->call('ApplicationSeeder');
         $this->command->info('Application table seeded!');
 
@@ -65,9 +64,10 @@ class DatabaseSeeder extends BaseSeeder
 
         if (DB::getDefaultConnection() === \MissionNext\DB\SqlStatement\Sql::PostgreSQL) {
             $this->call('UserCachedProfileSeeder');
+            $this->command->comment('UserCachedProfileSeeder table seeded!');
         }
 
-        $this->command->comment('UserCachedProfileSeeder table seeded!');
+
     }
 
 }

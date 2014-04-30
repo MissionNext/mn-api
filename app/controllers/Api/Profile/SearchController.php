@@ -75,15 +75,16 @@ class SearchController extends BaseController
                         }
                     } else {
                         $query .= $where . " ? && json_array_text(data->'profileData'->'{$fieldName}') ";
+                        $value = array_map('strtolower', $value);
                         $bindings[] = addslashes(str_replace(["[", "]"], ["{", "}"], json_encode($value)));
                     }
 
                 } else {
                     if (in_array($fieldName,$inputFields)){
-                        $query .= $where . " data->'profileData'->>'{$fieldName}' LIKE ?  ";
+                        $query .= $where . " data->'profileData'->>'{$fieldName}' ILIKE ?  ";
                         $bindings[] = '%'.$value.'%';
                     }else {
-                        $query .= $where . " ? = data->'profileData'->>'{$fieldName}' ";
+                        $query .= $where . " LOWER(?) = LOWER(data->'profileData'->>'{$fieldName}') ";
                         $bindings[] = $value;
                     }
                 }
@@ -95,7 +96,7 @@ class SearchController extends BaseController
         if (!empty($userSearch)) {
 
             foreach ($userSearch as $fN => $val) {
-                $query .= $where . "  data->>'{$fN}'  LIKE ? ";
+                $query .= $where . "  data->>'{$fN}'  ILIKE ? ";
                 $bindings[] = '%'.$val.'%';
             }
         }

@@ -54,8 +54,8 @@ class MatchConfigSeeder extends BaseSeeder
             [
                 "matching_type" => Config::MATCHING_EQUAL,
                 "weight" => 5,
-                "matching_field_id" => 6,
-                "main_field_id" => 4,
+                "matching_field_id" => 6, //subject_speciality
+                "main_field_id" => 4, // hobby
                 "app_id" => 1
             ],
             [
@@ -70,6 +70,14 @@ class MatchConfigSeeder extends BaseSeeder
                 "weight" => 4,
                 "matching_field_id" => 10, //birth_date - date -job
                 "main_field_id" => 1, // birth_date - candidate
+                "app_id" => 1
+            ],
+
+            [
+                "matching_type" => Config::MATCHING_EQUAL, //job less than candidate
+                "weight" => 4,
+                "matching_field_id" => 9, //favourite movies - multiple -job
+                "main_field_id" => 10, // best way to contact - select single -  candidate
                 "app_id" => 1
             ],
 
