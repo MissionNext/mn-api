@@ -54,7 +54,7 @@ class JobController extends BaseController
 
         $jobData = $Matching->matchResults();
 
-        return new RestResponse(array_values($jobData));
+        return new RestResponse($jobData);
     }
 
 }

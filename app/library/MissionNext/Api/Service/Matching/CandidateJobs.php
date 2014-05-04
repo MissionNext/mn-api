@@ -18,11 +18,6 @@ class CandidateJobs extends Matching
     {
         $configArr = $this->matchConfig->toArray();
 
-        $maxMatching = 0;
-        $this->matchConfig->each(function ($c) use (&$maxMatching) {
-            $maxMatching += $c->weight;
-        });
-
         $jobData = $this->matchAgainstData;
         $candidateData = $this->matchData;
 
@@ -100,23 +95,7 @@ class CandidateJobs extends Matching
 
         $jobData = array_intersect_key($jobData, $tempJobData);
 
-        foreach ($jobData as &$job) {
-            $job['matching_percentage'] = 0;
-            foreach ($job['profileData'] as $key=>&$prof) {
-                //  var_dump($prof);
-                if (isset($prof['matches']) && $prof['matches']) {
-                    $job['matching_percentage'] += $prof['weight'];
-                } elseif (!isset($prof['matches'])) {
-                    //dd($key);
-                    //@TODO job field not in matching config
-                    $prof = ["job_value" => $prof, "candidate_value" => null];
-                }
-            }
-            $job['matching_percentage'] = round(($job['matching_percentage'] / $maxMatching) * 100);
-        }
-
-        return $jobData;
-
+        return $this->calculateMatchingPercentage($jobData);
     }
 
 

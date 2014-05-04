@@ -3,6 +3,8 @@
 namespace MissionNext\Api\Service\Matching\Data;
 
 
+use MissionNext\Api\Service\Matching\Data\Type\Date;
+use MissionNext\Api\Service\Matching\Data\Type\Numeric;
 use MissionNext\Api\Service\Matching\Type\Matching;
 
 interface MatchingDataInterface
@@ -18,4 +20,8 @@ interface MatchingDataInterface
     public function getMatchingValues();
 
     public function isMatches();
+    /**
+     * @return Date|Numeric|String
+     */
+    public function getDataType();
 } 

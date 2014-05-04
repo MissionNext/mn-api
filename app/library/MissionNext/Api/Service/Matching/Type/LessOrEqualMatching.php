@@ -6,7 +6,7 @@ namespace MissionNext\Api\Service\Matching\Type;
 
 use MissionNext\Api\Service\Matching\Data\MatchingDataInterface;
 
-class LessMatching extends Matching
+class LessOrEqualMatching extends Matching
 {
     /**
      * @param MatchingDataInterface $matchingData
@@ -21,7 +21,7 @@ class LessMatching extends Matching
 
         foreach ($mainValues as $mainValue) {
             foreach ($matchingValues as $matchingValue) {
-                if ( $dataType->transform($mainValue) < $dataType->transform($matchingValue) ) {
+                if ( $dataType->transform($mainValue) <= $dataType->transform($matchingValue) ) {
                     return true;
                 }
             }

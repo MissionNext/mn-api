@@ -7,7 +7,9 @@ use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Api\Auth\Token;
 use MissionNext\Api\Exceptions\SecurityContextException;
 use MissionNext\Api\Service\Matching\Type\EqualMatching;
+use MissionNext\Api\Service\Matching\Type\GreaterMatching;
 use MissionNext\Api\Service\Matching\Type\LessMatching;
+use MissionNext\Api\Service\Matching\Type\LessOrEqualMatching;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\Matching\Config;
@@ -85,110 +87,57 @@ abstract class Matching
         switch($matchingType){
             case Config::MATCHING_EQUAL:
                 $matchingData->setMatchingType(new EqualMatching());
-                return $matchingData->isMatches();
                 break;
-            case Config::MATCHING_LESS;
+            case Config::MATCHING_LESS:
                 $matchingData->setMatchingType(new LessMatching());
-                return $matchingData->isMatches();
-                return $this->lessMatching($mainValues, $matchingValues);
+                break;
+            case Config::MATCHING_LESS_OR_EQUAL:
+                $matchingData->setMatchingType(new LessOrEqualMatching());
+                break;
+            case Config::MATCHING_GREATER:
+                $matchingData->setMatchingType(new GreaterMatching());
+                break;
             default:
-                return $this->equalMatching($mainValues, $matchingValues);
+                $matchingData->setMatchingType(new EqualMatching());
+
         }
+
+        return $matchingData->isMatches();
     }
 
     /**
-     * @param $mainValues
-     * @param $matchingValues
-     * @return bool
-     */
-    private function equalMatching($mainValues, $matchingValues)
-    {
-        foreach($mainValues  as $mainValue){
-            if (in_array($mainValue, $matchingValues)){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $mainValues
-     * @param $matchingValues
+     * @param array $data
      *
-     * @return bool
+     * @return array
      */
-    private function lessMatching($mainValues, $matchingValues)
+    protected  function calculateMatchingPercentage(array $data)
     {
+        $maxMatching = 0;
+        $this->matchConfig->each(function ($c) use (&$maxMatching) {
+            $maxMatching += $c->weight;
+        });
 
-       if ($this->isDateData($mainValues, $matchingValues)) {
-           foreach ($mainValues as $mainValue) {
-               foreach ($matchingValues as $matchingValue) {
-                   if (new \DateTime($mainValue) < new \DateTime($matchingValue)) {
-                       return true;
-                   }
-               }
-           }
-           return false;
-       }elseif($this->isNumericData($mainValues, $matchingValues)){
-           foreach ($mainValues as $mainValue) {
-               foreach ($matchingValues as $matchingValue) {
-                   if ($mainValue < $matchingValue) {
-                       return true;
-                   }
-               }
-           }
-           return false;
+        foreach ($data as &$job) {
+            $job['matching_percentage'] = 0;
+            foreach ($job['profileData'] as $key=>&$prof) {
+                //  var_dump($prof);
+                if (isset($prof['matches']) && $prof['matches']) {
+                    $job['matching_percentage'] += $prof['weight'];
+                } elseif (!isset($prof['matches'])) {
+                    //dd($key);
+                    //@TODO job field not in matching config
+                    $prof = ["job_value" => $prof, "candidate_value" => null];
+                }
+            }
+            $job['matching_percentage'] = round(($job['matching_percentage'] / $maxMatching) * 100);
+        }
 
-       }else{
-           return $this->equalMatching($mainValues, $matchingValues);
-       }
-
+        return array_values($data);
     }
 
-    /**
-     * @param $mainValues
-     * @param $matchingValues
-     * @return bool
-     */
-    private function isNumericData($mainValues, $matchingValues)
-    {
-        foreach($mainValues as $value){
-            if (!filter_var($value, FILTER_VALIDATE_FLOAT)){
-                return false;
-            }
-        }
 
-        foreach($matchingValues as $value){
-            if (!filter_var($value, FILTER_VALIDATE_FLOAT)){
-                return false;
-            }
-        }
 
-        return true;
-    }
 
-    /**
-     * @param $mainValues
-     * @param $matchingValues
-     * @return bool
-     */
-    private function isDateData($mainValues, $matchingValues){
-
-        foreach($mainValues as $value){
-            if (!filter_var($value, FILTER_VALIDATE_REGEXP, ['options' => ["regexp"=>"/\\d{4}-\\d{2}-\\d{2}/"]])){
-                return false;
-            }
-        }
-
-        foreach($matchingValues as $value){
-            if (!filter_var($value, FILTER_VALIDATE_REGEXP, ['options' => ["regexp"=>"/\\d{4}-\\d{2}-\\d{2}/"]])){
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     abstract public function matchResults();
 

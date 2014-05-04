@@ -3,6 +3,10 @@
 
 namespace MissionNext\Api\Service\Matching\Data;
 
+use MissionNext\Api\Service\Matching\Data\Type\AbstractDataType;
+use MissionNext\Api\Service\Matching\Data\Type\Date;
+use MissionNext\Api\Service\Matching\Data\Type\Numeric;
+use MissionNext\Api\Service\Matching\Data\Type\String;
 use MissionNext\Api\Service\Matching\Type\Matching as MatchType;
 
 
@@ -77,21 +81,19 @@ class Matching implements MatchingDataInterface
     }
 
     /**
-     * @return Date|Number|String
+     * @return Date|Numeric|String
      */
-    private function getDataType()
+    public function getDataType()
     {
-        $dateType = new Date($this);
-        $numericType = new Number($this);
-
-        if ($dateType->isValid()){
-           return $dateType;
-        }elseif($numericType->isValid()){
-            return $numericType;
-        }else{
-            return new String($this);
+        $dataTypes = [new Date($this), new Numeric($this)];
+        /** @var $dateType AbstractDataType */
+        foreach($dataTypes as $dateType){
+           if  ($dateType->isValid()){
+               return $dateType;
+           }
         }
 
+        return new String($this);
     }
 
 
