@@ -44,7 +44,7 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
      *
      * @return Builder|static
      */
-    public function jobDataWithNotes($userId)
+    public function dataWithNotes($userId)
     {
         $folderNotesTable = (new FolderNotes)->getTable();
         /** @var  $queryBuilder Builder */

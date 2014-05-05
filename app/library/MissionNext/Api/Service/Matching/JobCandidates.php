@@ -4,15 +4,13 @@
 namespace MissionNext\Api\Service\Matching;
 
 
-
 use MissionNext\Models\DataModel\BaseDataModel;
 
-class CandidateJobs extends Matching
+class JobCandidates extends Matching
 {
+    protected $matchingModel = BaseDataModel::CANDIDATE;
 
-    protected $matchingModel = BaseDataModel::JOB;
-
-    protected $mainMatchingModel = BaseDataModel::CANDIDATE;
+    protected $mainMatchingModel = BaseDataModel::JOB;
 
     /**
      * @return mixed
@@ -104,8 +102,4 @@ class CandidateJobs extends Matching
 
         return $this->calculateMatchingPercentage($matchingDataSet);
     }
-
-
-
-
 } 

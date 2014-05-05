@@ -25,6 +25,8 @@ abstract class Matching
 
     protected $matchingModel;
 
+    protected $mainMatchingModel;
+
     /**
      * @param $matchData
      * @param $matchAgainstData
@@ -137,7 +139,7 @@ abstract class Matching
                 } elseif (!isset($prof['matches'])) {
                     //dd($key);
                     //@TODO job field not in matching config
-                    $prof = [$this->matchingModel."_value" => $prof, "candidate_value" => null];
+                    $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
                 }
             }
             $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100);
