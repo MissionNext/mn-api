@@ -22,6 +22,9 @@ abstract class Matching
 {
 
     const NO_PREFERENCE_SYMBOL = "(!)";
+
+    protected $matchingModel;
+
     /**
      * @param $matchData
      * @param $matchAgainstData
@@ -125,19 +128,19 @@ abstract class Matching
             $maxMatching += $c->weight;
         });
 
-        foreach ($data as &$job) {
-            $job['matching_percentage'] = 0;
-            foreach ($job['profileData'] as $key=>&$prof) {
+        foreach ($data as &$profileData) {
+            $profileData['matching_percentage'] = 0;
+            foreach ($profileData['profileData'] as $key=>&$prof) {
                 //  var_dump($prof);
                 if (isset($prof['matches']) && $prof['matches']) {
-                    $job['matching_percentage'] += $prof['weight'];
+                    $profileData['matching_percentage'] += $prof['weight'];
                 } elseif (!isset($prof['matches'])) {
                     //dd($key);
                     //@TODO job field not in matching config
-                    $prof = ["job_value" => $prof, "candidate_value" => null];
+                    $prof = [$this->matchingModel."_value" => $prof, "candidate_value" => null];
                 }
             }
-            $job['matching_percentage'] = round(($job['matching_percentage'] / $maxMatching) * 100);
+            $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100);
         }
 
         return array_values($data);

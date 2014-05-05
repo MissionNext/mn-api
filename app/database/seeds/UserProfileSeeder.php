@@ -17,6 +17,8 @@ class UserProfileSeeder extends BaseSeeder
         $candidate = Role::find(Role::ROLE_CANDIDATE)->users()->first();
         /** @var  $org User */
         $org = Role::find(Role::ROLE_ORGANIZATION)->users()->first();
+        /** @var  $org1 User */
+        $org1 = User::find(5);
         /** @var  $agency User */
         $agency = Role::find(Role::ROLE_AGENCY)->users()->first();
         /** @var  $candidate1 User */
@@ -96,14 +98,20 @@ class UserProfileSeeder extends BaseSeeder
         $candidate1->candidateFields()->attach(4, array('value' => "Spanish"));
         $candidate1->candidateFields()->attach(6, array('value' => "Another title"));
         $candidate1->candidateFields()->attach(10, array('value' => "ParaSkaBB"));//best way to contact
+        $candidate1->candidateFields()->attach(3, array('value' => 110));
         /**
          * (job_id, can_id)
          * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1), (9, 10)
          */
 
 
-        $org->organizationFields()->attach(1, array('value' => "1985-11-11"));
+        $org->organizationFields()->attach(1, array('value' => "1975-11-11"));
         $org->organizationFields()->attach(2, array('value' => $choiceOrg->value));
+        $org->organizationFields()->attach(3, array('value' => 100));
+
+        $org1->organizationFields()->attach(1, array('value' => "1976-11-11"));
+        $org1->organizationFields()->attach(2, array('value' => $choiceOrg->value));
+        $org1->organizationFields()->attach(3, array('value' => 140));
 
         $agency->agencyFields()->attach(1, array('value' => "1988-11-11"));
         $agency->agencyFields()->attach(2, array('value' => $choiceAg->value));

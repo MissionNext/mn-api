@@ -15,6 +15,7 @@ use MissionNext\Controllers\Api\Form\Controller as FormController;
 use MissionNext\Controllers\Api\JobController;
 use MissionNext\Controllers\Api\Profile\JobController as JobProfileController;
 use MissionNext\Controllers\Api\Matching\JobController as MatchJobController;
+use MissionNext\Controllers\Api\Matching\OrganizationController as MatchOrgController;
 
 class Routing
 {
@@ -56,6 +57,7 @@ class Routing
             Route::controller('{type}/{form}/form', FormController::class);
 
             Route::controller('match/job/{candidate_id}', MatchJobController::class);
+            Route::controller('match/organization/{candidate_id}', MatchOrgController::class);
 
             Route::resource(static::RESOURCE_USER, UserController::class, [
                 'names' => ['store' => static::ROUTE_CREATE_USER]

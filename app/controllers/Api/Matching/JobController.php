@@ -18,7 +18,11 @@ use MissionNext\Api\Service\Matching\CandidateJobs;
 
 class JobController extends BaseController
 {
-
+    /**
+     * @param $candidate_id
+     *
+     * @return RestResponse
+     */
     public function getIndex($candidate_id)
     {
 

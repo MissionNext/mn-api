@@ -1,16 +1,13 @@
 <?php
 
-
 namespace MissionNext\Api\Service\Matching;
-
-
 
 use MissionNext\Models\DataModel\BaseDataModel;
 
-class CandidateJobs extends Matching
+class CandidateOrganizations extends Matching 
 {
 
-    protected $matchingModel = BaseDataModel::JOB;
+    protected  $matchingModel = BaseDataModel::ORGANIZATION;
 
     /**
      * @return mixed
@@ -25,11 +22,10 @@ class CandidateJobs extends Matching
         $candidateData = $this->matchData;
 
         $selectCanFields = $this->selectFieldsOfType(BaseDataModel::CANDIDATE);
-        $selectMatchingFields = $this->selectFieldsOfType(BaseDataModel::JOB);
+        $selectMatchingFields = $this->selectFieldsOfType(BaseDataModel::ORGANIZATION);
 
         $tempMainData = $matchingDataSet;
-        $matchingKey = BaseDataModel::JOB."_value";
-
+        $matchingKey = BaseDataModel::ORGANIZATION."_value";
         foreach ($matchingDataSet as $k => $matchingData) {
             foreach ($configArr as $conf) {
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
@@ -43,7 +39,6 @@ class CandidateJobs extends Matching
                     /** convert  all values to array to compare */
                     $matchingDataValue = (array)$matchingDataValue;
                     $canValue =  (array)$canValue;
-
                     $matchingDataValue = array_map('strtolower', $matchingDataValue);
                     $canValue = array_map('strtolower', $canValue);
 
@@ -101,8 +96,4 @@ class CandidateJobs extends Matching
 
         return $this->calculateMatchingPercentage($matchingDataSet);
     }
-
-
-
-
 } 

@@ -84,6 +84,8 @@ class MatchConfigSeeder extends BaseSeeder
         ];
         $configRep->insert($configs);
 
+
+
         /**
          * set profile cache data
          */
@@ -100,6 +102,38 @@ class MatchConfigSeeder extends BaseSeeder
 
         $sc->getToken()->setRoles([BaseDataModel::AGENCY]);
         $userRep->insertUserCachedData($userRep->find(1));
+
+        $sc->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
+        $userRep->insertUserCachedData($userRep->find(3));
+        $userRep->insertUserCachedData($userRep->find(5));
+
+        $configRep = (new \MissionNext\Repos\Matching\ConfigRepository())->setSecurityContext($sc);
+        $orgConfig = [
+            [
+                "matching_type" => Config::MATCHING_GREATER_OR_EQUAL, //canidadate date greater or equal
+                "weight" => 3,
+                "matching_field_id" => 1, //"birth_date" - date
+                "main_field_id" => 1, // birth_date - date
+                "app_id" => 1
+            ],
+            [
+                "matching_type" => Config::MATCHING_EQUAL,
+                "weight" => 4,
+                "matching_field_id" => 2, //"contry" -
+                "main_field_id" => 2, // country -
+                "app_id" => 1
+            ],
+            [
+                "matching_type" => Config::MATCHING_LESS,
+                "weight" => 4,
+                "matching_field_id" => 3, //"zipcode" -
+                "main_field_id" => 3, // zipcode -
+                "app_id" => 1
+            ],
+        ];
+
+        $configRep->insert($orgConfig);
+
     }
 }
 
