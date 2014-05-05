@@ -8,8 +8,10 @@ use MissionNext\Api\Auth\Token;
 use MissionNext\Api\Exceptions\SecurityContextException;
 use MissionNext\Api\Service\Matching\Type\EqualMatching;
 use MissionNext\Api\Service\Matching\Type\GreaterMatching;
+use MissionNext\Api\Service\Matching\Type\GreaterOrEqualMatching;
 use MissionNext\Api\Service\Matching\Type\LessMatching;
 use MissionNext\Api\Service\Matching\Type\LessOrEqualMatching;
+use MissionNext\Api\Service\Matching\Type\LikeMatching;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\Matching\Config;
@@ -96,6 +98,12 @@ abstract class Matching
                 break;
             case Config::MATCHING_GREATER:
                 $matchingData->setMatchingType(new GreaterMatching());
+                break;
+            case Config::MATCHING_GREATER_OR_EQUAL:
+                $matchingData->setMatchingType(new GreaterOrEqualMatching());
+                break;
+            case Config::MATCHING_LIKE:
+                $matchingData->setMatchingType(new LikeMatching());
                 break;
             default:
                 $matchingData->setMatchingType(new EqualMatching());

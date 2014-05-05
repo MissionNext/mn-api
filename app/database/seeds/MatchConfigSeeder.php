@@ -45,10 +45,10 @@ class MatchConfigSeeder extends BaseSeeder
                 "app_id" => 1
             ],
             [
-                "matching_type" => Config::MATCHING_EQUAL,
+                "matching_type" => Config::MATCHING_LIKE,
                 "weight" => 4,
-                "matching_field_id" => 5,
-                "main_field_id" => 5,
+                "matching_field_id" => 5,//position type
+                "main_field_id" => 5,//occupation
                 "app_id" => 1
             ],
             [
