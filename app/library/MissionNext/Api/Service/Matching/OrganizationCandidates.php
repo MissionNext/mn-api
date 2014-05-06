@@ -1,18 +1,17 @@
 <?php
 
-
 namespace MissionNext\Api\Service\Matching;
 
 
 use MissionNext\Models\DataModel\BaseDataModel;
 
-class JobCandidates extends Matching
+class OrganizationCandidates extends Matching
 {
-    protected $matchingModel = BaseDataModel::CANDIDATE;
+    protected  $matchingModel = BaseDataModel::CANDIDATE;
 
-    protected $mainMatchingModel = BaseDataModel::JOB;
+    protected  $mainMatchingModel = BaseDataModel::ORGANIZATION;
 
-    protected  $reverseMatching = true;
+    protected $reverseMatching = true;
 
     /**
      * @return mixed
@@ -93,8 +92,9 @@ class JobCandidates extends Matching
                         unset($tempMatchingData[$k]);
                         continue;
                     } else {
+                        $mainMatchingKeyValue = isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null;
                         $matchingDataSet[$k]['profileData'][$matchingDataKey] =
-                            [$matchingKey => null, $mainMatchingKey => null, "matches" => false, "weight" => $conf["weight"]];
+                            [$matchingKey => null, $mainMatchingKey => $mainMatchingKeyValue, "matches" => false, "weight" => $conf["weight"]];
                     }
                 }
             }

@@ -3,23 +3,21 @@
 namespace MissionNext\Api\Service\Matching\Type;
 
 
-use MissionNext\Api\Service\Matching\Data\MatchingDataInterface;
 
 class LikeMatching extends Matching
 {
     /**
-     * @param MatchingDataInterface $matchingData
-     *
      * @return bool
      */
-    public function isMatches(MatchingDataInterface $matchingData)
+    public function isMatches()
     {
-        $mainValues = $matchingData->getMainValues();
-        $matchingValues = $matchingData->getMatchingValues();
+        $mainValues = $this->getMainValues();
+        $matchingValues = $this->getMatchingValues();
 
         foreach ($mainValues as $mainValue) {
             foreach ($matchingValues as $matchingValue) {
-                if ( str_is("*".$mainValue."*", $matchingValue)  ) {
+                if ( str_is("*".$mainValue."*", $matchingValue) || str_is("*".$matchingValue."*", $mainValue)  ) {
+
                     return true;
                 }
             }

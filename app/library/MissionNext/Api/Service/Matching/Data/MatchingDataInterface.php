@@ -19,6 +19,10 @@ interface MatchingDataInterface
 
     public function getMatchingValues();
 
+    public function getReverseMatching();
+
+    public function setReverseMatching($reverseMatching);
+
     public function isMatches();
     /**
      * @return Date|Numeric|String

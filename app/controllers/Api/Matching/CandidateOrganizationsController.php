@@ -18,7 +18,7 @@ class CandidateOrganizationsController extends BaseController
         $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
 
         $configRepo = $this->matchingConfigRepo()->setSecurityContext($this->securityContext());
-        $config = $configRepo->configByCandidate(BaseDataModel::ORGANIZATION, $candidate_id)->get();
+        $config = $configRepo->configByCandidateOrganizations(BaseDataModel::ORGANIZATION, $candidate_id)->get();
 
 
         if (!$config->count()) {

@@ -29,7 +29,7 @@ class CandidateJobsController extends BaseController
         $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
 
         $configRepo = $this->matchingConfigRepo()->setSecurityContext($this->securityContext());
-        $config = $configRepo->configByCandidate(BaseDataModel::JOB, $candidate_id)->get();
+        $config = $configRepo->configByCandidateJobs(BaseDataModel::JOB, $candidate_id)->get();
 
         if (!$config->count()) {
 

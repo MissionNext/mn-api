@@ -4,20 +4,18 @@
 namespace MissionNext\Api\Service\Matching\Type;
 
 
-use MissionNext\Api\Service\Matching\Data\MatchingDataInterface;
 
 class LessOrEqualMatching extends Matching
 {
     /**
-     * @param MatchingDataInterface $matchingData
-     *
      * @return bool
      */
-    public function isMatches(MatchingDataInterface $matchingData)
+    public function isMatches()
     {
-        $mainValues = $matchingData->getMainValues();
-        $matchingValues = $matchingData->getMatchingValues();
-        $dataType = $matchingData->getDataType();
+        $mainValues = $this->getMainValues();
+        $matchingValues = $this->getMatchingValues();
+
+        $dataType = $this->matchingData->getDataType();
 
         foreach ($mainValues as $mainValue) {
             foreach ($matchingValues as $matchingValue) {

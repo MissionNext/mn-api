@@ -2,6 +2,7 @@
 
 namespace MissionNext\Repos\Matching;
 
+use Illuminate\Database\Eloquent\Builder;
 use MissionNext\Models\Application\Application as AppModel;
 use MissionNext\Models\Field\Candidate as CandidateFieldModel;
 
@@ -37,7 +38,12 @@ class ConfigRepository extends AbstractConfigRepository
 
         return $this->getModel();
     }
-
+    /**
+     * @param $role
+     * @param $id
+     *
+     * @return Builder
+     */
     public function configByCandidate($role, $id)
     {
         return $this->getModel()
@@ -52,7 +58,12 @@ class ConfigRepository extends AbstractConfigRepository
             ->distinct();
 
     }
-
+    /**
+     * @param $role
+     * @param $id
+     *
+     * @return Builder
+     */
     public function configByJobCandidates($role, $id)
     {
         return $this->getModel()
@@ -65,7 +76,68 @@ class ConfigRepository extends AbstractConfigRepository
             ->where('app_id','=', $this->sec_context->getApp()->id)
             ->where('job_profile.job_id','=', $id)
             ->distinct();
+    }
 
+    /**
+     * @param $role
+     * @param $id
+     *
+     * @return Builder
+     */
+    public function configByCandidateJobs($role, $id)
+    {
+
+        return $this->getModel()
+            ->select('job_fields.symbol_key as job_key',
+                'candidate_fields.symbol_key as candidate_key',
+                'weight', 'matching_type')
+            ->leftJoin('job_fields', 'job_fields.id', '=' , 'job_field_id' )
+            ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
+            ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
+            ->where('app_id','=', $this->sec_context->getApp()->id)
+            ->where('candidate_profile.user_id','=', $id)
+            ->distinct();
+    }
+    /**
+     * @param $role
+     * @param $id
+     *
+     * @return Builder
+     */
+    public function configByCandidateOrganizations($role, $id)
+    {
+
+        return $this->getModel()
+            ->select('organization_fields.symbol_key as organization_key',
+                'candidate_fields.symbol_key as candidate_key',
+                'weight', 'matching_type')
+            ->leftJoin('organization_fields', 'organization_fields.id', '=' , 'organization_field_id' )
+            ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
+            ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
+            ->where('app_id','=', $this->sec_context->getApp()->id)
+            ->where('candidate_profile.user_id','=', $id)
+            ->distinct();
+    }
+
+    /**
+     * @param $role
+     * @param $id
+     *
+     * @return Builder
+     */
+    public function configByOrganizationCandidates($role, $id)
+    {
+
+        return $this->getModel()
+            ->select('organization_fields.symbol_key as organization_key',
+                'candidate_fields.symbol_key as candidate_key',
+                'weight', 'matching_type')
+            ->leftJoin('organization_fields', 'organization_fields.id', '=' , 'organization_field_id' )
+            ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
+            ->leftJoin('organization_profile','organization_profile.field_id', '=', 'organization_field_id')
+            ->where('app_id','=', $this->sec_context->getApp()->id)
+            ->where('organization_profile.user_id','=', $id)
+            ->distinct();
     }
 
 } 

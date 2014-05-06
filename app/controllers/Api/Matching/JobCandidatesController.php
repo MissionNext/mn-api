@@ -35,7 +35,7 @@ class JobCandidatesController extends BaseController
         }
 
         $jobData = json_decode($jobData->data, true);
-
+        //TODO dataWithNotes set owner(organization) id
         $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->dataWithNotes(0)->get();
 
         $candidateData = !empty($candidateData) ? array_map(function ($d) {

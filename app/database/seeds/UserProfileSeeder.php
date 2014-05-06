@@ -47,7 +47,7 @@ class UserProfileSeeder extends BaseSeeder
         $job2->jobFields()->attach(2, ["value" => "Some title" ]);
         /** @var  $job3 Job */
         $job3 = Job::find(3);
-        $job3->jobFields()->attach(5, ["value" => "Administratorik" ]); //Administrator -
+        $job3->jobFields()->attach(5, ["value" => "Admin" ]); //Administrator -
         $job3->jobFields()->attach(6, ["value" => "Spanish" ]); //Spanish +
         $job3->jobFields()->attach(2, ["value" => "Bamby's" ]); // (!)bamby +
         $job3->jobFields()->attach(3, ["value" => "location" ]); //  +

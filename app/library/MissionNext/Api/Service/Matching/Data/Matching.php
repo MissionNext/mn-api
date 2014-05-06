@@ -13,7 +13,9 @@ use MissionNext\Api\Service\Matching\Type\Matching as MatchType;
 class Matching implements MatchingDataInterface
 {
     private $mainValues,
-            $matchingValues;
+            $matchingValues,
+            $reverseMatching;
+
         /** @var $matchType MatchType */
     private $matchType;
 
@@ -34,8 +36,9 @@ class Matching implements MatchingDataInterface
      */
     public function isMatches()
     {
+      $this->matchType->setMatchingData($this);
 
-      return $this->matchType->isMatches($this);
+      return $this->matchType->isMatches();
     }
 
     /**
@@ -60,6 +63,27 @@ class Matching implements MatchingDataInterface
         $this->matchingValues = $matchValues;
 
         return $this;
+    }
+
+    /**
+     * @param $reverseMatching bool
+     *
+     * @return $this
+     */
+    public function setReverseMatching($reverseMatching)
+    {
+        $this->reverseMatching = $reverseMatching;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getReverseMatching()
+    {
+
+        return $this->reverseMatching;
     }
 
     /**
@@ -89,6 +113,7 @@ class Matching implements MatchingDataInterface
         /** @var $dateType AbstractDataType */
         foreach($dataTypes as $dateType){
            if  ($dateType->isValid()){
+
                return $dateType;
            }
         }

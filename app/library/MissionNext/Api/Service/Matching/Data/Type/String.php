@@ -1,6 +1,5 @@
 <?php
 
-
 namespace MissionNext\Api\Service\Matching\Data\Type;
 
 

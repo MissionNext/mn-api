@@ -27,6 +27,8 @@ abstract class Matching
 
     protected $mainMatchingModel;
 
+    protected $reverseMatching = false;
+
     /**
      * @param $matchData
      * @param $matchAgainstData
@@ -89,7 +91,8 @@ abstract class Matching
     protected function isMatches($mainValues, $matchingValues, $matchingType)
     {
         $matchingData = (new MatchingData())->setMainValues($mainValues)
-                                            ->setMatchingValues($matchingValues);
+                                            ->setMatchingValues($matchingValues)
+                                            ->setReverseMatching($this->reverseMatching);
 
         switch($matchingType){
             case Config::MATCHING_EQUAL:

@@ -66,7 +66,7 @@ class MatchConfigSeeder extends BaseSeeder
                 "app_id" => 1
             ],
             [
-                "matching_type" => Config::MATCHING_GREATER, //job less than candidate
+                "matching_type" => Config::MATCHING_LESS, //candidate less than job
                 "weight" => 4,
                 "matching_field_id" => 10, //birth_date - date -job
                 "main_field_id" => 1, // birth_date - candidate

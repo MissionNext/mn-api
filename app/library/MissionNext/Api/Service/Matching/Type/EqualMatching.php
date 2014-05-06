@@ -4,19 +4,16 @@
 namespace MissionNext\Api\Service\Matching\Type;
 
 
-use MissionNext\Api\Service\Matching\Data\MatchingDataInterface;
 
 class EqualMatching extends Matching
 {
     /**
-     * @param MatchingDataInterface $matchingData
-     *
      * @return bool
      */
-    public  function isMatches(MatchingDataInterface $matchingData)
+    public  function isMatches()
     {
-        $mainValues = $matchingData->getMainValues();
-        $matchingValues = $matchingData->getMatchingValues();
+        $mainValues = $this->getMainValues();
+        $matchingValues = $this->getMatchingValues();
 
         foreach($mainValues  as $mainValue){
             if (in_array($mainValue, $matchingValues)){
