@@ -14,5 +14,9 @@ class UserRoleTableSeeder extends BaseSeeder
         User::find(4)->roles()->attach(Role::ROLE_CANDIDATE);
         User::find(5)->roles()->attach(Role::ROLE_ORGANIZATION);
 
+        User::find(6)->roles()->attach(Role::ROLE_ORGANIZATION);
+        User::find(7)->roles()->attach(Role::ROLE_ORGANIZATION);
+        User::find(8)->roles()->attach(Role::ROLE_ORGANIZATION);
+
     }
 }

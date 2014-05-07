@@ -34,7 +34,6 @@ class CandidateOrganizationsController extends BaseController
         $candidateData = json_decode($candidateData->data, true);
 
         $organizationData = (new UserCachedRepository(BaseDataModel::ORGANIZATION))->dataWithNotes($candidate_id)->get();
-
         $organizationData = !empty($organizationData) ? array_map(function ($d) {
             $data = json_decode($d->data, true);
             $data['notes'] = $d->notes;

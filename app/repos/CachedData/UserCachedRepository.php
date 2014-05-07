@@ -40,6 +40,15 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
     }
 
     /**
+     * @return int
+     */
+    public function count()
+    {
+
+        return $this->getModel()->count();
+    }
+
+    /**
      * @param $userId
      *
      * @return Builder|static
@@ -57,8 +66,9 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
             function($join) use ($userId)
             {
                 $join->on('jc.id', '=', 'fn.user_id')
-                    ->where('fn.for_user_id', '=', $userId)
-                    ->where('fn.user_type', '=', $this->currentType);
+                     //->on('fn.for_user_id', '=', 'jc.id');
+                     ->where('fn.for_user_id', '=', $userId)
+                     ->where('fn.user_type', '=', $this->currentType);
             });
 
 

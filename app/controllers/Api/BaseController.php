@@ -37,6 +37,7 @@ use MissionNext\Validators\ValidatorResolver;
 use MissionNext\Api\Service\Matching\Queue\CandidateJobs as CanJobsQueue;
 use MissionNext\Api\Service\Matching\Queue\CandidateOrganizations as CanOrgsQueue;
 use MissionNext\Api\Service\Matching\Queue\OrganizationCandidates as OrgCandidatesQueue;
+use MissionNext\Api\Service\Matching\Queue\JobCandidates as JobCandidatesQueue;
 
 
 class BaseController extends Controller
@@ -275,15 +276,18 @@ class BaseController extends Controller
             $user->touch();
 
             $this->userRepo()->updateUserCachedData($user);
-
+            $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id];
             switch($this->getToken()->getRoles()[0]){
 
                 case BaseDataModel::CANDIDATE:
-                     Queue::push(CanJobsQueue::class, ["userId"=>$user->id, "appId"=>$this->getApp()->id]);
-                     Queue::push(CanOrgsQueue::class, ["userId"=>$user->id, "appId"=>$this->getApp()->id]);
+                     Queue::push(CanJobsQueue::class, $queueData);
+                     Queue::push(CanOrgsQueue::class, $queueData);
                     break;
                 case BaseDataModel::ORGANIZATION:
-                     Queue::push(OrgCandidatesQueue::class, ["userId"=>$user->id, "appId"=>$this->getApp()->id]);
+                     Queue::push(OrgCandidatesQueue::class, $queueData);
+                    break;
+                case BaseDataModel::JOB:
+                     Queue::push(JobCandidatesQueue::class, $queueData);
                     break;
             }
 

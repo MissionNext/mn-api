@@ -3,7 +3,6 @@
 namespace MissionNext\Api\Service\Matching\Queue;
 
 
-
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
@@ -55,19 +54,29 @@ class CandidateJobs extends QueueMatching
 
         $jobData = $Matching->matchResults();
 
-        Results::where("for_user_id","=", $userId)->where("user_type","=", BaseDataModel::JOB)->delete();//TODO where user type = ?
+        if (empty($jobData)){
+
+            return [];
+        }
+
+        Results::where("for_user_id","=", $userId)
+            ->where("for_user_type","=", BaseDataModel::CANDIDATE)
+            ->where("user_type","=", BaseDataModel::JOB)
+            ->delete();//TODO where user type = ?
 
         $dateTime = (new \DateTime())->format("Y-m-d H:i:s");
 
-        $insertData = array_map(function($jD) use ($userId, $dateTime){
+        $insertData = array_map(function($d) use ($userId, $dateTime){
               return
                   [
-                    "user_type" => BaseDataModel::JOB,
-                    "user_id" => $jD['id'],
-                    "for_user_id" => $userId,
-                    "data" => json_encode($jD),
-                    "created_at" => $dateTime,
-                    "updated_at" => $dateTime,
+                      "user_type" => BaseDataModel::JOB,
+                      "user_id" => $d['id'],
+                      "for_user_id" => $userId ,
+                      "for_user_type" => BaseDataModel::CANDIDATE,
+                      "matching_percentage" => $d['matching_percentage'],
+                      "data" => json_encode($d),
+                      "created_at" => $dateTime,
+                      "updated_at" => $dateTime,
                   ];
 
         }, $jobData);

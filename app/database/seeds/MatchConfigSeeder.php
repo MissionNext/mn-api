@@ -100,12 +100,16 @@ class MatchConfigSeeder extends BaseSeeder
         $userRep->insertUserCachedData($userRep->find(2));
         $userRep->insertUserCachedData($userRep->find(4));
 
+
         $sc->getToken()->setRoles([BaseDataModel::AGENCY]);
         $userRep->insertUserCachedData($userRep->find(1));
 
         $sc->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
         $userRep->insertUserCachedData($userRep->find(3));
         $userRep->insertUserCachedData($userRep->find(5));
+        $userRep->insertUserCachedData($userRep->find(6));
+        $userRep->insertUserCachedData($userRep->find(7));
+        $userRep->insertUserCachedData($userRep->find(8));
 
         $configRep = (new \MissionNext\Repos\Matching\ConfigRepository())->setSecurityContext($sc);
         $orgConfig = [

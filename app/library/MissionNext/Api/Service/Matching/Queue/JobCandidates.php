@@ -6,42 +6,40 @@ use MissionNext\Models\Application\Application;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
-use MissionNext\Api\Service\Matching\OrganizationCandidates as MatchOrgCandidates;
+use MissionNext\Api\Service\Matching\JobCandidates as MatchJobCandidates;
 use MissionNext\Repos\Matching\ConfigRepository;
 
-class OrganizationCandidates extends QueueMatching
+class JobCandidates extends QueueMatching
 {
     public function fire($job, $data)
     {
         $userId = $data["userId"];
         $appId = $data["appId"];
 
-
         $this->securityContext()->getToken()->setApp(Application::find($appId));
 
-        $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
+        $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
 
         $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
 
-
-        $config = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $userId)->get();
+        $config = $configRepo->configByJobCandidates(BaseDataModel::JOB, $userId)->get();
 
         if (!$config->count()) {
 
             $job->delete();
             return [];
         }
-        $orgData = (new UserCachedRepository(BaseDataModel::ORGANIZATION))->select('data')->findOrFail($userId);
+        $jobData = (new UserCachedRepository(BaseDataModel::JOB))->select('data')->findOrFail($userId);
 
-        if (empty($orgData)) {
+        if (empty($jobData)) {
 
             $job->delete();
             return [];
         }
 
-        $orgData = json_decode($orgData->data, true);
+        $jobData = json_decode($jobData->data, true);
 
-        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->dataWithNotes($userId)->get();
+        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->dataWithNotes(0)->get();
 
         $candidateData = !empty($candidateData) ? array_map(function ($d) {
             $data = json_decode($d->data, true);
@@ -51,7 +49,7 @@ class OrganizationCandidates extends QueueMatching
             return $data;
         }, $candidateData) : [];
 
-        $Matching = new MatchOrgCandidates($orgData, $candidateData, $config);
+        $Matching = new MatchJobCandidates($jobData, $candidateData, $config);
 
         $candidateData = $Matching->matchResults();
 
@@ -61,9 +59,9 @@ class OrganizationCandidates extends QueueMatching
         }
 
         Results::where("for_user_id","=", $userId)
-            ->where("for_user_type","=", BaseDataModel::ORGANIZATION)
-            ->where("user_type","=", BaseDataModel::CANDIDATE)
-            ->delete();
+                ->where("for_user_type","=", BaseDataModel::JOB)
+                ->where("user_type","=", BaseDataModel::CANDIDATE)
+                ->delete();//TODO where user type = ?
 
         $dateTime = (new \DateTime())->format("Y-m-d H:i:s");
 
@@ -73,7 +71,7 @@ class OrganizationCandidates extends QueueMatching
                     "user_type" => BaseDataModel::CANDIDATE,
                     "user_id" => $d['id'],
                     "for_user_id" => $userId ,
-                    "for_user_type" => BaseDataModel::ORGANIZATION,
+                    "for_user_type" => BaseDataModel::JOB,
                     "matching_percentage" => $d['matching_percentage'],
                     "data" => json_encode($d),
                     "created_at" => $dateTime,
@@ -86,6 +84,6 @@ class OrganizationCandidates extends QueueMatching
 
         $job->delete();
 
-        return $candidateData;
+        return $jobData;
     }
 } 
