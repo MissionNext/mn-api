@@ -60,5 +60,7 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
                     ->where('fn.for_user_id', '=', $userId)
                     ->where('fn.user_type', '=', $this->currentType);
             });
+
+
     }
 }

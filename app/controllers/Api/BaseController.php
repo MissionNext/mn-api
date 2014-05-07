@@ -4,6 +4,7 @@ namespace MissionNext\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,9 @@ use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
 use MissionNext\Repos\ViewField\ViewFieldRepositoryInterface;
 use MissionNext\Validators\ValidatorResolver;
+use MissionNext\Api\Service\Matching\Queue\CandidateJobs as CanJobsQueue;
+use MissionNext\Api\Service\Matching\Queue\CandidateOrganizations as CanOrgsQueue;
+use MissionNext\Api\Service\Matching\Queue\OrganizationCandidates as OrgCandidatesQueue;
 
 
 class BaseController extends Controller
@@ -271,6 +275,17 @@ class BaseController extends Controller
             $user->touch();
 
             $this->userRepo()->updateUserCachedData($user);
+
+            switch($this->getToken()->getRoles()[0]){
+
+                case BaseDataModel::CANDIDATE:
+                     Queue::push(CanJobsQueue::class, ["userId"=>$user->id, "appId"=>$this->getApp()->id]);
+                     Queue::push(CanOrgsQueue::class, ["userId"=>$user->id, "appId"=>$this->getApp()->id]);
+                    break;
+                case BaseDataModel::ORGANIZATION:
+                     Queue::push(OrgCandidatesQueue::class, ["userId"=>$user->id, "appId"=>$this->getApp()->id]);
+                    break;
+            }
 
         }
 

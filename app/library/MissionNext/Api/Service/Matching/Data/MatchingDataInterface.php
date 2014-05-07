@@ -5,7 +5,7 @@ namespace MissionNext\Api\Service\Matching\Data;
 
 use MissionNext\Api\Service\Matching\Data\Type\Date;
 use MissionNext\Api\Service\Matching\Data\Type\Numeric;
-use MissionNext\Api\Service\Matching\Type\Matching;
+use MissionNext\Api\Service\Matching\Type\Matching as MatchingType;
 
 interface MatchingDataInterface
 {
@@ -13,7 +13,7 @@ interface MatchingDataInterface
 
     public function setMatchingValues(array $matchingValues);
 
-    public function setMatchingType(Matching $type);
+    public function setMatchingType(MatchingType $type);
 
     public function getMainValues();
 
