@@ -22,9 +22,8 @@ class JobController extends BaseController
      */
     public function show($id)
     {
-        $profileFieldsQuery = $this->fieldRepo()->profileFields($this->jobRepo()->find($id));
 
-        return new RestResponse($this->jobRepo()->profileStructure($profileFieldsQuery->get()));
+        return new RestResponse($this->jobRepo()->profileData($this->jobRepo()->find($id)));
     }
 
 

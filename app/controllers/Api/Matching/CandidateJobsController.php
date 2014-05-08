@@ -5,17 +5,11 @@ namespace MissionNext\Controllers\Api\Matching;
 
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
-use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\BaseDataModel;
-use MissionNext\Models\Field\FieldType;
-use MissionNext\Models\FolderNotes\FolderNotes;
-use MissionNext\Models\Matching\Config;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
-use MissionNext\Repos\Field\Field;
 use MissionNext\Api\Service\Matching\CandidateJobs;
 
 class CandidateJobsController extends BaseController
@@ -39,6 +33,11 @@ class CandidateJobsController extends BaseController
 
     }
 
+    /**
+     * @param $candidate_id
+     * 
+     * @return RestResponse
+     */
     public function getLive($candidate_id)
     {
 

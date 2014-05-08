@@ -14,6 +14,11 @@ use MissionNext\Repos\CachedData\UserCachedRepository;
 
 class OrganizationCandidatesController extends BaseController
 {
+    /**
+     * @param $organizationId
+     *
+     * @return RestResponse
+     */
     public function getIndex($organizationId)
     {
 
@@ -28,6 +33,11 @@ class OrganizationCandidatesController extends BaseController
         return new RestResponse($data);
     }
 
+    /**
+     * @param $organizationId
+     *
+     * @return RestResponse
+     */
     public function getLive($organizationId)
     {
         $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);

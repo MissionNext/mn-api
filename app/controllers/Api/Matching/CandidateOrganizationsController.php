@@ -13,7 +13,11 @@ use MissionNext\Repos\CachedData\UserCachedRepository;
 
 class CandidateOrganizationsController extends BaseController
 {
-
+    /**
+     * @param $candidate_id
+     *
+     * @return RestResponse
+     */
     public function getIndex($candidate_id)
     {
         /** @var  $matchResults Builder */

@@ -26,9 +26,8 @@ class UserController extends BaseController
     public function show($id)
     {
         $user = $this->userRepo()->find($id);
-        $profileFieldsQuery = $this->fieldRepo()->profileFields($user);
 
-        return new RestResponse($this->userRepo()->profileStructure($profileFieldsQuery->get()));
+        return new RestResponse($this->userRepo()->profileData($user));
     }
 
     /**

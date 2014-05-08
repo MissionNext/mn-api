@@ -16,6 +16,7 @@ class JobCandidatesController extends BaseController
     /**
      *
      * @param $jobId
+     *
      * @return RestResponse
      */
     public function getIndex($jobId)

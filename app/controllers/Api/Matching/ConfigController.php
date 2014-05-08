@@ -6,10 +6,7 @@ namespace MissionNext\Controllers\Api\Matching;
 use Illuminate\Support\Facades\Input;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
-use MissionNext\Facade\SecurityContext;
-use MissionNext\Models\Field\Candidate;
-use MissionNext\Models\Matching\Config;
-use MissionNext\Models\Field\Candidate as CandidateFieldModel;
+
 
 class ConfigController extends BaseController
 {
