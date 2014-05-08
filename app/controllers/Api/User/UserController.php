@@ -113,7 +113,7 @@ class UserController extends BaseController
         $data = Request::only(["username", "email", "password"]);
         $filteredData = array_filter($data);
 
-        $modelValidator = new UserValidator(Request::instance());
+        $modelValidator = new UserValidator(Request::instance(), $user);
 
         if (!$modelValidator->passes()){
 
@@ -123,6 +123,7 @@ class UserController extends BaseController
         foreach ($filteredData as $prop => $val) {
             $user->$prop = $prop === "password" ? Hash::make($val) : $val;
         }
+
         $user->save();
 
         return new RestResponse($user);

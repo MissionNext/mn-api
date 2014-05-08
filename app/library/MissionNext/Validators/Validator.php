@@ -2,6 +2,7 @@
 
 namespace MissionNext\Validators;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator as FValidator;
 use Illuminate\Support\MessageBag;
@@ -13,14 +14,17 @@ abstract class Validator
 
     protected $errors;
 
+    protected $model;
+
     public static $rules;
 
     /** @var  Request */
     protected  $request;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, Model $model = null)
     {
         $this->request = $request;
+        $this->model = $model;
         $this->input = $this->getInput();
 
     }
