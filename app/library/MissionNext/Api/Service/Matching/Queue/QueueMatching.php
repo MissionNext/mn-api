@@ -58,7 +58,7 @@ abstract class QueueMatching
         for($i=1; $i <= $queries; ++$i) {
 
             $offset = ($i - 1) * $limit;
-            $matchingData = $cacheRep->dataWithNotes($userId)->take($limit)->skip($offset)->get();
+            $matchingData = $cacheRep->dataWithNotes($this->forUserType === BaseDataModel::JOB ? null : $userId )->take($limit)->skip($offset)->get();
 
             $matchingData = !empty($matchingData) ? array_map(function ($d) {
                 $data = json_decode($d->data, true);

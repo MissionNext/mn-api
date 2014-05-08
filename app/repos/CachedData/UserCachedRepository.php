@@ -53,22 +53,29 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
      *
      * @return Builder|static
      */
-    public function dataWithNotes($userId)
+    public function dataWithNotes($userId = null)
     {
         $folderNotesTable = (new FolderNotes)->getTable();
         /** @var  $queryBuilder Builder */
-        $queryBuilder = DB::table($this->currentType."_cached_profile AS jc");
+        $queryBuilder = DB::table($this->currentType."_cached_profile AS cp");
 
         return
           $queryBuilder
-            ->select(DB::raw("jc.data, fn.notes, fn.folder"))
+            ->select(DB::raw("cp.data, fn.notes, fn.folder"))
             ->leftJoin(DB::raw($folderNotesTable." as fn"),
             function($join) use ($userId)
             {
-                $join->on('jc.id', '=', 'fn.user_id')
-                     //->on('fn.for_user_id', '=', 'jc.id');
-                     ->where('fn.for_user_id', '=', $userId)
-                     ->where('fn.user_type', '=', $this->currentType);
+                if (is_null($userId)){
+                    $join
+                        ->on('cp.id', '=', 'fn.user_id')
+                        ->where('fn.user_type', '=', $this->currentType);
+                }else{
+                    $join
+                         ->on('cp.id', '=', 'fn.user_id')
+                         ->where('fn.for_user_id', '=', $userId)
+                         ->where('fn.user_type', '=', $this->currentType);
+                }
+
             });
 
 

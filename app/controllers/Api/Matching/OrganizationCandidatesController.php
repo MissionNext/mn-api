@@ -27,4 +27,43 @@ class OrganizationCandidatesController extends BaseController
 
         return new RestResponse($data);
     }
-} 
+
+    public function getLive($organizationId)
+    {
+        $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
+
+        $configRepo = $this->matchingConfigRepo()->setSecurityContext($this->securityContext());
+        $config = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $organizationId)->get();
+
+
+        if (!$config->count()) {
+
+            return new RestResponse([]);
+        }
+
+        $orgData = (new UserCachedRepository(BaseDataModel::ORGANIZATION))->select('data')->findOrFail($organizationId);
+        if (empty($orgData)) {
+
+            return new RestResponse([]);
+        }
+
+        $orgData = json_decode($orgData->data, true);
+
+        $canData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->dataWithNotes($organizationId)->get();
+
+        $canData = !empty($canData) ? array_map(function ($d) {
+            $data = json_decode($d->data, true);
+            $data['notes'] = $d->notes;
+            $data['folder'] = $d->folder;
+
+            return $data;
+        }, $canData) : [];
+
+        $Matching = new OrganizationCandidates($orgData, $canData, $config->toArray());
+
+        $canData = $Matching->matchResults();
+
+        return new RestResponse($canData);
+    }
+
+}
