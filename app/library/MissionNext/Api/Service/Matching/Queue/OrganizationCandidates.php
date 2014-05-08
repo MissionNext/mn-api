@@ -11,10 +11,18 @@ use MissionNext\Repos\Matching\ConfigRepository;
 
 class OrganizationCandidates extends QueueMatching
 {
+    protected $userType = BaseDataModel::CANDIDATE;
+
+    protected $forUserType = BaseDataModel::ORGANIZATION;
+
+    protected $matchingClass = MatchOrgCandidates::class;
+
+
     public function fire($job, $data)
     {
         $userId = $data["userId"];
         $appId = $data["appId"];
+        $this->job = $job;
 
 
         $this->securityContext()->getToken()->setApp(Application::find($appId));
@@ -31,61 +39,7 @@ class OrganizationCandidates extends QueueMatching
             $job->delete();
             return [];
         }
-        $orgData = (new UserCachedRepository(BaseDataModel::ORGANIZATION))->select('data')->findOrFail($userId);
 
-        if (empty($orgData)) {
-
-            $job->delete();
-            return [];
-        }
-
-        $orgData = json_decode($orgData->data, true);
-
-        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->dataWithNotes($userId)->get();
-
-        $candidateData = !empty($candidateData) ? array_map(function ($d) {
-            $data = json_decode($d->data, true);
-            $data['notes'] = $d->notes;
-            $data['folder'] = $d->folder;
-
-            return $data;
-        }, $candidateData) : [];
-
-        $Matching = new MatchOrgCandidates($orgData, $candidateData, $config);
-
-        $candidateData = $Matching->matchResults();
-
-        if (empty($candidateData)){
-
-            return [];
-        }
-
-        Results::where("for_user_id","=", $userId)
-            ->where("for_user_type","=", BaseDataModel::ORGANIZATION)
-            ->where("user_type","=", BaseDataModel::CANDIDATE)
-            ->delete();
-
-        $dateTime = (new \DateTime())->format("Y-m-d H:i:s");
-
-        $insertData = array_map(function($d) use ($userId, $dateTime){
-            return
-                [
-                    "user_type" => BaseDataModel::CANDIDATE,
-                    "user_id" => $d['id'],
-                    "for_user_id" => $userId ,
-                    "for_user_type" => BaseDataModel::ORGANIZATION,
-                    "matching_percentage" => $d['matching_percentage'],
-                    "data" => json_encode($d),
-                    "created_at" => $dateTime,
-                    "updated_at" => $dateTime,
-                ];
-
-        }, $candidateData);
-
-        Results::insert($insertData);
-
-        $job->delete();
-
-        return $candidateData;
+        $this->matchResults($userId, $config);
     }
 } 

@@ -21,7 +21,7 @@ class CandidateJobs extends Matching
      */
     public function matchResults()
     {
-        $configArr = $this->matchConfig->toArray();
+        $configArr = $this->matchConfig;
 
         $matchingDataSet = $this->matchAgainstData;
         $mainData = $this->matchData;

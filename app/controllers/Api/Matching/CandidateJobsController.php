@@ -55,7 +55,7 @@ class CandidateJobsController extends BaseController
             return $data;
         }, $jobData) : [];
 
-        $Matching = new CandidateJobs($candidateData, $jobData, $config);
+        $Matching = new CandidateJobs($candidateData, $jobData, $config->toArray());
 
         $jobData = $Matching->matchResults();
 

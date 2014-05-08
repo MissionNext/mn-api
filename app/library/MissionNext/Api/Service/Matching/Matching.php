@@ -3,6 +3,7 @@
 namespace MissionNext\Api\Service\Matching;
 
 
+use Illuminate\Support\Collection;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Api\Auth\Token;
 use MissionNext\Api\Exceptions\SecurityContextException;
@@ -129,9 +130,13 @@ abstract class Matching
     protected  function calculateMatchingPercentage(array $data)
     {
         $maxMatching = 0;
-        $this->matchConfig->each(function ($c) use (&$maxMatching) {
-            $maxMatching += $c->weight;
-        });
+
+        array_map(function($c) use (&$maxMatching){
+
+            $maxMatching += $c['weight'];
+
+        }, $this->matchConfig);
+
 
         foreach ($data as &$profileData) {
             $profileData['matching_percentage'] = 0;

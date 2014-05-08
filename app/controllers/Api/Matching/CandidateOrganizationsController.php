@@ -42,7 +42,7 @@ class CandidateOrganizationsController extends BaseController
             return $data;
          }, $organizationData) : [];
 
-        $Matching = new CandidateOrganizations($candidateData, $organizationData, $config);
+        $Matching = new CandidateOrganizations($candidateData, $organizationData, $config->toArray());
 
         $orgData = $Matching->matchResults();
 

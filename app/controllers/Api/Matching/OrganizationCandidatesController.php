@@ -44,7 +44,7 @@ class OrganizationCandidatesController extends BaseController
             return $data;
         }, $canData) : [];
 
-        $Matching = new OrganizationCandidates($orgData, $canData, $config);
+        $Matching = new OrganizationCandidates($orgData, $canData, $config->toArray());
 
         $canData = $Matching->matchResults();
 
