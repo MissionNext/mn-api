@@ -57,7 +57,7 @@ class UserController extends BaseController
         }
 
         /** @var  $req \Symfony\Component\HttpFoundation\Request */
-        $profileData = Input::except("timestamp","username","password","email","role");
+        $profileData = Input::get('profile');
         $roleName = Input::get('role');
         if (!RouteSecurityFilter::isAllowedRole($roleName)){
 
@@ -171,8 +171,10 @@ class UserController extends BaseController
         $username = Request::input('username');
         $user = $this->userRepo()->getModel()->with('roles')->whereUsername($username)->first();
         $user && !Hash::check($password, $user->password) && $user = null;
-        $user = $user->toArray();
-        $user['roles'] = $user['roles'][0]['role'];
+        if($user){
+            $user = $user->toArray();
+            $user['roles'] = $user['roles'][0]['role'];
+        }
 
         return new RestResponse($user);
     }
