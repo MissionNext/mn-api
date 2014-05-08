@@ -21,21 +21,15 @@ class CandidateJobsController extends BaseController
      */
     public function getIndex($candidate_id)
     {
-        /** @var  $matchResults Builder */
-        $matchResults =  Results::matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::JOB, $candidate_id);
 
-        $data = [];
-        $matchResults->get()->each(function($el) use (&$data){
-             $data[] = json_decode($el->data, true);
-        });
-
-        return new RestResponse($data);
-
+        return
+            new RestResponse($this->matchingResultsRepo()
+                ->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::JOB, $candidate_id));
     }
 
     /**
      * @param $candidate_id
-     * 
+     *
      * @return RestResponse
      */
     public function getLive($candidate_id)

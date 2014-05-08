@@ -13,6 +13,8 @@ use MissionNext\Repos\FormGroup\FormGroupRepository;
 use MissionNext\Repos\FormGroup\FormGroupRepositoryInterface;
 use MissionNext\Repos\Matching\ConfigRepository;
 use MissionNext\Repos\Matching\ConfigRepositoryInterface;
+use MissionNext\Repos\Matching\ResultsRepository;
+use MissionNext\Repos\Matching\ResultsRepositoryInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
@@ -59,6 +61,11 @@ class RepositoryProvider extends ServiceProvider
         App::bind(ConfigRepositoryInterface::class, function () {
 
             return (new SecurityContextResolver(new ConfigRepository()))->getResolvedObject();
+        });
+
+        App::bind(ResultsRepositoryInterface::class, function () {
+
+            return new ResultsRepository();
         });
 
     }
