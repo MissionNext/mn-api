@@ -14,13 +14,14 @@ class User extends Validator
 
     public function passes()
     {
-      //  dd($this->model->username);
-        if (isset($this->input["email"])){
-            static::$rules["email"] =  ($this->model->email === $this->input["email"] ) ? "required|email" :  static::$rules["email"] ;
-        }
+        if ($this->model) {
+            if (isset($this->input["email"])) {
+                static::$rules["email"] = ($this->model->email === $this->input["email"]) ? "required|email" : static::$rules["email"];
+            }
 
-        if (isset($this->input["username"])){
-            static::$rules["username"]  =  ($this->model->username === $this->input["username"] ) ? "required" : static::$rules["username"] ;
+            if (isset($this->input["username"])) {
+                static::$rules["username"] = ($this->model->username === $this->input["username"]) ? "required" : static::$rules["username"];
+            }
         }
 
         /** @var  $validation \Illuminate\Validation\Validator */

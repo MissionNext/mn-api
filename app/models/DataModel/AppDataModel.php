@@ -21,7 +21,7 @@ class AppDataModel extends BaseDataModel implements ModelInterface
 
 
     /**
-     * @return AppDataModel
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function app()
     {

@@ -4,6 +4,7 @@ namespace MissionNext\Routing;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use MissionNext\Controllers\Api\Affiliate\AffiliateController;
 use MissionNext\Controllers\Api\FolderNotes\FolderController;
 use MissionNext\Controllers\Api\FolderNotes\NoteController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
@@ -18,6 +19,7 @@ use MissionNext\Controllers\Api\Matching\CandidateJobsController as MatchCandida
 use MissionNext\Controllers\Api\Matching\CandidateOrganizationsController as MatchCandidateOrgsController;
 use MissionNext\Controllers\Api\Matching\JobCandidatesController as MatchJobCandidatesController;
 use MissionNext\Controllers\Api\Matching\OrganizationCandidatesController as MatchOrgCandidatesController;
+use MissionNext\Models\Affiliate\Affiliate;
 
 class Routing
 {
@@ -62,6 +64,13 @@ class Routing
             Route::controller('match/candidate/organizations/{candidate_id}', MatchCandidateOrgsController::class);
             Route::controller('match/job/candidates/{jobId}', MatchJobCandidatesController::class);
             Route::controller('match/organization/candidates/{organizationId}', MatchOrgCandidatesController::class);
+
+            Route::pattern('requester_id', '\d+');
+            Route::pattern('approver_id', '\d+');
+            Route::pattern('affiliate_id', '\d+');
+            Route::pattern('affiliate_type', '('.Affiliate::TYPE_APPROVER.'|'.Affiliate::TYPE_REQUESTER.')');
+            Route::controller('affiliate/{requester_id}/to/{approver_id}', AffiliateController::class);
+            Route::get('affiliate/{affiliate_id}/as/{affiliate_type}', AffiliateController::class.'@getAffiliates');
 
             Route::resource(static::RESOURCE_USER, UserController::class, [
                 'names' => ['store' => static::ROUTE_CREATE_USER]

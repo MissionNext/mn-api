@@ -21,7 +21,7 @@ class OrganizationCandidatesController extends BaseController
      */
     public function getIndex($organizationId)
     {
-        
+
         return
             new RestResponse($this->matchingResultsRepo()
                 ->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId));

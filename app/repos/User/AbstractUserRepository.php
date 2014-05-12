@@ -44,7 +44,7 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
 
         if (!$this->model) {
 
-            throw new NotFoundHttpException(class_basename($this)." with id $id not found");
+            throw new NotFoundHttpException(class_basename($this->modelClassName)." with id $id not found");
         }
 
         return $this->model;
