@@ -45,8 +45,10 @@ class AffiliateController extends BaseController
 
         $res = $query->get()->each(function(&$el) use ($affiliateId){
            $el->organization_profile = json_decode($el->organization_profile);
+           $el->organization_profile->role = BaseDataModel::ORGANIZATION;
            $el->organization_profile->affiliate_type = $el->affiliate_approver == $el->organization_profile->id ? Affiliate::TYPE_APPROVER : Affiliate::TYPE_REQUESTER;
            $el->agency_profile = json_decode($el->agency_profile);
+           $el->agency_profile->role = BaseDataModel::AGENCY;
            $el->agency_profile->affiliate_type = $el->affiliate_approver == $el->agency_profile->id ? Affiliate::TYPE_APPROVER : Affiliate::TYPE_REQUESTER;
            $el->profile = $affiliateId == $el->organization_profile->id ? "organization_profile" : "agency_profile";
         });
