@@ -71,6 +71,7 @@ class Routing
             Route::pattern('affiliate_type', '('.Affiliate::TYPE_APPROVER.'|'.Affiliate::TYPE_REQUESTER.'|'.Affiliate::TYPE_ANY.')');
             Route::controller('affiliate/{requester_id}/to/{approver_id}', AffiliateController::class);
             Route::get('affiliate/{affiliate_id}/as/{affiliate_type}', AffiliateController::class.'@getAffiliates');
+            Route::get('affiliate/{affiliate_id}/jobs', AffiliateController::class.'@getAgencyJobs');
 
             Route::resource(static::RESOURCE_USER, UserController::class, [
                 'names' => ['store' => static::ROUTE_CREATE_USER]
