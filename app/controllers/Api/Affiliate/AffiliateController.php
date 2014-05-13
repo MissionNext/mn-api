@@ -177,7 +177,7 @@ class AffiliateController extends BaseController
     /**
      * @param $requesterId
      * @param $approverId
-     * 
+     *
      * @return array
      *
      * @throws \MissionNext\Api\Exceptions\AffiliateException

@@ -20,6 +20,7 @@ use MissionNext\Controllers\Api\Matching\CandidateOrganizationsController as Mat
 use MissionNext\Controllers\Api\Matching\JobCandidatesController as MatchJobCandidatesController;
 use MissionNext\Controllers\Api\Matching\OrganizationCandidatesController as MatchOrgCandidatesController;
 use MissionNext\Models\Affiliate\Affiliate;
+use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
 
 class Routing
 {
@@ -29,6 +30,7 @@ class Routing
     const RESOURCE_PROFILE = 'profile';
     const RESOURCE_JOB_PROFILE = 'profile/job';
     const RESOURCE_JOB = 'job';
+    const RESOURCE_FOLDER = 'folder';
     const ROUTE_CREATE_USER = 'mission.next.user.create';
     const ROUTE_CREATE_JOB = 'mission.next.job.create';
 
@@ -105,6 +107,10 @@ class Routing
 
             Route::controller('results/folder', FolderController::class, []);
             Route::controller('results/notes', NoteController::class, []);
+
+            Route::resource(static::RESOURCE_FOLDER, FolderResource::class,
+                [   ]
+            );
 
         });
 
