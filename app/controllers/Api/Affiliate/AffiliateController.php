@@ -19,8 +19,16 @@ class AffiliateController extends BaseController
 
     public function getAffiliates($affiliateId, $affiliateType)
     {
+        if ($affiliateType === Affiliate::TYPE_ANY ){
 
-        return new RestResponse(Affiliate::where("affiliate_" . $affiliateType, '=', $affiliateId)->get());
+            $query = Affiliate::where("affiliate_requester", '=', $affiliateId)
+                               ->orWhere("affiliate_approver", '=', $affiliateId);
+        } else {
+
+            $query = Affiliate::where("affiliate_" . $affiliateType, '=', $affiliateId);
+        }
+
+        return new RestResponse($query->get());
     }
 
     public function getIndex($requesterId, $approverId)

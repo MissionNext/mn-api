@@ -68,7 +68,7 @@ class Routing
             Route::pattern('requester_id', '\d+');
             Route::pattern('approver_id', '\d+');
             Route::pattern('affiliate_id', '\d+');
-            Route::pattern('affiliate_type', '('.Affiliate::TYPE_APPROVER.'|'.Affiliate::TYPE_REQUESTER.')');
+            Route::pattern('affiliate_type', '('.Affiliate::TYPE_APPROVER.'|'.Affiliate::TYPE_REQUESTER.'|'.Affiliate::TYPE_ANY.')');
             Route::controller('affiliate/{requester_id}/to/{approver_id}', AffiliateController::class);
             Route::get('affiliate/{affiliate_id}/as/{affiliate_type}', AffiliateController::class.'@getAffiliates');
 

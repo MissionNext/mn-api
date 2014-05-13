@@ -15,6 +15,7 @@ class Affiliate extends Eloquent implements ModelInterface
 
     const TYPE_REQUESTER = 'requester';
     const TYPE_APPROVER = 'approver';
+    const TYPE_ANY = 'any';
 
     protected $table = "affiliates";
 
