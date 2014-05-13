@@ -3,6 +3,7 @@
 namespace MissionNext\Controllers\Api\Affiliate;
 
 
+use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\AffiliateException;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
@@ -19,16 +20,38 @@ class AffiliateController extends BaseController
 
     public function getAffiliates($affiliateId, $affiliateType)
     {
+        $baseQuery = Affiliate::select("status","affiliate_approver_type", "organization_cached_profile.data as organization_profile",
+            "agency_cached_profile.data as agency_profile", "affiliate_approver", "affiliate_requester" )
+            ->leftJoin("organization_cached_profile", function($join){
+                $join->on("organization_cached_profile.id", "=", "affiliate_approver")
+                    ->orOn("organization_cached_profile.id","=","affiliate_requester");
+
+            })
+            ->leftJoin("agency_cached_profile", function($join){
+                $join->on("agency_cached_profile.id", "=", "affiliate_approver")
+                    ->orOn("agency_cached_profile.id","=","affiliate_requester");
+
+            });
         if ($affiliateType === Affiliate::TYPE_ANY ){
 
-            $query = Affiliate::where("affiliate_requester", '=', $affiliateId)
-                               ->orWhere("affiliate_approver", '=', $affiliateId);
+            $query = $baseQuery
+                                ->where("affiliate_requester", '=', $affiliateId)
+                                ->orWhere("affiliate_approver", '=', $affiliateId);
+
         } else {
 
-            $query = Affiliate::where("affiliate_" . $affiliateType, '=', $affiliateId);
+            $query = $baseQuery->where("affiliate_" . $affiliateType, '=', $affiliateId);
         }
 
-        return new RestResponse($query->get());
+        $res = $query->get()->each(function(&$el){
+           $el->organization_profile = json_decode($el->organization_profile);
+           $el->organization_profile->affiliate_type = $el->affiliate_approver == $el->organization_profile->id ? Affiliate::TYPE_APPROVER : Affiliate::TYPE_REQUESTER;
+           $el->agency_profile = json_decode($el->agency_profile);
+           $el->agency_profile->affiliate_type = $el->affiliate_approver == $el->agency_profile->id ? Affiliate::TYPE_APPROVER : Affiliate::TYPE_REQUESTER;
+
+        });
+
+        return new RestResponse($res);
     }
 
     public function getIndex($requesterId, $approverId)
