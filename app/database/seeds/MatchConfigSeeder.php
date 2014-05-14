@@ -95,6 +95,7 @@ class MatchConfigSeeder extends BaseSeeder
         $userRep->insertUserCachedData(Job::find(3));
         $userRep->insertUserCachedData(Job::find(4));
         $userRep->insertUserCachedData(Job::find(5));
+        $userRep->insertUserCachedData(Job::find(6));
 
         $sc->getToken()->setRoles([BaseDataModel::CANDIDATE]);
         $userRep->insertUserCachedData($userRep->find(2));

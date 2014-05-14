@@ -2,6 +2,7 @@
 namespace MissionNext\Controllers\Api\Profile;
 
 
+use Illuminate\Support\Facades\Input;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
@@ -42,6 +43,14 @@ class UserController extends BaseController
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
+        $files = Input::file();
+
+        if (!empty($files)){
+            foreach($files as $symbolKey => $file){
+                $hash[$symbolKey] = $file;
+            }
+        }
+
         if (empty($hash)) {
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
@@ -49,7 +58,7 @@ class UserController extends BaseController
         $this->updateUserProfile($user, $hash);
 
 
-        return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user)->get()));
+        return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user)->get(), $this->securityContext()->role()));
     }
 
     /**

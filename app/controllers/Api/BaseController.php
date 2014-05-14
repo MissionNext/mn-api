@@ -40,6 +40,7 @@ use MissionNext\Api\Service\Matching\Queue\CandidateJobs as CanJobsQueue;
 use MissionNext\Api\Service\Matching\Queue\CandidateOrganizations as CanOrgsQueue;
 use MissionNext\Api\Service\Matching\Queue\OrganizationCandidates as OrgCandidatesQueue;
 use MissionNext\Api\Service\Matching\Queue\JobCandidates as JobCandidatesQueue;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 class BaseController extends Controller
@@ -247,6 +248,7 @@ class BaseController extends Controller
         );
 
         if ($validator->fails()) {
+
             throw new ValidationException($validator->messages());
         }
         return $fields;
@@ -272,21 +274,30 @@ class BaseController extends Controller
         $user->save();
 
         $mapping = [];
+        $sKeys = [];
 
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
-                $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]];
+                $mapping[$field->id] = ["value" => $profileData[$field->symbol_key] ];
+                $sKeys[$field->id] = $field->symbol_key;
             }//@TODO if example favourite_movies[] = '', no errors;
         }
 
         foreach ($mapping as $key => $map) {
-            $this->fieldRepo()->profileFields($user)->detach($key, $map);
+            $this->fieldRepo()->profileFields($user)->detach($key, true);
             if (is_array($map['value'])) {
                 foreach ($map['value'] as $val) {
                     $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $val]);
                 }
-            } else {
+            } elseif( $map['value'] instanceof UploadedFile) {
+                /** @var  $file UploadedFile  */
+                $file = $map['value'];
+                $fileName = $this->securityContext()->role().$user->id."_".$sKeys[$key].".".$file->getClientOriginalExtension();
+                $file->move(public_path()."/uploads", $fileName );
+                $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $fileName]);
+            } else{
                 $this->fieldRepo()->profileFields($user)->attach($key, $map);
+
             }
         }
         if (!empty($mapping)) {

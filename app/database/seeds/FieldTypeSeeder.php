@@ -50,6 +50,11 @@ class FieldTypeSeeder extends BaseSeeder
                 "name" => "checkbox",
                 "multiple" => true,
             ),
+            array(
+                "id" => FieldType::FILE,
+                "name" => "file",
+                "multiple" => false,
+            ),
 
         ));
 

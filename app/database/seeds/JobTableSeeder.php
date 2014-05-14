@@ -23,6 +23,9 @@ class JobTableSeeder extends BaseSeeder
             array('name' => 'Fifth job', 'symbol_key' =>  "fifth_job", "organization_id" => 3,
                 'created_at'=>$dateTime, 'updated_at'=>$dateTime
             ),
+            array('name' => 'Six job', 'symbol_key' =>  "six_job", "organization_id" => 7,
+                'created_at'=>$dateTime, 'updated_at'=>$dateTime
+            ),
 
         ));
 

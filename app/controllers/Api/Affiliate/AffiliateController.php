@@ -75,19 +75,25 @@ class AffiliateController extends BaseController
             throw new AffiliateException("Only agencies can view jobs");
         }
 
-        $res = Affiliate::select("jobs.name", "jobs.id as job_id", "jobs.organization_id", "users.username")
-            ->join("jobs", "jobs.organization_id", "=", "affiliate_approver")
-            ->join("users", "jobs.organization_id", "=", "users.id")
+
+        $res = Affiliate::select(
+            "job_cached_profile.data as job_data",
+            "organization_cached_profile.data as org_data",
+            "organization_cached_profile.id"
+        )
+            ->join("job_cached_profile", DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "affiliate_approver")
+            ->join("organization_cached_profile", DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "organization_cached_profile.id")
             ->where("affiliate_requester", "=", $affiliateId)
             ->where("status", "=", Affiliate::STATUS_APPROVED)
             ->get();
 
         $data = [];
         foreach($res as $r){
-           if (!isset($data[$r->organization_id])) {
-                $data[$r->organization_id] = ["name" => $r->username, "id" => $r->organization_id, "jobs" => []];
+           if (!isset($data[$r->id])) {
+
+                $data[$r->id] = ["org_data" => json_decode($r->org_data), "jobs" => [] ];
             }
-            array_push($data[$r->organization_id]["jobs"], $r->toArray());
+            array_push($data[$r->id]["jobs"], json_decode($r->job_data) );
         }
 
       //  echo "<pre>"; print_r($data); exit;
@@ -146,11 +152,7 @@ class AffiliateController extends BaseController
     {
         $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
             ->where("affiliate_requester", '=', $requesterId)
-            ->where("status", '<>', Affiliate::STATUS_CANCELLED)
-            ->firstOrFail();
-
-        $affiliate->status = Affiliate::STATUS_CANCELLED;
-        $affiliate->save();
+            ->delete();
 
         return new RestResponse($affiliate);
     }

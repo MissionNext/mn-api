@@ -86,14 +86,15 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     public function setUpDb()
     {
-        Artisan::call('migrate');
-        Artisan::call('db:seed', array('--class' => 'TestDatabaseSeeder'));
+        Artisan::call('migrate', array('--env' => 'testing'));
+        Artisan::call('db:seed', array('--env' => 'testing'));
+       // Artisan::call('db:seed', array('--class' => 'TestDatabaseSeeder'));
 
     }
 
     public function teardownDb()
     {
-        Artisan::call('migrate:reset');
+        Artisan::call('migrate:reset', ['--env' => 'testing']);
     }
 
 }

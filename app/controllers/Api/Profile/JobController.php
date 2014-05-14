@@ -44,7 +44,7 @@ class JobController extends BaseController
         }
         $this->updateUserProfile($job, $hash);
 
-        return new RestResponse( $this->jobRepo()->profileStructure($this->fieldRepo()->profileFields($job)->get()));
+        return new RestResponse( $this->jobRepo()->profileStructure($this->fieldRepo()->profileFields($job)->get(), $this->securityContext()->role()));
     }
 
     /**

@@ -52,10 +52,11 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
 
     /**
      * @param Collection $fields
+     * @param null $role
      *
      * @return Profile
      */
-    public function profileStructure(Collection $fields)
+    public function profileStructure(Collection $fields, $role = null)
     {
 
         $profile = new Profile();
@@ -63,7 +64,7 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
         foreach($this->getModel()->toArray() as $prop=>$val){
             $profile->$prop = $val;
         }
-
+        $profile->role = $role;
         $profile->profileData = new \stdClass();
 
         $fields->each(function ($field) use ($profile) {
@@ -89,7 +90,7 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
         $role = $this->securityContext->role(); // or this->model->roleType
         $userName = $role === BaseDataModel::JOB ? BaseDataModel::JOB : "user";
 
-        return $this->profileStructure($user->belongsToMany(Field::currentFieldModelName($this->securityContext), $this->securityContext->role() . '_profile', $userName.'_id', 'field_id')->withPivot('value')->get());
+        return $this->profileStructure($user->belongsToMany(Field::currentFieldModelName($this->securityContext), $this->securityContext->role() . '_profile', $userName.'_id', 'field_id')->withPivot('value')->get(), $role);
 
     }
 

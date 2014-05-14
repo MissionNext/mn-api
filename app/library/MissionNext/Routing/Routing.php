@@ -96,8 +96,10 @@ class Routing
 
 
             Route::resource(static::RESOURCE_PROFILE, UserProfileController::class,
-                [  'except' => ['index','create', 'store', 'edit'] ]
+                [  'except' => ['index','create',  'edit'] ]
             );
+
+
 
 //            Route::post('search/{searchType}', SearchController::class.'@search');
             Route::delete('search/{searchId}', SearchController::class.'@delete');
@@ -116,4 +118,4 @@ class Routing
 
     }
 
-} 
+}

@@ -139,6 +139,11 @@ class FieldTableSeeder extends BaseSeeder
                     "name" => "gender",
                     "type" => FieldType::RADIO,
                 ),
+                array(
+                    "symbol_key" => "resume",
+                    "name" => "resume",
+                    "type" => FieldType::FILE,
+                ),
             ));
 
             DB::table('organization_fields')->insert(array(
