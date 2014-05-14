@@ -21,6 +21,7 @@ use MissionNext\Controllers\Api\Matching\JobCandidatesController as MatchJobCand
 use MissionNext\Controllers\Api\Matching\OrganizationCandidatesController as MatchOrgCandidatesController;
 use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
+use MissionNext\Models\DataModel\BaseDataModel;
 
 class Routing
 {
@@ -113,6 +114,11 @@ class Routing
             Route::resource(static::RESOURCE_FOLDER, FolderResource::class,
                 [   ]
             );
+            Route::pattern('role', '('.BaseDataModel::AGENCY.'|'.BaseDataModel::CANDIDATE.'|'.BaseDataModel::ORGANIZATION.'|'.BaseDataModel::JOB.')');
+
+            Route::group(array('prefix' => static::RESOURCE_FOLDER), function () {
+                Route::get('by/{role}', FolderResource::class.'@role');
+            });
 
         });
 

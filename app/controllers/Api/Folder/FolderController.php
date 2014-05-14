@@ -3,8 +3,10 @@
 namespace MissionNext\Controllers\Api\Folder;
 
 
+use MissionNext\Api\Exceptions\SecurityContextException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Folder\Folder;
 
 class FolderController extends BaseController
@@ -19,9 +21,15 @@ class FolderController extends BaseController
 
     /**
      * @return RestResponse
+     *
+     * @throws \MissionNext\Api\Exceptions\SecurityContextException
      */
     public function store()
     {
+        if (!RouteSecurityFilter::isAllowedRole($this->request->request->get('role'))){
+
+            throw new SecurityContextException("role doesn't exists");
+        }
 
         return new RestResponse(Folder::create($this->request->request->all()));
     }
@@ -62,6 +70,19 @@ class FolderController extends BaseController
 
         return new RestResponse($folder);
     }
+
+    /**
+     * @param $role
+     *
+     * @return RestResponse
+     */
+    public function role($role)
+    {
+
+        return new RestResponse(Folder::where("role","=",$role)->get());
+    }
+
+
 
 
 } 

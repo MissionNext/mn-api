@@ -42,8 +42,10 @@ class RouteSecurityFilter
 
         if ($role) {
             if (static::isAllowedRole($role)) {
+
                 SecurityContext::getToken()->setRoles([$role]);
             } else {
+
                 throw new SecurityContextException("'$role' role doesn't exists", SecurityContextException::ON_SET_ROLE);
             }
         }

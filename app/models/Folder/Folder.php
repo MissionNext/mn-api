@@ -11,7 +11,7 @@ class Folder extends Model implements ModelInterface
 {
     protected $table = "folders";
 
-    protected $fillable = ["title"];
+    protected $fillable = ["title", "role"];
 
     protected static function boot()
     {

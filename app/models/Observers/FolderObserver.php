@@ -11,12 +11,16 @@ class FolderObserver implements ModelObserverInterface
     public function deleted($model)
     {
 
-        FolderNotes::where("folder","=",$model->title)->update(["folder" => null]);
+        FolderNotes::where("folder","=",$model->title)
+                   ->where("user_type","=", $model->role)
+                   ->update(["folder" => null]);
     }
 
     public function updated($model)
     {
 
-        FolderNotes::where("folder","=",$model->getOriginal()['title'])->update(["folder" => $model->title]);
+        FolderNotes::where("folder","=",$model->getOriginal()['title'])
+                    ->where("user_type","=", $model->role)
+                    ->update(["folder" => $model->title]);
     }
 } 
