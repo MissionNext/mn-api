@@ -140,7 +140,7 @@ abstract class Matching
 
         foreach ($data as &$profileData) {
             $profileData['matching_percentage'] = 0;
-            foreach ($profileData['profileData'] as $key=>&$prof) {
+            foreach ($profileData['results'] as $key=>&$prof) {
                 //  var_dump($prof);
                 if (isset($prof['matches']) && $prof['matches']) {
                     $profileData['matching_percentage'] += $prof['weight'];

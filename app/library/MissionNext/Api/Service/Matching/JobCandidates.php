@@ -35,7 +35,6 @@ class JobCandidates extends Matching
 
         foreach ($matchingDataSet as $k => $matchingData) {
             foreach ($configArr as $conf) {
-
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
                 $matchingDataProfile = $matchingData['profileData'];
@@ -55,16 +54,20 @@ class JobCandidates extends Matching
 //                  }
                     /** if value starts with (!) any value  matches */
                     if (in_array($matchingDataKey, $selectMatchingDataFields) && $this->isNoPreference($matchingDataValue) ) {
-
-                        $matchingDataSet[$k]['profileData'][$matchingDataKey] =
+                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                        $matchingDataSet[$k]['results'][$matchingDataKey] =
                             [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
                         continue;
                     }
                     /** if value starts with (!) any value  matches */
                     if (in_array($mainDataKey, $selectMainDataFields) &&  $this->isNoPreference($mainDataValue)) {
 
-                        $matchingDataSet[$k]['profileData'][$matchingDataKey] =
+                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+
+                        [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
+                        $matchingDataSet[$k]['results'][$matchingDataKey] =
                             [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
+
                         continue;
                     }
 
@@ -74,15 +77,17 @@ class JobCandidates extends Matching
                             unset($tempMatchingData[$k]);
                             continue;
                         }
-
-                        $matchingDataSet[$k]['profileData'][$matchingDataKey] =
+                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                        $matchingDataSet[$k]['results'][$matchingDataKey] =
                             [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
                     }else{
                         if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
-                            $matchingDataSet[$k]['profileData'][$matchingDataKey] =
+                            $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                            $matchingDataSet[$k]['results'][$matchingDataKey] =
                                 [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
                         }else{
-                            $matchingDataSet[$k]['profileData'][$matchingDataKey] =
+                            $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                            $matchingDataSet[$k]['results'][$matchingDataKey] =
                                 [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
                         }
                     }
@@ -93,7 +98,8 @@ class JobCandidates extends Matching
                         unset($tempMatchingData[$k]);
                         continue;
                     } else {
-                        $matchingDataSet[$k]['profileData'][$matchingDataKey] =
+                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                        $matchingDataSet[$k]['results'][$matchingDataKey] =
                             [$matchingKey => null, $mainMatchingKey => null, "matches" => false, "weight" => $conf["weight"]];
                     }
                 }
