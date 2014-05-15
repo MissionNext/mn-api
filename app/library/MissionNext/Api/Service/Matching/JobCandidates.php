@@ -43,6 +43,14 @@ class JobCandidates extends Matching
 
                     $matchingDataValue = $matchingDataProfile[$matchingDataKey];
                     $mainDataValue = $mainDataProfile[$mainDataKey];
+
+                    if ($mainDataValue === "" || $matchingDataValue === "") {
+                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                        $matchingDataSet[$k]['results'][$matchingDataKey] =
+                            [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
+                        continue;
+                    }
+
                     /** convert  all values to array to compare */
                     $matchingDataValue = (array)$matchingDataValue;
                     $mainDataValue =  (array)$mainDataValue;
