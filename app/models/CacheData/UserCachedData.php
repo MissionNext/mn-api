@@ -5,6 +5,7 @@ namespace MissionNext\Models\CacheData;
 
 
 use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\Profile;
 use MissionNext\Models\ProfileInterface;

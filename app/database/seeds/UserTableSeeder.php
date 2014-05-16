@@ -46,6 +46,21 @@ class UserTableSeeder extends BaseSeeder
                 'username' => 'org4',
                 'created_at'=>$dateTime, 'updated_at'=>$dateTime
             ),
+
+            array('email' => 'adminApp2@example.com', 'password' =>  Hash::make('654321'),//9
+                'username' => 'adminApp2',
+                'created_at'=>$dateTime, 'updated_at'=>$dateTime
+            ),
+
+            array('email' => 'Candidate1App2@example.com', 'password' =>  Hash::make('654321'),//10
+                'username' => 'Candidate1App2',
+                'created_at'=>$dateTime, 'updated_at'=>$dateTime
+            ),
+
+            array('email' => 'org1App2@example.com', 'password' =>  Hash::make('654321'), //11
+                'username' => 'org1App2',
+                'created_at'=>$dateTime, 'updated_at'=>$dateTime
+            ),
         ));
 
     }

@@ -2,6 +2,7 @@
 
 namespace MissionNext\Repos\User;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\RepositoryInterface;
@@ -13,6 +14,6 @@ interface UserRepositoryInterface extends RepositoryInterface
      */
     public function getModel();
 
-    public function profileStructure(Collection $query);
+    public function profileStructure(BelongsToMany $query);
 
 }

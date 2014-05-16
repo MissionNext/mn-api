@@ -44,8 +44,7 @@ class CandidateJobsController extends BaseController
 
             return new RestResponse([]);
         }
-        // dd($config->toArray());
-        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->select('data')->findOrFail($candidate_id);
+        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->mainData($candidate_id);
 
         if (empty($candidateData)) {
 
@@ -55,16 +54,16 @@ class CandidateJobsController extends BaseController
         $candidateData = json_decode($candidateData->data, true);
 
         $jobData = (new UserCachedRepository(BaseDataModel::JOB))->dataWithNotes($candidate_id)->get();
+        $jobs = [];
+        $jobData->each(function($el) use (&$jobs){
+            $d = json_decode($el->data, true);
+            $d['notes'] = $el->notes;
+            $d['folder'] = $el->folder;
+            $jobs[] =  $d;
+         });
+        //@TODO add app to users when updates profile
 
-        $jobData = !empty($jobData) ? array_map(function ($d) {
-            $data = json_decode($d->data, true);
-            $data['notes'] = $d->notes;
-            $data['folder'] = $d->folder;
-
-            return $data;
-        }, $jobData) : [];
-
-        $Matching = new CandidateJobs($candidateData, $jobData, $config->toArray());
+        $Matching = new CandidateJobs($candidateData, $jobs, $config->toArray());
 
         $jobData = $Matching->matchResults();
 

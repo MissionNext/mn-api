@@ -48,7 +48,6 @@ class CandidateOrganizations extends Matching
                         continue;
                     }
 
-
                     /** convert  all values to array to compare */
                     $matchingDataValue = (array)$matchingDataValue;
                     $mainDataValue =  (array)$mainDataValue;

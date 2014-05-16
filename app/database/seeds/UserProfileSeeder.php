@@ -23,6 +23,8 @@ class UserProfileSeeder extends BaseSeeder
         $agency = Role::find(Role::ROLE_AGENCY)->users()->first();
         /** @var  $candidate1 User */
         $candidate1 = User::find(4);
+        /** @var  $candidate10App2 User */
+        $candidate10App2 = User::find(10);
 
 
 
@@ -76,6 +78,23 @@ class UserProfileSeeder extends BaseSeeder
         $job5->jobFields()->attach(3, ["value" => $choiceCan1->value ]);
         $job5->jobFields()->attach(9, ["value" => "Bamby" ]);
         $job5->jobFields()->attach(9, ["value" => "Buratino" ]);
+
+        // JOBS APP_2
+        /** @var  $job7 Job */
+        $job7 = Job::find(7);
+        $job7->jobFields()->attach(5, ["value" => "Admin" ]); //Administrator -
+        $job7->jobFields()->attach(6, ["value" => "Spanish" ]); //Spanish +
+        $job7->jobFields()->attach(2, ["value" => "Bamby's" ]); // (!)bamby +
+        $job7->jobFields()->attach(3, ["value" => "location" ]); //  +
+        $job7->jobFields()->attach(4, ["value" => "Mexico" ]); // not in config
+        $job7->jobFields()->attach(10, ["value" => "1988-11-11" ]); //-
+        $job7->jobFields()->attach(1, ["value" => "Another title" ]); // +
+        $job7->jobFields()->attach(9, ["value" => "Paraska" ]); // favourite movies
+        $job7->jobFields()->attach(9, ["value" => "Buryata" ]);
+
+        // END JOBS APP2
+
+
         /**
          * (job_id, can_id)
          * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1), (9, 10)
@@ -99,6 +118,16 @@ class UserProfileSeeder extends BaseSeeder
         $candidate1->candidateFields()->attach(6, array('value' => "Another title"));
         $candidate1->candidateFields()->attach(10, array('value' => "ParaSkaBB"));//best way to contact
         $candidate1->candidateFields()->attach(3, array('value' => 110));
+       //10 app2 candidate
+        $candidate10App2->candidateFields()->attach(1, array('value' => "1977-11-11"));
+        $candidate10App2->candidateFields()->attach(2, array('value' => "location" ));
+        $candidate10App2->candidateFields()->attach(13, array('value' => "(!)Bamby"));
+        $candidate10App2->candidateFields()->attach(13, array('value' => "Buratino"));
+        $candidate10App2->candidateFields()->attach(5, array('value' => "Administrator"));
+        $candidate10App2->candidateFields()->attach(4, array('value' => "Spanish"));
+        $candidate10App2->candidateFields()->attach(6, array('value' => "Another title"));
+        $candidate10App2->candidateFields()->attach(10, array('value' => "ParaSkaBB"));//best way to contact
+        $candidate10App2->candidateFields()->attach(3, array('value' => 110));
         /**
          * (job_id, can_id)
          * matching (1, 6), (3, 2), (5, 5), (6, 4), (2, 13), (10, 1), (9, 10)

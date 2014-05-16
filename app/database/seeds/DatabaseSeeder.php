@@ -39,6 +39,9 @@ class DatabaseSeeder extends BaseSeeder
         $this->call('UserRoleTableSeeder');
         $this->command->info('UserRole table seeded!');
 
+        $this->call('UserAppsSeeder');
+        $this->command->info('UserApps table seeded!');
+
         $this->call('FieldTypeSeeder');
         $this->command->info('Field table seeded!');
 

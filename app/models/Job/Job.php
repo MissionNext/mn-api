@@ -72,4 +72,10 @@ class Job extends ModelObservable implements ProfileInterface
         return $this;
     }
 
+    public function appIds()
+    {
+
+        return [$this->app_id];
+    }
+
 } 

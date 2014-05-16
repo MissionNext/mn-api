@@ -4,6 +4,7 @@
 namespace MissionNext\Repos\User;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Auth\ISecurityContextAware;
 use MissionNext\Models\CacheData\UserCachedData;
@@ -51,15 +52,17 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
     }
 
     /**
-     * @param Collection $fields
+     * @param BelongsToMany $query
      * @param null $role
      *
      * @return Profile
      */
-    public function profileStructure(Collection $fields, $role = null)
+    public function profileStructure(BelongsToMany $query, $role = null)
     {
 
         $profile = new Profile();
+        $profile->setModel($query->getParent());
+        $fields = $query->get();
        //  dd(get_class($this->getModel()), $this->getModel()->name);
         foreach($this->getModel()->toArray() as $prop=>$val){
             $profile->$prop = $val;
@@ -90,7 +93,7 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
         $role = $this->securityContext->role(); // or this->model->roleType
         $userName = $role === BaseDataModel::JOB ? BaseDataModel::JOB : "user";
 
-        return $this->profileStructure($user->belongsToMany(Field::currentFieldModelName($this->securityContext), $this->securityContext->role() . '_profile', $userName.'_id', 'field_id')->withPivot('value')->get(), $role);
+        return $this->profileStructure($user->belongsToMany(Field::currentFieldModelName($this->securityContext), $this->securityContext->role() . '_profile', $userName.'_id', 'field_id')->withPivot('value'), $role);
 
     }
 

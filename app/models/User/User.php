@@ -6,6 +6,7 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
+use MissionNext\Models\Application\Application;
 use MissionNext\Models\EloquentObservable;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\ModelInterface;
@@ -104,6 +105,15 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+    public function apps()
+    {
+
+        return $this->belongsToMany(Application::class, 'user_apps', 'user_id', 'app_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function candidateFields()
     {
 
@@ -175,6 +185,15 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     public function hasRole($check)
     {
         return in_array($check, array_fetch($this->roles->toArray(), 'name'));
+    }
+
+    /**
+     * @return array
+     */
+    public function appIds()
+    {
+
+        return $this->apps()->get()->lists("id");
     }
 
     /**

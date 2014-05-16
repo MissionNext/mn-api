@@ -35,6 +35,7 @@ class SearchController extends BaseController
 
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
+
         $folderNotesTable = (new FolderNotes)->getTable();
 
         $query = "SELECT  fN.folder as folderName, fN.notes, cP.data FROM {$tableName} as cP
@@ -101,7 +102,9 @@ class SearchController extends BaseController
             }
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
-            $query .= "  ) ";
+            //$query .= "  ) ";
+             $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids') ) ";
+             $bindings[] = $this->securityContext()->getApp()->id;
         }else{
 
             throw new SearchProfileException("No search params specified");

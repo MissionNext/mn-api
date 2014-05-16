@@ -57,27 +57,41 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
     {
         $folderNotesTable = (new FolderNotes)->getTable();
         /** @var  $queryBuilder Builder */
-        $queryBuilder = DB::table($this->currentType."_cached_profile AS cp");
+        $tableName = $this->currentType."_cached_profile";
 
         return
-          $queryBuilder
-            ->select(DB::raw("cp.data, fn.notes, fn.folder"))
-            ->leftJoin(DB::raw($folderNotesTable." as fn"),
-            function($join) use ($userId)
+          $this->getModel()
+            ->select("data", $folderNotesTable.'.notes', $folderNotesTable.'.folder')
+            ->leftJoin($folderNotesTable,
+            function($join) use ($userId, $tableName, $folderNotesTable)
             {
                 if (is_null($userId)){
                     $join
-                        ->on('cp.id', '=', 'fn.user_id')
-                        ->where('fn.user_type', '=', $this->currentType);
+                        ->on($tableName.'.id', '=', $folderNotesTable.'.user_id')
+                        ->where($folderNotesTable.'.user_type', '=', $this->currentType);
                 }else{
                     $join
-                         ->on('cp.id', '=', 'fn.user_id')
-                         ->where('fn.for_user_id', '=', $userId)
-                         ->where('fn.user_type', '=', $this->currentType);
+                         ->on($tableName.'.id', '=', $folderNotesTable.'.user_id')
+                         ->where($folderNotesTable.'.for_user_id', '=', $userId)
+                         ->where($folderNotesTable.'.user_type', '=', $this->currentType);
                 }
 
-            });
+            })
+            ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+    }
 
+    /**
+     * @param $userId
+     *
+     * @return UserCachedData
+     */
+    public function mainData($userId)
+    {
 
+        return $this->getModel()
+            ->select('data')
+            ->where("id", "=", $userId)
+            ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id])
+            ->firstOrFail();
     }
 }
