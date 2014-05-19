@@ -5,6 +5,7 @@ namespace MissionNext\Repos\Matching;
 
 
 use Illuminate\Database\Eloquent\Builder;
+use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\AbstractRepository;
 
@@ -37,6 +38,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                  ->where("for_user_type","=", $forUserType)
                  ->where("user_type", "=", $userType)
                  ->where("for_user_id", "=", $forUserId)
+                 ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id])
                  ->get();
 
         $matchResults->each(function($el) use (&$data){

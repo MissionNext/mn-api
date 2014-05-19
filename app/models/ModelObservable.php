@@ -34,6 +34,7 @@ abstract class ModelObservable extends Model {
      */
     public function setObserver(ModelObserverInterface $observer)
     {
+        static::observe($observer);
         $this->observer = $observer;
 
         return $this->observer;

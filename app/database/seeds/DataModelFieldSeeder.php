@@ -14,15 +14,30 @@ class DataModelFieldSeeder extends BaseSeeder
         /** @var  $application Application */
         $application = Application::find(1);
 
+        /** @var  $app2 Application */
+        $app2 = Application::find(2);
+
         $application->DM(BaseDataModel::CANDIDATE)
                     ->candidateFields()
                     ->sync([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]);
 
+        $app2->DM(BaseDataModel::CANDIDATE)
+            ->candidateFields()
+            ->sync([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]);
+
+
         $application->DM(BaseDataModel::CANDIDATE)
             ->candidateFields()
             ->attach([  15 =>  ["constraints" => "mimes:pdf|max:20000" ] ]);
+        $app2->DM(BaseDataModel::CANDIDATE)
+            ->candidateFields()
+            ->attach([  15 =>  ["constraints" => "mimes:pdf|max:20000" ] ]);
+
 
         $application->DM(BaseDataModel::ORGANIZATION)
+            ->organizationFields()
+            ->sync([ 1, 2, 3 ]);
+        $app2->DM(BaseDataModel::ORGANIZATION)
             ->organizationFields()
             ->sync([ 1, 2, 3 ]);
 
@@ -30,11 +45,18 @@ class DataModelFieldSeeder extends BaseSeeder
         $application->DM(BaseDataModel::AGENCY)
         ->agencyFields()
         ->sync([ 1, 2, 3, 4 ]);
+        $app2->DM(BaseDataModel::AGENCY)
+            ->agencyFields()
+            ->sync([ 1, 2, 3, 4 ]);
 
 
         $application->DM(BaseDataModel::JOB)
             ->jobFields()
             ->sync([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10  ]);
+        $app2->DM(BaseDataModel::JOB)
+        ->jobFields()
+        ->sync([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10  ]);
+
 
     }
 }

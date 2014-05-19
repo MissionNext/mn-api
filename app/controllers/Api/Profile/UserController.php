@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Input;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\User\User as UserModel;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as Req;
@@ -40,6 +41,9 @@ class UserController extends BaseController
     {
         /** @var  $user UserModel */
         $user = $this->userRepo()->find($id);
+        $user->setObserver(new UserObserver());
+        $user->addApp($this->getApp());
+
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
@@ -58,7 +62,7 @@ class UserController extends BaseController
         $this->updateUserProfile($user, $hash);
 
 
-        return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user)->get(), $this->securityContext()->role()));
+        return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user), $this->securityContext()->role()));
     }
 
     /**

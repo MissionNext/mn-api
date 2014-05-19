@@ -40,6 +40,7 @@ class MatchConfigSeeder extends BaseSeeder
         $configRep->insert($configs);
 
         $configRepApp2->insert($this->getJobConfig(2));
+
         $userRepApp2 = (new \MissionNext\Repos\User\UserRepository())->setSecurityContext($scApp2);
         $userRepApp2->insertUserCachedData(Job::find(7));
         $userRepApp2->insertUserCachedData(Job::find(8));
@@ -82,8 +83,11 @@ class MatchConfigSeeder extends BaseSeeder
 
         $configRep = (new \MissionNext\Repos\Matching\ConfigRepository())->setSecurityContext($sc);
         $orgConfig = $this->getOrgConfig(1);
-
         $configRep->insert($orgConfig);
+
+        $scApp2->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
+        $configRepApp2 = (new \MissionNext\Repos\Matching\ConfigRepository())->setSecurityContext($scApp2);
+        $configRepApp2->insert($this->getOrgConfig(2));
 
     }
 

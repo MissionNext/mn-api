@@ -47,6 +47,15 @@ class UserCachedData extends Model implements ModelInterface
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+
+        return json_decode($this->data, true);
+    }
+
 
 
 } 

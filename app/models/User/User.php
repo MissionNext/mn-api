@@ -6,6 +6,7 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
+use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\EloquentObservable;
 use MissionNext\Models\Job\Job;
@@ -18,6 +19,7 @@ use MissionNext\Models\Field\Candidate as CandidateField;
 use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
+use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 
 class User extends ModelObservable implements UserInterface, RemindableInterface, ProfileInterface
@@ -83,13 +85,35 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
     public function setRole(Role $role)
     {
-        $this->onCreated(function ($user) {
+        $this->onCreated(function ($user) use ($role) {
             /** @var $user User */
-            $user->roles()->sync([$user->observer()->getRole()->id]);
-
+            $user->roles()->sync([$role->id]);
         });
 
-        User::observe($this->setObserver( (new UserObserver())->setRole($role)->setUserRepo(App::make(UserRepositoryInterface::class)) ));
+        return $this;
+    }
+
+    /**
+     * @return UserRepository
+     */
+    public function getRepo()
+    {
+
+        return App::make(UserRepository::class)->setSecurityContext(SecurityContext::getInstance());
+    }
+
+    public function addApp(Application $app)
+    {
+        $this->onSaved(function ($user) use ($app) {
+            /** @var $user User */
+            if (!$user->hasApp($app)) {
+                $user->apps()->attach($app->id);
+
+                return true;
+            }
+
+            return false;
+        });
 
         return $this;
     }
@@ -184,7 +208,19 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
      */
     public function hasRole($check)
     {
+
         return in_array($check, array_fetch($this->roles->toArray(), 'name'));
+    }
+
+    /**
+     * @param Application $app
+     *
+     * @return bool
+     */
+    public function hasApp(Application $app)
+    {
+
+        return in_array($app->id, array_fetch($this->apps->toArray(), 'id'));
     }
 
     /**

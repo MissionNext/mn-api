@@ -1,14 +1,19 @@
 <?php
 namespace MissionNext\Models\Job;
 
+use Illuminate\Support\Facades\App;
+use MissionNext\Models\Application\Application;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\ModelObservable;
+use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\ProfileInterface;
 use MissionNext\Models\User\User as UserModel;
+use MissionNext\Repos\User\JobRepository;
+use MissionNext\Repos\User\JobRepositoryInterface;
+use MissionNext\Repos\User\UserRepositoryInterface;
 
 class Job extends ModelObservable implements ProfileInterface
 {
-
     /**
      * The database table used by the model.
      *
@@ -76,6 +81,42 @@ class Job extends ModelObservable implements ProfileInterface
     {
 
         return [$this->app_id];
+    }
+
+    /**
+     * @param Application $app
+     *
+     * @return bool
+     */
+    public function hasApp(Application $app)
+    {
+
+        return (bool)$this->app_id;
+    }
+
+    /**
+     * @param Application $app
+     *
+     * @return bool
+     */
+    public function addApp(Application $app)
+    {
+        if (!$this->hasApp($app)){
+            $this->app_id = $app->id;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return JobRepository
+     */
+    public function getRepo()
+    {
+
+        return App::make(JobRepositoryInterface::class);
     }
 
 } 

@@ -7,6 +7,7 @@ namespace MissionNext\Repos\User;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Auth\ISecurityContextAware;
+use MissionNext\Models\Application\Application;
 use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\ProfileInterface;
@@ -116,5 +117,7 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
         $userCachedData->setProfileData($d)
                        ->save();
     }
+
+    abstract  public function addApp(Application $app);
 
 } 

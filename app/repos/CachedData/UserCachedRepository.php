@@ -6,6 +6,8 @@ namespace MissionNext\Repos\CachedData;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\SecurityContextException;
+use MissionNext\Api\Service\DataTransformers\UserCachedDataStrategy;
+use MissionNext\Api\Service\DataTransformers\UserCachedTransformer;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\CacheData\UserCachedData;
@@ -49,9 +51,9 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
     }
 
     /**
-     * @param $userId
+     * @param null $userId
      *
-     * @return Builder|static
+     * @return UserCachedTransformer
      */
     public function dataWithNotes($userId = null)
     {
@@ -59,7 +61,7 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
         /** @var  $queryBuilder Builder */
         $tableName = $this->currentType."_cached_profile";
 
-        return
+        $queryBuilder =
           $this->getModel()
             ->select("data", $folderNotesTable.'.notes', $folderNotesTable.'.folder')
             ->leftJoin($folderNotesTable,
@@ -76,8 +78,11 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
                          ->where($folderNotesTable.'.user_type', '=', $this->currentType);
                 }
 
-            })
-            ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+            });
+          //  ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+
+        return
+            new UserCachedTransformer($queryBuilder, new UserCachedDataStrategy());
     }
 
     /**

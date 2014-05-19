@@ -34,27 +34,14 @@ class CandidateOrganizationsController extends BaseController
         $configRepo = $this->matchingConfigRepo()->setSecurityContext($this->securityContext());
         $config = $configRepo->configByCandidateOrganizations(BaseDataModel::ORGANIZATION, $candidate_id)->get();
 
-
         if (!$config->count()) {
 
             return new RestResponse([]);
         }
-        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->select('data')->findOrFail($candidate_id);
-        if (empty($candidateData)) {
+        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->mainData($candidate_id)->getData();
 
-            return new RestResponse([]);
-        }
+        $organizationData = (new UserCachedRepository(BaseDataModel::ORGANIZATION))->dataWithNotes($candidate_id)->get()->toArray();
 
-        $candidateData = json_decode($candidateData->data, true);
-
-        $organizationData = (new UserCachedRepository(BaseDataModel::ORGANIZATION))->dataWithNotes($candidate_id)->get();
-        $organizationData = !empty($organizationData) ? array_map(function ($d) {
-            $data = json_decode($d->data, true);
-            $data['notes'] = $d->notes;
-            $data['folder'] = $d->folder;
-
-            return $data;
-        }, $organizationData) : [];
 
         $Matching = new CandidateOrganizations($candidateData, $organizationData, $config->toArray());
 

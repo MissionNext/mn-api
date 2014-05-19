@@ -6,6 +6,7 @@ namespace MissionNext\Controllers\Api\Profile;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\User\User as UserModel;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as Req;
@@ -35,6 +36,8 @@ class JobController extends BaseController
     public function update($id)
     {
         $job = $this->jobRepo()->find($id);
+        $job->setObserver(new UserObserver());
+        $job->addApp($this->getApp());
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
@@ -44,7 +47,7 @@ class JobController extends BaseController
         }
         $this->updateUserProfile($job, $hash);
 
-        return new RestResponse( $this->jobRepo()->profileStructure($this->fieldRepo()->profileFields($job)->get(), $this->securityContext()->role()));
+        return new RestResponse( $this->jobRepo()->profileStructure($this->fieldRepo()->profileFields($job), $this->securityContext()->role()));
     }
 
     /**

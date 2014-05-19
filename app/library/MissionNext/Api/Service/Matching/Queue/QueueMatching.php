@@ -3,6 +3,7 @@
 namespace MissionNext\Api\Service\Matching\Queue;
 
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Queue;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Api\Service\Matching\CandidateOrganizations as MatchCanOrgs;
@@ -34,17 +35,14 @@ abstract class QueueMatching
 
     protected function matchResults($userId, $config)
     {
-        $mainData = (new UserCachedRepository($this->forUserType))->select('data')->findOrFail($userId);
+        try{
+            $mainData = (new UserCachedRepository($this->forUserType))->mainData($userId)->getData();
 
-        if (empty($mainData)) {
+        }catch (ModelNotFoundException $e){
 
             $this->job->delete();
-
             return [];
         }
-
-        $mainData = json_decode($mainData->data, true);
-
         //=========
 
         $this->clearCache($userId);
@@ -58,15 +56,10 @@ abstract class QueueMatching
         for($i=1; $i <= $queries; ++$i) {
 
             $offset = ($i - 1) * $limit;
-            $matchingData = $cacheRep->dataWithNotes($this->forUserType === BaseDataModel::JOB ? null : $userId )->take($limit)->skip($offset)->get();
-
-            $matchingData = !empty($matchingData) ? array_map(function ($d) {
-                $data = json_decode($d->data, true);
-                $data['notes'] = $d->notes;
-                $data['folder'] = $d->folder;
-
-                return $data;
-            }, $matchingData) : [];
+            $matchingData = $cacheRep->dataWithNotes($this->forUserType === BaseDataModel::JOB ? null : $userId )
+                ->takeAndSkip($limit, $offset)
+                ->get()
+                ->toArray();
 
             $data = [
                 "mainData" => $mainData,

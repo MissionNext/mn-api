@@ -2,6 +2,7 @@
 namespace MissionNext\Controllers\Api\User;
 
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -11,7 +12,10 @@ use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Filter\RouteSecurityFilter;
+use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\Role\Role;
+use MissionNext\Models\User\User;
+use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Validators\User as UserValidator;
 
 /**
@@ -63,12 +67,15 @@ class UserController extends BaseController
 
             throw new UserException("Role '{$roleName}' doesn't exists", UserException::ON_CREATE);
         }
+        $role = Role::whereRole( $roleName )->firstOrFail();
         $userRep = $this->userRepo();
         $user = $userRep->getModel();
+        $user->setObserver(new UserObserver());
         $user->setPassword(Input::get('password'));
         $user->setEmail(Input::get('email'));
         $user->setUsername(Input::get('username'));
-        $user->setRole(Role::whereRole( $roleName )->firstOrFail());
+        $user->setRole($role);
+        $user->addApp($this->getApp());
 
         $this->updateUserProfile($user, $profileData);
 
@@ -109,7 +116,11 @@ class UserController extends BaseController
      */
     public function update($id)
     {
+        /** @var  $user User  */
         $user = $this->userRepo()->find($id);
+        $user->setObserver(new UserObserver());
+        $user->addApp($this->getApp());
+
         $data = Request::only(["username", "email", "password"]);
         $filteredData = array_filter($data);
 

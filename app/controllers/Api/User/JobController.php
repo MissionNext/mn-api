@@ -42,6 +42,7 @@ class JobController extends BaseController
      */
     public function store()
     {
+
         $jobValidator = new JobValidator(Request::instance());
 
         if (!$jobValidator->passes())
@@ -56,13 +57,13 @@ class JobController extends BaseController
 
         $jobRepo = $this->jobRepo();
         $job = $jobRepo->getModel();
+        $job->setObserver(new UserObserver());
         $job->setName(Input::get("name"))
             ->setSymbolKey(Input::get("symbol_key"))
-            ->setOrganization($organization);
+            ->setOrganization($organization)
+            ->addApp($this->getApp());
 
-        $job::observe($job->setObserver( (new UserObserver())->setUserRepo(App::make(JobRepositoryInterface::class)) ) );
-
-
+        //@TODO CHECK if organization has current app_id to create job
         $this->updateUserProfile($job, $profileData);
 
         return new RestResponse($job);
@@ -91,6 +92,8 @@ class JobController extends BaseController
     public function update($id)
     {
         $user = $this->jobRepo()->find($id);
+        $user->setObserver(new UserObserver());
+        $user->addApp($this->getApp());
         $data = Request::only(["name", "symbol_key", "organization_id"]);
         $filteredData = array_filter($data);
         $jobValidator = new JobValidator(Request::instance());

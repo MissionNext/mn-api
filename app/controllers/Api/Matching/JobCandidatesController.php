@@ -38,24 +38,10 @@ class JobCandidatesController extends BaseController
 
             return new RestResponse([]);
         }
-        $jobData = (new UserCachedRepository(BaseDataModel::JOB))->select('data')->findOrFail($jobId);
-        if (empty($jobData)) {
+        $jobData = (new UserCachedRepository(BaseDataModel::JOB))->mainData($jobId)->getData();
 
-            return new RestResponse([]);
-        }
-
-        $jobData = json_decode($jobData->data, true);
         //TODO dataWithNotes set owner(organization) id
-        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->dataWithNotes()->get();
-       // dd($this->getLogQueries());
-
-        $candidateData = !empty($candidateData) ? array_map(function ($d) {
-            $data = json_decode($d->data, true);
-            $data['notes'] = $d->notes;
-            $data['folder'] = $d->folder;
-
-            return $data;
-        }, $candidateData) : [];
+        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->dataWithNotes()->get()->toArray();
 
 
         $Matching = new JobCandidates($jobData, $candidateData, $config->toArray());

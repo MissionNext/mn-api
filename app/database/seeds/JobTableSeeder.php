@@ -34,17 +34,17 @@ class JobTableSeeder extends BaseSeeder
             ),
 
             // app 2 jobs
-            array('name' => 'App2 Seventh job', 'symbol_key' =>  "seventh_job_app_2", "organization_id" => 12,
+            array('name' => 'App2 Seventh job', 'symbol_key' =>  "seventh_job_app_2", "organization_id" => 11,
                 'app_id' => 2,
                 'created_at'=>$dateTime, 'updated_at'=>$dateTime
             ),
 
-            array('name' => 'App2 Eights job', 'symbol_key' =>  "Eights_job_app_2", "organization_id" => 12,
+            array('name' => 'App2 Eights job', 'symbol_key' =>  "Eights_job_app_2", "organization_id" => 11,
                 'app_id' => 2,
                 'created_at'=>$dateTime, 'updated_at'=>$dateTime
             ),
 
-            array('name' => 'App2 Ninth job', 'symbol_key' =>  "Ninths_job_app_2", "organization_id" => 12,
+            array('name' => 'App2 Ninth job', 'symbol_key' =>  "Ninths_job_app_2", "organization_id" => 11,
                 'app_id' => 2,
                 'created_at'=>$dateTime, 'updated_at'=>$dateTime
             ),

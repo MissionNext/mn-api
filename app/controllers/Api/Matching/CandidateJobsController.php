@@ -5,6 +5,7 @@ namespace MissionNext\Controllers\Api\Matching;
 
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\DataModel\BaseDataModel;
@@ -21,10 +22,15 @@ class CandidateJobsController extends BaseController
      */
     public function getIndex($candidate_id)
     {
+        $candidateAppsIds = $this->userRepo()->find($candidate_id)->appIds();
+        if (in_array($this->securityContext()->getApp()->id, $candidateAppsIds)){
+            return
+                new RestResponse($this->matchingResultsRepo()
+                    ->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::JOB, $candidate_id));
+        }
 
         return
-            new RestResponse($this->matchingResultsRepo()
-                ->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::JOB, $candidate_id));
+            new RestResponse([]);
     }
 
     /**
@@ -44,26 +50,16 @@ class CandidateJobsController extends BaseController
 
             return new RestResponse([]);
         }
-        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))->mainData($candidate_id);
 
-        if (empty($candidateData)) {
+        $candidateData = (new UserCachedRepository(BaseDataModel::CANDIDATE))
+                ->mainData($candidate_id)
+                ->getData();
 
-            return new RestResponse([]);
-        }
+        $jobData = (new UserCachedRepository(BaseDataModel::JOB))->dataWithNotes($candidate_id)->get()->toArray();
 
-        $candidateData = json_decode($candidateData->data, true);
-
-        $jobData = (new UserCachedRepository(BaseDataModel::JOB))->dataWithNotes($candidate_id)->get();
-        $jobs = [];
-        $jobData->each(function($el) use (&$jobs){
-            $d = json_decode($el->data, true);
-            $d['notes'] = $el->notes;
-            $d['folder'] = $el->folder;
-            $jobs[] =  $d;
-         });
         //@TODO add app to users when updates profile
 
-        $Matching = new CandidateJobs($candidateData, $jobs, $config->toArray());
+        $Matching = new CandidateJobs($candidateData, $jobData, $config->toArray());
 
         $jobData = $Matching->matchResults();
 

@@ -16,9 +16,11 @@ use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application as AppModel;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Field\FieldType;
+use MissionNext\Models\Job\Job;
 use MissionNext\Models\Profile;
 use MissionNext\Models\ProfileInterface;
 use MissionNext\Models\User\User as UserModel;
+use MissionNext\Models\User\User;
 use MissionNext\Repos\Field\FieldRepository;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
 use MissionNext\Repos\Form\FormRepository;
@@ -224,7 +226,6 @@ class BaseController extends Controller
         /** @var  $fields Collection */
         $fields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $fieldNames)->get();
 
-
         if ($fields->count() !== count($fieldNames)) {
 
             throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);
@@ -262,16 +263,18 @@ class BaseController extends Controller
      */
     protected function updateUserProfile(ProfileInterface $user, array $profileData = null)
     {
+        /** @var $user User|Job */
         if (empty($profileData)) {
 
-            $user->save();
+            $user->touch();
 
             return $user;
         }
 
         $fields = $this->validateProfileData($profileData);
 
-        $user->save();
+        $user->touch();
+
 
         $mapping = [];
         $sKeys = [];
@@ -301,7 +304,7 @@ class BaseController extends Controller
             }
         }
         if (!empty($mapping)) {
-            $user->touch();
+             //$user->touch();
 
             $this->userRepo()->updateUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id];
