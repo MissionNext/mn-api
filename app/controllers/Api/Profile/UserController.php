@@ -62,6 +62,7 @@ class UserController extends BaseController
         $this->updateUserProfile($user, $hash);
 
 
+
         return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user), $this->securityContext()->role()));
     }
 

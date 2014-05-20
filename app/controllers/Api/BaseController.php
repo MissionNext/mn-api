@@ -308,7 +308,7 @@ class BaseController extends Controller
 
             $this->userRepo()->updateUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id];
-            switch($this->getToken()->getRoles()[0]){
+            switch($this->securityContext()->role()){
 
                 case BaseDataModel::CANDIDATE:
                      Queue::push(CanJobsQueue::class, $queueData);

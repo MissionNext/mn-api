@@ -21,10 +21,14 @@ class OrganizationCandidatesController extends BaseController
      */
     public function getIndex($organizationId)
     {
+        $orgAppIds = $this->userRepo()->find($organizationId)->appIds();
+        if (in_array($this->securityContext()->getApp()->id, $orgAppIds)) {
+            return
+                new RestResponse($this->matchingResultsRepo()
+                    ->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId));
+        }
 
-        return
-            new RestResponse($this->matchingResultsRepo()
-                ->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId));
+        return new RestResponse([]);
     }
 
     /**

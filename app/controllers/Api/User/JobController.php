@@ -92,8 +92,6 @@ class JobController extends BaseController
     public function update($id)
     {
         $user = $this->jobRepo()->find($id);
-        $user->setObserver(new UserObserver());
-        $user->addApp($this->getApp());
         $data = Request::only(["name", "symbol_key", "organization_id"]);
         $filteredData = array_filter($data);
         $jobValidator = new JobValidator(Request::instance());

@@ -118,8 +118,6 @@ class UserController extends BaseController
     {
         /** @var  $user User  */
         $user = $this->userRepo()->find($id);
-        $user->setObserver(new UserObserver());
-        $user->addApp($this->getApp());
 
         $data = Request::only(["username", "email", "password"]);
         $filteredData = array_filter($data);

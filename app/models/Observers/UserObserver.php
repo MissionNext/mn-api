@@ -10,8 +10,8 @@ class UserObserver extends AbstractUserObserver implements ModelObserverInterfac
     public function saved(ProfileInterface $model)
     {
         $this->runClosures($model, static::SAVED);
-        $model->getRepo()->updateUserCachedData($model);
-      //  var_dump('---1---');
+       // $model->getRepo()->updateUserCachedData($model);
+        //  var_dump('---1---');
     }
 
     public function created(ProfileInterface $model)
