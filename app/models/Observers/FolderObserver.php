@@ -3,7 +3,8 @@
 namespace MissionNext\Models\Observers;
 
 
-use MissionNext\Models\FolderNotes\FolderNotes;
+use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\FolderApps\FolderApps;
 
 class FolderObserver implements ModelObserverInterface
 {
@@ -11,16 +12,18 @@ class FolderObserver implements ModelObserverInterface
     public function deleted($model)
     {
 
-        FolderNotes::where("folder","=",$model->title)
+        FolderApps::where("folder","=",$model->title)
                    ->where("user_type","=", $model->role)
-                   ->update(["folder" => null]);
+                   ->where("app_id", "=", SecurityContext::getInstance()->getApp()->id())
+                   ->delete();
     }
 
     public function updated($model)
     {
 
-        FolderNotes::where("folder","=",$model->getOriginal()['title'])
+        FolderApps::where("folder","=",$model->getOriginal()['title'])
                     ->where("user_type","=", $model->role)
+                    ->where("app_id", "=", SecurityContext::getInstance()->getApp()->id())
                     ->update(["folder" => $model->title]);
     }
 } 

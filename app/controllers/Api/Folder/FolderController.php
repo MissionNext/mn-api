@@ -16,7 +16,7 @@ class FolderController extends BaseController
      */
     public function index()
     {
-        return new RestResponse(Folder::all());
+        return new RestResponse(Folder::where("app_id", "=", $this->securityContext()->getApp()->id())->get());
     }
 
     /**
@@ -31,7 +31,9 @@ class FolderController extends BaseController
             throw new SecurityContextException("role doesn't exists");
         }
 
-        return new RestResponse(Folder::create($this->request->request->all()));
+        $data = $this->request->request->all();
+        $data["app_id"] = $this->securityContext()->getApp()->id();
+        return new RestResponse(Folder::create($data));
     }
 
     /**
@@ -41,7 +43,10 @@ class FolderController extends BaseController
     public function show($id)
     {
 
-        return new RestResponse(Folder::findOrFail($id));
+        return new RestResponse( Folder::where("app_id", "=", $this->securityContext()->getApp()->id())
+                                         ->where("id", "=", $id)
+                                         ->firstOrFail()
+        );
     }
 
     /**
@@ -51,7 +56,9 @@ class FolderController extends BaseController
      */
     public function update($id)
     {
-       $folder =  Folder::findOrFail($id);
+       $folder =  Folder::where("app_id", "=", $this->securityContext()->getApp()->id())
+           ->where("id", "=", $id)
+           ->firstOrFail();
        $folder->title = $this->request->request->get('title');
        $folder->save();
 
@@ -65,7 +72,10 @@ class FolderController extends BaseController
      */
     public function destroy($id)
     {
-        $folder = Folder::findOrFail($id);
+        $folder = Folder::where("app_id", "=", $this->securityContext()->getApp()->id())
+        ->where("id", "=", $id)
+        ->firstOrFail();
+
         $folder->delete();
 
         return new RestResponse($folder);
@@ -79,7 +89,9 @@ class FolderController extends BaseController
     public function role($role)
     {
 
-        return new RestResponse(Folder::where("role","=",$role)->get());
+        return new RestResponse(Folder::where("role","=",$role)
+                ->where("app_id", "=", $this->securityContext()->getApp()->id())
+                ->get());
     }
 
 

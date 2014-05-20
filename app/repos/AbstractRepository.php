@@ -49,6 +49,20 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @param string $boolean
+     * @return \Illuminate\Database\Query\Builder|static
+     */
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    {
+
+        return call_user_func_array("{$this->modelClassName}::where", array($column, $operator, $value, $boolean));
+
+    }
+
+    /**
      * @param $string
      * @return \Illuminate\Database\Eloquent\Builder|static
      */

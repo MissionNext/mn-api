@@ -10,6 +10,7 @@ class TestDatabaseSeeder extends BaseSeeder
      */
     public function run()
     {
+        return;
         Eloquent::unguard(); // allows mass assignment
 
         $dbStatement = $this->getDbStatement();

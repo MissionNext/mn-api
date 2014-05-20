@@ -34,6 +34,12 @@ class Application extends Eloquent implements ModelInterface
         return $this->hasMany(AppDataModel::class, 'app_id');
     }
 
+    public function id()
+    {
+
+        return $this->id;
+    }
+
     /**
      * @param null $type
      * @return AppDataModel

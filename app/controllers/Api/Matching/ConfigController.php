@@ -18,7 +18,7 @@ class ConfigController extends BaseController
     public function getIndex($type)
     {
 
-        return new RestResponse($this->matchingConfigRepo()->with("mainField")->with("matchingField")->get());
+        return new RestResponse($this->matchingConfigRepo()->where("app_id", '=', $this->securityContext()->getApp()->id)->with("mainField")->with("matchingField")->get());
     }
 
     /**
@@ -32,6 +32,11 @@ class ConfigController extends BaseController
         $modelAppQuery = $model->where('app_id', '=', $this->getApp()->id);
         $modelAppQuery->delete();
         $configs = Input::get("configs");
+
+        if (is_null($configs)){
+
+            return new RestResponse([]);
+        }
         $this->matchingConfigRepo()->insert($configs);
 
         return new RestResponse( $modelAppQuery->with("mainField")->with('matchingField')->get() );
