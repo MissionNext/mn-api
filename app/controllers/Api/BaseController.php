@@ -10,6 +10,7 @@ use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Exceptions\ValidationException;
+use MissionNext\Api\Service\Matching\Queue\MasterMatching;
 use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
@@ -307,21 +308,9 @@ class BaseController extends Controller
              //$user->touch();
 
             $this->userRepo()->updateUserCachedData($user);
-            $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id];
-            switch($this->securityContext()->role()){
+            $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id, "role" => $this->securityContext()->role()];
 
-                case BaseDataModel::CANDIDATE:
-                     Queue::push(CanJobsQueue::class, $queueData);
-                     Queue::push(CanOrgsQueue::class, $queueData);
-                    break;
-                case BaseDataModel::ORGANIZATION:
-                     Queue::push(OrgCandidatesQueue::class, $queueData);
-                    break;
-                case BaseDataModel::JOB:
-                     Queue::push(JobCandidatesQueue::class, $queueData);
-                    break;
-            }
-
+            Queue::push(MasterMatching::class, $queueData);
         }
 
         return $user;

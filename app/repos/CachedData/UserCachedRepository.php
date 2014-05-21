@@ -121,7 +121,7 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
         return $this->getModel()
             ->select('data')
             ->where("id", "=", $userId)
-            ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id])
+          //  ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id()])
             ->firstOrFail();
     }
 }
