@@ -24,7 +24,8 @@ class AffiliateController extends BaseController
      */
     public function getAffiliates($affiliateId, $affiliateType)
     {
-        $baseQuery = Affiliate::select("status", "affiliate_approver_type", "organization_cached_profile.data as organization_profile",
+        $baseQuery =
+            Affiliate::select("status", "affiliate_approver_type", "organization_cached_profile.data as organization_profile",
             "agency_cached_profile.data as agency_profile", "affiliate_approver", "affiliate_requester")
             ->leftJoin("organization_cached_profile", function ($join) {
                 $join->on("organization_cached_profile.id", "=", "affiliate_approver")
@@ -35,7 +36,9 @@ class AffiliateController extends BaseController
                 $join->on("agency_cached_profile.id", "=", "affiliate_approver")
                     ->orOn("agency_cached_profile.id", "=", "affiliate_requester");
 
-            });
+            })
+            ->where("app_id", "=", $this->securityContext()->getApp()->id());
+
         if ($affiliateType === Affiliate::TYPE_ANY) {
 
             $query = $baseQuery
@@ -84,7 +87,9 @@ class AffiliateController extends BaseController
             ->join("job_cached_profile", DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "affiliate_approver")
             ->join("organization_cached_profile", DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "organization_cached_profile.id")
             ->where("affiliate_requester", "=", $affiliateId)
+            ->whereRaw("job_cached_profile.data->>'app_id' = ? ", [$this->securityContext()->getApp()->id()])
             ->where("status", "=", Affiliate::STATUS_APPROVED)
+            ->where("app_id","=", $this->securityContext()->getApp()->id())
             ->get();
 
         $data = [];
@@ -111,7 +116,10 @@ class AffiliateController extends BaseController
     {
 
         return new RestResponse(Affiliate::where("affiliate_approver", '=', $approverId)
-            ->where("affiliate_requester", '=', $requesterId)->first());
+            ->where("affiliate_requester", '=', $requesterId)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
+
+            ->first());
     }
 
     /**
@@ -134,6 +142,7 @@ class AffiliateController extends BaseController
         $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
             ->where("affiliate_requester", '=', $requesterId)
             ->where("status", '<>', Affiliate::STATUS_APPROVED)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
             ->firstOrFail();
 
         $affiliate->status = Affiliate::STATUS_APPROVED;
@@ -152,6 +161,7 @@ class AffiliateController extends BaseController
     {
         $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
             ->where("affiliate_requester", '=', $requesterId)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
             ->delete();
 
         return new RestResponse($affiliate);
@@ -168,6 +178,7 @@ class AffiliateController extends BaseController
         $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
             ->where("affiliate_requester", '=', $requesterId)
             ->where("status", '<>', Affiliate::STATUS_PENDING)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
             ->firstOrFail();
 
         $affiliate->status = Affiliate::STATUS_PENDING;
@@ -192,6 +203,7 @@ class AffiliateController extends BaseController
         }
         $affiliate = Affiliate::where("affiliate_approver", '=', $requesterId)
             ->where("affiliate_requester", '=', $approverId)
+            ->where("app_id", '=', $this->securityContext()->getApp()->id())
             ->first();
 
         if ($affiliate) {
@@ -220,6 +232,7 @@ class AffiliateController extends BaseController
             "affiliate_approver" => $approverId,
             "affiliate_requester" => $requesterId,
             "affiliate_approver_type" => $approverRole,
+            "app_id" => $this->securityContext()->getApp()->id()
         ];
     }
 

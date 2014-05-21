@@ -19,7 +19,7 @@ class Affiliate extends Eloquent implements ModelInterface
 
     protected $table = "affiliates";
 
-    protected $fillable = array('affiliate_approver', 'affiliate_requester', 'status', 'affiliate_approver_type');
+    protected $fillable = array('affiliate_approver', 'affiliate_requester', 'status', 'affiliate_approver_type', "app_id");
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -13,6 +13,7 @@ use MissionNext\Api\Service\Matching\Queue\CandidateJobs as CanJobsQueue;
 use MissionNext\Api\Service\Matching\Queue\CandidateOrganizations as CanOrgsQueue;
 use MissionNext\Api\Service\Matching\Queue\OrganizationCandidates as OrgCandidatesQueue;
 use MissionNext\Api\Service\Matching\Queue\JobCandidates as JobCandidatesQueue;
+use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 
 class MasterMatching
@@ -23,7 +24,9 @@ class MasterMatching
 
     public function fire($job, $data)
     {
-        $userId = $data["userId"];
+        Results::truncate();
+
+        $userId = isset($data["userId"]) ? $data["userId"] : null;
         $appId = $data["appId"];
         $role = $data["role"];
 

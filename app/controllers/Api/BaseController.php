@@ -1,6 +1,7 @@
 <?php
 namespace MissionNext\Controllers\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
@@ -309,7 +310,6 @@ class BaseController extends Controller
 
             $this->userRepo()->updateUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id, "role" => $this->securityContext()->role()];
-
             Queue::push(MasterMatching::class, $queueData);
         }
 

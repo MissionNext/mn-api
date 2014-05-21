@@ -4,7 +4,9 @@ namespace MissionNext\Controllers\Api\Matching;
 
 
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Queue;
 use MissionNext\Api\Response\RestResponse;
+use MissionNext\Api\Service\Matching\Queue\MasterMatching;
 use MissionNext\Controllers\Api\BaseController;
 
 
@@ -38,6 +40,10 @@ class ConfigController extends BaseController
             return new RestResponse([]);
         }
         $this->matchingConfigRepo()->insert($configs);
+
+        $queueData = ["appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
+
+        Queue::push(MasterMatching::class, $queueData);
 
         return new RestResponse( $modelAppQuery->with("mainField")->with('matchingField')->get() );
     }
