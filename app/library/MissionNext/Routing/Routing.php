@@ -9,6 +9,7 @@ use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\FolderNotes\FolderController;
 use MissionNext\Controllers\Api\FolderNotes\NoteController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
+use MissionNext\Controllers\Api\Notes\NotesController;
 use MissionNext\Controllers\Api\Profile\SearchController;
 use MissionNext\Controllers\Api\User\UserController;
 use MissionNext\Controllers\Api\Profile\UserController as UserProfileController;
@@ -109,9 +110,7 @@ class Routing
 
             ]);
 
-            Route::controller('results/folder', FolderController::class, []);
-            Route::controller('results/notes', NoteController::class, []);
-
+            Route::controller('meta/notes', NotesController::class, []);
             Route::controller('meta/folder', FolderAppsController::class, []);
 
             Route::resource(static::RESOURCE_FOLDER, FolderResource::class,

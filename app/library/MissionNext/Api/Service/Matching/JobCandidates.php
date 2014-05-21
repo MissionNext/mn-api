@@ -108,7 +108,7 @@ class JobCandidates extends Matching
                     } else {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         $matchingDataSet[$k]['results'][$matchingDataKey] =
-                            [$matchingKey => null, $mainMatchingKey => null, "matches" => false, "weight" => $conf["weight"]];
+                            [$matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
                     }
                 }
             }

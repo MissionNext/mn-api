@@ -12,7 +12,7 @@ use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Field\Candidate;
 use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\FolderApps\FolderApps;
-use MissionNext\Models\FolderNotes\FolderNotes;
+use MissionNext\Models\Notes\Notes;
 use MissionNext\Models\SearchData\SearchData;
 use MissionNext\Repos\Field\Field;
 
@@ -37,20 +37,26 @@ class SearchController extends BaseController
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
 
-        $folderNotesTable = (new FolderNotes)->getTable();
-        $folderAppsTable = (new FolderApps())->getTable();
+        $folderNotesTable = (new Notes)->getTable();
+        $folderAppsTable = (new FolderApps)->getTable();
 
-        $query = "SELECT  fA.folder as folderName, cP.data FROM {$tableName} as cP
+        $query = "SELECT  n.notes, cp.data, fA.folder as folderName FROM {$tableName} as cp
+                  LEFT JOIN {$folderNotesTable} n ON cp.id = n.user_id
+                              AND n.for_user_id = ? AND n.user_type = ?
                   LEFT JOIN {$folderAppsTable} fA ON cp.id = fA.user_id
-
-                  AND fA.for_user_id = ? AND fA.user_type = ? AND fA.app_id = ?
+                           AND fA.for_user_id = ? AND fA.user_type = ? AND fA.app_id = ?
                    ";
-
+        // ,
+//
+      //
       // fN.notes, AND fN.for_user_id = ? AND fN.user_type = ?
 
         $bindings[] = $userId;
         $bindings[] = $searchType;
+        $bindings[] = $userId;
+        $bindings[] = $searchType;
         $bindings[] = $this->securityContext()->getApp()->id();
+
         $where = " WHERE ( ";
         if (!empty($profileSearch)) {
 
@@ -111,17 +117,17 @@ class SearchController extends BaseController
         if (!empty($profileSearch) || !empty($userSearch)) {
             //$query .= "  ) ";
              $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids') ) ";
-             $bindings[] = $this->securityContext()->getApp()->id;
+             $bindings[] = $this->securityContext()->getApp()->id();
         }else{
 
             throw new SearchProfileException("No search params specified");
         }
 
-       dd($query, $bindings);
+     //    dd($query, $bindings);
      //    dd( DB::select($query, $bindings));
         return new RestResponse(array_map(function ($d) {
                $data = json_decode($d->data);
-              // $data->notes = $d->notes;
+               $data->notes = $d->notes;
                $data->folder = $d->foldername;
             return $data;
         }, DB::select($query, $bindings)));
