@@ -3,6 +3,7 @@ namespace MissionNext\Controllers\Api;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Queue\BeanstalkdQueue;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Queue;
@@ -45,6 +46,7 @@ use MissionNext\Api\Service\Matching\Queue\CandidateOrganizations as CanOrgsQueu
 use MissionNext\Api\Service\Matching\Queue\OrganizationCandidates as OrgCandidatesQueue;
 use MissionNext\Api\Service\Matching\Queue\JobCandidates as JobCandidatesQueue;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Queue\Queue as AQueue;
 
 
 class BaseController extends Controller
@@ -66,6 +68,10 @@ class BaseController extends Controller
 
     /** @var  ResultsRepositoryInterface */
     private $matchResultsRepo;
+    /** @var  \Illuminate\Queue\Queue */
+    protected $queue;
+    /** @var  \Pheanstalk_Pheanstalk */
+    protected $beanstalk;
     /**
      * @var \Illuminate\Http\Request
      */
@@ -87,6 +93,7 @@ class BaseController extends Controller
     )
 
     {
+        $this->beanstalk = Queue::getPheanstalk();
         $this->request = $request;
         $this->fieldRepo = $fieldRepo;
         $this->userRepo = $userRepo;
@@ -310,7 +317,7 @@ class BaseController extends Controller
 
             $this->userRepo()->updateUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id, "role" => $this->securityContext()->role()];
-            Queue::push(MasterMatching::class, $queueData);
+            MasterMatching::run($queueData);
         }
 
         return $user;

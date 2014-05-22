@@ -58,6 +58,7 @@ class SearchController extends BaseController
         $bindings[] = $this->securityContext()->getApp()->id();
 
         $where = " WHERE ( ";
+        
         if (!empty($profileSearch)) {
 
             $expandedFields = $this->viewFieldRepo()->getModel()->whereRaw(
@@ -116,7 +117,7 @@ class SearchController extends BaseController
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
             //$query .= "  ) ";
-             $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids') ) ";
+             $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids')  ) ";
              $bindings[] = $this->securityContext()->getApp()->id();
         }else{
 

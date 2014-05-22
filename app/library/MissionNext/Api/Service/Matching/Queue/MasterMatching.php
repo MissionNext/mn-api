@@ -20,6 +20,25 @@ class MasterMatching
 {
 
     private $matchingRoles = [BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, BaseDataModel::JOB];
+    /** @var  \Pheanstalk_Pheanstalk */
+    public static $pheanstalk;
+
+    public static function run($queueData)
+    {
+        $job = null;
+        static::$pheanstalk = Queue::getPheanstalk();
+        if (!empty(static::$pheanstalk->listTubes()) && $tube = static::$pheanstalk->listTubes()[0] ){
+
+            try{
+                $job = static::$pheanstalk->peekReady($tube);
+                return false;
+                // dd($job->getData());
+            }catch (\Pheanstalk_Exception_ServerException $e){
+                Queue::push(MasterMatching::class, $queueData);
+            }
+
+        }
+    }
 
 
     public function fire($job, $data)

@@ -42,8 +42,7 @@ class ConfigController extends BaseController
         $this->matchingConfigRepo()->insert($configs);
 
         $queueData = ["appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
-
-        Queue::push(MasterMatching::class, $queueData);
+        MasterMatching::run($queueData);
 
         return new RestResponse( $modelAppQuery->with("mainField")->with('matchingField')->get() );
     }

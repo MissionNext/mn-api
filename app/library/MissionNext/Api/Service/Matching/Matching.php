@@ -137,7 +137,6 @@ abstract class Matching
 
         }, $this->matchConfig);
 
-
         foreach ($data as &$profileData) {
             $profileData['matching_percentage'] = 0;
             foreach ($profileData['results'] as $key=>&$prof) {
@@ -153,7 +152,10 @@ abstract class Matching
             $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100);
         }
 
-        return array_values($data);
+        return array_filter(array_values($data), function($d){
+
+          return  $d['matching_percentage'] != 0;
+        });
     }
 
 

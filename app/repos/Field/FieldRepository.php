@@ -123,7 +123,7 @@ class FieldRepository extends AbstractFieldRepository
         foreach ($addedFields as $addedField) {
             $choices = $addedField["choices"];
             if ($choices) {
-                $choices = explode(",", $choices);
+               // $choices = explode(",", $choices);
                 foreach ($choices as $choice) {
                     $dictionary[] = ["field_id" => $addedField["id"], "value" => $choice];
                 }
@@ -157,7 +157,7 @@ class FieldRepository extends AbstractFieldRepository
                 /** @var  $model Candidate */
                 $model =  $this->getModel()->find($field["id"]);
                 $model->choices()->delete();
-                $choices = explode(',', $field["choices"]);
+                $choices =  $field["choices"];
                 foreach($choices as $choice){
                      $model->choices()->save($model->choices()->create(["value"=>$choice]));
                 }

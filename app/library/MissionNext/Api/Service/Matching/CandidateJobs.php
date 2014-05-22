@@ -14,7 +14,7 @@ class CandidateJobs extends Matching
 
     protected $mainMatchingModel = BaseDataModel::CANDIDATE;
 
-    /**
+    /**s
      * @return mixed
      * @throws \MissionNext\Api\Exceptions\SecurityContextException
      *

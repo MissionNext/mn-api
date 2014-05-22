@@ -4,6 +4,7 @@ namespace MissionNext\Controllers\Api\Affiliate;
 
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use MissionNext\Api\Exceptions\AffiliateException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
@@ -43,7 +44,8 @@ class AffiliateController extends BaseController
 
             $query = $baseQuery
                 ->where("affiliate_requester", '=', $affiliateId)
-                ->orWhere("affiliate_approver", '=', $affiliateId);
+                ->orWhere("affiliate_approver", '=', $affiliateId)
+                ->where("app_id", "=", $this->securityContext()->getApp()->id());
 
         } else {
 
@@ -84,9 +86,14 @@ class AffiliateController extends BaseController
             "organization_cached_profile.data as org_data",
             "organization_cached_profile.id"
         )
-            ->join("job_cached_profile", DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "affiliate_approver")
+            ->join("job_cached_profile", function($join){
+               $join->on(DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "affiliate_approver" )
+                    ->orOn(DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "affiliate_requester");
+
+            })
             ->join("organization_cached_profile", DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "organization_cached_profile.id")
             ->where("affiliate_requester", "=", $affiliateId)
+            ->orWhere("affiliate_approver", "=", $affiliateId)
             ->whereRaw("job_cached_profile.data->>'app_id' = ? ", [$this->securityContext()->getApp()->id()])
             ->where("status", "=", Affiliate::STATUS_APPROVED)
             ->where("app_id","=", $this->securityContext()->getApp()->id())
@@ -131,6 +138,11 @@ class AffiliateController extends BaseController
      */
     public function postIndex($requesterId, $approverId)
     {
+//        /** @var  $pheanstalk \Pheanstalk_Pheanstalk */
+//        $pheanstalk=Queue::getPheanstalk();
+//        dd($pheanstalk->clearTube("default"));
+
+
         $affiliateData = $this->affiliateCheck($requesterId, $approverId);
         $affiliateData["status"] = Affiliate::STATUS_PENDING;
 
