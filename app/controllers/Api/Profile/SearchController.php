@@ -58,7 +58,7 @@ class SearchController extends BaseController
         $bindings[] = $this->securityContext()->getApp()->id();
 
         $where = " WHERE ( ";
-        
+
         if (!empty($profileSearch)) {
 
             $expandedFields = $this->viewFieldRepo()->getModel()->whereRaw(
@@ -83,11 +83,20 @@ class SearchController extends BaseController
 
                 if (is_array($value)) {
                     if (in_array($fieldName, $expandedFields)) {
+                        $prepend = '';
+                        if (count($value) > 1){
+                            $prepend = " ( ";
+                        }
                         foreach ($value as $val) {
-                            $query .= $where . " ? = data->'profileData'->>'{$fieldName}' ";
+                            $query .= $where . $prepend . " ? = data->'profileData'->>'{$fieldName}' ";
                             $bindings[] = $val;
                             $where = " OR ";
+                            $prepend = "";
                         }
+                        if (count($value) > 1){
+                            $query .= " ) ";
+                        }
+
                     } else {
                         $query .= $where . " ? && json_array_text(data->'profileData'->'{$fieldName}') ";
                         $value = array_map('strtolower', $value);
@@ -124,7 +133,7 @@ class SearchController extends BaseController
             throw new SearchProfileException("No search params specified");
         }
 
-     //    dd($query, $bindings);
+        //dd($query, $bindings);
      //    dd( DB::select($query, $bindings));
         return new RestResponse(array_map(function ($d) {
                $data = json_decode($d->data);
