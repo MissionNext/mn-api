@@ -9,6 +9,7 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Api\Exceptions\SearchProfileException;
 use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\Favorite\Favorite;
 use MissionNext\Models\Field\Candidate;
 use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\FolderApps\FolderApps;
@@ -39,12 +40,15 @@ class SearchController extends BaseController
 
         $folderNotesTable = (new Notes)->getTable();
         $folderAppsTable = (new FolderApps)->getTable();
+        $favoriteTable = (new Favorite)->getTable();
 
-        $query = "SELECT  n.notes, cp.data, fA.folder as folderName FROM {$tableName} as cp
+        $query = "SELECT  n.notes, cp.data, fA.folder as folderName, f.id as favorite FROM {$tableName} as cp
                   LEFT JOIN {$folderNotesTable} n ON cp.id = n.user_id
                               AND n.for_user_id = ? AND n.user_type = ?
                   LEFT JOIN {$folderAppsTable} fA ON cp.id = fA.user_id
                            AND fA.for_user_id = ? AND fA.user_type = ? AND fA.app_id = ?
+                  LEFT JOIN {$favoriteTable} f ON cp.id = f.target_id
+                           AND f.user_id = ? AND f.target_type = ? AND f.app_id = ?
                    ";
         // ,
 //
@@ -53,6 +57,9 @@ class SearchController extends BaseController
 
         $bindings[] = $userId;
         $bindings[] = $searchType;
+        $bindings[] = $userId;
+        $bindings[] = $searchType;
+        $bindings[] = $this->securityContext()->getApp()->id();
         $bindings[] = $userId;
         $bindings[] = $searchType;
         $bindings[] = $this->securityContext()->getApp()->id();
@@ -129,6 +136,7 @@ class SearchController extends BaseController
                $data = json_decode($d->data);
                $data->notes = $d->notes;
                $data->folder = $d->foldername;
+               $data->favorite = $d->favorite;
             return $data;
         }, DB::select($query, $bindings)));
 

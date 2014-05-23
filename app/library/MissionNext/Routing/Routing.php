@@ -23,6 +23,7 @@ use MissionNext\Controllers\Api\Matching\JobCandidatesController as MatchJobCand
 use MissionNext\Controllers\Api\Matching\OrganizationCandidatesController as MatchOrgCandidatesController;
 use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
+use MissionNext\Controllers\Api\Favorite\Controller as FavoriteResource;
 use MissionNext\Models\DataModel\BaseDataModel;
 
 class Routing
@@ -34,6 +35,7 @@ class Routing
     const RESOURCE_JOB_PROFILE = 'profile/job';
     const RESOURCE_JOB = 'job';
     const RESOURCE_FOLDER = 'folder';
+    const RESOURCE_FAVORITE = 'favorite';
     const ROUTE_CREATE_USER = 'mission.next.user.create';
     const ROUTE_CREATE_JOB = 'mission.next.job.create';
 
@@ -120,6 +122,14 @@ class Routing
 
             Route::group(array('prefix' => static::RESOURCE_FOLDER), function () {
                 Route::get('by/{role}', FolderResource::class.'@role');
+            });
+
+            Route::pattern('user_id', '\d+');
+            Route::pattern('favorite_id', '\d+');
+            Route::post(static::RESOURCE_FAVORITE, FavoriteResource::class.'@store');
+            Route::group(array('prefix' => static::RESOURCE_FAVORITE), function(){
+                Route::get('{user_id}/{role}', FavoriteResource::class.'@getByRole');
+                Route::delete('{favorite_id}', FavoriteResource::class.'@delete');
             });
 
         });
