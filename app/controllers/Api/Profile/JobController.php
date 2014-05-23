@@ -3,6 +3,7 @@
 
 namespace MissionNext\Controllers\Api\Profile;
 
+use Illuminate\Support\Facades\Input;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
@@ -41,6 +42,11 @@ class JobController extends BaseController
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
+
+        if ($files = Input::file()){
+            $this->checkFile($files['profile'], $hash);
+        }
+
         if (empty($hash)) {
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);

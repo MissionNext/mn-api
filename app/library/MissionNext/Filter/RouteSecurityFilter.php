@@ -4,6 +4,7 @@ namespace MissionNext\Filter;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Route as Router;
 use MissionNext\Api\Exceptions\SecurityContextException;
@@ -31,6 +32,11 @@ class RouteSecurityFilter
      */
     public function role(Router $route, LRequest $request)
     {
+        $symfRequest = $request->request;
+        if ( $symfRequest->has("_method") && strtoupper($symfRequest->get("_method")) === "PUT" ){
+             $symfRequest->remove("_method");
+        }
+
         $user_id = Route::input('user', Route::input('profile', null));
         $role = Route::input('type');
         $job_id = Route::input('job');

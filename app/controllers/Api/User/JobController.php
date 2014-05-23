@@ -52,6 +52,11 @@ class JobController extends BaseController
 
         /** @var  $req \Symfony\Component\HttpFoundation\Request */
         $profileData = Input::except("timestamp","name","symbol_key","organization_id");
+
+        if ($files = Input::file()){
+            $this->checkFile($files['profile'], $profileData);
+        }
+
         /** @var  $organization User */
         $organization = $this->userRepo()->getModel()->findOrFail(Input::get('organization_id'));
 

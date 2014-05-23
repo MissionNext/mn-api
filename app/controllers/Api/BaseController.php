@@ -68,10 +68,6 @@ class BaseController extends Controller
 
     /** @var  ResultsRepositoryInterface */
     private $matchResultsRepo;
-    /** @var  \Illuminate\Queue\Queue */
-    protected $queue;
-    /** @var  \Pheanstalk_Pheanstalk */
-    protected $beanstalk;
     /**
      * @var \Illuminate\Http\Request
      */
@@ -93,7 +89,6 @@ class BaseController extends Controller
     )
 
     {
-        $this->beanstalk = Queue::getPheanstalk();
         $this->request = $request;
         $this->fieldRepo = $fieldRepo;
         $this->userRepo = $userRepo;
@@ -321,6 +316,15 @@ class BaseController extends Controller
         }
 
         return $user;
+    }
+
+    protected function checkFile(array $files, array &$hash)
+    {
+        if (!empty($files)){
+            foreach($files as $symbolKey => $file){
+                $hash[$symbolKey] = $file;
+            }
+        }
     }
 
 } 

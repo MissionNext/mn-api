@@ -62,6 +62,11 @@ class UserController extends BaseController
 
         /** @var  $req \Symfony\Component\HttpFoundation\Request */
         $profileData = Input::get('profile');
+
+        if ($files = Input::file()){
+            $this->checkFile($files['profile'], $profileData);
+        }
+
         $roleName = Input::get('role');
         if (!RouteSecurityFilter::isAllowedRole($roleName)){
 

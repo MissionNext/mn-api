@@ -39,6 +39,7 @@ class UserController extends BaseController
      */
     public function update($id)
     {
+
         /** @var  $user UserModel */
         $user = $this->userRepo()->find($id);
         $user->setObserver(new UserObserver());
@@ -47,12 +48,9 @@ class UserController extends BaseController
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->all();
-        $files = Input::file();
 
-        if (!empty($files)){
-            foreach($files as $symbolKey => $file){
-                $hash[$symbolKey] = $file;
-            }
+        if ($files = Input::file()){
+            $this->checkFile($files, $hash);
         }
 
         if (empty($hash)) {
