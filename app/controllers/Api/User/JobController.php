@@ -142,6 +142,9 @@ class JobController extends BaseController
             next($searchByData);
         }
 
+        $str .= " and app_id = ?";
+        $arrV[] = $this->securityContext()->getApp()->id();
+
         return new RestResponse($this->jobRepo()->getModel()->whereRaw($str, $arrV)->get());
     }
 

@@ -3,6 +3,7 @@
 
 namespace MissionNext\Api\Service\Matching\Queue;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use MissionNext\Api\Service\Matching\Matching as ServiceMatching;
 use MissionNext\Models\Matching\Results;
@@ -28,13 +29,13 @@ class InsertQueue
 
         $dateTime = (new \DateTime())->format("Y-m-d H:i:s");
 
-        if (!empty($matchingData)){
-            $insertData = array_map(function($d) use ($dateTime, $userId, $userType, $forUserType){
+        if (!empty($matchingData)) {
+            $insertData = array_map(function ($d) use ($dateTime, $userId, $userType, $forUserType) {
                 return
                     [
                         "user_type" => $userType,
                         "user_id" => $d['id'],
-                        "for_user_id" => $userId ,
+                        "for_user_id" => $userId,
                         "for_user_type" => $forUserType,
                         "matching_percentage" => $d['matching_percentage'],
                         "data" => json_encode($d),
@@ -44,9 +45,12 @@ class InsertQueue
 
             }, $matchingData);
 
-            Results::insert($insertData);
-        }
 
+           Results::insert($insertData);
+
+        }
         $job->delete();
+
     }
+
 } 
