@@ -172,6 +172,15 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function appData()
+    {
+
+        return $this->apps()->get();
+    }
+
+    /**
      * Get the unique identifier for the user.
      *
      * @return mixed

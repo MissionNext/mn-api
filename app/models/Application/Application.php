@@ -18,7 +18,7 @@ class Application extends Eloquent implements ModelInterface
      *
      * @var array
      */
-    protected $hidden = array('public_key', 'private_key');
+    protected $hidden = array('private_key');
 
     /** @var array protected from mass assignment */
     protected $guarded = array('public_key', 'private_key');

@@ -11,8 +11,11 @@ class Profile extends Eloquent
 
     public function setModel(ProfileInterface $model)
     {
+        $apps = $model->appData();
+
         $this->model = $model;
-        $this->app_ids = $model->appIds();
+        $this->app_ids = $apps->lists("id");
+        $this->app_names = $apps->lists("public_key");
     }
 
     /**

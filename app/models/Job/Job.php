@@ -53,6 +53,21 @@ class Job extends ModelObservable implements ProfileInterface
         return $this;
     }
 
+    public function appData()
+    {
+
+        return $this->app()->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function app()
+    {
+
+        return $this->belongsTo(Application::class, 'app_id', 'id');
+    }
+
     /**
      * @param UserModel $organization
      *
