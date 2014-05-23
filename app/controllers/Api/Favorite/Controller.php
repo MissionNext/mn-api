@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Favorite\Favorite;
+use MissionNext\Models\Notes\Notes;
 
 class Controller extends BaseController {
 
@@ -20,12 +21,17 @@ class Controller extends BaseController {
     public function getByRole($user_id, $role){
 
         $cache_table = $role . "_cached_profile";
+        $folderNotesTable = (new Notes)->getTable();
 
         $data = Favorite::where("app_id", '=', $this->securityContext()->getApp()->id())
-            ->where("user_id", '=', $user_id)
-            ->where("target_type", '=', $role)
+            ->where("favorite.user_id", '=', $user_id)
+            ->where("favorite.target_type", '=', $role)
             ->join($cache_table, $cache_table . ".id", "=", "favorite.target_id")
-            ->select("favorite.id", "favorite.user_id", "favorite.target_type", "favorite.target_id" , "$cache_table.data as data")
+            ->leftJoin($folderNotesTable, function($join) use ($folderNotesTable, $user_id){
+                $join->on($folderNotesTable . ".user_id", '=', 'favorite.target_id');
+                $join->on($folderNotesTable . ".for_user_id", '=', DB::raw($user_id));
+            })
+            ->select("favorite.id", "favorite.user_id", "favorite.target_type", "favorite.target_id" , "$cache_table.data as data", $folderNotesTable.".notes as notes")
             ->get();
 
         foreach($data as $key => $row){
