@@ -8,6 +8,7 @@ use MissionNext\Controllers\Api\Affiliate\AffiliateController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\FolderNotes\FolderController;
 use MissionNext\Controllers\Api\FolderNotes\NoteController;
+use MissionNext\Controllers\Api\Inquire\InquireController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Notes\NotesController;
 use MissionNext\Controllers\Api\Profile\SearchController;
@@ -111,7 +112,7 @@ class Routing
             Route::controller('search/{searchType}/for/{userType}/{id}', SearchController::class, [
 
             ]);
-
+            //NOTES FOLDER CONTROLLER
             Route::controller('meta/notes', NotesController::class, []);
             Route::controller('meta/folder', FolderAppsController::class, []);
 
@@ -123,7 +124,9 @@ class Routing
             Route::group(array('prefix' => static::RESOURCE_FOLDER), function () {
                 Route::get('by/{role}', FolderResource::class.'@role');
             });
+            //END
 
+            //FAVOURITE CONTROLLER
             Route::pattern('user_id', '\d+');
             Route::pattern('favorite_id', '\d+');
             Route::post(static::RESOURCE_FAVORITE, FavoriteResource::class.'@store');
@@ -131,6 +134,12 @@ class Routing
                 Route::get('{user_id}/{role}', FavoriteResource::class.'@getByRole');
                 Route::delete('{favorite_id}', FavoriteResource::class.'@delete');
             });
+            //END
+
+            //INQUIRE CONTROLLER
+            Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
+            //END
+
 
         });
 

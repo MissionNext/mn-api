@@ -3,6 +3,7 @@ namespace MissionNext\Models\Job;
 
 use Illuminate\Support\Facades\App;
 use MissionNext\Models\Application\Application;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\ModelObservable;
 use MissionNext\Models\Observers\UserObserver;
@@ -107,6 +108,12 @@ class Job extends ModelObservable implements ProfileInterface
     {
 
         return (bool)$this->app_id;
+    }
+
+    public function hasRole($check)
+    {
+
+        return $check === BaseDataModel::JOB;
     }
 
     /**

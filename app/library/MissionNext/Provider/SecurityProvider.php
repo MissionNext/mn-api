@@ -7,6 +7,7 @@ use MissionNext\Api\Auth\Manager;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\Route;
+use MissionNext\Filter\RoleChecker;
 use MissionNext\Filter\RouteSecurityFilter;
 
 class SecurityProvider extends ServiceProvider
@@ -59,6 +60,7 @@ class SecurityProvider extends ServiceProvider
     {
         Route::filter(RouteSecurityFilter::ROLE, RouteSecurityFilter::class.'@'.RouteSecurityFilter::ROLE_M);
         Route::filter(RouteSecurityFilter::AUTHORIZE,  RouteSecurityFilter::class.'@'.RouteSecurityFilter::AUTHORIZE_M);
+        Route::filter(RoleChecker::CHECK,  RoleChecker::class.'@'.RoleChecker::CHECK);
 
         return $this;
     }

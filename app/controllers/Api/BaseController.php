@@ -1,12 +1,9 @@
 <?php
 namespace MissionNext\Controllers\Api;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Queue\BeanstalkdQueue;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\DB;
@@ -41,12 +38,7 @@ use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
 use MissionNext\Repos\ViewField\ViewFieldRepositoryInterface;
 use MissionNext\Validators\ValidatorResolver;
-use MissionNext\Api\Service\Matching\Queue\CandidateJobs as CanJobsQueue;
-use MissionNext\Api\Service\Matching\Queue\CandidateOrganizations as CanOrgsQueue;
-use MissionNext\Api\Service\Matching\Queue\OrganizationCandidates as OrgCandidatesQueue;
-use MissionNext\Api\Service\Matching\Queue\JobCandidates as JobCandidatesQueue;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Queue\Queue as AQueue;
 
 
 class BaseController extends Controller

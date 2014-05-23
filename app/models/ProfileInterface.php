@@ -22,6 +22,9 @@ interface ProfileInterface extends ModelInterface
 
     public function addApp(Application $app);
 
+    public function hasRole($check);
+
+
     /**
      * @return UserRepository|JobRepository
      */

@@ -10,6 +10,7 @@ use Illuminate\Routing\Route as Router;
 use MissionNext\Api\Exceptions\SecurityContextException;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Models\Job\Job;
 use MissionNext\Models\User\User as UserModel;
 use Illuminate\Http\Request as LRequest;
 use MissionNext\Provider\EventProvider;

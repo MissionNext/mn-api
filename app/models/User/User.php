@@ -218,7 +218,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     public function hasRole($check)
     {
 
-        return in_array($check, array_fetch($this->roles->toArray(), 'name'));
+        return in_array($check, array_fetch($this->roles->toArray(), 'role'));
     }
 
     /**
