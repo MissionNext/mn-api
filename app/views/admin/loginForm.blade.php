@@ -10,14 +10,6 @@
         <div class="row">
             <div class="col-md-offset-4 col-md-4 login-form">
 
-                {{ Form::open(array(
-                    'action' => 'MissionNext\Controllers\Admin\AdminController@login',
-                    'class' => 'form-signin',
-                )) }}
-
-                <?php
-                    var_dump($errors);
-                ?>
                 @if (!$errors->isEmpty())
                 <div class="alert alert-danger">
                     @foreach ($errors->all() as $error)
@@ -27,10 +19,21 @@
                 @endif
 
                 @if (Session::has('info'))
-                    <div class="alert alert-danger">
-                        {{ Session::get('info') }}
-                    </div>
+                <div class="alert alert-danger">
+                    {{ Session::get('info') }}
+                </div>
                 @endif
+
+                @if (Session::has('message'))
+                <div class="flash alert">
+                    <p>{{ Session::get('message') }}</p>
+                </div>
+                @endif
+
+                {{ Form::open(array(
+                    'action' => 'MissionNext\Controllers\Admin\AdminController@login',
+                    'class' => 'form-signin',
+                )) }}
 
                 {{ Form::text('username', null, array('class' => 'form-control', 'placeholder' => 'username')) }}
                 {{-- Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'email')) --}}

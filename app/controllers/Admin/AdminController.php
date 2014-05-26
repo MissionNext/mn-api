@@ -17,26 +17,63 @@ class AdminController extends AdminBaseController {
 
             Input::flash();
 
-            $validator = Validator::make(Input::all(), AdminUserModel::$rules);
+            $input = Input::only('username', 'password');
+            $rules = array(
+                'username' => 'required|min:3|max:200',
+                'password' => 'required|min:6'
+            );
 
-            if($validator->passes()) {
+            $validator = Validator::make($input, $rules);
 
-                $adminUser = AdminUserModel::where('username', Input::get('username'))->first();
+            if ($validator->fails()) {
+                Session::flash('info', 'Some field is wrong!');
+                return Redirect::route('login')->withInput()->withErrors($validator);
+            }
 
-                if(!is_null($adminUser)) {
+            $adminUser = AdminUserModel::where('username', Input::get('username'))->first();
 
-                    dd('user found');
+            if(!is_null($adminUser)) {
 
-                } else {
-
-                    Session::flash('info', 'Some field is wrong!');
-                    return Redirect::route('login');
-                }
+                Auth::login($adminUser);
+                return Redirect::route('adminHomepage');
 
             } else {
 
+                Session::flash('info', 'Some field is wrong!');
                 return Redirect::route('login')->withInput()->withErrors($validator);
+
+//                dd($adminUser);
+//                Auth::login($adminUser);
+//                return Redirect::route('adminHomepage');
+//                return View::make('admin.adminHomepage');
             }
+
+
+
+
+
+
+
+
+
+//            if($validator->passes()) {
+//
+//                $adminUser = AdminUserModel::where('username', Input::get('username'))->first();
+//
+//                if(!is_null($adminUser)) {
+//
+//                    dd('user found');
+//
+//                } else {
+//
+//                    Session::flash('info', 'Some field is wrong!');
+//                    return Redirect::route('login');
+//                }
+//
+//            } else {
+//
+//                return Redirect::route('login')->withInput()->withErrors($validator);
+//            }
 
         }
 

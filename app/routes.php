@@ -17,14 +17,15 @@ Route::post('login', array(
 ));
 
 
+Route::get('/', array(
+    'as' => 'adminHomepage',
+    function () {
+        return View::make('admin.adminHomepage');
+    }
+));
+
 Route::group(array('prefix' => '/dashboard', 'before' => 'admin_auth'), function () {
 
-    Route::get('/', array(
-        'as' => 'adminHomepage',
-        function () {
-            return View::make('user.profile');
-        }
-    ));
 
     Route::get('logout', array(
         'as' => 'logout',
