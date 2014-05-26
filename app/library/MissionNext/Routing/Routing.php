@@ -22,6 +22,7 @@ use MissionNext\Controllers\Api\Matching\CandidateJobsController as MatchCandida
 use MissionNext\Controllers\Api\Matching\CandidateOrganizationsController as MatchCandidateOrgsController;
 use MissionNext\Controllers\Api\Matching\JobCandidatesController as MatchJobCandidatesController;
 use MissionNext\Controllers\Api\Matching\OrganizationCandidatesController as MatchOrgCandidatesController;
+use MissionNext\Filter\RoleChecker;
 use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
 use MissionNext\Controllers\Api\Favorite\Controller as FavoriteResource;
@@ -135,10 +136,14 @@ class Routing
                 Route::delete('{favorite_id}', FavoriteResource::class.'@delete');
             });
             //END
+            Route::group(array('before' => RoleChecker::CHECK),function(){
+                //INQUIRE CONTROLLER
+                Route::get('inquire/candidates/for/organization/{organization}', InquireController::class.'@getCandidates');
+                Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
+                Route::get('inquire/jobs/for/{candidate}', InquireController::class.'@getJobs');
+                //END
+            });
 
-            //INQUIRE CONTROLLER
-            Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
-            //END
 
 
         });

@@ -31,8 +31,6 @@ class JobRepository extends AbstractUserRepository implements JobRepositoryInter
 
             return true;
         }
-        dd("has  app");
-
 
         return false;
     }

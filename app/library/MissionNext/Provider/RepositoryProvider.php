@@ -2,6 +2,7 @@
 
 namespace MissionNext\Provider;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use MissionNext\Api\Auth\SecurityContextResolver;
 use MissionNext\Repos\Field\FieldRepository;
@@ -11,10 +12,14 @@ use MissionNext\Repos\Form\FormRepository;
 use MissionNext\Repos\Form\FormRepositoryInterface;
 use MissionNext\Repos\FormGroup\FormGroupRepository;
 use MissionNext\Repos\FormGroup\FormGroupRepositoryInterface;
+use MissionNext\Repos\Inquire\InquireRepository;
+use MissionNext\Repos\Inquire\InquireRepositoryInterface;
 use MissionNext\Repos\Matching\ConfigRepository;
 use MissionNext\Repos\Matching\ConfigRepositoryInterface;
 use MissionNext\Repos\Matching\ResultsRepository;
 use MissionNext\Repos\Matching\ResultsRepositoryInterface;
+use MissionNext\Repos\RepositoryContainer;
+use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
@@ -67,6 +72,18 @@ class RepositoryProvider extends ServiceProvider
 
             return new ResultsRepository();
         });
+
+        App::bind(InquireRepositoryInterface::class, function () {
+
+            return (new SecurityContextResolver(new InquireRepository()))->getResolvedObject();
+        });
+
+        App::bind(RepositoryContainerInterface::class, function(Application $app)
+        {
+
+            return (new SecurityContextResolver( new RepositoryContainer($app)))->getResolvedObject();
+        });
+
 
     }
 

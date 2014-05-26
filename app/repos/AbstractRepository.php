@@ -14,6 +14,9 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     protected $model;
 
+    /** @var  RepositoryContainer */
+    protected $repoContainer;
+
 
     public function __construct()
     {
@@ -24,6 +27,18 @@ abstract class AbstractRepository implements RepositoryInterface
     {
 
         return call_user_func_array("{$this->modelClassName}::create", array($attributes));
+    }
+
+    /**
+     * @param RepositoryContainer $container
+     *
+     * @return $this
+     */
+    public function setRepoContainer(RepositoryContainer $container)
+    {
+        $this->repoContainer = $container;
+
+        return $this;
     }
 
 

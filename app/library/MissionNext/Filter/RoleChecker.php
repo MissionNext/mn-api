@@ -16,7 +16,6 @@ class RoleChecker
 
     public function check(Router $route, LRequest $request)
     {
-
         $userModel = new User();
         $jobModel = new Job();
         $roleInputs =  [ "candidate" => ["model" =>$userModel, "role" => BaseDataModel::CANDIDATE] ,
@@ -28,8 +27,7 @@ class RoleChecker
 
         /** @var $model User */
         foreach($roleInputs as $input => $el){
-            if ($userId = Route::input($input))
-            {
+            if ($userId = Route::input($input)){
                 $model = $el["model"]->find($userId);
                 if (!$model || !$model->hasRole($el["role"])){
 

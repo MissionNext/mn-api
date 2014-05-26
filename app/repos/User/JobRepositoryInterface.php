@@ -7,5 +7,5 @@ use MissionNext\Repos\RepositoryInterface;
 
 interface JobRepositoryInterface extends RepositoryInterface
 {
-
+    const KEY = "job";
 } 
