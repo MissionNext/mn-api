@@ -69,6 +69,9 @@ class DatabaseSeeder extends BaseSeeder
             $this->command->comment('UserCachedProfileSeeder table seeded!');
         }
 
+        $this->call('AdminUsersSeeder');
+        $this->command->info('Admin Users seeded!');
+
 
     }
 
