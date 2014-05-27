@@ -112,13 +112,22 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
         /** @var  $userRepo UserRepository */
         $userRepo = $this->repoContainer[UserRepositoryInterface::KEY];
 
-        return $userRepo->getModel()
-            ->leftJoin("inquires", "inquires.candidate_id", '=', 'users.id')
-            ->where("inquires.candidate_id", "=", $user->id)
-            ->where("inquires.app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
-            ->select("users.id", "users.username",  "inquires.status")
-            ->get();
+        /** @var  $jobRepo JobRepository */
+        $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
 
+        $jobIds =  $jobRepo->getModel()
+                    ->where("organization_id", "=", $user->id)
+                    ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
+                    ->get()
+                    ->lists("id");
+
+        return  $jobIds ? $this->getModel()
+                ->leftJoin("users", "users.id", "=", "inquires.candidate_id")
+                ->whereIn("job_id", $jobIds)
+                ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
+                ->select("users.username", "users.id", "users.email")
+                ->distinct()
+                ->get() : [];
     }
 
 }
