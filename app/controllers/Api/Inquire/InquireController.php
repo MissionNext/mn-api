@@ -59,11 +59,23 @@ class InquireController extends BaseController
      * @param User $organization
      * @return RestResponse
      */
-    public function getCandidates(User $organization)
+    public function getCandidatesForOrganization(User $organization)
     {
         /** @var  $repo InquireRepository */
         $repo =  $this->repoContainer[InquireRepositoryInterface::KEY];
 
-        return new RestResponse($repo->candidates($organization));
+        return new RestResponse($repo->candidatesForOrganization($organization));
+    }
+
+    /**
+     * @param User $agency
+     * @return RestResponse
+     */
+    public function getCandidatesForAgency(User $agency)
+    {
+        /** @var  $repo InquireRepository */
+        $repo =  $this->repoContainer[InquireRepositoryInterface::KEY];
+
+        return new RestResponse($repo->candidatesForAgency($agency));
     }
 } 

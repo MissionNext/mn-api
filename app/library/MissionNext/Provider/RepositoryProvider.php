@@ -5,6 +5,8 @@ namespace MissionNext\Provider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use MissionNext\Api\Auth\SecurityContextResolver;
+use MissionNext\Repos\Affiliate\AffiliateRepository;
+use MissionNext\Repos\Affiliate\AffiliateRepositoryInterface;
 use MissionNext\Repos\Field\FieldRepository;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
 use Illuminate\Support\Facades\App;
@@ -76,6 +78,11 @@ class RepositoryProvider extends ServiceProvider
         App::bind(InquireRepositoryInterface::class, function () {
 
             return (new SecurityContextResolver(new InquireRepository()))->getResolvedObject();
+        });
+
+        App::bind(AffiliateRepositoryInterface::class, function () {
+
+            return new AffiliateRepository();
         });
 
         App::bind(RepositoryContainerInterface::class, function(Application $app)

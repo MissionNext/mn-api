@@ -12,6 +12,8 @@ use MissionNext\Models\Inquire\Inquire;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\AbstractRepository;
+use MissionNext\Repos\Affiliate\AffiliateRepository;
+use MissionNext\Repos\Affiliate\AffiliateRepositoryInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
@@ -107,11 +109,30 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
                 ->get();
     }
 
-    public function candidates(User $user)
+    /**
+     * @param array $jobIds
+     *
+     * @return Collection
+     */
+    private function candidateByJobs(array $jobIds)
     {
-        /** @var  $userRepo UserRepository */
-        $userRepo = $this->repoContainer[UserRepositoryInterface::KEY];
 
+       return  $this->getModel()
+            ->leftJoin("users", "users.id", "=", "inquires.candidate_id")
+            ->whereIn("job_id", $jobIds)
+            ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
+            ->select("users.username", "users.id", "users.email")
+            ->distinct()
+            ->get();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Collection|array
+     */
+    public function candidatesForOrganization(User $user)
+    {
         /** @var  $jobRepo JobRepository */
         $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
 
@@ -121,13 +142,45 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
                     ->get()
                     ->lists("id");
 
-        return  $jobIds ? $this->getModel()
-                ->leftJoin("users", "users.id", "=", "inquires.candidate_id")
-                ->whereIn("job_id", $jobIds)
-                ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
-                ->select("users.username", "users.id", "users.email")
-                ->distinct()
-                ->get() : [];
+        return  $jobIds ?
+                  $this->candidateByJobs($jobIds)
+               : [];
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Collection|array
+     */
+    public function candidatesForAgency(User $user)
+    {
+        /** @var  $affilRepo AffiliateRepository */
+        $affilRepo = $this->repoContainer[AffiliateRepositoryInterface::KEY];
+
+        $orgIdsR = $affilRepo->where("affiliate_approver","=", $user->id)
+                             ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
+                             ->get()
+                             ->lists("affiliate_requester");
+
+        $orgIdsA = $affilRepo->where("affiliate_requester","=", $user->id)
+                             ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
+                             ->get()
+                             ->lists("affiliate_approver");
+
+        $orgIds = array_merge($orgIdsA, $orgIdsR);
+
+        /** @var  $jobRepo JobRepository */
+        $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
+
+        $jobIds =  $jobRepo->getModel()
+            ->whereIn("organization_id",  $orgIds)
+            ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
+            ->get()
+            ->lists("id");
+
+        return  $jobIds ?
+             $this->candidateByJobs($jobIds)
+            : [];
     }
 
 }

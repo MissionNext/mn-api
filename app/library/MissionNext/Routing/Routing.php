@@ -138,9 +138,10 @@ class Routing
             //END
             Route::group(array('before' => RoleChecker::CHECK),function(){
                 //INQUIRE CONTROLLER
-                Route::get('inquire/candidates/for/organization/{organization}', InquireController::class.'@getCandidates');
-                Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
+                Route::get('inquire/candidates/for/organization/{organization}', InquireController::class.'@getCandidatesForOrganization');
+                Route::get('inquire/candidates/for/agency/{agency}', InquireController::class.'@getCandidatesForAgency');
                 Route::get('inquire/jobs/for/{candidate}', InquireController::class.'@getJobs');
+                Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
                 //END
             });
 
