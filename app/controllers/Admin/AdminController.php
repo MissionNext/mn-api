@@ -1,14 +1,12 @@
 <?php
 namespace MissionNext\Controllers\Admin;
 
-use Cartalyst\Sentry\Users\WrongPasswordException;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
-use Illuminate\Support\Facades\Config;
 use Cartalyst\Sentry\Users\LoginRequiredException as LoginRequired;
 use Cartalyst\Sentry\Users\PasswordRequiredException as PasswordRequired;
 use Cartalyst\Sentry\Users\WrongPasswordException as WrongPass;
@@ -19,37 +17,26 @@ use Cartalyst\Sentry\Throttling\UserBannedException as UserBanned;
 use Cartalyst\Sentry\Users\UserExistsException as UserExist;
 use Cartalyst\Sentry\Users\UserAlreadyActivatedException as UserAlreadyActivated;
 
-
 class AdminController extends AdminBaseController {
 
     public function login() {
-
         if($this->request->isMethod('post')) {
-
             Input::flash();
-
             $input = Input::only('username', 'password');
             $rules = array(
                 'username' => 'required|min:3|max:200',
                 'password' => 'required|min:6'
             );
-
             $validator = Validator::make($input, $rules);
-
             if ($validator->fails()) {
 
                 return Redirect::route('login')->withInput()->withErrors($validator);
             }
-
             try {
-                $credentials = array(
-                        'username' => Input::get('username'),
-                        'password' => Input::get('password'),
-                        );
-
                 $user = Sentry::authenticate($input, false);
 
-                return Redirect::route('adminHomepage');
+                return Redirect::to('dashboard');
+//                return Redirect::route('adminHomepage');
             } catch (LoginRequired $e) {
                 Session::flash('info', 'Login field is required.');
             } catch (PasswordRequired $e) {
@@ -72,4 +59,10 @@ class AdminController extends AdminBaseController {
         return View::make('admin.loginForm');
     }
 
-} 
+    public function logout() {
+
+        Sentry::logout();
+
+        return Redirect::route('login');
+    }
+}

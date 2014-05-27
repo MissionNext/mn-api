@@ -30,11 +30,10 @@
                 )) }}
 
                 {{ Form::text('username', null, array('class' => 'form-control', 'placeholder' => 'username')) }}
-                {{-- Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'email')) --}}
                 {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'password')) }}
 
                 <br/>
-                {{ Form::submit('Login', array('class' => 'btn btn-lg btn-primary btn-block login-form-submit')) }}
+                {{ Form::submit('Login', array('class' => 'btn btn-sm btn-primary btn-block login-form-submit')) }}
 
                 {{ Form::close() }}
             </div>

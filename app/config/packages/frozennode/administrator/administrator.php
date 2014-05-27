@@ -7,28 +7,28 @@ return array(
 	 *
 	 * @type string
 	 */
-	'uri' => 'admin',
+	'uri' => 'dashboard',
 
 	/**
 	 * Page title
 	 *
 	 * @type string
 	 */
-	'title' => 'Admin',
+	'title' => 'Admin Dashboard',
 
 	/**
 	 * The path to your model config directory
 	 *
 	 * @type string
 	 */
-	'model_config_path' => app('path') . '/config/administrator',
+	'model_config_path' => app('path') . '/controllers/Admin/Dashboard/models',
 
 	/**
 	 * The path to your settings config directory
 	 *
 	 * @type string
 	 */
-	'settings_config_path' => app('path') . '/config/administrator/settings',
+	'settings_config_path' => app('path') . '/controllers/Admin/Dashboard/settings',
 
 	/**
 	 * The menu structure of the site. For models, you should either supply the name of a model config file or an array of names of model config
@@ -51,7 +51,11 @@ return array(
 	 * 		'Analytics' => array('E-Commerce' => 'page.ecommerce.analytics'),
 	 *	)
 	 */
-	'menu' => array(),
+	'menu' => array(
+        'Applications' => array(
+            'Application'
+        ),
+    ),
 
 	/**
 	 * The permission option is the highest-level authentication check that lets you define a closure that should return true if the current user
@@ -61,7 +65,7 @@ return array(
 	 */
 	'permission'=> function()
 	{
-		return Auth::check();
+		return Sentry::check();
 	},
 
 	/**
@@ -84,7 +88,7 @@ return array(
 	 *
 	 * @type string
 	 */
-	'home_page' => '',
+	'home_page' => 'Application',
 
 	/**
 	 * The route to which the user will be taken when they click the "back to site" button
@@ -98,14 +102,14 @@ return array(
 	 *
 	 * @type string
 	 */
-	'login_path' => 'user/login',
+	'login_path' => 'login',
 
 	/**
 	 * The logout path is the path where Administrator will send the user when they click the logout link
 	 *
 	 * @type string
 	 */
-	'logout_path' => false,
+	'logout_path' => 'logout',
 
 	/**
 	 * This is the key of the return path that is sent with the redirection to your login_action. Session::get('redirect') will hold the return URL.
@@ -127,6 +131,6 @@ return array(
 	 *
 	 * @type array
 	 */
-	'locales' => array(),
+	'locales' => array('en', 'de', 'ru'),
 
 );

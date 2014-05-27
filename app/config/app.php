@@ -111,6 +111,7 @@ return array(
         'MissionNext\Provider\ErrorProvider',
         'MissionNext\Provider\RepositoryProvider',
         'MissionNext\Models\Admin\AdminServiceProvider',
+        'Frozennode\Administrator\AdministratorServiceProvider',
 
     ),
 
