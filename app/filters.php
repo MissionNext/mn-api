@@ -39,7 +39,8 @@ Route::filter('auth', function()
 
 Route::filter('admin_auth', function()
 {
-    if (!Auth::check()) return Redirect::route('login');
+    return Auth::check() ? Redirect::intended('adminHomepage') : Redirect::route('login');
+//    if (!Auth::check()) return
 });
 
 Route::filter('auth.basic', function()

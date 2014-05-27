@@ -26,7 +26,7 @@ class AdminController extends AdminBaseController {
             $validator = Validator::make($input, $rules);
 
             if ($validator->fails()) {
-                Session::flash('info', 'Some field is wrong!');
+
                 return Redirect::route('login')->withInput()->withErrors($validator);
             }
 
@@ -34,12 +34,14 @@ class AdminController extends AdminBaseController {
 
             if(!is_null($adminUser)) {
 
-                Auth::login($adminUser);
-                return Redirect::route('adminHomepage');
+                if (Auth::attempt(array('username' => Input::get('username'), 'password' => Input::get('password')))) {
+                    return Redirect::intended('adminHomepage');
+                }
+//                Auth::login($adminUser);
+//                return Redirect::route('adminHomepage');
 
             } else {
 
-                Session::flash('info', 'Some field is wrong!');
                 return Redirect::route('login')->withInput()->withErrors($validator);
 
 //                dd($adminUser);

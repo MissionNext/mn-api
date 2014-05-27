@@ -6,13 +6,14 @@ class AdminUsersSeeder extends BaseSeeder {
 
     public function run() {
 
-        DB::statement($this->getDbStatement()->truncateTable('admin_users'));
+        DB::table('adminusers')->delete();
 
-        $adminUser1 = new AdminUserModel();
-        $adminUser1->username = 'admin';
-        $adminUser1->email = 'admin@local.com';
-        $adminUser1->password = Hash::make('Flvbygfhjkm');  //Админпароль
-        $adminUser1->save();
+        $user = Sentry::createUser(array(
+            'email'     => 'admin@loc.com',
+            'password'  => 'Flvbygfhjkm',  // Админпароль
+            'activated' => true,
+            'username'  => 'admin',
+        ));
 
     }
 }

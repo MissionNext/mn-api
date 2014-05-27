@@ -110,6 +110,7 @@ return array(
         'MissionNext\Provider\SecurityProvider',
         'MissionNext\Provider\ErrorProvider',
         'MissionNext\Provider\RepositoryProvider',
+        'Cartalyst\Sentry\SentryServiceProvider',
 
     ),
 
@@ -176,6 +177,7 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+        'Sentry'          => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
 
 	),
 

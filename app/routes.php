@@ -17,7 +17,8 @@ Route::post('login', array(
 ));
 
 
-Route::get('/', array(
+
+Route::get('/a', array(
     'as' => 'adminHomepage',
     function () {
         return View::make('admin.adminHomepage');
@@ -25,6 +26,7 @@ Route::get('/', array(
 ));
 
 Route::group(array('prefix' => '/dashboard', 'before' => 'admin_auth'), function () {
+
 
 
     Route::get('logout', array(

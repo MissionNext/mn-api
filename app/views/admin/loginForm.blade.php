@@ -24,18 +24,12 @@
                 </div>
                 @endif
 
-                @if (Session::has('message'))
-                <div class="flash alert">
-                    <p>{{ Session::get('message') }}</p>
-                </div>
-                @endif
-
                 {{ Form::open(array(
                     'action' => 'MissionNext\Controllers\Admin\AdminController@login',
                     'class' => 'form-signin',
                 )) }}
 
-                {{ Form::text('username', null, array('class' => 'form-control', 'placeholder' => 'username')) }}
+                {{ Form::text('username', Input::old('username'), array('class' => 'form-control', 'placeholder' => 'username')) }}
                 {{-- Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'email')) --}}
                 {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'password')) }}
 
