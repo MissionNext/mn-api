@@ -36,7 +36,6 @@ class AdminController extends AdminBaseController {
                 $user = Sentry::authenticate($input, false);
 
                 return Redirect::to('dashboard');
-//                return Redirect::route('adminHomepage');
             } catch (LoginRequired $e) {
                 Session::flash('info', 'Login field is required.');
             } catch (PasswordRequired $e) {
@@ -59,10 +58,4 @@ class AdminController extends AdminBaseController {
         return View::make('admin.loginForm');
     }
 
-    public function logout() {
-
-        Sentry::logout();
-
-        return Redirect::route('login');
-    }
 }
