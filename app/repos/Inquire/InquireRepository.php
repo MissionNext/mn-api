@@ -172,11 +172,11 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
         /** @var  $jobRepo JobRepository */
         $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
 
-        $jobIds =  $jobRepo->getModel()
+        $jobIds = $orgIds ?  $jobRepo->getModel()
             ->whereIn("organization_id",  $orgIds)
             ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
             ->get()
-            ->lists("id");
+            ->lists("id") : [];
 
         return  $jobIds ?
              $this->candidateByJobs($jobIds)
