@@ -63,7 +63,8 @@ class InquireController extends BaseController
     {
         /** @var  $repo InquireRepository */
         $repo =  $this->repoContainer[InquireRepositoryInterface::KEY];
-
+        $repo->candidatesForOrganization($organization);
+       // dd($this->getLogQueries());
         return new RestResponse($repo->candidatesForOrganization($organization));
     }
 

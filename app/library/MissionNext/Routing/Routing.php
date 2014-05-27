@@ -2,6 +2,7 @@
 
 namespace MissionNext\Routing;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
@@ -44,7 +45,6 @@ class Routing
 
     public function __construct()
     {
-
         Route::get('/', function () {
 
             return View::make('hello');

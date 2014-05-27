@@ -6,14 +6,19 @@ namespace MissionNext\Repos\Inquire;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Auth\ISecurityContextAware;
 use MissionNext\Api\Auth\SecurityContext;
+use MissionNext\Api\Service\DataTransformers\UserCachedDataStrategy;
+use MissionNext\Api\Service\DataTransformers\UserCachedTransformer;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Inquire\Inquire;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Repos\Affiliate\AffiliateRepository;
 use MissionNext\Repos\Affiliate\AffiliateRepositoryInterface;
+use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
@@ -116,14 +121,15 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
      */
     private function candidateByJobs(array $jobIds)
     {
-
-       return  $this->getModel()
-            ->leftJoin("users", "users.id", "=", "inquires.candidate_id")
+        $builder =   $this->getModel()
+            ->leftJoin("candidate_cached_profile", "candidate_cached_profile.id", "=", "inquires.candidate_id")
             ->whereIn("job_id", $jobIds)
             ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
-            ->select("users.username", "users.id", "users.email")
-            ->distinct()
-            ->get();
+            ->select(DB::raw("distinct on (candidate_cached_profile.id) candidate_cached_profile.id, candidate_cached_profile.data ") );
+
+        return
+            (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->get();
+
     }
 
     /**
@@ -135,6 +141,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
     {
         /** @var  $jobRepo JobRepository */
         $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
+
 
         $jobIds =  $jobRepo->getModel()
                     ->where("organization_id", "=", $user->id)

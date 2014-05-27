@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use MissionNext\Api\Auth\ISecurityContextAware;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Repos\Affiliate\AffiliateRepositoryInterface;
+use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\Inquire\InquireRepository;
 use MissionNext\Repos\Inquire\InquireRepositoryInterface;
 use MissionNext\Repos\User\JobRepositoryInterface;
@@ -48,6 +49,7 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
             JobRepositoryInterface::KEY   => $app->make(JobRepositoryInterface::class)->setRepoContainer($this),
             UserRepositoryInterface::KEY   => $app->make(UserRepositoryInterface::class)->setRepoContainer($this),
             AffiliateRepositoryInterface::KEY   => $app->make(AffiliateRepositoryInterface::class)->setRepoContainer($this),
+            UserCachedRepositoryInterface::KEY   => $app->make(UserCachedRepositoryInterface::class)->setRepoContainer($this),
         ];
     }
 
