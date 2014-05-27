@@ -12,7 +12,7 @@
 
                 @if (!$errors->isEmpty())
                 <div class="alert alert-danger">
-                    @foreach ($errors->all() as $error)
+                    @foreach ($errors->all('<p>:message</p>') as $error)
                         {{ $error }}
                     @endforeach
                 </div>

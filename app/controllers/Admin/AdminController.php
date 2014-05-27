@@ -24,10 +24,7 @@ class AdminController extends AdminBaseController {
 
     public function login() {
 
-
         if($this->request->isMethod('post')) {
-
-
 
             Input::flash();
 
@@ -37,84 +34,42 @@ class AdminController extends AdminBaseController {
                 'password' => 'required|min:6'
             );
 
-//            $validator = Validator::make($input, $rules);
-//
-//            if ($validator->fails()) {
-//
-//                return Redirect::route('login')->withInput()->withErrors($validator);
-//            }
+            $validator = Validator::make($input, $rules);
 
-              try {
+            if ($validator->fails()) {
 
-            $credentials = array(
-                'username' => Input::get('username'),
-                'password' => Input::get('password'),
-            );
+                return Redirect::route('login')->withInput()->withErrors($validator);
+            }
 
-            $user = Sentry::authenticate($credentials, false);
+            try {
+                $credentials = array(
+                        'username' => Input::get('username'),
+                        'password' => Input::get('password'),
+                        );
 
-            return Redirect::route('adminHomepage');
-              } catch(WrongPasswordException $e) {
+                $user = Sentry::authenticate($input, false);
 
-              }
+                return Redirect::route('adminHomepage');
+            } catch (LoginRequired $e) {
+                Session::flash('info', 'Login field is required.');
+            } catch (PasswordRequired $e) {
+                Session::flash('info', 'Password field is required.');
+            } catch (WrongPass $e) {
+                Session::flash('info', 'Wrong password, try again.');
+            } catch (UserNotFound $e) {
+                Session::flash('info', 'User was not found.');
+            } catch (UserNotActivated $e) {
+                Session::flash('info', 'User is not activated.');
+            }
+            // The following is only required if the throttling is enabled
+            catch (UserSuspended $e) {
+                Session::flash('info', 'User is suspended.');
+            } catch (UserBanned $e) {
+                Session::flash('info', 'User is banned.');
+            }
         }
 
         return View::make('admin.loginForm');
-    }
-
-    public function tmp() {
-//
-//
-//
-//
-//
-//            $adminUser = AdminUserModel::where('username', Input::get('username'))->first();
-//
-//            if(!is_null($adminUser)) {
-//
-//                if (Auth::attempt(array('username' => Input::get('username'), 'password' => Input::get('password')))) {
-//                    return Redirect::intended('adminHomepage');
-//                }
-////                Auth::login($adminUser);
-////                return Redirect::route('adminHomepage');
-//
-//            } else {
-//
-//                return Redirect::route('login')->withInput()->withErrors($validator);
-//
-////                dd($adminUser);
-////                Auth::login($adminUser);
-////                return Redirect::route('adminHomepage');
-////                return View::make('admin.adminHomepage');
-//            }
-
-
-
-
-
-
-
-
-
-//            if($validator->passes()) {
-//
-//                $adminUser = AdminUserModel::where('username', Input::get('username'))->first();
-//
-//                if(!is_null($adminUser)) {
-//
-//                    dd('user found');
-//
-//                } else {
-//
-//                    Session::flash('info', 'Some field is wrong!');
-//                    return Redirect::route('login');
-//                }
-//
-//            } else {
-//
-//                return Redirect::route('login')->withInput()->withErrors($validator);
-//            }
-
     }
 
 } 
