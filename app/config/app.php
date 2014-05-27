@@ -110,7 +110,7 @@ return array(
         'MissionNext\Provider\SecurityProvider',
         'MissionNext\Provider\ErrorProvider',
         'MissionNext\Provider\RepositoryProvider',
-        'Cartalyst\Sentry\SentryServiceProvider',
+        'MissionNext\Models\Admin\AdminServiceProvider',
 
     ),
 

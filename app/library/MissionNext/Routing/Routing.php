@@ -26,6 +26,7 @@ use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
 use MissionNext\Controllers\Api\Favorite\Controller as FavoriteResource;
 use MissionNext\Models\DataModel\BaseDataModel;
+use Illuminate\Support\Facades\Config;
 
 class Routing
 {
@@ -43,6 +44,9 @@ class Routing
 
     public function __construct()
     {
+        if(strpos($_SERVER['REQUEST_URI'], 'login') or strpos($_SERVER['REQUEST_URI'], 'dashboard')) {
+            Config::set('session.driver','file');
+        }
 
         Route::get('/', function () {
 

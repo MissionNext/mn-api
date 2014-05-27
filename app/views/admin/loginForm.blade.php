@@ -29,7 +29,7 @@
                     'class' => 'form-signin',
                 )) }}
 
-                {{ Form::text('username', Input::old('username'), array('class' => 'form-control', 'placeholder' => 'username')) }}
+                {{ Form::text('username', null, array('class' => 'form-control', 'placeholder' => 'username')) }}
                 {{-- Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'email')) --}}
                 {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'password')) }}
 

@@ -11,10 +11,7 @@
         <div class="col-md-offset-4 col-md-4 login-form">
             <h3> admin home page </h3>
 
-            <?php
-                $user = Auth::getUser();
-                var_dump($user);
-            ?>
+            {{ Sentry::getUser()->username }}
 
         </div>
     </div>

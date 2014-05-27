@@ -1,19 +1,33 @@
 <?php
 namespace MissionNext\Controllers\Admin;
 
+use Cartalyst\Sentry\Users\WrongPasswordException;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
-use MissionNext\Models\Admin\AdminUserModel;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Cartalyst\Sentry\Facades\Laravel\Sentry;
+use Illuminate\Support\Facades\Config;
+use Cartalyst\Sentry\Users\LoginRequiredException as LoginRequired;
+use Cartalyst\Sentry\Users\PasswordRequiredException as PasswordRequired;
+use Cartalyst\Sentry\Users\WrongPasswordException as WrongPass;
+use Cartalyst\Sentry\Users\UserNotFoundException as UserNotFound;
+use Cartalyst\Sentry\Users\UserNotActivatedException as UserNotActivated;
+use Cartalyst\Sentry\Throttling\UserSuspendedException as UserSuspended;
+use Cartalyst\Sentry\Throttling\UserBannedException as UserBanned;
+use Cartalyst\Sentry\Users\UserExistsException as UserExist;
+use Cartalyst\Sentry\Users\UserAlreadyActivatedException as UserAlreadyActivated;
+
 
 class AdminController extends AdminBaseController {
 
     public function login() {
 
+
         if($this->request->isMethod('post')) {
+
+
 
             Input::flash();
 
@@ -23,32 +37,56 @@ class AdminController extends AdminBaseController {
                 'password' => 'required|min:6'
             );
 
-            $validator = Validator::make($input, $rules);
+//            $validator = Validator::make($input, $rules);
+//
+//            if ($validator->fails()) {
+//
+//                return Redirect::route('login')->withInput()->withErrors($validator);
+//            }
 
-            if ($validator->fails()) {
+              try {
 
-                return Redirect::route('login')->withInput()->withErrors($validator);
-            }
+            $credentials = array(
+                'username' => Input::get('username'),
+                'password' => Input::get('password'),
+            );
 
-            $adminUser = AdminUserModel::where('username', Input::get('username'))->first();
+            $user = Sentry::authenticate($credentials, false);
 
-            if(!is_null($adminUser)) {
+            return Redirect::route('adminHomepage');
+              } catch(WrongPasswordException $e) {
 
-                if (Auth::attempt(array('username' => Input::get('username'), 'password' => Input::get('password')))) {
-                    return Redirect::intended('adminHomepage');
-                }
-//                Auth::login($adminUser);
-//                return Redirect::route('adminHomepage');
+              }
+        }
 
-            } else {
+        return View::make('admin.loginForm');
+    }
 
-                return Redirect::route('login')->withInput()->withErrors($validator);
-
-//                dd($adminUser);
-//                Auth::login($adminUser);
-//                return Redirect::route('adminHomepage');
-//                return View::make('admin.adminHomepage');
-            }
+    public function tmp() {
+//
+//
+//
+//
+//
+//            $adminUser = AdminUserModel::where('username', Input::get('username'))->first();
+//
+//            if(!is_null($adminUser)) {
+//
+//                if (Auth::attempt(array('username' => Input::get('username'), 'password' => Input::get('password')))) {
+//                    return Redirect::intended('adminHomepage');
+//                }
+////                Auth::login($adminUser);
+////                return Redirect::route('adminHomepage');
+//
+//            } else {
+//
+//                return Redirect::route('login')->withInput()->withErrors($validator);
+//
+////                dd($adminUser);
+////                Auth::login($adminUser);
+////                return Redirect::route('adminHomepage');
+////                return View::make('admin.adminHomepage');
+//            }
 
 
 
@@ -77,9 +115,6 @@ class AdminController extends AdminBaseController {
 //                return Redirect::route('login')->withInput()->withErrors($validator);
 //            }
 
-        }
-
-        return View::make('admin.loginForm');
     }
 
 } 
