@@ -15,11 +15,10 @@ class ErrorProvider extends ServiceProvider
     public function register()
     {
         App::error(function (Exception $exception, $code) {
-
             Log::error($exception);
 
             if (App::environment('local')) {
-                dd($exception);
+                dd(get_class($exception), "message = ".$exception->getMessage());
             }
 
             return (new RestResponse())->setErrorData($exception);

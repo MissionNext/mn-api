@@ -48,6 +48,19 @@ class UserCachedData extends Model implements ModelInterface
     }
 
     /**
+     * @param $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getData()

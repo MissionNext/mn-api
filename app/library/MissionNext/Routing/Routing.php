@@ -2,6 +2,7 @@
 
 namespace MissionNext\Routing;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
@@ -22,11 +23,11 @@ use MissionNext\Controllers\Api\Matching\CandidateJobsController as MatchCandida
 use MissionNext\Controllers\Api\Matching\CandidateOrganizationsController as MatchCandidateOrgsController;
 use MissionNext\Controllers\Api\Matching\JobCandidatesController as MatchJobCandidatesController;
 use MissionNext\Controllers\Api\Matching\OrganizationCandidatesController as MatchOrgCandidatesController;
+use MissionNext\Filter\RoleChecker;
 use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
 use MissionNext\Controllers\Api\Favorite\Controller as FavoriteResource;
 use MissionNext\Models\DataModel\BaseDataModel;
-use Illuminate\Support\Facades\Config;
 
 class Routing
 {
@@ -135,10 +136,14 @@ class Routing
                 Route::delete('{favorite_id}', FavoriteResource::class.'@delete');
             });
             //END
-
-            //INQUIRE CONTROLLER
-            Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
-            //END
+            Route::group(array('before' => RoleChecker::CHECK),function(){
+                //INQUIRE CONTROLLER
+                Route::get('inquire/candidates/for/organization/{organization}', InquireController::class.'@getCandidatesForOrganization');
+                Route::get('inquire/candidates/for/agency/{agency}', InquireController::class.'@getCandidatesForAgency');
+                Route::get('inquire/jobs/for/{candidate}', InquireController::class.'@getJobs');
+                Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
+                //END
+            });
 
 
         });

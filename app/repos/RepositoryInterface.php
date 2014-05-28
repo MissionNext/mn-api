@@ -17,6 +17,8 @@ interface RepositoryInterface {
 
     public function destroy($ids);
 
+    public  function  setRepoContainer(RepositoryContainer $container);
+
     /**
      * @return Model
      */

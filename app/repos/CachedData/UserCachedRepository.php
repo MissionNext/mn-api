@@ -17,7 +17,7 @@ use MissionNext\Models\Notes\Notes;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Repos\RepositoryInterface;
 
-class UserCachedRepository extends AbstractRepository implements RepositoryInterface
+class UserCachedRepository extends AbstractRepository implements UserCachedRepositoryInterface
 {
     protected $modelClassName = UserCachedData::class;
 
@@ -36,6 +36,13 @@ class UserCachedRepository extends AbstractRepository implements RepositoryInter
         $this->app = SecurityContext::getInstance()->getApp();
         parent::__construct();
     }
+
+    public function dataOfType($type)
+    {
+
+        return new self($type);
+    }
+
 
     /**
      * @return UserCachedData
