@@ -19,7 +19,7 @@ class NotesController extends BaseController
             ->first();
 
         if ($notes) {
-            $notes->setNotes($notes);
+            $notes->setNotes($request->get('notes'));
             $notes->save();
         } else {
             $notes = Notes::create($this->request->request->all());
