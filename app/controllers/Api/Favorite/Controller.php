@@ -44,7 +44,8 @@ class Controller extends BaseController {
 
         foreach($data as $key => $row){
             $data[$key]['data'] = json_decode($row['data']);
-            $data[$key]['organization'] = json_decode($row['organization']);
+            $data[$key]['data']->organization = json_decode($row['organization']);
+            unset($data[$key]['organization']);
         }
 
         return new RestResponse($data);
