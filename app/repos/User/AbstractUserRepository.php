@@ -112,9 +112,10 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
     {
         $d = $this->profileData($user);
         /** @var  $userCachedData UserCachedData */
-        $userCachedData = (new UserCachedData())->find($user->id);
+        $userCachedData = (new UserCachedData())->find($user->id) ? : new UserCachedData();
 
         $userCachedData->setProfileData($d)
+                       ->setId($user->id)
                        ->save();
     }
 
