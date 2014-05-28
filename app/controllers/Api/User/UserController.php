@@ -135,7 +135,7 @@ class UserController extends BaseController
         }
 
         foreach ($filteredData as $prop => $val) {
-            $user->$prop = $prop === "password" ? Hash::make($val) : $val;
+            $user->$prop = $val;
         }
 
         $user->save();

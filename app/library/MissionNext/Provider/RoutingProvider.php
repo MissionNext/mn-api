@@ -1,9 +1,10 @@
 <?php
 
+
 namespace MissionNext\Provider;
 
-
 use Illuminate\Support\ServiceProvider;
+use MissionNext\Routing\AdminRouting;
 use MissionNext\Routing\Routing;
 
 class RoutingProvider extends ServiceProvider
@@ -16,7 +17,8 @@ class RoutingProvider extends ServiceProvider
      */
     public function register()
     {
-        new Routing();
+        new  Routing();
+        new AdminRouting();
     }
 
 } 

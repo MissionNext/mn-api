@@ -44,14 +44,10 @@ class Routing
 
     public function __construct()
     {
-        if(strpos($_SERVER['REQUEST_URI'], 'login') or strpos($_SERVER['REQUEST_URI'], 'logout') or strpos($_SERVER['REQUEST_URI'], 'dashboard')) {
+
+        if(starts_with($_SERVER['REQUEST_URI'], '/login') or starts_with($_SERVER['REQUEST_URI'], '/logout') or starts_with($_SERVER['REQUEST_URI'], '/dashboard')) {
             Config::set('session.driver','file');
         }
-
-        Route::get('/', function () {
-
-            return View::make('hello');
-        });
 
         Route::group(array('prefix' => static::API_PREFIX), function () {
 

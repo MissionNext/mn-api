@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Directors model config
- */
-
 return array(
 
     'title' => 'Application',
     'single' => 'application',
-    'model' => 'MissionNext\Models\Application\Application',
+    'model' => \MissionNext\Models\Application\Application::class,
 
     /**
      * The display columns

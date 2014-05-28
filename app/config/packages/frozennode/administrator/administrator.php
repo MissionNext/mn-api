@@ -55,6 +55,8 @@ return array(
         'Applications' => array(
             'Application'
         ),
+        'Users',
+//        'settings.User',
     ),
 
 	/**
@@ -74,14 +76,14 @@ return array(
 	 *
 	 * @type bool
 	 */
-	'use_dashboard' => false,
+	'use_dashboard' => true,
 
 	/**
 	 * If you want to create a dashboard view, provide the view string here.
 	 *
 	 * @type string
 	 */
-	'dashboard_view' => '',
+	'dashboard_view' => 'admin.adminHomepage',
 
 	/**
 	 * The menu item that should be used as the default landing page of the administrative section
@@ -109,7 +111,7 @@ return array(
 	 *
 	 * @type string
 	 */
-	'logout_path' => 'logout',
+	'logout_path' => URL::route('logout'),
 
 	/**
 	 * This is the key of the return path that is sent with the redirection to your login_action. Session::get('redirect') will hold the return URL.
@@ -131,6 +133,6 @@ return array(
 	 *
 	 * @type array
 	 */
-	'locales' => array('en', 'de', 'ru'),
+	'locales' => array(),
 
 );

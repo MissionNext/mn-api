@@ -77,7 +77,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
      */
     public function setPassword($password)
     {
-        $this->password = Hash::make($password);
+        $this->password = $password;
 
         return $this;
     }
@@ -116,6 +116,18 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         });
 
         return $this;
+    }
+
+    public function setUserPassword($value)
+    {
+
+        $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function setPasswordAttribute($value)
+    {
+
+        $this->attributes['password'] = Hash::make($value);
     }
 
     /**
