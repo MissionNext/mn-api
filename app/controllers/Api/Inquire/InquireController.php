@@ -39,7 +39,35 @@ class InquireController extends BaseController
         /** @var  $repo InquireRepository */
         $repo =  $this->repoContainer[InquireRepositoryInterface::KEY];
 
-        return new RestResponse($repo->cancel($candidate, $job));
+        return new RestResponse($repo->cancelJobByCandidate($job, $candidate));
+    }
+
+    /**
+     * @param $inquireId
+     * @param User $agency
+     *
+     * @return RestResponse
+     */
+    public function postCancelInquireByAgency($inquireId, User $agency)
+    {
+        /** @var  $repo InquireRepository */
+        $repo =  $this->repoContainer[InquireRepositoryInterface::KEY];
+
+        return new RestResponse($repo->cancelInquireByAgency(Inquire::findOrFail($inquireId), $agency));
+    }
+
+    /**
+     * @param $inquireId
+     * @param User $organization
+     *
+     * @return RestResponse
+     */
+    public function postCancelInquireByOrganization($inquireId, User $organization)
+    {
+        /** @var  $repo InquireRepository */
+        $repo =  $this->repoContainer[InquireRepositoryInterface::KEY];
+
+        return new RestResponse($repo->cancelInquireByOrganization(Inquire::findOrFail($inquireId), $organization));
     }
 
     /**
