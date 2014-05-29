@@ -18,6 +18,7 @@ use MissionNext\Models\User\User;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Repos\Affiliate\AffiliateRepository;
 use MissionNext\Repos\Affiliate\AffiliateRepositoryInterface;
+use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
@@ -155,22 +156,22 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
      */
     public function jobs(User $user)
     {
-       /** @var  $jobRepo JobRepository */
-       $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
+       /** @var  $userCacheRepo UserCachedRepository */
+       $userCacheRepo = $this->repoContainer[UserCachedRepositoryInterface::KEY]->dataOfType(BaseDataModel::JOB);
 
-       $builder =  $jobRepo->getModel()
-                ->leftJoin("inquires", "inquires.job_id",'=', 'jobs.id')
-                ->leftJoin('organization_cached_profile', 'organization_cached_profile.id','=','jobs.organization_id')
+       $builder =  $userCacheRepo->getModel()
+                ->leftJoin("inquires", "inquires.job_id",'=', "job_cached_profile.id")
+                ->leftJoin('organization_cached_profile', 'organization_cached_profile.id','=',DB::raw("(job_cached_profile.data->>'organization_id')::int"))
                 ->where("inquires.candidate_id","=", $user->id)
-                ->where("jobs.app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
+                ->where(DB::raw("job_cached_profile.data->>'app_id'"), "=", $this->repoContainer->securityContext()->getApp()->id())
                 ->where("inquires.app_id","=", $this->repoContainer->securityContext()->getApp()->id())
-                ->select("jobs.id", "jobs.name", "jobs.symbol_key", "jobs.organization_id", "jobs.app_id", "inquires.status", 'organization_cached_profile.data as organization');
+                ->select("job_cached_profile.data", "inquires.status", 'organization_cached_profile.data as organization');
                //->get();
           // dd(DB::getQueryLog());
 //        dd($builder->toArray());
 
         return
-            (new UserCachedTransformer($builder, new UserCachedDataStrategy( ['organization'] )))->get();
+            (new UserCachedTransformer($builder, new UserCachedDataStrategy( [['data' => true], 'organization' ] )))->get();
     }
 
     /**
@@ -189,7 +190,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
 
         return
             (new UserCachedTransformer($builder, new UserCachedDataStrategy( [ 'candidate', ['job'=>false] ] )))->get();
-
+         // job => false = job as key , true =  
     }
 
     /**
