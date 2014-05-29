@@ -46,7 +46,8 @@ class Routing
     public function __construct()
     {
 
-        if(starts_with($_SERVER['REQUEST_URI'], '/login') or starts_with($_SERVER['REQUEST_URI'], '/logout') or starts_with($_SERVER['REQUEST_URI'], '/dashboard')) {
+        $requestUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+        if(starts_with($requestUri, '/login') or starts_with($requestUri, '/logout') or starts_with($requestUri, '/dashboard')) {
             Config::set('session.driver','file');
         }
 

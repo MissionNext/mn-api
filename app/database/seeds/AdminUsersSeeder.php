@@ -10,7 +10,7 @@ class AdminUsersSeeder extends BaseSeeder {
 
         $user = Sentry::createUser(array(
             'email'     => 'admin@loc.com',
-            'password'  => 'Flvbygfhjkm',  // Админпароль
+            'password'  => '123456',  // Админпароль
             'activated' => true,
             'username'  => 'admin',
         ));
