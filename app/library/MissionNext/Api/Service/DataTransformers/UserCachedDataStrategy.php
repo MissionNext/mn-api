@@ -48,6 +48,16 @@ class UserCachedDataStrategy extends TransformDataStrategy
 
                $d->$jsonKey = json_decode($d->$jsonKey, true);
            }
+           if (empty($this->jsonDataKeys)){
+               // default key data
+               $d->data = json_decode($d->data, true);
+               $props = array_keys($d->data);
+               foreach($props as $prop){
+                   $d->$prop = $d->data[$prop];
+               }
+               unset($d->data);
+
+           }
 
        });
     }

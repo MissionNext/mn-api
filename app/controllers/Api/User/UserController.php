@@ -5,6 +5,7 @@ namespace MissionNext\Controllers\Api\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Api\Exceptions\ValidationException;
