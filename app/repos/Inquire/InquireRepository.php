@@ -158,14 +158,19 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
        /** @var  $jobRepo JobRepository */
        $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
 
-       return $jobRepo->getModel()
+       $builder =  $jobRepo->getModel()
                 ->leftJoin("inquires", "inquires.job_id",'=', 'jobs.id')
-                ->with("organization")
+                ->leftJoin('organization_cached_profile', 'organization_cached_profile.id','=','jobs.organization_id')
                 ->where("inquires.candidate_id","=", $user->id)
                 ->where("jobs.app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
                 ->where("inquires.app_id","=", $this->repoContainer->securityContext()->getApp()->id())
-                ->select("jobs.id", "jobs.name", "jobs.symbol_key", "jobs.organization_id", "jobs.app_id", "inquires.status")
-                ->get();
+                ->select("jobs.id", "jobs.name", "jobs.symbol_key", "jobs.organization_id", "jobs.app_id", "inquires.status", 'organization_cached_profile.data as organization');
+               //->get();
+          // dd(DB::getQueryLog());
+//        dd($builder->toArray());
+
+        return
+            (new UserCachedTransformer($builder, new UserCachedDataStrategy( ['organization'] )))->get();
     }
 
     /**
@@ -180,7 +185,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
             ->leftJoin("job_cached_profile", "job_cached_profile.id", "=", "inquires.job_id")
             ->whereIn("job_id", $jobIds)
             ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
-            ->select(DB::raw("distinct on (candidate_cached_profile.id) candidate_cached_profile.id, candidate_cached_profile.data as candidate, job_cached_profile.data as job ") );
+            ->select(DB::raw("distinct on (candidate_cached_profile.id) candidate_cached_profile.id, candidate_cached_profile.data as candidate, job_cached_profile.data as job, inquires.id as id") );
 
         return
             (new UserCachedTransformer($builder, new UserCachedDataStrategy( [ 'candidate', ['job'=>false] ] )))->get();

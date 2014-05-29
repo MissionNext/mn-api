@@ -5,6 +5,7 @@ namespace MissionNext\Repos\Matching;
 
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\AbstractRepository;
@@ -35,6 +36,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
         $matchResults =
             $this->getModel()
+                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type) matching_results.data") )
                  ->where("for_user_type","=", $forUserType)
                  ->where("user_type", "=", $userType)
                  ->where("for_user_id", "=", $forUserId)
