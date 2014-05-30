@@ -43,9 +43,10 @@ class AffiliateController extends BaseController
         if ($affiliateType === Affiliate::TYPE_ANY) {
 
             $query = $baseQuery
+                ->where("app_id", "=", $this->securityContext()->getApp()->id())
                 ->where("affiliate_requester", '=', $affiliateId)
-                ->orWhere("affiliate_approver", '=', $affiliateId)
-                ->where("app_id", "=", $this->securityContext()->getApp()->id());
+                ->orWhere("affiliate_approver", '=', $affiliateId);
+
 
         } else {
 
@@ -61,6 +62,7 @@ class AffiliateController extends BaseController
             $el->agency_profile->affiliate_type = $el->affiliate_approver == $el->agency_profile->id ? Affiliate::TYPE_APPROVER : Affiliate::TYPE_REQUESTER;
             $el->profile = $affiliateId == $el->organization_profile->id ? "organization_profile" : "agency_profile";
         });
+
 
         return new RestResponse($res);
     }
@@ -84,20 +86,25 @@ class AffiliateController extends BaseController
         $res = Affiliate::select(
             "job_cached_profile.data as job_data",
             "organization_cached_profile.data as org_data",
-            "organization_cached_profile.id"
+            "organization_cached_profile.id",
+            "affiliates.status as status"
         )
+
             ->join("job_cached_profile", function($join){
                $join->on(DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "affiliate_approver" )
                     ->orOn(DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "affiliate_requester");
 
             })
-            ->join("organization_cached_profile", DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "organization_cached_profile.id")
-            ->where("affiliate_requester", "=", $affiliateId)
-            ->orWhere("affiliate_approver", "=", $affiliateId)
-            ->whereRaw("job_cached_profile.data->>'app_id' = ? ", [$this->securityContext()->getApp()->id()])
             ->where("status", "=", Affiliate::STATUS_APPROVED)
             ->where("app_id","=", $this->securityContext()->getApp()->id())
+            ->whereRaw("job_cached_profile.data->>'app_id' = ? ", [$this->securityContext()->getApp()->id()])
+            ->join("organization_cached_profile", DB::raw("(job_cached_profile.data->>'organization_id')::int"), "=", "organization_cached_profile.id")
+            ->where(function($query) use ($affiliateId){
+                $query->where("affiliate_requester", "=", $affiliateId)
+                      ->orWhere("affiliate_approver", "=", $affiliateId);
+            })
             ->get();
+
 
         $data = [];
         foreach($res as $r){

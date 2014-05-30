@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
-use MissionNext\Controllers\Api\FolderNotes\FolderController;
-use MissionNext\Controllers\Api\FolderNotes\NoteController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Notes\NotesController;

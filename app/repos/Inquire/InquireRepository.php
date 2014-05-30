@@ -11,6 +11,7 @@ use MissionNext\Api\Auth\ISecurityContextAware;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Api\Service\DataTransformers\UserCachedDataStrategy;
 use MissionNext\Api\Service\DataTransformers\UserCachedTransformer;
+use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Inquire\Inquire;
 use MissionNext\Models\Job\Job;
@@ -190,7 +191,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
 
         return
             (new UserCachedTransformer($builder, new UserCachedDataStrategy( [ 'candidate', ['job'=>false] ] )))->get();
-         // job => false = job as key , true =  
+         // job => false = job as key , true =
     }
 
     /**
@@ -234,12 +235,14 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
         $affilRepo = $this->repoContainer[AffiliateRepositoryInterface::KEY];
 
         $orgIdsR = $affilRepo->where("affiliate_approver","=", $user->id)
+            ->where("status","=", Affiliate::STATUS_APPROVED)
             ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
             ->get()
             ->lists("affiliate_requester");
 
         $orgIdsA = $affilRepo->where("affiliate_requester","=", $user->id)
             ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
+            ->where("status","=", Affiliate::STATUS_APPROVED)
             ->get()
             ->lists("affiliate_approver");
 

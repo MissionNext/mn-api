@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\User\User;
@@ -30,6 +31,12 @@ class JobController extends BaseController
      */
     public function index()
     {
+//        $jobs = Job::with('organization')->get();
+//
+//        $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
+//        foreach($jobs as $job){
+//            $this->updateUserProfile($job);
+//        }
 
         return new RestResponse($this->jobRepo()->getModel()->with('organization')->get());
     }

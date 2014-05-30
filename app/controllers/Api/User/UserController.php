@@ -13,6 +13,8 @@ use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Filter\RouteSecurityFilter;
+use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Models\Job\Job;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\Role\Role;
 use MissionNext\Models\User\User;
