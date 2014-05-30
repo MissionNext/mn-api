@@ -18,46 +18,7 @@ use Cartalyst\Sentry\Users\UserExistsException as UserExist;
 use Cartalyst\Sentry\Users\UserAlreadyActivatedException as UserAlreadyActivated;
 use MissionNext\Models\Application\Application;
 
-class AdminController extends AdminBaseController {
-
-    public function login() {
-        if($this->request->isMethod('post')) {
-            Input::flash();
-            $input = Input::only('username', 'password');
-            $rules = array(
-                'username' => 'required|min:3|max:200',
-                'password' => 'required|min:6'
-            );
-            $validator = Validator::make($input, $rules);
-            if ($validator->fails()) {
-
-                return Redirect::route('login')->withInput()->withErrors($validator);
-            }
-            try {
-                $user = Sentry::authenticate($input, false);
-
-                return Redirect::route('adminHomepage');
-            } catch (LoginRequired $e) {
-                Session::flash('info', 'Login field is required.');
-            } catch (PasswordRequired $e) {
-                Session::flash('info', 'Password field is required.');
-            } catch (WrongPass $e) {
-                Session::flash('info', 'Wrong password, try again.');
-            } catch (UserNotFound $e) {
-                Session::flash('info', 'User was not found.');
-            } catch (UserNotActivated $e) {
-                Session::flash('info', 'User is not activated.');
-            }
-            // The following is only required if the throttling is enabled
-            catch (UserSuspended $e) {
-                Session::flash('info', 'User is suspended.');
-            } catch (UserBanned $e) {
-                Session::flash('info', 'User is banned.');
-            }
-        }
-
-        return View::make('admin.loginForm');
-    }
+class ApplicationController extends AdminBaseController {
 
     public function index()
     {
