@@ -68,6 +68,9 @@ class AdminController extends AdminBaseController {
         ));
     }
 
+    /**
+     * @return mixed
+     */
     public function create()
     {
         if ($this->request->isMethod('post')) {
@@ -97,7 +100,13 @@ class AdminController extends AdminBaseController {
         return View::make('admin.application.create');
     }
 
-    public function edit($id) {
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit($id)
+    {
 
         $application = Application::find($id);
 
@@ -131,6 +140,11 @@ class AdminController extends AdminBaseController {
         return View::make('admin.application.edit', array('application' => $application));
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function delete($id) {
         if($this->request->isMethod('delete')) {
 

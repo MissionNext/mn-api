@@ -3,6 +3,7 @@ namespace MissionNext\Controllers\Admin;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AdminBaseController extends Controller {
 
