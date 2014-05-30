@@ -36,7 +36,7 @@ class JobController extends BaseController
      */
     public function update($id)
     {
-        $job = $this->jobRepo()->find($id);
+        $job = $this->jobRepo()->with('organization')->find($id);
         $job->setObserver(new UserObserver());
         $job->addApp($this->getApp());
         /** @var  $request Req */

@@ -18,6 +18,7 @@ class RoleChecker
     {
         $userModel = new User();
         $jobModel = new Job();
+
         $roleInputs =  [ "candidate" => ["model" =>$userModel, "role" => BaseDataModel::CANDIDATE] ,
                          "job" => ["model" => $jobModel, "role" => BaseDataModel::JOB],
                          "agency" =>["model" => $userModel, "role" => BaseDataModel::AGENCY],

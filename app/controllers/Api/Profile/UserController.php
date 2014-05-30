@@ -3,6 +3,7 @@ namespace MissionNext\Controllers\Api\Profile;
 
 
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Queue;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
@@ -39,7 +40,6 @@ class UserController extends BaseController
      */
     public function update($id)
     {
-
         /** @var  $user UserModel */
         $user = $this->userRepo()->find($id);
         $user->setObserver(new UserObserver());

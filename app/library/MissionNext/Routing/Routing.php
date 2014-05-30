@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
-use MissionNext\Controllers\Api\FolderNotes\FolderController;
-use MissionNext\Controllers\Api\FolderNotes\NoteController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Notes\NotesController;
@@ -142,6 +140,8 @@ class Routing
                 Route::get('inquire/candidates/for/organization/{organization}', InquireController::class.'@getCandidatesForOrganization');
                 Route::get('inquire/candidates/for/agency/{agency}', InquireController::class.'@getCandidatesForAgency');
                 Route::get('inquire/jobs/for/{candidate}', InquireController::class.'@getJobs');
+                Route::post('inquire/cancel/{inquire_id}/by/agency/{agency}', InquireController::class.'@postCancelInquireByAgency');
+                Route::post('inquire/cancel/{inquire_id}/by/organization/{organization}', InquireController::class.'@postCancelCandidateByOrganization');
                 Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
                 //END
             });
