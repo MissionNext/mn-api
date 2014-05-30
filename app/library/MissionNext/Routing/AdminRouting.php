@@ -2,7 +2,6 @@
 
 namespace MissionNext\Routing;
 
-
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -18,44 +17,59 @@ class AdminRouting
                 return Redirect::route('login');
             }
         ));
-        Route::get('login', array(
-            'as' => 'login',
-            'uses' => 'MissionNext\Controllers\Admin\AdminController@login'
-        ));
-        Route::post('login', array(
-            'as' => 'login',
-            'uses' => 'MissionNext\Controllers\Admin\AdminController@login'
-        ));
 
+        Route::match(array('GET', 'POST'), 'login', array(
+            'as' => 'login',
+            'uses' => 'MissionNext\Controllers\Admin\AdminController@login'
+        ));
 
         Route::group(array('prefix' => 'dashboard', "before" => "admin_auth" ), function () {
-
             Route::get('logout', array(
                 'as' => 'logout',
                 function () {
-
                     Sentry::logout();
                     return Redirect::route('login');
                 }
             ));
-
             Route::get('linkadm2', array(
                 'as' => 'adm2',
                 function() {
                     return View::make('admin.adm2');
                 }
             ));
+            Route::get('/', array(
+                'as' => 'adminHomepage',
+                function () {
+                    return View::make('admin.adminHomepage');
+                }
+            ));
+            Route::get('/application', array(
+                'as' => 'applications',
+                'uses' => 'MissionNext\Controllers\Admin\AdminController@index'
+            ));
 
-//    Route::get('/', array(
-//        'as' => 'adminHomepage',
-//
-//        function () {
-//            return View::make('admin.adminHomepage');
-//        }
-//    ));
+            Route::match(array('GET', 'POST'), '/application/create', array(
+                'as' => 'applicationCreate',
+                'uses' => 'MissionNext\Controllers\Admin\AdminController@create'
+            ));
+
+            Route::match(array('GET', 'POST'), '/application/{id}/edit', array(
+                'as' => 'applicationEdit',
+                'uses' => 'MissionNext\Controllers\Admin\AdminController@edit'
+            ));
+
+            Route::match(array('GET', 'DELETE'), '/application/{id}/delete', array(
+                'as' => 'applicationDelete',
+                'uses' => 'MissionNext\Controllers\Admin\AdminController@delete'
+            ));
 
 
-        });
 
-    }
+
+
+
+
+        });  // end group dashboard
+
+    }  // end construct
 } 

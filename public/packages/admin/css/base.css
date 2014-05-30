@@ -1,0 +1,13 @@
+.login-form {
+    margin-top: 15%;
+}
+.navbar {
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+.custom-form input[type=submit]{
+    margin: 0 auto;
+    width: 33%;
+    display: block;
+    margin-top: 20px;
+}

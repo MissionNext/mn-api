@@ -130,6 +130,18 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         $this->attributes['password'] = Hash::make($value);
     }
 
+    public function getUserRolesViewAttribute() {
+
+        $roles = $this->roles()->get();
+
+        $strOut = '';
+        foreach ($roles as $role) {
+            $strOut .= '<p>'.$role->role.'</p>';
+        }
+
+        return $strOut;
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
