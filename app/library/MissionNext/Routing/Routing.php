@@ -141,7 +141,7 @@ class Routing
                 Route::get('inquire/candidates/for/agency/{agency}', InquireController::class.'@getCandidatesForAgency');
                 Route::get('inquire/jobs/for/{candidate}', InquireController::class.'@getJobs');
                 Route::post('inquire/cancel/{inquire_id}/by/agency/{agency}', InquireController::class.'@postCancelInquireByAgency');
-                Route::post('inquire/cancel/{inquire_id}/by/organization/{organization}', InquireController::class.'@postCancelCandidateByOrganization');
+                Route::post('inquire/cancel/{inquire_id}/by/organization/{organization}', InquireController::class.'@postCancelInquireByOrganization');
                 Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
                 //END
             });
