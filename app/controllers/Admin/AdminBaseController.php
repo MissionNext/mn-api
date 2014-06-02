@@ -19,7 +19,6 @@ use Cartalyst\Sentry\Throttling\UserBannedException as UserBanned;
 use Cartalyst\Sentry\Users\UserExistsException as UserExist;
 use Cartalyst\Sentry\Users\UserAlreadyActivatedException as UserAlreadyActivated;
 
-
 class AdminBaseController extends Controller {
 
     protected $request;

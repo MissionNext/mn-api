@@ -26,7 +26,7 @@ return array(
     |
     */
 
-    'default' => 'pgsql',
+    'default' => 'pgsql2',
 
     /*
     |--------------------------------------------------------------------------
@@ -63,12 +63,23 @@ return array(
             'prefix'    => '',
         ),
 
-        'pgsql' => array(
+        'pgsql2' => array(
             'driver'   => 'pgsql',
             'host'     => 'localhost',
             'database' => 'mission_next_local',
             'username' => 'mission-next-user',
             'password' => '123456',
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+        ),
+
+        'pgsql' => array(
+            'driver'   => 'pgsql',
+            'host'     => 'localhost',
+            'database' => 'mission_next_local',
+            'username' => 'postgres',
+            'password' => 'bigpups',
             'charset'  => 'utf8',
             'prefix'   => '',
             'schema'   => 'public',
