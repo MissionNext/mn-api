@@ -11,7 +11,6 @@
         <h3> admin home page </h3>
 
             current user is {{ Sentry::getUser()->username }} <br/>
-            {{ link_to_route('adminHomepage', 'adm2') }}
 
     </div>
 </div>
