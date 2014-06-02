@@ -11,7 +11,7 @@ use MissionNext\Models\Application\Application;
 class ApplicationController extends AdminBaseController {
 
     /**
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function index()

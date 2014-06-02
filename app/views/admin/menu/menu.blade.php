@@ -42,19 +42,19 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="#">Link</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown 2<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action 1</a></li>
-                        <li><a href="#">Action 2</a></li>
-                        <li><a href="#">Action 3</a></li>
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Header into dropdown</li>
-                        <li><a href="#">Link 1</a></li>
-                        <li><a href="#">Link 2</a></li>
-                    </ul>
-                </li>
+<!--                <li><a href="#">Link</a></li>-->
+<!--                <li class="dropdown">-->
+<!--                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown 2<b class="caret"></b></a>-->
+<!--                    <ul class="dropdown-menu">-->
+<!--                        <li><a href="#">Action 1</a></li>-->
+<!--                        <li><a href="#">Action 2</a></li>-->
+<!--                        <li><a href="#">Action 3</a></li>-->
+<!--                        <li class="divider"></li>-->
+<!--                        <li class="dropdown-header">Header into dropdown</li>-->
+<!--                        <li><a href="#">Link 1</a></li>-->
+<!--                        <li><a href="#">Link 2</a></li>-->
+<!--                    </ul>-->
+<!--                </li>-->
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
