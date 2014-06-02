@@ -10,9 +10,13 @@ use MissionNext\Models\Application\Application;
 
 class ApplicationController extends AdminBaseController {
 
+    /**
+     * 
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
-        $applications = Application::orderBy('id')->paginate(5);
+        $applications = Application::orderBy('id')->paginate(15);
 
         return View::make('admin.application.applications', array(
             'applications' => $applications,
@@ -20,7 +24,8 @@ class ApplicationController extends AdminBaseController {
     }
 
     /**
-     * @return mixed
+     *
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -94,7 +99,7 @@ class ApplicationController extends AdminBaseController {
     /**
      * @param $id
      *
-     * @return mixed
+     * @return \Illuminate\View\View
      */
     public function delete($id) {
         if($this->request->isMethod('delete')) {

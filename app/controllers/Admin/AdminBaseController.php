@@ -27,6 +27,10 @@ class AdminBaseController extends Controller {
         $this->request = $request;
     }
 
+    /**
+     *
+     * @return \Illuminate\View\View
+     */
     public function login() {
         if($this->request->isMethod('post')) {
             Input::flash();
