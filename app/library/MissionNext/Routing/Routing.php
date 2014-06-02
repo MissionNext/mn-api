@@ -108,7 +108,7 @@ class Routing
 
 
 //            Route::post('search/{searchType}', SearchController::class.'@search');
-            Route::delete('search/{searchId}', SearchController::class.'@delete');
+            Route::delete('search/{searchId}/{forUserId}', SearchController::class.'@delete');
             Route::controller('search/{searchType}/for/{userType}/{id}', SearchController::class, [
 
             ]);

@@ -90,7 +90,7 @@ class Controller extends BaseController
         $modelFields = $this->fieldRepo()->modelFieldsExpanded()->whereIn("symbol_key", $groupFields)->orderBy("symbol_key")->get()->toArray();
         $mergedData = array_replace_recursive($modelFields, $viewFields);
         $groups = [];
-        //dd($groupFields, $modelFields);
+       // dd($groupFields, $modelFields);
         foreach ($mergedData as $key => $data) {
             if (!isset($data["id"])) {
                 continue;
@@ -103,6 +103,7 @@ class Controller extends BaseController
             $groups[$symbolKey]["is_outer_dependent"] = $data["form_group"]["is_outer_dependent"];
             $groups[$symbolKey]["order"] = $data["form_group"]["order"];
             $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
+            $groups[$symbolKey]["fields"][$key]["constraints"] = $data["constraints"];
             $groups[$symbolKey]["fields"][$key]["type"] = $data["type"];
             $groups[$symbolKey]["fields"][$key]["name"] = $data["name"];
             $groups[$symbolKey]["fields"][$key]["choices"] = $data["choices"] ? : [];

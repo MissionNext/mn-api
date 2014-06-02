@@ -172,7 +172,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
 //        dd($builder->toArray());
 
         return
-            (new UserCachedTransformer($builder, new UserCachedDataStrategy( [['data' => true], 'organization' ] )))->get();
+            (new UserCachedTransformer($builder, new UserCachedDataStrategy( [ ['data' => true], 'organization'  ] )))->get();
     }
 
     /**
