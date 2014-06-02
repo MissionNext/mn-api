@@ -44,8 +44,10 @@ class AffiliateController extends BaseController
 
             $query = $baseQuery
                 ->where("app_id", "=", $this->securityContext()->getApp()->id())
-                ->where("affiliate_requester", '=', $affiliateId)
-                ->orWhere("affiliate_approver", '=', $affiliateId);
+                ->where(function($query) use ($affiliateId){
+                    $query->where("affiliate_requester", '=', $affiliateId)
+                    ->orWhere("affiliate_approver", '=', $affiliateId);
+                });
 
 
         } else {

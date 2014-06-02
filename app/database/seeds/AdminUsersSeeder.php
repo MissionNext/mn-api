@@ -6,7 +6,7 @@ class AdminUsersSeeder extends BaseSeeder {
 
     public function run() {
 
-        DB::table('adminusers')->delete();
+        DB::table('adminusers')->truncate();
 
         $user = Sentry::createUser(array(
             'email'     => 'admin@loc.com',

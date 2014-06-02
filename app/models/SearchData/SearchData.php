@@ -24,8 +24,7 @@ class SearchData extends Model implements ModelInterface
      * @return QueryBuilder
      */
     public function scopeFindData($query, $searchType, $userType, $userId)
-   {
-        $folderNotesTable = (new FolderNotes)->getTable();
+    {
 
         /** @var $query Builder */
         return
@@ -39,5 +38,5 @@ class SearchData extends Model implements ModelInterface
             ->where("search_data.search_type","=",$searchType)
             ->where("search_data.user_type", "=", $userType)
             ->where("search_data.user_id", "=", $userId);
-   }
+    }
 } 
