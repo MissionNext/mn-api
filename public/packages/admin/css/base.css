@@ -5,9 +5,20 @@
     margin-top: 10px;
     margin-bottom: 50px;
 }
-.custom-form input[type=submit]{
-    margin: 0 auto;
-    width: 33%;
-    display: block;
+span.pull-right {
+    padding-top: 30px;
+}
+.edit-form-buttons {
     margin-top: 20px;
+}
+.edit-form-buttons a {
+    width: 25%;
+}
+.edit-form-buttons input[type=submit] {
+    display: inline-block;
+    width: 25%;
+}
+.user-filters {
+    margin-top: 25px;
+    width: 80%;
 }

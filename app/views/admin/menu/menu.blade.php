@@ -16,12 +16,12 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-user"> </span> Users <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="#">
+                            <a href="{{ URL::route('users')}}">
                                 <span class="glyphicon glyphicon-list"> </span> List users
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{ URL::route('userCreate')}}">
                                 <span class="glyphicon glyphicon-plus"> </span> New user
                             </a>
                         </li>

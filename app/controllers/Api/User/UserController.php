@@ -190,6 +190,8 @@ class UserController extends BaseController
         $user = $this->userRepo()->getModel()->with('roles')->whereUsername($username)->first();
         $user && !Hash::check($password, $user->password) && $user = null;
         if($user){
+            $user->last_login = date('Y-m-d H:i:s');
+            $user->save();
             $user = $user->toArray();
             $user['roles'] = $user['roles'][0]['role'];
         }

@@ -24,7 +24,10 @@ Dashboard. Editing application
         {{ Form::text('public_key', null, array('class' => 'form-control', 'placeholder' => 'put your public key')) }}
         {{ Form::password('private_key', array('class' => 'form-control', 'placeholder' => 'put your private key')) }}
 
-        {{ Form::submit('Edit', array('class' => 'btn btn-sm btn-info')) }}
+        <div class="edit-form-buttons">
+            <a href="{{ URL::route('applications') }}" class="btn btn-sm btn-warning pull-left"> Cancel </a>
+            <input type="submit" value="Edit" class="btn btn-sm btn-info pull-right">
+        </div>
 
         {{ Form::close() }}
 
