@@ -20,7 +20,7 @@ class AdminRouting
 
         Route::match(array('GET', 'POST'), 'login', array(
             'as' => 'login',
-            'uses' => 'MissionNext\Controllers\Admin\AdminController@login'
+            'uses' => 'MissionNext\Controllers\Admin\AdminBaseController@login'
         ));
 
         Route::group(array('prefix' => 'dashboard', "before" => "admin_auth" ), function () {
@@ -45,22 +45,22 @@ class AdminRouting
             ));
             Route::get('/application', array(
                 'as' => 'applications',
-                'uses' => 'MissionNext\Controllers\Admin\AdminController@index'
+                'uses' => 'MissionNext\Controllers\Admin\ApplicationController@index'
             ));
 
             Route::match(array('GET', 'POST'), '/application/create', array(
                 'as' => 'applicationCreate',
-                'uses' => 'MissionNext\Controllers\Admin\AdminController@create'
+                'uses' => 'MissionNext\Controllers\Admin\ApplicationController@create'
             ));
 
             Route::match(array('GET', 'POST'), '/application/{id}/edit', array(
                 'as' => 'applicationEdit',
-                'uses' => 'MissionNext\Controllers\Admin\AdminController@edit'
+                'uses' => 'MissionNext\Controllers\Admin\ApplicationController@edit'
             ));
 
             Route::match(array('GET', 'DELETE'), '/application/{id}/delete', array(
                 'as' => 'applicationDelete',
-                'uses' => 'MissionNext\Controllers\Admin\AdminController@delete'
+                'uses' => 'MissionNext\Controllers\Admin\ApplicationController@delete'
             ));
 
 

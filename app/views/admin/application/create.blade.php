@@ -17,7 +17,7 @@
                 @endif
 
                 {{ Form::open(array(
-                'action' => 'MissionNext\Controllers\Admin\AdminController@create',
+                'action' => 'MissionNext\Controllers\Admin\ApplicationController@create',
                 'class' => 'custom-form',
                 'role' => 'form'
                 )) }}

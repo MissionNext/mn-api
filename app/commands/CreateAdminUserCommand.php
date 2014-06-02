@@ -11,7 +11,7 @@ class CreateAdminUserCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'AdminUser:create';
+	protected $name = 'adminuser:create';
 
 	/**
 	 * The console command description.
@@ -47,10 +47,10 @@ class CreateAdminUserCommand extends Command {
         if ($this->confirm('You confirm create user (y/n)?')) {
 
             $user = Sentry::createUser(array(
-                'email'     => $email,
-                'password'  => $password,
-                'activated' => true,
                 'username'  => $username,
+                'password'  => $password,
+                'email'     => $email,
+                'activated' => true,
             ));
 
             if($user) {
@@ -70,9 +70,9 @@ class CreateAdminUserCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			array('username', null, InputOption::VALUE_OPTIONAL, 'Username (login).', 'admin'),
-			array('password', null, InputOption::VALUE_OPTIONAL, 'password.', '123456'),
-			array('email', null, InputOption::VALUE_OPTIONAL, 'email.', 'admin@local.com'),
+			array('username', null, InputOption::VALUE_OPTIONAL, 'Username (login).', null),
+			array('password', null, InputOption::VALUE_OPTIONAL, 'password.', null),
+			array('email', null, InputOption::VALUE_OPTIONAL, 'email.', null),
 		);
 	}
 

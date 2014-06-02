@@ -200,9 +200,9 @@ class SearchController extends BaseController
      *
      * @return RestResponse
      */
-    public function delete( $searchId )
+    public function delete( $searchId, $forUserId )
     {
 
-        return new RestResponse(SearchData::destroy($searchId));
+        return new RestResponse(SearchData::where("user_id", "=", $forUserId)->where("id", "=", $searchId)->delete());
     }
 }

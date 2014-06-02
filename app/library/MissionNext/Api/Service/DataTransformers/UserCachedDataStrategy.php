@@ -23,30 +23,42 @@ class UserCachedDataStrategy extends TransformDataStrategy
      */
     public function transform(Collection $dataCollection)
     {
+      $keys = [];
+      foreach($this->jsonDataKeys as $data){
+          if (is_array($data)){
+              $keys[] = key($data);
+          }else{
+              $keys[] = $data;
+          }
+      }
 
-      return $dataCollection->each(function($d){
+      return $dataCollection->each(function($d) use ($keys){
 
            foreach($this->jsonDataKeys as $jsonKey){
                if (is_array($jsonKey)){
                    if (current($jsonKey)){
                        $key = key($jsonKey);
                        $data = json_decode($d->$key, true);
-
                        $props = array_keys($data);
 
                        foreach($props as $prop){
-
-                           $d->$prop = $data[$prop];
+                          if (!in_array($prop, $keys)){
+                              $d->$prop = $data[$prop];
+                          }
                        }
                        unset($d->$key);
                        continue;
                    }else{
                        $jsonKey = key($jsonKey);
+                       $d->$jsonKey = json_decode($d->$jsonKey, true);
                    }
 
+               }else{
+                  // dd($d->$jsonKey);
+                   $d->$jsonKey = json_decode($d->$jsonKey, true);
                }
 
-               $d->$jsonKey = json_decode($d->$jsonKey, true);
+
            }
            if (empty($this->jsonDataKeys)){
                // default key data

@@ -30,7 +30,7 @@
                     <span class="glyphicon glyphicon-edit"> </span> Edit </a>
 
                     {{ Form::open(array(
-                        'action' => array('MissionNext\Controllers\Admin\AdminController@delete', $application->id),
+                        'action' => array('MissionNext\Controllers\Admin\ApplicationController@delete', $application->id),
                         'class' => 'pull-right',
                         'method' => 'delete',
                     )) }}

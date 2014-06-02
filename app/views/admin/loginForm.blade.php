@@ -28,7 +28,7 @@
             @endif
 
             {{ Form::open(array(
-                'action' => 'MissionNext\Controllers\Admin\AdminController@login',
+                'action' => 'MissionNext\Controllers\Admin\AdminBaseController@login',
                 'class' => 'form-signin',
                 'role' => 'form'
             )) }}
