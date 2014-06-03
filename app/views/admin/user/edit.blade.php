@@ -24,10 +24,9 @@ Dashboard. Editing user
         {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'user email')) }}
         {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'user password')) }}
 
-        <div class="edit-form-buttons">
-            <a href="{{ URL::route('users') }}" class="btn btn-sm btn-warning pull-left"> Cancel </a>
-            <input type="submit" value="Edit" class="btn btn-sm btn-info pull-right">
-        </div>
+        <a href="{{ URL::route('users') }}" class="btn btn-sm btn-warning pull-left cancel_btm"> Cancel </a>
+        <input type="submit" value="Edit" class="btn btn-sm btn-info pull-right">
+
         {{ Form::close() }}
 
     </div>

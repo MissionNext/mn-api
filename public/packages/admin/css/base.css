@@ -1,6 +1,11 @@
 .login-form {
     margin-top: 15%;
 }
+.custom-form input[type=submit] {
+    display: block;
+    margin: 15px auto;
+    width: 33%;
+}
 .navbar {
     margin-top: 10px;
     margin-bottom: 50px;
@@ -11,12 +16,9 @@ span.pull-right {
 .edit-form-buttons {
     margin-top: 20px;
 }
-.edit-form-buttons a {
-    width: 25%;
-}
-.edit-form-buttons input[type=submit] {
-    display: inline-block;
-    width: 25%;
+.cancel_btm {
+    margin-top: 15px;
+    width: 33%;
 }
 .user-filters {
     margin-top: 25px;
