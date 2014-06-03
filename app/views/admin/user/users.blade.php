@@ -14,7 +14,7 @@ Dashboard. Users
                     User list
                 </h3>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 pagination-info">
                 <span class="pull-right"> {{ $users->getTo() }} / {{ $users->getTotal() }} </span>
             </div>
         </div>
@@ -32,51 +32,50 @@ Dashboard. Users
         @endif
 
 
-    <div id="firter-rezult">
+        <div id="firter-rezult">
 
-    </div>
-    <div id="default-rezult">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>E-mail</th>
-                <th>Created at</th>
-                <th>Last login</th>
-                <th></th>
-            </tr>
-            </thead>
-            @foreach($users as $user)
-            <tr>
-                <td>{{ $user->id }}</td>
-                <td>{{ $user->username }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ date("d.m.Y H:i", strtotime($user->created_at)) }}</td>
-                <td>{{ date("d.m.Y H:i", strtotime($user->last_login)) }}</td>
-                <td>
-                    <a href="{{ URL::route('userEdit', array('id' => $user->id)) }}" class="btn-warning btn btn-xs">
-                        <span class="glyphicon glyphicon-edit"> </span> Edit </a>
-
-                    {{ Form::open(array(
-                        'action' => array('MissionNext\Controllers\Admin\UserController@delete', $user->id),
-                        'class' => 'pull-right',
-                        'method' => 'delete',
-                    )) }}
-
-                    <input type="submit" class="btn btn-xs btn-danger" value=' Delete' onclick=' return confirm("confirm delete user {{ $user->username }} ?")' >
-                    {{ Form::close() }}
-                </td>
-            </tr>
-            @endforeach
-        </table>
-
-        <div class="text-center">
-            {{ $users->links() }}
         </div>
 
-    </div>
+        <div id="default-rezult">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>E-mail</th>
+                    <th>Created at</th>
+                    <th>Last login</th>
+                    <th></th>
+                </tr>
+                </thead>
+                @foreach($users as $user)
+                <tr>
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->username }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ date("d.m.Y H:i", strtotime($user->created_at)) }}</td>
+                    <td>{{ date("d.m.Y H:i", strtotime($user->last_login)) }}</td>
+                    <td>
+                        <a href="{{ URL::route('userEdit', array('id' => $user->id)) }}" class="btn-warning btn btn-xs">
+                            <span class="glyphicon glyphicon-edit"> </span> Edit </a>
 
+                        {{ Form::open(array(
+                            'action' => array('MissionNext\Controllers\Admin\UserController@delete', $user->id),
+                            'class' => 'pull-right',
+                            'method' => 'delete',
+                        )) }}
+
+                        <input type="submit" class="btn btn-xs btn-danger" value=' Delete' onclick=' return confirm("confirm delete user {{ $user->username }} ?")' >
+                        {{ Form::close() }}
+                    </td>
+                </tr>
+                @endforeach
+            </table>
+
+            <div class="text-center">
+                {{ $users->links() }}
+            </div>
+        </div>
     </div>
     <div class="col-md-3">
         <h3 class="text-center">Filters:</h3>
@@ -90,31 +89,6 @@ Dashboard. Users
                 @endforeach
             </select>
         </div>
-
-
-
-
-
-
-
-
-<?php
-/*
-        {{ Form::open(array(
-            'action' => 'MissionNext\Controllers\Admin\AjaxController@filterBy',
-            'class' => 'custom-form',
-            'role' => 'form'
-        )) }}
-        {{ Form::selectMonth('month') }}
-
-        {{ Form::select('size', array('L' => 'Large', 'S' => 'Small')) }}
-
-        {{ Form::text('app') }}
-        {{ Form::submit('Create ', array('class' => 'btn btn-sm btn-info')) }}
-
-        {{ Form::close() }}
-*/
-?>
     </div>
 </div>
 
@@ -123,20 +97,46 @@ Dashboard. Users
 @section('javascripts')
 @parent
 <script>
+    var pagination = 3;
+    var count = 1;
+
     $('#apps-select-id').change(function() {
         var selectValue = $(this).val();
-        $.post("{{ URL::route('userFilters') }}", {appId: selectValue } )
+        if (selectValue == 'all') {
+            location.reload();
+        }
+        $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination } )
             .done(function(msg){
-
+                $('#default-rezult').remove();
+                $('.pagination-info').hide();
                 $('#firter-rezult').html(msg);
-                $('#default-rezult').hide();
-//                console.log(msg);
+
+                var totalCount = $('#first-result-table').data('usercount');
+                if(count * pagination >= totalCount) {
+                    $('#show-more-filtered-data').remove();
+                }
             })
             .error(function(msg){
                 console.log(msg);
             });
-//        console.log(selectValue);
-    })
+    });
+
+    $('#firter-rezult').on('click', '#show-more-filtered-data', function(event) {
+        var itemObj = $(event.target);
+        var applicationId = $('#apps-select-id').val();
+        var totalCount = $('#first-result-table').data('usercount');
+        $.post("{{ URL::route('filteredUsersByApp') }}", {appId: applicationId, take: pagination, skip: count * pagination  } )
+            .done(function(msg){
+                count++;
+                $('#filter-more-rezult').append(msg);
+                if(count * pagination >= totalCount) {
+                    itemObj.remove();
+                }
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
+    });
 
 </script>
 @endsection

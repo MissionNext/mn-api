@@ -7,59 +7,57 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\User\User;
+use Illuminate\Support\Facades\DB;
 
 class AjaxController extends AdminBaseController {
 
     public function filterBy() {
 
-
-        $appId = Input::get('appId');
-
-        if ($appId == 'all') {
-//            $users = User::orderBy('id')->paginate(15);
-
-            return Redirect::route('users');
-//            return View::make('admin.user.ajax.users', array('users' => $users, 'pagination' => 'yes'));
-        } else {
-            $app = Application::find($appId);
-            $users = $app->users;
-
-            return View::make('admin.user.ajax.users', array('users' => $users));
-        }
-//
-//        $appId = Input::get('appId');
-//
-//        if ($appId == 'all') {
-//            $users = User::all();
-//        } else {
-//            $app = Application::find($appId);
-//            $users = $app->users;
-//
-//
-//            dd($users);
-//        }
-//
-
         if ($this->request->isMethod('post'))
         {
             $appId = Input::get('appId');
+            $take = Input::get('take');
 
             if ($appId == 'all') {
-                $users = User::all();
+                $usersCount = User::all();
+                $users = DB::table('users')
+                    ->orderBy('id')
+                    ->get();
 
-                return View::make('admin.user.ajax.users', array('users' => $users));
+                return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
             } else {
                 $app = Application::find($appId);
-                $users = $app->users;
+                $usersCount = $app->users;
+                $users = $this->getFilteredByAppUsers($appId, 0, $take);
 
-                return View::make('admin.user.ajax.users', array('users' => $users));
+                return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
             }
-
         } else {
             $resp = 'fail';
         }
 
-
         return Response::make($resp);
+    }
+
+    public function filterByApps() {
+
+        $appId = Input::get('appId');
+        $take = Input::get('take');
+        $skip = Input::get('skip');
+        $users = $this->getFilteredByAppUsers($appId, $skip, $take);
+
+        return View::make('admin.user.ajax.filteredSliceUsers', array('users' => $users));
+    }
+
+    private function getFilteredByAppUsers($appId, $skip = 0, $take = 15) {
+        $users = DB::table('users')
+            ->join('user_apps', 'users.id', '=', 'user_apps.user_id')
+            ->where('user_apps.app_id', '=', $appId)
+            ->orderBy('users.id')
+            ->skip($skip)
+            ->take($take)
+            ->get();
+
+        return $users;
     }
 }

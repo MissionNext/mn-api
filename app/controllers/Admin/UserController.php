@@ -23,7 +23,7 @@ class UserController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function index() {
-        $users = User::orderBy('id')->paginate(15);
+        $users = User::orderBy('id')->paginate(10);
 
         $apps = Application::all()->toArray();
         $arrRez = array();

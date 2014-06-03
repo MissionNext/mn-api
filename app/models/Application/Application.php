@@ -59,7 +59,7 @@ class Application extends Eloquent implements ModelInterface
     public function users()
     {
 
-        return $this->belongsToMany(User::class, 'user_apps', 'user_id', 'app_id');
+        return $this->belongsToMany(User::class, 'user_apps', 'app_id', 'user_id');
     }
 
 

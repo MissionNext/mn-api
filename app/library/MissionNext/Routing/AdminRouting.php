@@ -76,9 +76,13 @@ class AdminRouting
             // -------------------------------------------------
 
             // --------------- Filters -------------------------
-            Route::match(array('GET', 'POST'), '/user/filterBy', array(
+            Route::match(array('POST'), '/user/filterBy', array(
                 'as' => 'userFilters',
                 'uses' => 'MissionNext\Controllers\Admin\AjaxController@filterBy'
+            ));
+            Route::match(array('POST'), '/user/filterByApps', array(
+                'as' => 'filteredUsersByApp',
+                'uses' => 'MissionNext\Controllers\Admin\AjaxController@filterByApps'
             ));
             // -------------------------------------------------
 
