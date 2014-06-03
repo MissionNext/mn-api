@@ -24,6 +24,7 @@ class CandidateJobsController extends BaseController
     {
         $candidateAppsIds = $this->userRepo()->find($candidate_id)->appIds();
         if (in_array($this->securityContext()->getApp()->id, $candidateAppsIds)){
+
             return
                 new RestResponse($this->matchingResultsRepo()
                     ->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::JOB, $candidate_id));
