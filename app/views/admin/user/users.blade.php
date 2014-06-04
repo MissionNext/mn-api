@@ -31,9 +31,7 @@ Dashboard. Users
         </div>
         @endif
 
-
         <div id="firter-rezult">
-
         </div>
 
         <div id="default-rezult">
@@ -101,6 +99,7 @@ Dashboard. Users
     var count = 1;
 
     $('#apps-select-id').change(function() {
+        count = 1;
         var selectValue = $(this).val();
         if (selectValue == 'all') {
             location.reload();
