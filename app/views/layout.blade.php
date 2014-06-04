@@ -19,10 +19,6 @@
         {{ Breadcrumbs::render() }}
     @show
 
-    @section('breadcrumbs')
-        {{-- Breadcrumbs::render() --}}
-    @show
-
     @yield('content')
     @yield('footer')
 </div>
