@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use MissionNext\Repos\Languages\LanguageRepository;
+use MissionNext\Repos\Languages\LanguageRepositoryInterface;
 
 class LanguageController extends AdminBaseController {
 
@@ -15,7 +17,11 @@ class LanguageController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function index() {
-        $languages = LanguageModel::orderBy('id')->paginate(15);
+        
+        /** @var  $languageRepo LanguageRepository */
+        $languageRepo = $this->repoContainer[LanguageRepositoryInterface::KEY];
+        $languages = $languageRepo->getModel()->orderBy('id')->paginate(15);
+
 
         return View::make('admin.language.languages', array('langs' => $languages));
     }
@@ -58,7 +64,10 @@ class LanguageController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function edit($id) {
-        $language = LanguageModel::find($id);
+
+        /** @var  $languageRepo LanguageRepository */
+        $languageRepo = $this->repoContainer[LanguageRepositoryInterface::KEY];
+        $language = $languageRepo->find($id);
 
         if(is_null($language)) {
             Session::flash('warning', "language with ID $id not found");
@@ -92,7 +101,8 @@ class LanguageController extends AdminBaseController {
     public function delete($id) {
         if($this->request->isMethod('delete')) {
 
-            $language = LanguageModel::find($id);
+            $languageRepo = $this->repoContainer[LanguageRepositoryInterface::KEY];
+            $language = $languageRepo->find($id);
             $name = $language->name;
             $language->delete();
             Session::flash('info', "language <strong>$name</strong> successfully deleted");

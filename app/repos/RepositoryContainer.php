@@ -51,7 +51,7 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
             UserRepositoryInterface::KEY   => $app->make(UserRepositoryInterface::class)->setRepoContainer($this),
             AffiliateRepositoryInterface::KEY   => $app->make(AffiliateRepositoryInterface::class)->setRepoContainer($this),
             UserCachedRepositoryInterface::KEY   => $app->make(UserCachedRepositoryInterface::class)->setRepoContainer($this),
-            LanguageRepositoryInterface::KEY   => $app->make(LanguageRepositoryInterface::class)->setRepoContainer($this),
+            LanguageRepositoryInterface::KEY => $app->make(LanguageRepositoryInterface::class)->setRepoContainer($this),
         ];
     }
 
