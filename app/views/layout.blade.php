@@ -16,7 +16,13 @@
 <div class="container">
     @section('menu')
         @include('admin.menu.menu')
+        {{ Breadcrumbs::render() }}
     @show
+
+    @section('breadcrumbs')
+        {{-- Breadcrumbs::render() --}}
+    @show
+
     @yield('content')
     @yield('footer')
 </div>
