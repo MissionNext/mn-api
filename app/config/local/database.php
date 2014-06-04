@@ -74,6 +74,17 @@ return array(
             'schema'   => 'public',
         ),
 
+        'pgsql3' => array(
+            'driver'   => 'pgsql',
+            'host'     => 'localhost',
+            'database' => 'mission_next_local2',
+            'username' => 'missionNext',
+            'password' => 'bobobo',
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+        ),
+
         'pgsql' => array(
             'driver'   => 'pgsql',
             'host'     => 'localhost',

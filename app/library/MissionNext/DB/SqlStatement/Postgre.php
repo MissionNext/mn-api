@@ -13,6 +13,7 @@ class Postgre extends SqlStatement
     public function foreignKeyChecksOn()
     {
 
+
         return "SET session_replication_role = DEFAULT";
     }
 

@@ -13,11 +13,11 @@ class DatabaseSeeder extends BaseSeeder
 
         $dbStatement = $this->getDbStatement();
 
-        DB::statement($dbStatement->foreignKeyChecksOff());
+        //DB::statement($dbStatement->foreignKeyChecksOff());
 
         $this->runSeeders();
 
-        DB::statement($dbStatement->foreignKeyChecksOn());
+        //DB::statement($dbStatement->foreignKeyChecksOn());
 
     }
 
