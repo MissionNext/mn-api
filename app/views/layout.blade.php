@@ -16,7 +16,9 @@
 <div class="container">
     @section('menu')
         @include('admin.menu.menu')
-        {{ Breadcrumbs::render() }}
+        @if (Breadcrumbs::exists())
+            {{ Breadcrumbs::render() }}
+        @endif
     @show
 
     @yield('content')
