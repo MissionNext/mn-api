@@ -6,6 +6,7 @@ namespace MissionNext\Models\SearchData;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\FolderNotes\FolderNotes;
 use MissionNext\Models\ModelInterface;
 
@@ -13,7 +14,7 @@ class SearchData extends Model implements ModelInterface
 {
    protected $table = "search_data";
 
-   protected $fillable = [ "user_type", "search_name", "search_type", "user_id", "data" ];
+   protected $fillable = [ "user_type", "search_name", "search_type", "user_id", "data", "app_id" ];
 
     /**
      * @param $query
@@ -37,6 +38,7 @@ class SearchData extends Model implements ModelInterface
 //              } )
             ->where("search_data.search_type","=",$searchType)
             ->where("search_data.user_type", "=", $userType)
+            ->where("app_id", "=", SecurityContext::getInstance()->getApp()->id())
             ->where("search_data.user_id", "=", $userId);
     }
 } 

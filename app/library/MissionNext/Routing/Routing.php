@@ -10,6 +10,7 @@ use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Notes\NotesController;
+use MissionNext\Controllers\Api\User\OrganizationController;
 use MissionNext\Controllers\Api\Profile\SearchController;
 use MissionNext\Controllers\Api\User\UserController;
 use MissionNext\Controllers\Api\Profile\UserController as UserProfileController;
@@ -108,7 +109,7 @@ class Routing
 
 
 //            Route::post('search/{searchType}', SearchController::class.'@search');
-            Route::delete('search/{searchId}', SearchController::class.'@delete');
+            Route::delete('search/{searchId}/{forUserId}', SearchController::class.'@delete');
             Route::controller('search/{searchType}/for/{userType}/{id}', SearchController::class, [
 
             ]);
@@ -141,9 +142,10 @@ class Routing
                 Route::get('inquire/candidates/for/agency/{agency}', InquireController::class.'@getCandidatesForAgency');
                 Route::get('inquire/jobs/for/{candidate}', InquireController::class.'@getJobs');
                 Route::post('inquire/cancel/{inquire_id}/by/agency/{agency}', InquireController::class.'@postCancelInquireByAgency');
-                Route::post('inquire/cancel/{inquire_id}/by/organization/{organization}', InquireController::class.'@postCancelCandidateByOrganization');
+                Route::post('inquire/cancel/{inquire_id}/by/organization/{organization}', InquireController::class.'@postCancelInquireByOrganization');
                 Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
                 //END
+                Route::controller( 'organization/jobs/{organization}/for/{user_id}', OrganizationController::class );
             });
 
 
