@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: xeon
- * Date: 02.06.14
- * Time: 11:52
- */
-
 namespace MissionNext\Controllers\Admin;
 
 use Illuminate\Support\Facades\Redirect;
@@ -23,7 +16,7 @@ class UserController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function index() {
-        $users = User::orderBy('id')->paginate(10);
+        $users = User::orderBy('id')->paginate(15);
 
         $apps = Application::all()->toArray();
         $arrRez = array();
