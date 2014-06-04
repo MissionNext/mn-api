@@ -10,6 +10,7 @@ use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Notes\NotesController;
+use MissionNext\Controllers\Api\User\OrganizationController;
 use MissionNext\Controllers\Api\Profile\SearchController;
 use MissionNext\Controllers\Api\User\UserController;
 use MissionNext\Controllers\Api\Profile\UserController as UserProfileController;
@@ -144,6 +145,7 @@ class Routing
                 Route::post('inquire/cancel/{inquire_id}/by/organization/{organization}', InquireController::class.'@postCancelInquireByOrganization');
                 Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
                 //END
+                Route::controller( 'organization/jobs/{organization}', OrganizationController::class );
             });
 
 
