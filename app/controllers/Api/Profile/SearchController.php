@@ -162,14 +162,14 @@ class SearchController extends BaseController
     public function putIndex($searchType, $userType, $userId )
     {
        $searchData = $this->request->request->get("search_data");
-      // dd(json_encode($search_data));
        $searchName = $this->request->request->get("search_name");
        $search = SearchData::create([
            "search_name"=> $searchName,
            "search_type"=>$searchType,
            "user_type"=>$userType,
            "user_id"=>$userId,
-           "data" => json_encode($searchData)
+           "app_id" => $this->securityContext()->getApp()->id(),
+           "data" => json_encode($searchData),
        ]);
 
 
@@ -203,6 +203,9 @@ class SearchController extends BaseController
     public function delete( $searchId, $forUserId )
     {
 
-        return new RestResponse(SearchData::where("user_id", "=", $forUserId)->where("id", "=", $searchId)->delete());
+        return new RestResponse(SearchData::where("user_id", "=", $forUserId)
+                         ->where("id", "=", $searchId)
+                         ->where("app_id", "=", $this->securityContext()->getApp()->id())
+                         ->delete());
     }
 }
