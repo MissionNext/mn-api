@@ -11,16 +11,19 @@ use MissionNext\Repos\User\UserRepositoryInterface;
 
 class OrganizationController extends BaseController
 {
-
-    public function getIndex(User $organization)
+    /**
+     * @param User $organization
+     * @param $userId
+     *
+     * @return RestResponse
+     */
+    public function getIndex(User $organization, $userId)
     {
          /** @var  $userRepo UserRepository */
         $userRepo = $this->repoContainer[UserRepositoryInterface::KEY];
+        /** @var  $user User */
+        $user =  $userRepo->find($userId);
 
-        return new RestResponse( $userRepo->organizationJobs($organization) );
-
-
-
-        dd($userRepo->getModel()->jobs()->get()->toArray());
+        return new RestResponse( $userRepo->organizationJobsForUser($organization, $user) );
     }
 } 

@@ -57,25 +57,26 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
      *
      * @return Collection
      */
-    public function organizationJobs(User $organization)
+    public function organizationJobsForUser(User $organization, User $user)
     {
         /** @var  $jobRepo JobRepository */
         $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
 
+
         $builder =  $jobRepo->getModel()
                      ->select("job_cached_profile.data", "notes.notes", "folder_apps.folder")
                      ->leftJoin("job_cached_profile", "job_cached_profile.id", "=", "jobs.id")
-                     ->leftJoin("folder_apps", function($join) use ($organization){
+                     ->leftJoin("folder_apps", function($join) use ($user){
                             $join->on("folder_apps.user_id", "=", "jobs.id")
-                                ->where("folder_apps.for_user_id", "=", $organization->id)
+                                ->where("folder_apps.for_user_id", "=", $user->id)
                                 ->where("folder_apps.user_type", "=", BaseDataModel::JOB)
                                 ->where("folder_apps.app_id", "=", $this->securityContext->getApp()->id());
 
 
                     })
-                    ->leftJoin("notes", function($join) use ($organization){
+                    ->leftJoin("notes", function($join) use ($user){
                               $join->on("notes.user_id", "=", "jobs.id")
-                                    ->where("notes.for_user_id", "=", $organization->id)
+                                    ->where("notes.for_user_id", "=", $user->id)
                                     ->where("notes.user_type", "=", BaseDataModel::JOB);
                     })
                      ->where("jobs.organization_id", "=", $organization->id)
