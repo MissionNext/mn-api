@@ -29,3 +29,16 @@ Breadcrumbs::register('userEdit', function($breadcrumbs) {
     $breadcrumbs->parent('users');
     $breadcrumbs->push('Update user', route('userEdit'));
 });
+
+Breadcrumbs::register('languages', function($breadcrumbs) {
+    $breadcrumbs->parent('adminHomepage');
+    $breadcrumbs->push('Languages', route('languages'));
+});
+Breadcrumbs::register('languageCreate', function($breadcrumbs) {
+    $breadcrumbs->parent('languages');
+    $breadcrumbs->push('Create language', route('languageCreate'));
+});
+Breadcrumbs::register('languageEdit', function($breadcrumbs) {
+    $breadcrumbs->parent('languages');
+    $breadcrumbs->push('Update language', route('languageEdit'));
+});

@@ -55,7 +55,6 @@ class AdminRouting
                 'uses' => 'MissionNext\Controllers\Admin\ApplicationController@delete'
             ));
             // -------------------------------------------------
-
             // ------------------- Users -----------------------
             Route::get('/user', array(
                 'as' => 'users',
@@ -74,6 +73,26 @@ class AdminRouting
                 'uses' => 'MissionNext\Controllers\Admin\UserController@delete'
             ));
             // -------------------------------------------------
+            // ------------------- Language --------------------
+            Route::get('/language', array(
+                'as' => 'languages',
+                'uses' => 'MissionNext\Controllers\Admin\LanguageController@index'
+            ));
+            Route::match(array('GET', 'POST'), '/language/create', array(
+                'as' => 'languageCreate',
+                'uses' => 'MissionNext\Controllers\Admin\LanguageController@create'
+            ));
+            Route::match(array('GET', 'POST'), '/language/{id}/edit', array(
+                'as' => 'languageEdit',
+                'uses' => 'MissionNext\Controllers\Admin\LanguageController@edit'
+            ));
+            Route::match(array('GET', 'DELETE'), '/language/{id}/delete', array(
+                'as' => 'languageDelete',
+                'uses' => 'MissionNext\Controllers\Admin\LanguageController@delete'
+            ));
+            // -------------------------------------------------
+
+
 
             // --------------- Filters -------------------------
             Route::match(array('POST'), '/user/filterBy', array(
