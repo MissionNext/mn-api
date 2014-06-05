@@ -95,7 +95,7 @@ Dashboard. Users
 @section('javascripts')
 @parent
 <script>
-    var pagination = 3;
+    var pagination = 10;
     var count = 1;
 
     $('#apps-select-id').change(function() {

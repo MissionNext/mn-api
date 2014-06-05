@@ -34,6 +34,6 @@
 </table>
 <div id="filter-more-rezult"></div>
 
-<div class="text-center">
+<div class="text-center ajax-footer">
     <input type="button" class="btn btn-sm btn-success" id="show-more-filtered-data" value=" Show more " />
 </div>
