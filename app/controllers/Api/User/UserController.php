@@ -35,6 +35,22 @@ class UserController extends BaseController
      */
     public function index()
     {
+//        public function clearTube($tube)
+//    {
+//        try
+//        {
+//            while($job = $this->peekReady($tube))
+//            {
+//                var_dump($job->getData());
+//                $this->delete($job);
+//            }
+//        }
+//        catch(\Pheanstalk_Exception_ServerException $e){}
+//    }
+//        /** @var  $phn \Pheanstalk_Pheanstalk */
+//        $phn = Queue::getPheanstalk();
+//
+//        $phn->clearTube('default');
 
         return new RestResponse($this->userRepo()->all());
     }

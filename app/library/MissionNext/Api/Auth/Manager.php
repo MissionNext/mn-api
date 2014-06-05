@@ -60,7 +60,7 @@ class Manager
         $hash = strtr(base64_encode(
             hash_hmac('sha1', $this->token->uri,
                 base64_decode(strtr($application->private_key, '-_', '+/')), true)), '+/', '-_');
-       // return true;
+        //return true;
         return ($hash === $this->token->hash) || App::environment('local');
     }
 

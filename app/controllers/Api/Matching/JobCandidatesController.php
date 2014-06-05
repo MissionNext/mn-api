@@ -21,10 +21,16 @@ class JobCandidatesController extends BaseController
      */
     public function getIndex($jobId)
     {
+        $userAppsIds = $this->securityContext()->getToken()->currentUser()->appIds();
 
-        return
-            new RestResponse($this->matchingResultsRepo()
-                ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId));
+        if (in_array($this->securityContext()->getApp()->id, $userAppsIds)) {
+
+            return
+                new RestResponse($this->matchingResultsRepo()
+                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId));
+        }
+
+        return new RestResponse([]);
     }
 
     public function getLive($jobId)

@@ -182,13 +182,14 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
      */
     private function candidateByJobs(array $jobIds)
     {
+
         $builder =   $this->getModel()
             ->leftJoin("candidate_cached_profile", "candidate_cached_profile.id", "=", "inquires.candidate_id")
             ->leftJoin("job_cached_profile", "job_cached_profile.id", "=", "inquires.job_id")
-            ->whereIn("job_id", $jobIds)
-            ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
-            ->select(DB::raw("distinct on (candidate_cached_profile.id) candidate_cached_profile.id, candidate_cached_profile.data as candidate, job_cached_profile.data as job, inquires.id as id") );
-
+            ->whereIn("inquires.job_id", $jobIds)
+            ->where("inquires.app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
+            ->select(DB::raw("candidate_cached_profile.id, candidate_cached_profile.data as candidate, job_cached_profile.data as job, inquires.id as id") );
+//distinct on (candidate_cached_profile.id)
         return
             (new UserCachedTransformer($builder, new UserCachedDataStrategy( [ 'candidate', ['job'=>false] ] )))->get();
          // job => false = job as key , true =

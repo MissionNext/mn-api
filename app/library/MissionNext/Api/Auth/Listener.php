@@ -4,6 +4,7 @@ namespace MissionNext\Api\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use MissionNext\Api\Exceptions\AuthenticationException;
+use MissionNext\Models\User\User;
 
 class Listener
 {
@@ -41,6 +42,7 @@ class Listener
         $request = $this->request;
         (!$request->headers->has('X-Auth')
             || !$request->headers->has('X-Auth-Hash')
+            || !$request->headers->has('X-User')
             || !$request->query->get('timestamp')
         ) && App::abort(400, "Bad Request");
 
@@ -49,6 +51,7 @@ class Listener
         $token->publicKey = $request->headers->get('X-Auth');
         $token->hash = $request->headers->get('X-Auth-Hash');
         $token->created = (int)$request->query->get('timestamp');
+        $token->currentUser = User::find($request->headers->get('X-User'));
         $this->authManager->authenticate($token);
     }
 } 
