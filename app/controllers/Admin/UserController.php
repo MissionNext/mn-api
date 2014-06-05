@@ -34,6 +34,8 @@ class UserController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function create() {
+        $roles = Role::all()->toArray();
+
         if ($this->request->isMethod('post')) {
             Input::flash();
             $rules = array(
@@ -48,19 +50,22 @@ class UserController extends AdminBaseController {
                 return Redirect::route('userCreate')->withInput()->withErrors($validator);
             }
 
+            $role = Role::find(Input::get('role'));
+
             $user = new User();
             $user->username = Input::get('username');
             $user->email = Input::get('email');
             $user->password = Input::get('password');
             $user->last_login = date('Y-m-d H:i:s');
             $user->save();
+            $user->roles()->attach($role->id);
             $name = $user->username;
             Session::flash('info', "user <strong>$name</strong> successfully created");
 
             return Redirect::route('users');
         }
 
-        return View::make('admin.user.create');
+        return View::make('admin.user.create', array('roles' => $roles,));
     }
 
     /**
