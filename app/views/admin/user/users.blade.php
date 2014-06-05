@@ -87,6 +87,16 @@ Dashboard. Users
                 @endforeach
             </select>
         </div>
+
+        <div class="user-filters pull-right">
+            <label for="role-select-id">By roles:</label>
+            <select class="form-control" name="role" id="role-select-id">
+                <option value="all">All roles</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role['id'] }}">{{ $role['role'] }}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
 </div>
 
@@ -97,14 +107,39 @@ Dashboard. Users
 <script>
     var pagination = 10;
     var count = 1;
+    var filterBy = '';
 
     $('#apps-select-id').change(function() {
         count = 1;
+        filterBy = 'app';
         var selectValue = $(this).val();
         if (selectValue == 'all') {
             location.reload();
         }
-        $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination } )
+        $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination, filter: filterBy } )
+            .done(function(msg){
+                $('#default-rezult').remove();
+                $('.pagination-info').hide();
+                $('#firter-rezult').html(msg);
+
+                var totalCount = $('#first-result-table').data('usercount');
+                if(count * pagination >= totalCount) {
+                    $('#show-more-filtered-data').remove();
+                }
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
+    });
+
+    $('#role-select-id').change(function() {
+        count = 1;
+        filterBy = 'role';
+        var selectValue = $(this).val();
+        if (selectValue == 'all') {
+            location.reload();
+        }
+        $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination, filter: filterBy } )
             .done(function(msg){
                 $('#default-rezult').remove();
                 $('.pagination-info').hide();
@@ -122,9 +157,16 @@ Dashboard. Users
 
     $('#firter-rezult').on('click', '#show-more-filtered-data', function(event) {
         var itemObj = $(event.target);
-        var applicationId = $('#apps-select-id').val();
+        var id = 0;
+        if (filterBy == 'app'){
+            id = $('#apps-select-id').val();
+        }
+        if (filterBy == 'role'){
+            id = $('#role-select-id').val();
+        }
+
         var totalCount = $('#first-result-table').data('usercount');
-        $.post("{{ URL::route('filteredUsersByApp') }}", {appId: applicationId, take: pagination, skip: count * pagination  } )
+        $.post("{{ URL::route('filteredUsersByApp') }}", {appId: id, take: pagination, skip: count * pagination, filter: filterBy  } )
             .done(function(msg){
                 count++;
                 $('#first-result-table').append(msg);

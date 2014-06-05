@@ -4,6 +4,7 @@ namespace MissionNext\Controllers\Admin;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use MissionNext\Models\Role\Role;
 use MissionNext\Models\User\User;
 use MissionNext\Models\Application\Application;
 use Illuminate\Support\Facades\View;
@@ -19,14 +20,12 @@ class UserController extends AdminBaseController {
         $users = User::orderBy('id')->paginate(15);
 
         $apps = Application::all()->toArray();
-        $arrRez = array();
-        foreach($apps as $app) {
-            $arrRez = array_add($arrRez, $app['id'], $app['name']);
-        }
+        $roles = Role::all()->toArray();
 
         return View::make('admin.user.users', array(
             'users' => $users,
             'apps'  => $apps,
+            'roles' => $roles,
         ));
     }
 
