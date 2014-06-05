@@ -101,7 +101,7 @@ class AdminRouting
             ));
             Route::match(array('POST'), '/user/filterByApps', array(
                 'as' => 'filteredUsersByApp',
-                'uses' => 'MissionNext\Controllers\Admin\AjaxController@filterByApps'
+                'uses' => 'MissionNext\Controllers\Admin\AjaxController@filterByEth'
             ));
             // -------------------------------------------------
 

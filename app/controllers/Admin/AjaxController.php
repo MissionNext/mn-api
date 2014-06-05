@@ -44,7 +44,7 @@ class AjaxController extends AdminBaseController {
         return Response::make($resp);
     }
 
-    public function filterByApps() {
+    public function filterByEth() {
 
         $appId = Input::get('appId');
         $take = Input::get('take');
