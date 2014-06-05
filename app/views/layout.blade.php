@@ -16,7 +16,11 @@
 <div class="container">
     @section('menu')
         @include('admin.menu.menu')
+        @if (Breadcrumbs::exists())
+            {{ Breadcrumbs::render() }}
+        @endif
     @show
+
     @yield('content')
     @yield('footer')
 </div>

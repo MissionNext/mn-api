@@ -12,6 +12,7 @@ use MissionNext\Repos\Inquire\InquireRepository;
 use MissionNext\Repos\Inquire\InquireRepositoryInterface;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepositoryInterface;
+use MissionNext\Repos\Languages\LanguageRepositoryInterface;
 
 class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, RepositoryContainerInterface
 {
@@ -50,6 +51,7 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
             UserRepositoryInterface::KEY   => $app->make(UserRepositoryInterface::class)->setRepoContainer($this),
             AffiliateRepositoryInterface::KEY   => $app->make(AffiliateRepositoryInterface::class)->setRepoContainer($this),
             UserCachedRepositoryInterface::KEY   => $app->make(UserCachedRepositoryInterface::class)->setRepoContainer($this),
+            LanguageRepositoryInterface::KEY => $app->make(LanguageRepositoryInterface::class)->setRepoContainer($this),
         ];
     }
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\User\User;
 
 
 class Application extends Eloquent implements ModelInterface
@@ -51,5 +52,15 @@ class Application extends Eloquent implements ModelInterface
         return
             $this->dataModels()->whereType($type)->firstOrFail();
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+
+        return $this->belongsToMany(User::class, 'user_apps', 'app_id', 'user_id');
+    }
+
 
 } 

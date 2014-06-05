@@ -18,13 +18,17 @@ use Cartalyst\Sentry\Throttling\UserSuspendedException as UserSuspended;
 use Cartalyst\Sentry\Throttling\UserBannedException as UserBanned;
 use Cartalyst\Sentry\Users\UserExistsException as UserExist;
 use Cartalyst\Sentry\Users\UserAlreadyActivatedException as UserAlreadyActivated;
+use MissionNext\Repos\RepositoryContainerInterface;
 
 class AdminBaseController extends Controller {
 
     protected $request;
+    protected $repoContainer;
 
-    public function __construct(Request $request) {
+    public function __construct(Request $request, RepositoryContainerInterface $containerInterface) {
         $this->request = $request;
+        $this->repoContainer = $containerInterface;
+
     }
 
     /**

@@ -16,12 +16,12 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-user"> </span> Users <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="#">
+                            <a href="{{ URL::route('users')}}">
                                 <span class="glyphicon glyphicon-list"> </span> List users
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{ URL::route('userCreate')}}">
                                 <span class="glyphicon glyphicon-plus"> </span> New user
                             </a>
                         </li>
@@ -38,6 +38,21 @@
                         <li>
                             <a href="{{ URL::route('applicationCreate')}}">
                                 <span class="glyphicon glyphicon-plus"> </span> New app
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-flag"> </span> Languages <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ URL::route('languages')}}">
+                                <span class="glyphicon glyphicon-list"> </span> List lang
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ URL::route('languageCreate')}}">
+                                <span class="glyphicon glyphicon-plus"> </span> New lang
                             </a>
                         </li>
                     </ul>

@@ -49,6 +49,8 @@ class ApplicationController extends AdminBaseController {
             $newApp->public_key = Input::get('public_key');
             $newApp->private_key = Input::get('private_key');
             $newApp->save();
+            $name = $newApp->name;
+            Session::flash('info', "application <strong>$name</strong> successfully created");
 
             return Redirect::route('applications');
         }
@@ -67,6 +69,7 @@ class ApplicationController extends AdminBaseController {
         $application = Application::find($id);
 
         if(is_null($application)) {
+            Session::flash('warning', "application with ID $id not found");
 
             return Redirect::route('applications');
         }
@@ -89,6 +92,8 @@ class ApplicationController extends AdminBaseController {
             $application->public_key = Input::get('public_key');
             ($private_key == '') ? : $application->private_key = $private_key;
             $application->save();
+            $name = $application->name;
+            Session::flash('info', "application <strong>$name</strong> successfully updated");
 
             return Redirect::route('applications');
         }
@@ -105,7 +110,10 @@ class ApplicationController extends AdminBaseController {
         if($this->request->isMethod('delete')) {
 
             $application = Application::find($id);
+            $name = $application->name;
             $application->delete();
+
+            Session::flash('info', "application <strong>$name</strong> successfully deleted");
 
             return Redirect::route('applications');
         } else {

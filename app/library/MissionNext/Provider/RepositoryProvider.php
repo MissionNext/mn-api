@@ -31,6 +31,8 @@ use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
 use MissionNext\Repos\ViewField\ViewFieldRepositoryInterface;
+use MissionNext\Repos\Languages\LanguageRepositoryInterface;
+use MissionNext\Repos\Languages\LanguageRepository;
 
 class RepositoryProvider extends ServiceProvider
 {
@@ -98,6 +100,12 @@ class RepositoryProvider extends ServiceProvider
 
             return (new SecurityContextResolver( new RepositoryContainer($app)))->getResolvedObject();
         });
+
+        App::bind(LanguageRepositoryInterface::class, function () {
+
+            return new LanguageRepository();
+        });
+
 
 
     }
