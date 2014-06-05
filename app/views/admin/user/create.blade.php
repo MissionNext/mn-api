@@ -22,9 +22,9 @@ Dashboard. Creating new user
         'role' => 'form'
         )) }}
 
-        {{ Form::text('username', null, array('class' => 'form-control', 'placeholder' => 'put username', 'autofocus' => 'true')) }}
-        {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'put user e-mail')) }}
-        {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'put user password')) }}
+        {{ Form::text('username', null, array('class' => 'form-control', 'placeholder' => 'username', 'autofocus' => 'true')) }}
+        {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'user e-mail')) }}
+        {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'user password')) }}
 
         {{ Form::submit('Create ', array('class' => 'btn btn-sm btn-info')) }}
 

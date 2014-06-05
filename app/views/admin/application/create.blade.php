@@ -23,8 +23,8 @@
                 )) }}
 
                 {{ Form::text('app_name', null, array('class' => 'form-control', 'placeholder' => 'application name', 'autofocus' => 'true')) }}
-                {{ Form::text('public_key', null, array('class' => 'form-control', 'placeholder' => 'put your public key')) }}
-                {{ Form::password('private_key', array('class' => 'form-control', 'placeholder' => 'put your private key')) }}
+                {{ Form::text('public_key', null, array('class' => 'form-control', 'placeholder' => 'your public key')) }}
+                {{ Form::password('private_key', array('class' => 'form-control', 'placeholder' => 'your private key')) }}
 
                 {{ Form::submit('Create ', array('class' => 'btn btn-sm btn-info')) }}
 
