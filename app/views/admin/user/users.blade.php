@@ -127,7 +127,7 @@ Dashboard. Users
         $.post("{{ URL::route('filteredUsersByApp') }}", {appId: applicationId, take: pagination, skip: count * pagination  } )
             .done(function(msg){
                 count++;
-                $('#filter-more-rezult').append(msg);
+                $('#first-result-table').append(msg);
                 if(count * pagination >= totalCount) {
                     itemObj.remove();
                 }
