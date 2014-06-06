@@ -6,7 +6,7 @@ namespace MissionNext\Controllers\Api\Matching;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Queue;
 use MissionNext\Api\Response\RestResponse;
-use MissionNext\Api\Service\Matching\Queue\MasterMatching;
+use MissionNext\Api\Service\Matching\Queue\Master\ConfigUpdateMatching;
 use MissionNext\Controllers\Api\BaseController;
 
 
@@ -31,7 +31,7 @@ class ConfigController extends BaseController
     public function putIndex($type)
     {
         $model = $this->matchingConfigRepo()->getModel();
-        $modelAppQuery = $model->where('app_id', '=', $this->getApp()->id);
+        $modelAppQuery = $model->where('app_id', '=', $this->getApp()->id());
         $modelAppQuery->delete();
         $configs = Input::get("configs");
 
@@ -41,8 +41,8 @@ class ConfigController extends BaseController
         }
         $this->matchingConfigRepo()->insert($configs);
 
-        $queueData = ["appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
-        MasterMatching::run($queueData);
+        $queueData = ["appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role(), "userId" => 0];
+        ConfigUpdateMatching::run($queueData);
 
         return new RestResponse( $modelAppQuery->with("mainField")->with('matchingField')->get() );
     }

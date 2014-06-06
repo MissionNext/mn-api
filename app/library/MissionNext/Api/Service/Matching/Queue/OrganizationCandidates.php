@@ -21,9 +21,9 @@ class OrganizationCandidates extends QueueMatching
     public function fire($job, $data)
     {
         $userId = $data["userId"];
+        $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
         $appId = $data["appId"];
         $this->job = $job;
-
 
         $this->securityContext()->getToken()->setApp(Application::find($appId));
 
@@ -33,13 +33,12 @@ class OrganizationCandidates extends QueueMatching
 
 
         $config = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $userId)->get();
-
         if (!$config->count()) {
 
             $job->delete();
             return [];
         }
-
-        $this->matchResults($userId, $config);
+        $matchingId ? $this->matchResult($userId, $matchingId, $config)
+            : $this->matchResults($userId,  $config);
     }
 } 

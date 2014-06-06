@@ -46,6 +46,7 @@ class RouteSecurityFilter
         $role = $route->getName() === Routing::ROUTE_CREATE_USER ? $request->request->get("role") : $role;
         $role = $route->getName() === Routing::ROUTE_CREATE_JOB ? BaseDataModel::JOB : $role;
         $role = $job_id ? BaseDataModel::JOB : $role;
+       // dd($role);
 
         if ($role) {
             if (static::isAllowedRole($role)) {

@@ -33,6 +33,56 @@ abstract class QueueMatching
         return SecurityContext::getInstance();
     }
 
+    /**
+     * @param $userId
+     * @param $matchingId
+     * @param $config
+     */
+    protected function matchResult($userId, $matchingId ,$config)
+    {
+        try{
+            $mainData = (new UserCachedRepository($this->forUserType))->mainData($userId)->getData();
+
+        }catch (ModelNotFoundException $e){
+
+            $this->job->delete();
+            return [];
+        }
+        //=========
+
+        $this->clearCache($userId, $matchingId);
+
+        try{
+            $matchingData = [(new UserCachedRepository($this->userType))->mainData($matchingId)->getData()];
+
+
+        }catch (ModelNotFoundException $e){
+
+            $this->job->delete();
+            return [];
+        }
+        $data = [
+            "mainData" => $mainData,
+            "matchingData" => $matchingData,
+            "matchingClass" =>$this->matchingClass,
+            "forUserType" => $this->forUserType,
+            "userType" => $this->userType,
+            "config" => $config->toArray(),
+            "userId" => $userId,
+        ];
+
+        Queue::push(InsertQueue::class, $data);
+
+
+
+        $this->job->delete();
+    }
+
+    /**
+     * @param $userId
+     *
+     * @param $config
+     */
     protected function matchResults($userId, $config)
     {
         try{
@@ -78,11 +128,18 @@ abstract class QueueMatching
         $this->job->delete();
     }
 
-    protected function clearCache($userId)
+    /**
+     * @param $userId
+     * @param null $matchingId
+     */
+    protected function clearCache($userId, $matchingId = null)
     {
-        Results::where("for_user_id","=", $userId)
+       $builder =  Results::where("for_user_id","=", $userId)
             ->where("for_user_type","=", $this->forUserType)
-            ->where("user_type","=", $this->userType)
-            ->delete();
+            ->where("user_type","=", $this->userType);
+
+       $builder = $matchingId ? $builder->where("user_id", "=", $matchingId) : $builder;
+
+       $builder->delete();
     }
 } 

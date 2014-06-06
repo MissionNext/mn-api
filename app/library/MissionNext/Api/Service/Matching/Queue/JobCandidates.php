@@ -20,6 +20,7 @@ class JobCandidates extends QueueMatching
     public function fire($job, $data)
     {
         $userId = $data["userId"];
+        $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
         $appId = $data["appId"];
         $this->job = $job;
 
@@ -37,6 +38,7 @@ class JobCandidates extends QueueMatching
             return [];
         }
 
-        $this->matchResults($userId, $config);
+        $matchingId ? $this->matchResult($userId, $matchingId, $config)
+            : $this->matchResults($userId,  $config);
     }
 } 
