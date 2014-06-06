@@ -75,16 +75,14 @@ class AjaxController extends AdminBaseController {
         return Response::make($response);
     }
 
-    public function roles() {
+    public function getRolesApps() {
         $roles = Role::all()->toArray();
-
-        return Response::json($roles);
-    }
-
-    public function apps() {
         $apps = Application::all()->toArray();
+        $resultArray = array();
+        $resultArray['apps'] = $apps;
+        $resultArray['roles'] = $roles;
 
-        return Response::json($apps);
+        return Response::json($resultArray);
     }
 
     private function getFilteredByAppUsers($appId, $skip = 0, $take = 15) {

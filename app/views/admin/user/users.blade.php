@@ -95,28 +95,11 @@ Dashboard. Users
 @section('javascripts')
 @parent
 <script>
-    var pagination = 2;
+    var pagination = 10;
     var count = 1;
 
     $(document).ready(function() {
         $.post("{{ URL::route('getRoles') }}")
-            .done(function(msg){
-                $('#role-select-id').selectize({
-                    plugins: ['remove_button'],
-                    delimiter: ',',
-                    maxItems: null,
-                    valueField: 'id',
-                    labelField: 'role',
-                    searchField: 'role',
-                    options: msg,
-                    create: false
-                });
-            })
-            .error(function(msg){
-                console.log(msg);
-            });
-
-        $.post("{{ URL::route('getApps') }}")
             .done(function(msg){
                 $('#apps-select-id').selectize({
                     plugins: ['remove_button'],
@@ -125,14 +108,23 @@ Dashboard. Users
                     valueField: 'id',
                     labelField: 'name',
                     searchField: 'name',
-                    options: msg,
+                    options: msg['apps'],
+                    create: false
+                });
+                $('#role-select-id').selectize({
+                    plugins: ['remove_button'],
+                    delimiter: ',',
+                    maxItems: null,
+                    valueField: 'id',
+                    labelField: 'role',
+                    searchField: 'role',
+                    options: msg['roles'],
                     create: false
                 });
             })
             .error(function(msg){
                 console.log(msg);
             });
-
     });
 
     $('#apps-select-id').change(function() {
