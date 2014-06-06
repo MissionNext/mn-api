@@ -21,7 +21,7 @@ class OrganizationCandidatesController extends BaseController
      */
     public function getIndex($organizationId)
     {
-        $orgAppIds = $this->userRepo()->find($organizationId)->appIds();
+        $orgAppIds = $this->securityContext()->getToken()->currentUser()->appIds();
         if (in_array($this->securityContext()->getApp()->id, $orgAppIds)) {
             return
                 new RestResponse($this->matchingResultsRepo()

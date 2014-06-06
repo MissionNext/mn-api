@@ -3,6 +3,7 @@ namespace MissionNext\Api\Auth;
 
 
 use MissionNext\Core\Security\AbstractToken;
+use MissionNext\Models\User\User;
 
 class Token extends AbstractToken
 {
@@ -11,6 +12,16 @@ class Token extends AbstractToken
     public $hash;
     public $publicKey;
     public $uri;
+    public $currentUser;
+
+    /**
+     * @return User
+     */
+    public function currentUser()
+    {
+
+        return $this->currentUser;
+    }
 
     /**
      * @param array $roles

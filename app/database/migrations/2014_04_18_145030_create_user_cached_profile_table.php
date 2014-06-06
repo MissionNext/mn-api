@@ -13,7 +13,7 @@ class CreateUserCachedProfileTable extends Migration {
      */
     public function up()
     {
-        if (DB::getDefaultConnection() === \MissionNext\DB\SqlStatement\Sql::PostgreSQL) {
+        //if (DB::getDefaultConnection() === \MissionNext\DB\SqlStatement\Sql::PostgreSQL) {
             DB::statement("
                CREATE TABLE candidate_cached_profile
               (id serial NOT NULL,
@@ -48,7 +48,7 @@ class CreateUserCachedProfileTable extends Migration {
             )");
 
            // DB::statement(" CREATE UNIQUE INDEX profile_data_symbol_key ON user_cached_profile ((data->'profileData'->>'symbol_key')) ");
-        }
+     //   }
 
     }
 
@@ -59,12 +59,12 @@ class CreateUserCachedProfileTable extends Migration {
      */
     public function down()
     {
-        if (DB::getDefaultConnection() === \MissionNext\DB\SqlStatement\Sql::PostgreSQL) {
+      //  if (DB::getDefaultConnection() === \MissionNext\DB\SqlStatement\Sql::PostgreSQL) {
             DB::statement("DROP TABLE IF EXISTS candidate_cached_profile");
             DB::statement("DROP TABLE IF EXISTS organization_cached_profile");
             DB::statement("DROP TABLE IF EXISTS agency_cached_profile");
             DB::statement("DROP TABLE IF EXISTS job_cached_profile");
-        }
+       // }
     }
 
 }

@@ -3,6 +3,7 @@
 namespace MissionNext\Core\Security;
 
 use MissionNext\Models\Application\Application;
+use MissionNext\Models\User\User;
 
 
 abstract class AbstractToken
@@ -11,6 +12,11 @@ abstract class AbstractToken
     protected $roles;
 
     protected $app;
+
+    /**
+     * @return User
+     */
+    abstract public function currentUser();
 
     /**
      * @return Application;

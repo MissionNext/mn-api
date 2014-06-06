@@ -22,7 +22,7 @@ abstract class QueueMatching
 
 
 
-    const QUERY_LIMIT = 100;
+    const QUERY_LIMIT = 10;
     /**
      * @return \MissionNext\Api\Auth\SecurityContext
      */
@@ -56,7 +56,7 @@ abstract class QueueMatching
         for($i=1; $i <= $queries; ++$i) {
 
             $offset = ($i - 1) * $limit;
-            $matchingData = $cacheRep->dataWithNotes($this->forUserType === BaseDataModel::JOB ? null : $userId )
+            $matchingData = $cacheRep->data()
                 ->takeAndSkip($limit, $offset)
                 ->get()
                 ->toArray();
