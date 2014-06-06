@@ -16,22 +16,20 @@ class AjaxController extends AdminBaseController {
 
         if ($this->request->isMethod('post'))
         {
-            $id = Input::get('appId');
+            $idArray = explode(',', Input::get('appId'));
             $take = Input::get('take');
             $filter = Input::get('filter');
 
             switch ($filter) {
                 case 'app':
-                    $app = Application::find($id);
-                    $usersCount = $app->users;
-                    $users = $this->getFilteredByAppUsers($id, 0, $take);
+                    $usersCount = $this->getCountByAppUsers($idArray);
+                    $users = $this->getFilteredByAppUsers($idArray, 0, $take);
 
                     return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
                     break;
                 case 'role':
-                    $role = Role::find($id);
-                    $usersCount = $role->users;
-                    $users = $this->getFilteredByRoleUsers($id, 0, $take);
+                    $usersCount = $this->getCountByRoleUsers($idArray);
+                    $users = $this->getFilteredByRoleUsers($idArray, 0, $take);
 
                     return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
                     break;
@@ -46,31 +44,52 @@ class AjaxController extends AdminBaseController {
 
     public function filterByEth() {
 
-        $appId = Input::get('appId');
+        $idArray = explode(',', Input::get('appId'));
         $take = Input::get('take');
         $skip = Input::get('skip');
         $filter = Input::get('filter');
 
         switch($filter) {
             case 'app':
-                $users = $this->getFilteredByAppUsers($appId, $skip, $take);
+                $users = $this->getFilteredByAppUsers($idArray, $skip, $take);
                 break;
             case 'role':
-                $users = $this->getFilteredByRoleUsers($appId, $skip, $take);
+                $users = $this->getFilteredByRoleUsers($idArray, $skip, $take);
                 break;
         }
 
-
         return View::make('admin.user.ajax.filteredSliceUsers', array('users' => $users));
+    }
+
+    public function roles() {
+        $roles = Role::all()->toArray();
+
+        return Response::json($roles);
+    }
+
+    public function apps() {
+        $apps = Application::all()->toArray();
+
+        return Response::json($apps);
     }
 
     private function getFilteredByAppUsers($appId, $skip = 0, $take = 15) {
         $users = DB::table('users')
             ->join('user_apps', 'users.id', '=', 'user_apps.user_id')
-            ->where('user_apps.app_id', '=', $appId)
+            ->whereIn('user_apps.app_id', $appId)
             ->orderBy('users.id')
             ->skip($skip)
             ->take($take)
+            ->get();
+
+        return $users;
+    }
+
+    private function getCountByAppUsers($appId) {
+        $users = DB::table('users')
+            ->join('user_apps', 'users.id', '=', 'user_apps.user_id')
+            ->whereIn('user_apps.app_id', $appId)
+            ->orderBy('users.id')
             ->get();
 
         return $users;
@@ -79,7 +98,7 @@ class AjaxController extends AdminBaseController {
     private function getFilteredByRoleUsers($roleId, $skip = 0, $take = 15) {
         $users = DB::table('users')
             ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
-            ->where('user_roles.role_id', '=', $roleId)
+            ->whereIn('user_roles.role_id', $roleId)
             ->orderBy('users.id')
             ->skip($skip)
             ->take($take)
@@ -88,4 +107,13 @@ class AjaxController extends AdminBaseController {
         return $users;
     }
 
+    private function getCountByRoleUsers($roleId) {
+        $users = DB::table('users')
+            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
+            ->whereIn('user_roles.role_id', $roleId)
+            ->orderBy('users.id')
+            ->get();
+
+        return $users;
+    }
 }

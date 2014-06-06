@@ -103,6 +103,15 @@ class AdminRouting
                 'as' => 'filteredUsersByApp',
                 'uses' => 'MissionNext\Controllers\Admin\AjaxController@filterByEth'
             ));
+            Route::match(array('POST'), '/getroles', array(
+                'as' => 'getRoles',
+                'uses' => 'MissionNext\Controllers\Admin\AjaxController@roles'
+            ));
+            Route::match(array('POST'), '/getapps', array(
+                'as' => 'getApps',
+                'uses' => 'MissionNext\Controllers\Admin\AjaxController@apps'
+            ));
+
             // -------------------------------------------------
 
 

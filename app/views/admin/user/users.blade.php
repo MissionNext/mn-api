@@ -80,22 +80,12 @@ Dashboard. Users
 
         <div class="user-filters pull-right">
             <label for="apps-select-id">By applications:</label>
-            <select class="form-control" name="app" id="apps-select-id">
-                    <option value="all">All applications</option>
-                @foreach($apps as $app)
-                    <option value="{{ $app['id'] }}">{{ $app['name'] }}</option>
-                @endforeach
-            </select>
+            <textarea id="apps-select-id"></textarea>
         </div>
 
         <div class="user-filters pull-right">
             <label for="role-select-id">By roles:</label>
-            <select class="form-control" name="role" id="role-select-id">
-                <option value="all">All roles</option>
-                @foreach($roles as $role)
-                    <option value="{{ $role['id'] }}">{{ $role['role'] }}</option>
-                @endforeach
-            </select>
+            <textarea id="role-select-id"></textarea>
         </div>
     </div>
 </div>
@@ -109,11 +99,50 @@ Dashboard. Users
     var count = 1;
     var filterBy = '';
 
+    $(document).ready(function() {
+        $.post("{{ URL::route('getRoles') }}")
+            .done(function(msg){
+
+                $('#role-select-id').selectize({
+                    plugins: ['remove_button'],
+                    delimiter: ',',
+                    maxItems: null,
+                    valueField: 'id',
+                    labelField: 'role',
+                    searchField: 'role',
+                    options: msg,
+                    create: false
+                });
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
+
+        $.post("{{ URL::route('getApps') }}")
+            .done(function(msg){
+
+                $('#apps-select-id').selectize({
+                    plugins: ['remove_button'],
+                    delimiter: ',',
+                    maxItems: null,
+                    valueField: 'id',
+                    labelField: 'name',
+                    searchField: 'name',
+                    options: msg,
+                    create: false
+                });
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
+
+    });
+
     $('#apps-select-id').change(function() {
         count = 1;
         filterBy = 'app';
         var selectValue = $(this).val();
-        if (selectValue == 'all') {
+        if (selectValue == '') {
             location.reload();
         }
         $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination, filter: filterBy } )
@@ -136,7 +165,7 @@ Dashboard. Users
         count = 1;
         filterBy = 'role';
         var selectValue = $(this).val();
-        if (selectValue == 'all') {
+        if (selectValue == '') {
             location.reload();
         }
         $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination, filter: filterBy } )
