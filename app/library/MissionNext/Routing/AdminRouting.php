@@ -72,6 +72,15 @@ class AdminRouting
                 'as' => 'userDelete',
                 'uses' => 'MissionNext\Controllers\Admin\UserController@delete'
             ));
+            Route::match(array('POST'), '/user/searching', array(
+                'as' => 'userSearching',
+                'uses' => 'MissionNext\Controllers\Admin\UserController@searching'
+            ));
+            Route::match(array('GET'), '/user/{searchText}/search', array(
+                'as' => 'search',
+                'uses' => 'MissionNext\Controllers\Admin\UserController@search'
+            ));
+
             // -------------------------------------------------
             // ------------------- Language --------------------
             Route::get('/language', array(

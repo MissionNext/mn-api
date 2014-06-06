@@ -9,6 +9,7 @@ use MissionNext\Models\User\User;
 use MissionNext\Models\Application\Application;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends AdminBaseController {
 
@@ -17,15 +18,10 @@ class UserController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function index() {
-        $users = User::orderBy('id')->paginate(15);
-
-        $apps = Application::all()->toArray();
-        $roles = Role::all()->toArray();
+        $users = User::orderBy('id')->paginate(AdminBaseController::PAGINATE);
 
         return View::make('admin.user.users', array(
             'users' => $users,
-            'apps'  => $apps,
-            'roles' => $roles,
         ));
     }
 
@@ -121,5 +117,25 @@ class UserController extends AdminBaseController {
 
             return Redirect::route('users');
         }
+    }
+
+    public function searching() {
+
+        $searchText = trim(strip_tags(addslashes(Input::get('search'))));
+        return $searchText == '' ? Redirect::route('users') : Redirect::route('search', array('searchText' => $searchText));
+    }
+
+    public function search($searchText) {
+
+        $searchText = trim(strip_tags(addslashes($searchText)));
+        $users = DB::table('users')
+            ->where('username','like', '%'.$searchText.'%')
+            ->orWhere('email','like', '%'.$searchText.'%')
+            ->orderBy('id')
+            ->paginate(AdminBaseController::PAGINATE);
+
+        return View::make('admin.user.users', array(
+            'users' => $users,
+        ));
     }
 }

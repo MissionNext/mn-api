@@ -1,10 +1,24 @@
 @extends('layout')
 
 @section('title')
-Dashboard. Users
+    Dashboard. Users
 @endsection
 
 @section('content')
+
+<div class="row">
+    <div class="col-md-7 col-md-offset-1">
+
+        {{ Form::open(array(
+            'action' => array('MissionNext\Controllers\Admin\UserController@searching'),
+            'class' => 'form-inline user-search-form',
+            'role' => 'form'
+        )) }}
+        {{ Form::text('search', null, array('class' => 'form-control', 'placeholder' => 'search by user or email')) }}
+            <input type="submit" value=" Search " class="btn btn-sm btn-info ">
+        {{ Form::close() }}
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-9">

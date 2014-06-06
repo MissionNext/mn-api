@@ -22,6 +22,8 @@ use MissionNext\Repos\RepositoryContainerInterface;
 
 class AdminBaseController extends Controller {
 
+    const PAGINATE = 15;
+
     protected $request;
     protected $repoContainer;
 
