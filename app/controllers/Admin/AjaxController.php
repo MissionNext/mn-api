@@ -14,51 +14,65 @@ class AjaxController extends AdminBaseController {
 
     public function filterBy() {
 
-        if ($this->request->isMethod('post'))
-        {
-            $idArray = explode(',', Input::get('appId'));
+        if ($this->request->isMethod('post')) {
+            $appIdArray = explode(',', Input::get('appId'));
+            $roleIdArray = explode(',', Input::get('roleId'));
             $take = Input::get('take');
-            $filter = Input::get('filter');
 
-            switch ($filter) {
-                case 'app':
-                    $usersCount = $this->getCountByAppUsers($idArray);
-                    $users = $this->getFilteredByAppUsers($idArray, 0, $take);
+            if($appIdArray[0] == '') {
+                $usersCount = $this->getCountByRoleUsers($roleIdArray);
+                $users = $this->getFilteredByRoleUsers($roleIdArray, 0, $take);
 
-                    return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
-                    break;
-                case 'role':
-                    $usersCount = $this->getCountByRoleUsers($idArray);
-                    $users = $this->getFilteredByRoleUsers($idArray, 0, $take);
-
-                    return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
-                    break;
+                return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
             }
 
+            if($roleIdArray[0] == '') {
+                $usersCount = $this->getCountByAppUsers($appIdArray);
+                $users = $this->getFilteredByAppUsers($appIdArray, 0, $take);
+
+                return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
+            }
+
+            $users = $this->getFilteredUsers($appIdArray, $roleIdArray, 0, $take);
+            $usersCount = $this->getCountUsers($appIdArray, $roleIdArray);
+
+            return View::make('admin.user.ajax.filteredUsers', array('users' => $users, 'count' => count($usersCount)));
         } else {
-            $resp = 'fail';
+            $response = 'fail';
         }
 
-        return Response::make($resp);
+        return Response::make($response);
     }
 
-    public function filterByEth() {
+    public function filterByShowMore() {
 
-        $idArray = explode(',', Input::get('appId'));
-        $take = Input::get('take');
-        $skip = Input::get('skip');
-        $filter = Input::get('filter');
+        if ($this->request->isMethod('post')) {
 
-        switch($filter) {
-            case 'app':
-                $users = $this->getFilteredByAppUsers($idArray, $skip, $take);
-                break;
-            case 'role':
-                $users = $this->getFilteredByRoleUsers($idArray, $skip, $take);
-                break;
+            $appIdArray = explode(',', Input::get('appId'));
+            $roleIdArray = explode(',', Input::get('roleId'));
+            $take = Input::get('take');
+            $skip = Input::get('skip');
+
+            if($appIdArray[0] == '') {
+                $users = $this->getFilteredByRoleUsers($roleIdArray, $skip, $take);
+
+                return View::make('admin.user.ajax.filteredSliceUsers', array('users' => $users));
+            }
+
+            if($roleIdArray[0] == '') {
+                $users = $this->getFilteredByAppUsers($appIdArray, $skip, $take);
+
+                return View::make('admin.user.ajax.filteredSliceUsers', array('users' => $users));
+            }
+
+            $users = $this->getFilteredUsers($appIdArray, $roleIdArray, $skip, $take);
+
+            return View::make('admin.user.ajax.filteredSliceUsers', array('users' => $users));
+        } else {
+            $response = 'fail';
         }
 
-        return View::make('admin.user.ajax.filteredSliceUsers', array('users' => $users));
+        return Response::make($response);
     }
 
     public function roles() {
@@ -84,6 +98,33 @@ class AjaxController extends AdminBaseController {
 
         return $users;
     }
+
+    private function getFilteredUsers($appId, $roleId, $skip = 0, $take = 15) {
+        $users = DB::table('users')
+            ->join('user_apps', 'users.id', '=', 'user_apps.user_id')
+            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
+            ->whereIn('user_apps.app_id', $appId)
+            ->whereIn('user_roles.role_id', $roleId)
+            ->orderBy('users.id')
+            ->skip($skip)
+            ->take($take)
+            ->get();
+
+        return $users;
+    }
+
+    private function getCountUsers($appId, $roleId) {
+        $users = DB::table('users')
+            ->join('user_apps', 'users.id', '=', 'user_apps.user_id')
+            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
+            ->whereIn('user_apps.app_id', $appId)
+            ->whereIn('user_roles.role_id', $roleId)
+            ->orderBy('users.id')
+            ->get();
+
+        return $users;
+    }
+
 
     private function getCountByAppUsers($appId) {
         $users = DB::table('users')

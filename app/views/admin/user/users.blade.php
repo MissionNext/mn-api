@@ -95,14 +95,12 @@ Dashboard. Users
 @section('javascripts')
 @parent
 <script>
-    var pagination = 10;
+    var pagination = 2;
     var count = 1;
-    var filterBy = '';
 
     $(document).ready(function() {
         $.post("{{ URL::route('getRoles') }}")
             .done(function(msg){
-
                 $('#role-select-id').selectize({
                     plugins: ['remove_button'],
                     delimiter: ',',
@@ -120,7 +118,6 @@ Dashboard. Users
 
         $.post("{{ URL::route('getApps') }}")
             .done(function(msg){
-
                 $('#apps-select-id').selectize({
                     plugins: ['remove_button'],
                     delimiter: ',',
@@ -140,12 +137,13 @@ Dashboard. Users
 
     $('#apps-select-id').change(function() {
         count = 1;
-        filterBy = 'app';
-        var selectValue = $(this).val();
-        if (selectValue == '') {
+        var selectAppValue = $(this).val();
+        var selectRoleValue = $('#role-select-id').val();
+
+        if (selectAppValue == '' && selectRoleValue == '' ) {
             location.reload();
         }
-        $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination, filter: filterBy } )
+        $.post("{{ URL::route('userFilters') }}", {appId: selectAppValue, roleId: selectRoleValue, take: pagination } )
             .done(function(msg){
                 $('#default-rezult').remove();
                 $('.pagination-info').hide();
@@ -163,12 +161,13 @@ Dashboard. Users
 
     $('#role-select-id').change(function() {
         count = 1;
-        filterBy = 'role';
-        var selectValue = $(this).val();
-        if (selectValue == '') {
+        var selectAppValue = $('#apps-select-id').val();
+        var selectRoleValue = $(this).val();
+
+        if (selectAppValue == '' && selectRoleValue == '' ) {
             location.reload();
         }
-        $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination, filter: filterBy } )
+        $.post("{{ URL::route('userFilters') }}", {appId: selectAppValue, roleId: selectRoleValue, take: pagination } )
             .done(function(msg){
                 $('#default-rezult').remove();
                 $('.pagination-info').hide();
@@ -186,16 +185,11 @@ Dashboard. Users
 
     $('#firter-rezult').on('click', '#show-more-filtered-data', function(event) {
         var itemObj = $(event.target);
-        var id = 0;
-        if (filterBy == 'app'){
-            id = $('#apps-select-id').val();
-        }
-        if (filterBy == 'role'){
-            id = $('#role-select-id').val();
-        }
-
+        var appId = $('#apps-select-id').val();
+        var roleId = $('#role-select-id').val();
         var totalCount = $('#first-result-table').data('usercount');
-        $.post("{{ URL::route('filteredUsersByApp') }}", {appId: id, take: pagination, skip: count * pagination, filter: filterBy  } )
+
+        $.post("{{ URL::route('filteredUsersByEth') }}", {appId: appId, roleId: roleId, take: pagination, skip: count * pagination } )
             .done(function(msg){
                 count++;
                 $('#first-result-table').append(msg);
