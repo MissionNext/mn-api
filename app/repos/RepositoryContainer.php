@@ -8,11 +8,15 @@ use MissionNext\Api\Auth\ISecurityContextAware;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Repos\Affiliate\AffiliateRepositoryInterface;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
+use MissionNext\Repos\Field\FieldRepository;
+use MissionNext\Repos\Field\FieldRepositoryInterface;
 use MissionNext\Repos\Inquire\InquireRepository;
 use MissionNext\Repos\Inquire\InquireRepositoryInterface;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\Languages\LanguageRepositoryInterface;
+use MissionNext\Repos\Translation\FieldRepositoryInterface as TransFieldRepoInterface;
+use MissionNext\Repos\Translation\FieldRepository as TransFieldRepo;
 
 class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, RepositoryContainerInterface
 {
@@ -52,6 +56,8 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
             AffiliateRepositoryInterface::KEY   => $app->make(AffiliateRepositoryInterface::class)->setRepoContainer($this),
             UserCachedRepositoryInterface::KEY   => $app->make(UserCachedRepositoryInterface::class)->setRepoContainer($this),
             LanguageRepositoryInterface::KEY => $app->make(LanguageRepositoryInterface::class)->setRepoContainer($this),
+            TransFieldRepoInterface::KEY => $app->make(TransFieldRepoInterface::class)->setRepoContainer($this),
+            FieldRepositoryInterface::KEY => $app->make(FieldRepositoryInterface::class)->setRepoContainer($this),
         ];
     }
 

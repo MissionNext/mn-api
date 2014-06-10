@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\AppDataModel;
+use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\User\User;
 
@@ -25,6 +26,15 @@ class Application extends Eloquent implements ModelInterface
     protected $guarded = array('public_key', 'private_key');
 
     protected $fillable = array('name');
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function languages()
+    {
+
+        return $this->belongsToMany(LanguageModel::class, 'app_languages', 'app_id', 'lang_id');
+    }
 
     /**
      * @return HasMany

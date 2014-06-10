@@ -33,6 +33,8 @@ use MissionNext\Repos\ViewField\ViewFieldRepository;
 use MissionNext\Repos\ViewField\ViewFieldRepositoryInterface;
 use MissionNext\Repos\Languages\LanguageRepositoryInterface;
 use MissionNext\Repos\Languages\LanguageRepository;
+use MissionNext\Repos\Translation\FieldRepositoryInterface as TransFieldRepoInterface;
+use MissionNext\Repos\Translation\FieldRepository as TransFieldRepo;
 
 class RepositoryProvider extends ServiceProvider
 {
@@ -104,6 +106,11 @@ class RepositoryProvider extends ServiceProvider
         App::bind(LanguageRepositoryInterface::class, function () {
 
             return new LanguageRepository();
+        });
+
+        App::bind(TransFieldRepoInterface::class, function () {
+
+            return new TransFieldRepo();
         });
 
 

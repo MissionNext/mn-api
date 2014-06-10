@@ -30,13 +30,14 @@ class FieldRepository extends AbstractFieldRepository
                 $role . '_fields.symbol_key',
                 $role . '_fields.name',
                 $role . '_fields.default_value',
-                DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")))
+                DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")),
+                DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.id", "dictionary_id", "{$role}_dictionary.value")))
             ->leftJoin('field_types', 'field_types.id', '=', $role . '_fields.type')
             ->leftJoin($role . '_dictionary', $role . '_dictionary.field_id', '=', $role . '_fields.id')
             ->groupBy($role . '_fields.id', 'field_types.name');
 
         return
-            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','default_value']));
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','default_value', 'dictionary_id']));
 
     }
 
@@ -58,7 +59,8 @@ class FieldRepository extends AbstractFieldRepository
                 $role . '_fields.name',
                 $role . '_fields.default_value',
                 'data_model_' . $role . '_fields.constraints',
-                \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")))
+                \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")),
+                \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.id", "dictionary_id", "{$role}_dictionary.value")))
             ->leftJoin('data_model_' . $role . '_fields', $role . '_fields.id', '=', 'data_model_' . $role . '_fields.field_id')
             ->leftJoin('field_types', 'field_types.id', '=', $role . '_fields.type')
             ->leftJoin($role . '_dictionary', $role . '_dictionary.field_id', '=', $role . '_fields.id')
@@ -66,7 +68,7 @@ class FieldRepository extends AbstractFieldRepository
             ->groupBy($role . '_fields.id', 'field_types.name', 'data_model_' . $role . '_fields.constraints');
 
         return
-            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','default_value']));
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','default_value', 'dictionary_id']));
     }
 
     /**

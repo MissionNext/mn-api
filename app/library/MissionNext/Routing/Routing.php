@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
+use MissionNext\Controllers\Api\Translation\LanguageController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Notes\NotesController;
 use MissionNext\Controllers\Api\User\OrganizationController;
@@ -27,6 +28,7 @@ use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
 use MissionNext\Controllers\Api\Favorite\Controller as FavoriteResource;
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Controllers\Api\Translation\FieldController as TransFieldController;
 
 class Routing
 {
@@ -147,6 +149,11 @@ class Routing
                 //END
                 Route::controller( 'organization/jobs/{organization}/for/{user_id}', OrganizationController::class );
             });
+
+
+            Route::controller('language', LanguageController::class, []);
+
+            Route::controller('trans/{type}/fields', TransFieldController::class, []);
 
 
         });

@@ -147,6 +147,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
      */
     public function roles()
     {
+
         return $this->belongsToMany(RoleModel::class, 'user_roles', 'user_id', 'role_id');
     }
 

@@ -23,11 +23,12 @@ class Postgre extends SqlStatement
         return "TRUNCATE $tableName RESTART IDENTITY CASCADE";
     }
 
-    public function groupConcat($fieldName, $alias = null)
+    public function groupConcat($fieldName, $alias = null, $orderByField = null)
     {
         $alias = $alias ? " as $alias" : '';
+        $orderByField = $orderByField ? $orderByField : $fieldName;
 
-        return "string_agg($fieldName, ','  ORDER BY $fieldName) $alias";
+        return "string_agg(($fieldName)::text, ','  ORDER BY $orderByField) $alias";
     }
 
 } 

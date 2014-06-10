@@ -9,5 +9,6 @@ use MissionNext\Models\User\User;
 interface InquireRepositoryInterface
 {
     const KEY = 'inquire';
+
     public function inquire(User $user, Job $job);
 } 

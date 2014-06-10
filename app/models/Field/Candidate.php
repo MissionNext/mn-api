@@ -3,9 +3,11 @@
 namespace MissionNext\Models\Field;
 
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\DataModel\AppDataModel;
 use Illuminate\Database\Eloquent\Builder;
+use MissionNext\Models\Translation\Field as TransField;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Models\Dictionary\Candidate as CandidateDictionary;
 
@@ -24,6 +26,15 @@ class Candidate extends BaseField implements ModelInterface, IRoleField
 
         return $this->belongsToMany(UserModel::class, 'candidate_profile', 'field_id', 'user_id')->withPivot('value');
     } //@TODO first fields_id because Candiate is Field entity
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function languages()
+    {
+
+        return $this->belongsToMany(LanguageModel::class, 'candidate_fields_trans', 'field_id', 'lang_id')->withPivot('name');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

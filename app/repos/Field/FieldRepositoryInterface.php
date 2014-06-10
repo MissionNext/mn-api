@@ -27,4 +27,6 @@ interface FieldRepositoryInterface extends  RepositoryInterface {
 
     public function profileFields(ProfileInterface $user);
 
+    const KEY = "model_field";
+
 } 
