@@ -1,10 +1,24 @@
 @extends('layout')
 
 @section('title')
-Dashboard. Users
+    Dashboard. Users
 @endsection
 
 @section('content')
+
+<div class="row">
+    <div class="col-md-7 col-md-offset-1">
+
+        {{ Form::open(array(
+            'action' => array('MissionNext\Controllers\Admin\UserController@searching'),
+            'class' => 'form-inline user-search-form',
+            'role' => 'form'
+        )) }}
+        {{ Form::text('search', null, array('class' => 'form-control', 'placeholder' => 'search by user or email')) }}
+            <input type="submit" value=" Search " class="btn btn-sm btn-info ">
+        {{ Form::close() }}
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-9">
@@ -80,12 +94,12 @@ Dashboard. Users
 
         <div class="user-filters pull-right">
             <label for="apps-select-id">By applications:</label>
-            <select class="form-control" name="app" id="apps-select-id">
-                    <option value="all">All applications</option>
-                @foreach($apps as $app)
-                    <option value="{{ $app['id'] }}">{{ $app['name'] }}</option>
-                @endforeach
-            </select>
+            <textarea id="apps-select-id"></textarea>
+        </div>
+
+        <div class="user-filters pull-right">
+            <label for="role-select-id">By roles:</label>
+            <textarea id="role-select-id"></textarea>
         </div>
     </div>
 </div>
@@ -98,13 +112,68 @@ Dashboard. Users
     var pagination = 10;
     var count = 1;
 
+    $(document).ready(function() {
+        $.post("{{ URL::route('getRoles') }}")
+            .done(function(msg){
+                $('#apps-select-id').selectize({
+                    plugins: ['remove_button'],
+                    delimiter: ',',
+                    maxItems: null,
+                    valueField: 'id',
+                    labelField: 'name',
+                    searchField: 'name',
+                    options: msg['apps'],
+                    create: false
+                });
+                $('#role-select-id').selectize({
+                    plugins: ['remove_button'],
+                    delimiter: ',',
+                    maxItems: null,
+                    valueField: 'id',
+                    labelField: 'role',
+                    searchField: 'role',
+                    options: msg['roles'],
+                    create: false
+                });
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
+    });
+
     $('#apps-select-id').change(function() {
         count = 1;
-        var selectValue = $(this).val();
-        if (selectValue == 'all') {
+        var selectAppValue = $(this).val();
+        var selectRoleValue = $('#role-select-id').val();
+
+        if (selectAppValue == '' && selectRoleValue == '' ) {
             location.reload();
         }
-        $.post("{{ URL::route('userFilters') }}", {appId: selectValue, take: pagination } )
+        $.post("{{ URL::route('userFilters') }}", {appId: selectAppValue, roleId: selectRoleValue, take: pagination } )
+            .done(function(msg){
+                $('#default-rezult').remove();
+                $('.pagination-info').hide();
+                $('#firter-rezult').html(msg);
+
+                var totalCount = $('#first-result-table').data('usercount');
+                if(count * pagination >= totalCount) {
+                    $('#show-more-filtered-data').remove();
+                }
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
+    });
+
+    $('#role-select-id').change(function() {
+        count = 1;
+        var selectAppValue = $('#apps-select-id').val();
+        var selectRoleValue = $(this).val();
+
+        if (selectAppValue == '' && selectRoleValue == '' ) {
+            location.reload();
+        }
+        $.post("{{ URL::route('userFilters') }}", {appId: selectAppValue, roleId: selectRoleValue, take: pagination } )
             .done(function(msg){
                 $('#default-rezult').remove();
                 $('.pagination-info').hide();
@@ -122,12 +191,14 @@ Dashboard. Users
 
     $('#firter-rezult').on('click', '#show-more-filtered-data', function(event) {
         var itemObj = $(event.target);
-        var applicationId = $('#apps-select-id').val();
+        var appId = $('#apps-select-id').val();
+        var roleId = $('#role-select-id').val();
         var totalCount = $('#first-result-table').data('usercount');
-        $.post("{{ URL::route('filteredUsersByApp') }}", {appId: applicationId, take: pagination, skip: count * pagination  } )
+
+        $.post("{{ URL::route('filteredUsersByEth') }}", {appId: appId, roleId: roleId, take: pagination, skip: count * pagination } )
             .done(function(msg){
                 count++;
-                $('#filter-more-rezult').append(msg);
+                $('#first-result-table').append(msg);
                 if(count * pagination >= totalCount) {
                     itemObj.remove();
                 }

@@ -22,9 +22,16 @@ Dashboard. Creating new user
         'role' => 'form'
         )) }}
 
-        {{ Form::text('username', null, array('class' => 'form-control', 'placeholder' => 'put username', 'autofocus' => 'true')) }}
-        {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'put user e-mail')) }}
-        {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'put user password')) }}
+        {{ Form::text('username', null, array('class' => 'form-control', 'placeholder' => 'username', 'autofocus' => 'true')) }}
+        {{ Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'user e-mail')) }}
+        {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'user password')) }}
+
+        <select class="form-control" name="role" id="role-select-id">
+            @foreach($roles as $role)
+                <option value="{{ $role['id'] }}">{{ $role['role'] }}</option>
+            @endforeach
+        </select>
+
 
         {{ Form::submit('Create ', array('class' => 'btn btn-sm btn-info')) }}
 

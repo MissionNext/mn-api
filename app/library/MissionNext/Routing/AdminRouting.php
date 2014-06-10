@@ -72,6 +72,15 @@ class AdminRouting
                 'as' => 'userDelete',
                 'uses' => 'MissionNext\Controllers\Admin\UserController@delete'
             ));
+            Route::match(array('POST'), '/user/searching', array(
+                'as' => 'userSearching',
+                'uses' => 'MissionNext\Controllers\Admin\UserController@searching'
+            ));
+            Route::match(array('GET'), '/user/{searchText}/search', array(
+                'as' => 'search',
+                'uses' => 'MissionNext\Controllers\Admin\UserController@search'
+            ));
+
             // -------------------------------------------------
             // ------------------- Language --------------------
             Route::get('/language', array(
@@ -91,23 +100,20 @@ class AdminRouting
                 'uses' => 'MissionNext\Controllers\Admin\LanguageController@delete'
             ));
             // -------------------------------------------------
-
-
-
             // --------------- Filters -------------------------
             Route::match(array('POST'), '/user/filterBy', array(
                 'as' => 'userFilters',
                 'uses' => 'MissionNext\Controllers\Admin\AjaxController@filterBy'
             ));
             Route::match(array('POST'), '/user/filterByApps', array(
-                'as' => 'filteredUsersByApp',
-                'uses' => 'MissionNext\Controllers\Admin\AjaxController@filterByApps'
+                'as' => 'filteredUsersByEth',
+                'uses' => 'MissionNext\Controllers\Admin\AjaxController@filterByShowMore'
+            ));
+            Route::match(array('POST'), '/getrolesapps', array(
+                'as' => 'getRoles',
+                'uses' => 'MissionNext\Controllers\Admin\AjaxController@getRolesApps'
             ));
             // -------------------------------------------------
-
-
-
-
 
 
         });  // end group dashboard

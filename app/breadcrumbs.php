@@ -29,6 +29,10 @@ Breadcrumbs::register('userEdit', function($breadcrumbs) {
     $breadcrumbs->parent('users');
     $breadcrumbs->push('Update user', route('userEdit'));
 });
+Breadcrumbs::register('search', function($breadcrumbs) {
+    $breadcrumbs->parent('users');
+    $breadcrumbs->push('Search results', route('search'));
+});
 
 Breadcrumbs::register('languages', function($breadcrumbs) {
     $breadcrumbs->parent('adminHomepage');

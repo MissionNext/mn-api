@@ -16,7 +16,7 @@ class ApplicationController extends AdminBaseController {
      */
     public function index()
     {
-        $applications = Application::orderBy('id')->paginate(15);
+        $applications = Application::orderBy('id')->paginate(AdminBaseController::PAGINATE);
 
         return View::make('admin.application.applications', array(
             'applications' => $applications,

@@ -20,7 +20,7 @@ class LanguageController extends AdminBaseController {
         
         /** @var  $languageRepo LanguageRepository */
         $languageRepo = $this->repoContainer[LanguageRepositoryInterface::KEY];
-        $languages = $languageRepo->getModel()->orderBy('id')->paginate(15);
+        $languages = $languageRepo->getModel()->orderBy('id')->paginate(AdminBaseController::PAGINATE);
 
 
         return View::make('admin.language.languages', array('langs' => $languages));

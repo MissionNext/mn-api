@@ -4,10 +4,12 @@ namespace MissionNext\Controllers\Admin;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use MissionNext\Models\Role\Role;
 use MissionNext\Models\User\User;
 use MissionNext\Models\Application\Application;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends AdminBaseController {
 
@@ -16,17 +18,10 @@ class UserController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function index() {
-        $users = User::orderBy('id')->paginate(15);
-
-        $apps = Application::all()->toArray();
-        $arrRez = array();
-        foreach($apps as $app) {
-            $arrRez = array_add($arrRez, $app['id'], $app['name']);
-        }
+        $users = User::orderBy('id')->paginate(AdminBaseController::PAGINATE);
 
         return View::make('admin.user.users', array(
             'users' => $users,
-            'apps'  => $apps,
         ));
     }
 
@@ -35,6 +30,8 @@ class UserController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function create() {
+        $roles = Role::all()->toArray();
+
         if ($this->request->isMethod('post')) {
             Input::flash();
             $rules = array(
@@ -49,19 +46,22 @@ class UserController extends AdminBaseController {
                 return Redirect::route('userCreate')->withInput()->withErrors($validator);
             }
 
+            $role = Role::find(Input::get('role'));
+
             $user = new User();
             $user->username = Input::get('username');
             $user->email = Input::get('email');
             $user->password = Input::get('password');
             $user->last_login = date('Y-m-d H:i:s');
             $user->save();
+            $user->roles()->attach($role->id);
             $name = $user->username;
             Session::flash('info', "user <strong>$name</strong> successfully created");
 
             return Redirect::route('users');
         }
 
-        return View::make('admin.user.create');
+        return View::make('admin.user.create', array('roles' => $roles,));
     }
 
     /**
@@ -117,5 +117,25 @@ class UserController extends AdminBaseController {
 
             return Redirect::route('users');
         }
+    }
+
+    public function searching() {
+
+        $searchText = trim(strip_tags(addslashes(Input::get('search'))));
+        return $searchText == '' ? Redirect::route('users') : Redirect::route('search', array('searchText' => $searchText));
+    }
+
+    public function search($searchText) {
+
+        $searchText = trim(strip_tags(addslashes($searchText)));
+        $users = DB::table('users')
+            ->where('username','like', '%'.$searchText.'%')
+            ->orWhere('email','like', '%'.$searchText.'%')
+            ->orderBy('id')
+            ->paginate(AdminBaseController::PAGINATE);
+
+        return View::make('admin.user.users', array(
+            'users' => $users,
+        ));
     }
 }

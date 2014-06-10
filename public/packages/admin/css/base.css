@@ -34,3 +34,6 @@ span.pull-right {
 .ajax-footer {
     margin-bottom: 50px;
 }
+.user-search-form input[type=text]{
+    width: 80%;
+}
