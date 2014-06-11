@@ -3,6 +3,7 @@
 namespace MissionNext\Models\Dictionary;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use MissionNext\Models\ModelInterface;
 
 
@@ -15,5 +16,9 @@ abstract class BaseDictionary extends Eloquent implements ModelInterface {
 
     abstract  public function field();
 
+    /**
+     * @return BelongsToMany
+     */
+    abstract public function languages();
 
 } 

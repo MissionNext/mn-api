@@ -4,6 +4,7 @@ namespace MissionNext\Api\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use MissionNext\Api\Exceptions\AuthenticationException;
+use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\User\User;
 
 class Listener
@@ -43,6 +44,7 @@ class Listener
         (!$request->headers->has('X-Auth')
             || !$request->headers->has('X-Auth-Hash')
             || !$request->headers->has('X-User')
+            || !$request->headers->has('X-Lang')
             || !$request->query->get('timestamp')
         ) && App::abort(400, "Bad Request");
 
@@ -52,6 +54,7 @@ class Listener
         $token->hash = $request->headers->get('X-Auth-Hash');
         $token->created = (int)$request->query->get('timestamp');
         $token->currentUser = User::find($request->headers->get('X-User'));
+        $token->language = LanguageModel::find($request->headers->get('X-Lang'));
         $this->authManager->authenticate($token);
     }
 } 

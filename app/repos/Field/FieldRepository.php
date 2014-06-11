@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\FieldException;
 use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Models\Dictionary\BaseDictionary;
 use MissionNext\Models\Field\Candidate;
+use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\ProfileInterface;
 use MissionNext\Models\User\User as UserModel;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
@@ -15,6 +17,48 @@ use MissionNext\Repos\ViewField\ViewFieldRepository;
 
 class FieldRepository extends AbstractFieldRepository
 {
+    /**
+     * @param LanguageModel $language
+     *
+     * @return FieldDataTransformer
+     */
+    public function fieldsExpandedTrans(LanguageModel $language = null)
+    {
+        $role = $this->securityContext->role();
+
+        if (!$language) {
+
+            return $this->fieldsExpanded();
+        }
+        /**
+         * @var $builder Builder
+         */
+        $builder = $this->getModel() //!!! getModel
+        ->select($role . '_fields.id',
+            'field_types.name as type',
+            $role . '_fields.symbol_key',
+            $role . '_fields.default_value',
+            $role . '_fields_trans.name',
+            DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary_trans.value", "choices")),
+            DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary_trans.dictionary_id", "dictionary_id", "{$role}_dictionary_trans.value")))
+            ->leftJoin('field_types', 'field_types.id', '=', $role . '_fields.type')
+            ->leftJoin($role . '_dictionary', $role . '_dictionary.field_id', '=', $role . '_fields.id')
+            ->leftJoin($role . '_fields_trans', function ($join) use ($role, $language) {
+                $join->on($role . '_fields_trans.field_id', '=', $role . '_fields.id')
+                    ->where($role . '_fields_trans.lang_id', '=', $language->id);
+            })
+            ->leftJoin($role . '_dictionary_trans', function ($join) use ($role, $language) {
+                $join->on($role . '_dictionary_trans.dictionary_id', '=', $role . '_dictionary.id')
+                    ->where($role . '_dictionary_trans.lang_id', '=', $language->id);
+            })
+
+            ->groupBy($role . '_fields.id', 'field_types.name', $role . '_fields_trans.name');
+
+        return
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices', 'default_value', 'dictionary_id']));
+
+    }
+
     /**
      * @return FieldDataTransformer
      */
@@ -25,19 +69,19 @@ class FieldRepository extends AbstractFieldRepository
          * @var $builder Builder
          */
         $builder = $this->getModel() //!!! getModel
-            ->select($role . '_fields.id',
-                'field_types.name as type',
-                $role . '_fields.symbol_key',
-                $role . '_fields.name',
-                $role . '_fields.default_value',
-                DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")),
-                DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.id", "dictionary_id", "{$role}_dictionary.value")))
+        ->select($role . '_fields.id',
+            'field_types.name as type',
+            $role . '_fields.symbol_key',
+            $role . '_fields.name',
+            $role . '_fields.default_value',
+            DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices")),
+            DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.id", "dictionary_id", "{$role}_dictionary.value")))
             ->leftJoin('field_types', 'field_types.id', '=', $role . '_fields.type')
             ->leftJoin($role . '_dictionary', $role . '_dictionary.field_id', '=', $role . '_fields.id')
             ->groupBy($role . '_fields.id', 'field_types.name');
 
         return
-            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','default_value', 'dictionary_id']));
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices', 'default_value', 'dictionary_id']));
 
     }
 
@@ -68,7 +112,7 @@ class FieldRepository extends AbstractFieldRepository
             ->groupBy($role . '_fields.id', 'field_types.name', 'data_model_' . $role . '_fields.constraints');
 
         return
-            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','default_value', 'dictionary_id']));
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices', 'default_value', 'dictionary_id']));
     }
 
     /**
@@ -93,7 +137,7 @@ class FieldRepository extends AbstractFieldRepository
         $role = $this->securityContext->role(); // or this->model->roleType
         $userName = $role === BaseDataModel::JOB ? BaseDataModel::JOB : "user";
 
-        return $user->belongsToMany($this->getModelClassName(), $role . '_profile', $userName.'_id', 'field_id')->withPivot('value');
+        return $user->belongsToMany($this->getModelClassName(), $role . '_profile', $userName . '_id', 'field_id')->withPivot('value');
     }
 
     /**
@@ -125,7 +169,7 @@ class FieldRepository extends AbstractFieldRepository
         foreach ($addedFields as $addedField) {
             $choices = $addedField["choices"];
             if ($choices) {
-               // $choices = explode(",", $choices);
+                // $choices = explode(",", $choices);
                 foreach ($choices as $choice) {
                     $dictionary[] = ["field_id" => $addedField["id"], "value" => $choice];
                 }
@@ -156,13 +200,35 @@ class FieldRepository extends AbstractFieldRepository
                 ]);
 
             if ($field["choices"]) {
+                $choices = $field["choices"];
+                $updateChoices = array_except($choices, 'new');
+                $newChoices = isset($choices['new']) ? $choices['new'] : [];
                 /** @var  $model Candidate */
-                $model =  $this->getModel()->find($field["id"]);
-                $model->choices()->delete();
-                $choices =  $field["choices"];
-                foreach($choices as $choice){
-                     $model->choices()->save($model->choices()->create(["value"=>$choice]));
+                $model = $this->getModel()->find($field["id"]);
+                $currentChoicesIds = $model->choices()->get()->lists('id');
+                $updateChoiceIds = array_fetch($updateChoices, 'id');
+
+
+                foreach ($currentChoicesIds as $activeChoiceId) {  //SYNC EXISTENT CHOICES
+                    /** @var  $choice \Illuminate\Database\Query\Builder */
+                    $choice = $model->choices()->where("id", "=", $activeChoiceId);
+                    if (!in_array($activeChoiceId, $updateChoiceIds)) {
+                        $choice->delete();
+                    } else {
+                        $updateChoice = current(array_where($updateChoices, function ($key, $value) use ($activeChoiceId) {
+
+                            return $value["id"] == $activeChoiceId;
+                        }));
+
+                        $choice->update(["value" => $updateChoice['value']]);
+                    }
                 }
+
+                foreach($newChoices as $newChoice){ // CREATE NEW ONE
+
+                    $model->choices()->save($model->choices()->create(["value"=>$newChoice['value']]));
+                }
+
             }
 
         }
@@ -180,18 +246,18 @@ class FieldRepository extends AbstractFieldRepository
      */
     public function deleteFields(array $ids)
     {
-       $symbol_keys = $this->getModel()->whereIn("id", $ids)->lists('symbol_key');
+        $symbol_keys = $this->getModel()->whereIn("id", $ids)->lists('symbol_key');
 
-       if (count($symbol_keys) !== count($ids)){
+        if (count($symbol_keys) !== count($ids)) {
 
-           throw new FieldException("Specified ids have not related records", FieldException::ON_DELETE);
-       }
+            throw new FieldException("Specified ids have not related records", FieldException::ON_DELETE);
+        }
 
-       $viewFieldRepo = new ViewFieldRepository();
-       $viewFieldRepo->deleteByDMSymbolKeys($this->securityContext->getApp()->DM(), $symbol_keys);
-       $this->getModel()->destroy($ids);
+        $viewFieldRepo = new ViewFieldRepository();
+        $viewFieldRepo->deleteByDMSymbolKeys($this->securityContext->getApp()->DM(), $symbol_keys);
+        $this->getModel()->destroy($ids);
 
-       return $this->fieldsExpanded()->get();
+        return $this->fieldsExpanded()->get();
     }
 
 } 

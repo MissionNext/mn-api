@@ -5,9 +5,13 @@ namespace MissionNext\Models\Field;
 
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 interface  IField  {
 
+    /**
+     * @return HasMany
+     */
   public function choices();
 
   public function dataModels();
@@ -15,6 +19,6 @@ interface  IField  {
     /**
      * @return BelongsToMany
      */
-    public function languages();
+  public function languages();
 
 } 

@@ -3,6 +3,7 @@ namespace MissionNext\Api\Auth;
 
 
 use MissionNext\Core\Security\AbstractToken;
+use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\User\User;
 
 class Token extends AbstractToken
@@ -13,14 +14,24 @@ class Token extends AbstractToken
     public $publicKey;
     public $uri;
     public $currentUser;
+    public $language;
 
     /**
-     * @return User
+     * @return User|null
      */
     public function currentUser()
     {
 
         return $this->currentUser;
+    }
+
+    /**
+     * @return LanguageModel|null
+     */
+    public function language()
+    {
+
+        return $this->language;
     }
 
     /**

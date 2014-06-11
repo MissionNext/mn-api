@@ -29,7 +29,7 @@ class FieldToArrayTransformStrategy extends TransformDataStrategy {
           //  dd($field->toArray());
            foreach($this->fields as $fieldName){
                $field->{$fieldName} =
-                   $field->{$fieldName} ? explode(",", $field->{$fieldName}) : null;
+                   $field->{$fieldName} ? explode("|", $field->{$fieldName}) : null;
            }
 
            return $field;

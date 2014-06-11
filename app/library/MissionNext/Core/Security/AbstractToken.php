@@ -3,6 +3,7 @@
 namespace MissionNext\Core\Security;
 
 use MissionNext\Models\Application\Application;
+use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\User\User;
 
 
@@ -17,6 +18,11 @@ abstract class AbstractToken
      * @return User
      */
     abstract public function currentUser();
+
+    /**
+     * @return LanguageModel|null
+     */
+    abstract public function language();
 
     /**
      * @return Application;

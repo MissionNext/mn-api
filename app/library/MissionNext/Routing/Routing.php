@@ -153,7 +153,7 @@ class Routing
 
             Route::controller('language', LanguageController::class, []);
 
-            Route::controller('trans/{type}/fields', TransFieldController::class, []);
+            Route::controller('trans/{type}/field', TransFieldController::class, []);
 
 
         });

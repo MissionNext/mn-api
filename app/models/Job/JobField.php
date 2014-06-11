@@ -6,6 +6,7 @@ namespace MissionNext\Models\Job;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\Field\BaseField;
 use MissionNext\Models\Job\Job as JobModel;
+use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\ModelInterface;
 
 class JobField extends BaseField implements IJobField, ModelInterface
@@ -29,6 +30,15 @@ class JobField extends BaseField implements IJobField, ModelInterface
     {
 
         return $this->hasMany(JobDictionary::class, 'field_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function languages()
+    {
+
+        return $this->belongsToMany(LanguageModel::class, 'job_fields_trans', 'field_id', 'lang_id')->withPivot('name');
     }
 
     /**
