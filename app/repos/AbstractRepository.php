@@ -41,8 +41,6 @@ abstract class AbstractRepository implements RepositoryInterface
         return $this;
     }
 
-
-
     /**
      * @param array $columns
      *

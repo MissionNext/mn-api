@@ -1,14 +1,18 @@
 <?php
 namespace MissionNext\Controllers\Api\Form;
 
+use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\FormGroupsException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\Field\FieldGroup;
 use MissionNext\Models\Form\AppForm;
 use MissionNext\Models\Form\BaseForm;
 use MissionNext\Models\DataModel\AppDataModel;
 use Illuminate\Support\Facades\Request;
+use MissionNext\Repos\Form\FormRepository;
+use MissionNext\Repos\Form\FormRepositoryInterface;
 
 /**
  * Class Controller
@@ -73,51 +77,64 @@ class Controller extends BaseController
         $application = $this->securityContext()->getApp();
         /** @var  $dm AppDataModel */
         $dm = $application->DM();
+        $language = $this->getToken()->language();
         $forms = $dm->forms()->whereSymbolKey($formName)->get();
-
         /** @var  $form AppForm */
-
         $form = $forms->first();
 
         if (!$form || !$form->fields()->count()) {
 
             return new RestResponse(null);
         }
-        $form->fields()->get();
-       // dd(\DB::select('select "group_fields".*, "app_forms"."data_model_id", "app_data_model".* from "group_fields" inner join "form_groups" on "form_groups"."id" = "group_fields"."group_id" inner join "app_forms" on "app_forms"."id" = "form_groups"."form_id"  inner join "app_data_model" on   "app_data_model"."id" = "app_forms"."data_model_id" where "app_forms"."data_model_id" = ? and  "group_fields"."symbol_key" =?',array(2,'birth_date')));
-        $viewFields = $form->fields()->with("formGroup")->orderBy("symbol_key")->get()->toArray();
-        $groupFields = array_fetch($viewFields, 'symbol_key');
-        $modelFields = $this->fieldRepo()->modelFieldsExpanded()->whereIn("symbol_key", $groupFields)->orderBy("symbol_key")->get()->toArray();
-        $mergedData = array_replace_recursive($modelFields, $viewFields);
-        $groups = [];
-       // dd($groupFields, $modelFields);
-        foreach ($mergedData as $key => $data) {
-            if (!isset($data["id"])) {
-                continue;
+        /** @var  $formRepo FormRepository */
+        $formRepo = $this->repoContainer[FormRepositoryInterface::KEY];
+        $structuredData = [];
+        $groupFields = $formRepo->groupedFields($form)->get();
+        foreach($groupFields as $groupField){
+            $groupId = $groupField->id;
+            $fieldId = $groupField->field_id;
+            $structuredData[$groupId]['symbol_key'] = $groupField->symbol_key;
+            $structuredData[$groupId]['id'] = $groupId;
+            $structuredData[$groupId]['name'] = $groupField->name;
+            $structuredData[$groupId]['depends_on'] = $groupField->depends_on;
+            $structuredData[$groupId]['is_outer_dependent'] = $groupField->is_outer_dependent;
+            $structuredData[$groupId]['order'] = $groupField->order;
+
+            $choices = $groupField->field_choices ? : [];
+            $defChoices = $groupField->field_default_choices ? : [];
+            $choicesIds = $groupField->field_dictionary_id ? : [];
+
+            $structuredData[$groupId]['fields'][$fieldId]['id'] = $fieldId;
+            $structuredData[$groupId]['fields'][$fieldId]['symbol_key'] = $groupField->field_symbol_key;
+            $structuredData[$groupId]['fields'][$fieldId]['constraints'] = $groupField->field_constraints;
+            $structuredData[$groupId]['fields'][$fieldId]['type'] = $groupField->field_type;
+            $structuredData[$groupId]['fields'][$fieldId]['name'] = $groupField->field_name;
+            $structuredData[$groupId]['fields'][$fieldId]['choices'] = $choices;
+            $structuredData[$groupId]['fields'][$fieldId]['field_dictionary_ids'] = $groupField->field_dictionary_id ? : [];
+            $structuredData[$groupId]['fields'][$fieldId]['default_choices'] = $defChoices;
+            $structuredData[$groupId]['fields'][$fieldId]['field_default_dictionary_ids'] = $groupField->field_default_dictionary_id ? : [];
+            $structuredData[$groupId]['fields'][$fieldId]['default_value'] = $groupField->field_default_value;
+            $structuredData[$groupId]['fields'][$fieldId]['order'] = $groupField->field_order;
+            $structuredData[$groupId]['fields'][$fieldId]['meta'] = json_decode($groupField->field_meta, true);
+
+            $dictionary = [];
+            foreach($choices as $key => $choice){
+                $dictionary[$key]['value'] = $choice;
+                $dictionary[$key]['default_value'] = $defChoices[$key];
+                $dictionary[$key]['id'] = intval($choicesIds[$key]);
+                $dictionary[$key]['order'] = 0;
             }
-            $symbolKey = $data["form_group"]["symbol_key"];
-            $groups[$symbolKey]["symbol_key"] = $data["form_group"]["symbol_key"];
-            $groups[$symbolKey]["id"] = $data["form_group"]["id"];
-            $groups[$symbolKey]["name"] = $data["form_group"]["name"];
-            $groups[$symbolKey]["depends_on"] = $data["form_group"]["depends_on"];
-            $groups[$symbolKey]["is_outer_dependent"] = $data["form_group"]["is_outer_dependent"];
-            $groups[$symbolKey]["order"] = $data["form_group"]["order"];
-            $groups[$symbolKey]["fields"][$key]["symbol_key"] = $data["symbol_key"];
-            $groups[$symbolKey]["fields"][$key]["constraints"] = $data["constraints"];
-            $groups[$symbolKey]["fields"][$key]["type"] = $data["type"];
-            $groups[$symbolKey]["fields"][$key]["name"] = $data["name"];
-            $groups[$symbolKey]["fields"][$key]["choices"] = $data["choices"] ? : [];
-            $groups[$symbolKey]["fields"][$key]["default_value"] = $data["default_value"];
-            $groups[$symbolKey]["fields"][$key]["order"] = $data["order"];
-            $groups[$symbolKey]["fields"][$key]["meta"] = json_decode($data["meta"]);
-            $groups[$symbolKey]["fields"][$key]["id"] = $data["id"];//@TODO default_value to array
-        }
-        $groups = array_values($groups);
-        foreach ($groups as $key => $group) {
-            $groups[$key]["fields"] = array_values($groups[$key]["fields"]);
+
+            $structuredData[$groupId]['fields'][$fieldId]['choices'] = $dictionary;
+
+            //@TODO default_value to array
         }
 
-        return new RestResponse( $groups );
+
+        return new RestResponse($structuredData);
+
+
+
     }
 
     /**

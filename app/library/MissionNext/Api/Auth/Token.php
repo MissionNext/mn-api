@@ -26,12 +26,12 @@ class Token extends AbstractToken
     }
 
     /**
-     * @return LanguageModel|null
+     * @return LanguageModel
      */
     public function language()
     {
 
-        return $this->language;
+        return $this->language ? : new LanguageModel();
     }
 
     /**

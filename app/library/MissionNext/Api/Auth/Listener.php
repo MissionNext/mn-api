@@ -41,6 +41,7 @@ class Listener
     public function handle()
     {
         $request = $this->request;
+
         (!$request->headers->has('X-Auth')
             || !$request->headers->has('X-Auth-Hash')
             || !$request->headers->has('X-User')
