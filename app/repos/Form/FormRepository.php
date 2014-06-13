@@ -53,6 +53,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             $structuredData[$groupId]['fields'][$fieldId]['constraints'] = $groupField->field_constraints;
             $structuredData[$groupId]['fields'][$fieldId]['type'] = $groupField->field_type;
             $structuredData[$groupId]['fields'][$fieldId]['name'] = $groupField->field_trans_name;
+            $structuredData[$groupId]['fields'][$fieldId]['default_name'] = $groupField->field_name;
             //$structuredData[$groupId]['fields'][$fieldId]['choices'] = $choices;
             //$structuredData[$groupId]['fields'][$fieldId]['field_dictionary_ids'] = $groupField->field_dictionary_id ? : [];
             //  $structuredData[$groupId]['fields'][$fieldId]['default_choices'] = $defChoices;

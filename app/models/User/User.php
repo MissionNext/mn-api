@@ -166,7 +166,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     public function candidateFields()
     {
 
-        return $this->belongsToMany(CandidateField::class, 'candidate_profile', 'user_id', 'field_id')->withPivot('value');
+        return $this->belongsToMany(CandidateField::class, 'candidate_profile', 'user_id', 'field_id')->withPivot('value', 'dictionary_id');
     }
 
     /**

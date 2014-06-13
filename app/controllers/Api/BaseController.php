@@ -218,11 +218,10 @@ class BaseController extends Controller
         $fieldNames = array_keys($profileData);
         $dependentFields = $this->formGroupRepo()->dependentFields()->get();
 
-     // dd($dependentFields->toArray());
         foreach($dependentFields as $field){
             $ownerField = $field->depends_on;
             if (isset($profileData[$ownerField])){
-                $ownerFieldValue = $profileData[$ownerField];
+                $ownerFieldValue = $profileData[$ownerField]['value'];
                 if (!$ownerFieldValue) {
                     $fieldNames = array_diff($fieldNames, $field->symbol_keys);
                 }
@@ -242,11 +241,10 @@ class BaseController extends Controller
 
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
-                $validationData[$field->symbol_key] = $profileData[$field->symbol_key];
+                $validationData[$field->symbol_key] = $profileData[$field->symbol_key]['value'];//@TODO can be array
                 $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
             }
         }
-
        // dd($validationData, $constraints);
         /** @var  $validator \Illuminate\Validation\Validator */
         $validator = Validator::make(
@@ -279,7 +277,6 @@ class BaseController extends Controller
 
             return $user;
         }
-
         $fields = $this->validateProfileData($profileData);
 
         $user->touch();
@@ -290,16 +287,15 @@ class BaseController extends Controller
 
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
-                $mapping[$field->id] = ["value" => $profileData[$field->symbol_key] ];
+                $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]['value'], "dictionary_id" => $profileData[$field->symbol_key]['dictionary_id'] ? : null  ];
                 $sKeys[$field->id] = $field->symbol_key;
             }//@TODO if example favourite_movies[] = '', no errors;
         }
-
         foreach ($mapping as $key => $map) {
             $this->fieldRepo()->profileFields($user)->detach($key, true);
             if (is_array($map['value'])) {
-                foreach ($map['value'] as $val) {
-                    $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $val]);
+                foreach ($map['value'] as $k => $val) {
+                    $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $val, "dictionary_id" => $map['dictionary_id'][$k] ? : null]);
                 }
             } elseif( $map['value'] instanceof UploadedFile) {
                 /** @var  $file UploadedFile  */
@@ -309,7 +305,6 @@ class BaseController extends Controller
                 $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $fileName]);
             } else{
                 $this->fieldRepo()->profileFields($user)->attach($key, $map);
-
             }
         }
         if (!empty($mapping)) {
@@ -323,11 +318,17 @@ class BaseController extends Controller
         return $user;
     }
 
+    /**
+     * @param array $files
+     * @param array $hash
+     */
     protected function checkFile(array $files, array &$hash)
     {
         if (!empty($files)){
             foreach($files as $symbolKey => $file){
-                $hash[$symbolKey] = $file;
+                $hash[$symbolKey]['value'] = $file;
+                $hash[$symbolKey]['dictionary_id'] = null;
+                $hash[$symbolKey]['type'] = 'field';
             }
         }
     }

@@ -47,18 +47,16 @@ class UserController extends BaseController
 
         /** @var  $request Req */
         $request = Request::instance();
+        //echo "<pre>"; print_r($request); exit;
         $hash = $request->request->all();
-
         if ($files = Input::file()){
             $this->checkFile($files, $hash);
         }
-
         if (empty($hash)) {
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
         $this->updateUserProfile($user, $hash);
-
 
 
         return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user), $this->securityContext()->role()));
