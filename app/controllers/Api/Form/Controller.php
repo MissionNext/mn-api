@@ -88,53 +88,9 @@ class Controller extends BaseController
         }
         /** @var  $formRepo FormRepository */
         $formRepo = $this->repoContainer[FormRepositoryInterface::KEY];
-        $structuredData = [];
-        $groupFields = $formRepo->groupedFields($form)->get();
-        foreach($groupFields as $groupField){
-            $groupId = $groupField->id;
-            $fieldId = $groupField->field_id;
-            $structuredData[$groupId]['symbol_key'] = $groupField->symbol_key;
-            $structuredData[$groupId]['id'] = $groupId;
-            $structuredData[$groupId]['name'] = $groupField->name;
-            $structuredData[$groupId]['depends_on'] = $groupField->depends_on;
-            $structuredData[$groupId]['is_outer_dependent'] = $groupField->is_outer_dependent;
-            $structuredData[$groupId]['order'] = $groupField->order;
-
-            $choices = $groupField->field_choices ? : [];
-            $defChoices = $groupField->field_default_choices ? : [];
-            $choicesIds = $groupField->field_dictionary_id ? : [];
-
-            $structuredData[$groupId]['fields'][$fieldId]['id'] = $fieldId;
-            $structuredData[$groupId]['fields'][$fieldId]['symbol_key'] = $groupField->field_symbol_key;
-            $structuredData[$groupId]['fields'][$fieldId]['constraints'] = $groupField->field_constraints;
-            $structuredData[$groupId]['fields'][$fieldId]['type'] = $groupField->field_type;
-            $structuredData[$groupId]['fields'][$fieldId]['name'] = $groupField->field_name;
-            $structuredData[$groupId]['fields'][$fieldId]['choices'] = $choices;
-            $structuredData[$groupId]['fields'][$fieldId]['field_dictionary_ids'] = $groupField->field_dictionary_id ? : [];
-            $structuredData[$groupId]['fields'][$fieldId]['default_choices'] = $defChoices;
-            $structuredData[$groupId]['fields'][$fieldId]['field_default_dictionary_ids'] = $groupField->field_default_dictionary_id ? : [];
-            $structuredData[$groupId]['fields'][$fieldId]['default_value'] = $groupField->field_default_value;
-            $structuredData[$groupId]['fields'][$fieldId]['order'] = $groupField->field_order;
-            $structuredData[$groupId]['fields'][$fieldId]['meta'] = json_decode($groupField->field_meta, true);
-
-            $dictionary = [];
-            foreach($choices as $key => $choice){
-                $dictionary[$key]['value'] = $choice;
-                $dictionary[$key]['default_value'] = $defChoices[$key];
-                $dictionary[$key]['id'] = intval($choicesIds[$key]);
-                $dictionary[$key]['order'] = 0;
-            }
-
-            $structuredData[$groupId]['fields'][$fieldId]['choices'] = $dictionary;
-
-            //@TODO default_value to array
-        }
 
 
-        return new RestResponse($structuredData);
-
-
-
+        return new RestResponse($formRepo->structuredGroupFields($form));
     }
 
     /**

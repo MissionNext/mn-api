@@ -3,6 +3,7 @@
 namespace MissionNext\Repos\Form;
 
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\Form\AppForm;
@@ -21,6 +22,61 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
     {
 
         return $this->model;
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    private function structureData(Collection $collection)
+    {
+        $structuredData = [];
+
+        foreach($collection as $groupField){
+            $groupId = $groupField->id;
+            $fieldId = $groupField->field_id;
+            $structuredData[$groupId]['symbol_key'] = $groupField->symbol_key;
+            $structuredData[$groupId]['id'] = $groupId;
+            $structuredData[$groupId]['name'] = $groupField->name;
+            $structuredData[$groupId]['depends_on'] = $groupField->depends_on;
+            $structuredData[$groupId]['is_outer_dependent'] = $groupField->is_outer_dependent;
+            $structuredData[$groupId]['order'] = $groupField->order;
+
+            $choices = $groupField->field_choices ? : [];
+            $defChoices = $groupField->field_default_choices ? : [];
+            $choicesIds = $groupField->field_default_dictionary_id ? : [];
+            $dictionaryOrder = $groupField->dictionary_order ? : [];
+
+            $structuredData[$groupId]['fields'][$fieldId]['id'] = $fieldId;
+            $structuredData[$groupId]['fields'][$fieldId]['symbol_key'] = $groupField->field_symbol_key;
+            $structuredData[$groupId]['fields'][$fieldId]['constraints'] = $groupField->field_constraints;
+            $structuredData[$groupId]['fields'][$fieldId]['type'] = $groupField->field_type;
+            $structuredData[$groupId]['fields'][$fieldId]['name'] = $groupField->field_trans_name;
+            //$structuredData[$groupId]['fields'][$fieldId]['choices'] = $choices;
+            //$structuredData[$groupId]['fields'][$fieldId]['field_dictionary_ids'] = $groupField->field_dictionary_id ? : [];
+            //  $structuredData[$groupId]['fields'][$fieldId]['default_choices'] = $defChoices;
+            // $structuredData[$groupId]['fields'][$fieldId]['field_default_dictionary_ids'] = $groupField->field_default_dictionary_id ? : [];
+            $structuredData[$groupId]['fields'][$fieldId]['default_value'] = $groupField->field_default_value;
+            $structuredData[$groupId]['fields'][$fieldId]['order'] = $groupField->field_order;
+            $structuredData[$groupId]['fields'][$fieldId]['meta'] = json_decode($groupField->field_meta, true);
+
+            $dictionary = [];
+
+
+            foreach($defChoices as $key => $defChoice){
+                $dictionary[$key]['value'] = isset($choices[$key]) ? $choices[$key] : null;
+                $dictionary[$key]['default_value'] = $defChoice;
+                $dictionary[$key]['id'] = intval($choicesIds[$key]);
+                $dictionary[$key]['order'] = intval($dictionaryOrder[$key]);
+            }
+
+            $structuredData[$groupId]['fields'][$fieldId]['choices'] = $dictionary;
+
+            //@TODO default_value to array
+        }
+
+        return $structuredData;
     }
 
     /**
@@ -69,8 +125,9 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
 
                 DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary_trans.value", "field_choices", "{$type}_dictionary_trans.dictionary_id" )),
                 DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary.value", "field_default_choices", "{$type}_dictionary.id")),
-                DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary_trans.dictionary_id", "field_dictionary_id","{$type}_dictionary_trans.dictionary_id")),
+                //DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary_trans.dictionary_id", "field_dictionary_id","{$type}_dictionary_trans.dictionary_id")),
                 DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary.id", "field_default_dictionary_id","{$type}_dictionary.id")),
+                DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary.order", "dictionary_order", "{$type}_dictionary.id")),
                 $type.'_fields.symbol_key as field_symbol_key',
                 'data_model_' . $type . '_fields.constraints as field_constraints',
                 $type."_fields.id as field_id",
@@ -85,8 +142,19 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             );
 
         return
-            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['field_choices', 'field_default_choices', 'field_default_value', 'field_dictionary_id', 'field_default_dictionary_id']));
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['field_choices', 'field_default_choices', 'field_default_value', 'field_dictionary_id', 'field_default_dictionary_id', 'dictionary_order']));
 
+    }
+
+    /**
+     * @param AppForm $form
+     *
+     * @return array
+     */
+    public function structuredGroupFields(AppForm $form)
+    {
+
+        return $this->structureData($this->groupedFields($form)->get());
     }
 
 } 

@@ -31,7 +31,7 @@ class FieldController extends BaseController
        foreach($appLangIds as $langId){
            array_push($transFields, [
                       'lang_id' => $langId,
-                      'fields' => $fieldRepo->fieldsExpandedTrans(LanguageModel::find($langId))->get()->toArray(),
+                      'fields' => $fieldRepo->fieldsExpandedTrans(LanguageModel::find($langId) ?: new LanguageModel())->get()->toArray(),
                       ] );
        }
 

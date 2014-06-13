@@ -12,7 +12,7 @@ abstract class BaseDictionary extends Eloquent implements ModelInterface {
 
     public $timestamps = false;
 
-    protected $fillable = array('value');
+    protected $fillable = array('value', 'field_id', 'order');
 
     abstract  public function field();
 
