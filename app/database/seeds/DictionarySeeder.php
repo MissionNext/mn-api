@@ -64,6 +64,41 @@ class DictionarySeeder extends BaseSeeder
                 "field_id" => 7,
                 "value" => "ESL",
             ),
+            array(
+                "field_id" => 9, //14
+                "value" => "(!)Bamby's",
+            ),
+            array(
+                "field_id" => 9,
+                "value" => "Buratino",
+            ),
+            array(
+                "field_id" => 9,
+                "value" => "Terminatorik",
+            ),
+
+        ));
+        DB::table('job_dictionary_trans')->insert(array(
+            array(
+                "dictionary_id" => 14,
+                "lang_id" => 1,
+                "value" => "First Lang (!)Bambys",
+            ),
+            array(
+                "dictionary_id" => 16,
+                "lang_id" => 1,
+                "value" => "Pervuia Lang Terminatorik",
+            ),
+            array(
+                "dictionary_id" => 15,
+                "lang_id" => 2,
+                "value" => "Second Buration",
+            ),
+            array(
+                "dictionary_id" => 16,
+                "lang_id" => 3,
+                "value" => "Third Terminatorik",
+            ),
 
         ));
 

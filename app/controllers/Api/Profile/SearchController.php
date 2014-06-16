@@ -3,9 +3,11 @@
 namespace MissionNext\Controllers\Api\Profile;
 
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Response\RestResponse;
+use MissionNext\Api\Service\Matching\TransData;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Api\Exceptions\SearchProfileException;
 use MissionNext\Facade\SecurityContext;
@@ -139,16 +141,15 @@ class SearchController extends BaseController
 
             throw new SearchProfileException("No search params specified");
         }
+      $result =  array_map(function ($d) {
+            $data = json_decode($d->data);
+            $data->notes = $d->notes;
+            $data->folder = $d->foldername;
+            $data->favorite = $d->favorite;
+            return  new \ArrayObject($data);
+        }, DB::select($query, $bindings));
 
-        //dd($query, $bindings);
-     //    dd( DB::select($query, $bindings));
-        return new RestResponse(array_map(function ($d) {
-               $data = json_decode($d->data);
-               $data->notes = $d->notes;
-               $data->folder = $d->foldername;
-               $data->favorite = $d->favorite;
-            return $data;
-        }, DB::select($query, $bindings)));
+      return new RestResponse( (new TransData($this->getToken()->language(), $searchType, $result))->get() );
 
     }
 

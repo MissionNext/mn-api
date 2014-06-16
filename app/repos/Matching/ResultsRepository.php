@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Service\DataTransformers\UserCachedDataStrategy;
 use MissionNext\Api\Service\DataTransformers\UserCachedTransformer;
+use MissionNext\Api\Service\Matching\TransData;
 use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\CacheData\UserCachedDataTrans;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\AbstractRepository;
@@ -68,23 +70,10 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                  ->where("matching_results.for_user_id", "=", $forUserId)
                  ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
-        return
+         $result =
             (new UserCachedTransformer($builder, new UserCachedDataStrategy( )))->get();
 
-         //dd(DB::getQueryLog());
-       // dd($matchResults->toArray());
+         return (new TransData($this->securityContext()->getToken()->language(), $userType, $result->toArray()))->get();
 
-//        $matchResults->each(function($el) use (&$data){
-//            static $i = 0;
-//
-//            $data[$i] = json_decode($el->data, true);
-//
-//            $data[$i]['folder'] = $el->folder;
-//            $data[$i]['notes'] = $el->notes;
-//            $i++;
-//
-//        });
-//
-//        return $data;
     }
 } 

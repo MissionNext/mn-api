@@ -14,6 +14,7 @@ use MissionNext\Repos\Form\FormRepositoryInterface;
 use MissionNext\Repos\Inquire\InquireRepository;
 use MissionNext\Repos\Inquire\InquireRepositoryInterface;
 use MissionNext\Repos\User\JobRepositoryInterface;
+use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\Languages\LanguageRepositoryInterface;
 use MissionNext\Repos\Translation\FieldRepositoryInterface as TransFieldRepoInterface;
@@ -49,7 +50,6 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
 
     public function __construct(Application $app)
     {
-
         $this->container = [
             InquireRepositoryInterface::KEY   => $app->make(InquireRepositoryInterface::class)->setRepoContainer($this),
             JobRepositoryInterface::KEY   => $app->make(JobRepositoryInterface::class)->setRepoContainer($this),
@@ -60,6 +60,8 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
             TransFieldRepoInterface::KEY => $app->make(TransFieldRepoInterface::class)->setRepoContainer($this),
             FieldRepositoryInterface::KEY => $app->make(FieldRepositoryInterface::class)->setRepoContainer($this),
             FormRepositoryInterface::KEY => $app->make(FormRepositoryInterface::class)->setRepoContainer($this),
+            FormRepositoryInterface::KEY => $app->make(FormRepositoryInterface::class)->setRepoContainer($this),
+            ProfileRepositoryFactory::KEY => $app->make(ProfileRepositoryFactory::class)->setRepoContainer($this),
         ];
     }
 

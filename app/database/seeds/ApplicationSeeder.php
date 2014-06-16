@@ -24,6 +24,8 @@ class ApplicationSeeder extends BaseSeeder {
         $application1->dataModels()->save(AppDataModel::createOrganization());
         $application1->dataModels()->save(AppDataModel::createAgency());
         $application1->dataModels()->save(AppDataModel::createJob());
+        $application1->languages()->attach(\MissionNext\Models\Language\LanguageModel::findOrFail(1)->id);
+        $application1->languages()->attach(\MissionNext\Models\Language\LanguageModel::findOrFail(2)->id);
 
         $application2 = new Application();
         $application2->private_key = "private";
@@ -34,6 +36,9 @@ class ApplicationSeeder extends BaseSeeder {
         $application2->dataModels()->save(AppDataModel::createOrganization());
         $application2->dataModels()->save(AppDataModel::createAgency());
         $application2->dataModels()->save(AppDataModel::createJob());
+        $application2->languages()->attach(\MissionNext\Models\Language\LanguageModel::findOrFail(1)->id);
+        $application2->languages()->attach(\MissionNext\Models\Language\LanguageModel::findOrFail(2)->id);
+        $application2->languages()->attach(\MissionNext\Models\Language\LanguageModel::findOrFail(3)->id);
 
     }
 

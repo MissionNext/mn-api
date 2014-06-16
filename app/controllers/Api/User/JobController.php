@@ -10,10 +10,13 @@ use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
+use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\User\User;
+use MissionNext\Repos\CachedData\UserCachedRepository;
+use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Validators\Job as JobValidator;
 
@@ -49,7 +52,6 @@ class JobController extends BaseController
      */
     public function store()
     {
-
         $jobValidator = new JobValidator(Request::instance());
 
         if (!$jobValidator->passes())
@@ -91,8 +93,11 @@ class JobController extends BaseController
     public function show($id)
     {
 
-        return new RestResponse($this->jobRepo()->getModel()->with('organization')->find($id));
-    }
+        /** @var  $cacheData UserCachedRepository */
+        $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
+        $cacheData->findOrFail($id);
+
+        return new RestResponse($cacheData->transData($this->getToken()->language()));    }
 
     /**
      * @param $id

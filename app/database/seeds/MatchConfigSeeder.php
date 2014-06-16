@@ -6,11 +6,20 @@ use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\User\User;
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Repos\RepositoryContainerInterface;
 
 class MatchConfigSeeder extends BaseSeeder
 {
+
     public function run()
     {
+        $app = $this->createApp();
+//        $app['router']->enableFilters();
+//        $app->register(\MissionNext\Provider\RoutingProvider::class);
+//        $app->register(\MissionNext\Provider\SecurityProvider::class);
+//        $app->register(\MissionNext\Provider\ErrorProvider::class);
+//        $app->register(\MissionNext\Provider\RepositoryProvider::class);
+
         DB::statement($this->getDbStatement()->truncateTable("matching_job_config"));
         DB::statement($this->getDbStatement()->truncateTable("matching_organization_config"));
         DB::statement($this->getDbStatement()->truncateTable("organization_cached_profile"));
@@ -40,46 +49,77 @@ class MatchConfigSeeder extends BaseSeeder
         $configRep->insert($configs);
 
         $configRepApp2->insert($this->getJobConfig(2));
+        /** @var  $repoContainer \MissionNext\Repos\RepositoryContainer */
+        $repoContainer = $app->make(RepositoryContainerInterface::class);
+        $repoContainer->setSecurityContext($scApp2);
+        /** @var  $profileRepo  \MissionNext\Repos\User\ProfileRepositoryFactory */
+        $profileRepo = $repoContainer[\MissionNext\Repos\User\ProfileRepositoryFactory::KEY];
+        $userRepApp2 = $profileRepo->setRepoContainer($repoContainer)->profileRepository();
+        $userRepApp2->addUserCachedData(Job::find(7));
+        $userRepApp2->addUserCachedData(Job::find(8));
+        $userRepApp2->addUserCachedData(Job::find(9));
 
-        $userRepApp2 = (new \MissionNext\Repos\User\UserRepository())->setSecurityContext($scApp2);
-        $userRepApp2->insertUserCachedData(Job::find(7));
-        $userRepApp2->insertUserCachedData(Job::find(8));
-        $userRepApp2->insertUserCachedData(Job::find(9));
 
 
         /**
          * set profile cache data
          */
-        $userRep = (new \MissionNext\Repos\User\UserRepository())->setSecurityContext($sc);
-        $userRep->insertUserCachedData(Job::find(1));
-        $userRep->insertUserCachedData(Job::find(2));
-        $userRep->insertUserCachedData(Job::find(3));
-        $userRep->insertUserCachedData(Job::find(4));
-        $userRep->insertUserCachedData(Job::find(5));
-        $userRep->insertUserCachedData(Job::find(6));
+        $repoContainer->setSecurityContext($sc);
+        $profileRepo->setRepoContainer($repoContainer);
+        $userRep = $profileRepo->profileRepository();
+        $userRep->addUserCachedData(Job::find(1));
+        $userRep->addUserCachedData(Job::find(2));
+        $userRep->addUserCachedData(Job::find(3));
+        $userRep->addUserCachedData(Job::find(4));
+        $userRep->addUserCachedData(Job::find(5));
+        $userRep->addUserCachedData(Job::find(6));
 
         $sc->getToken()->setRoles([BaseDataModel::CANDIDATE]);
         $scApp2->getToken()->setRoles([BaseDataModel::CANDIDATE]);
-        $userRep->insertUserCachedData($userRep->find(2));
-        $userRep->insertUserCachedData($userRep->find(4));
-        $userRepApp2->insertUserCachedData($userRepApp2->find(10));
+
+        $repoContainer->setSecurityContext($sc);
+        $profileRepo->setRepoContainer($repoContainer);
+        $userRep = $profileRepo->profileRepository();
+        $userRep->addUserCachedData($userRep->find(2));
+        $userRep->addUserCachedData($userRep->find(4));
+        $repoContainer->setSecurityContext($scApp2);
+        $profileRepo->setRepoContainer($repoContainer);
+        $userRepApp2 = $profileRepo->profileRepository();
+        $userRepApp2->addUserCachedData($userRepApp2->find(10));
 
 
         $sc->getToken()->setRoles([BaseDataModel::AGENCY]);
         $scApp2->getToken()->setRoles([BaseDataModel::AGENCY]);
-        $userRepApp2->insertUserCachedData($userRepApp2->find(9));
-        $userRep->insertUserCachedData($userRep->find(1));
+
+        $repoContainer->setSecurityContext($sc);
+        $profileRepo->setRepoContainer($repoContainer);
+        $userRep = $profileRepo->profileRepository();
+        $userRep->addUserCachedData($userRep->find(1));
+
+        $repoContainer->setSecurityContext($scApp2);
+        $profileRepo->setRepoContainer($repoContainer);
+        $userRepApp2 = $profileRepo->profileRepository();
+        $userRepApp2->addUserCachedData($userRepApp2->find(9));
 
         $sc->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
         $scApp2->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
 
-        $userRepApp2->insertUserCachedData($userRepApp2->find(11));
+        $repoContainer->setSecurityContext($sc);
+        $profileRepo->setRepoContainer($repoContainer);
+        $userRep = $profileRepo->profileRepository();
 
-        $userRep->insertUserCachedData($userRep->find(3));
-        $userRep->insertUserCachedData($userRep->find(5));
-        $userRep->insertUserCachedData($userRep->find(6));
-        $userRep->insertUserCachedData($userRep->find(7));
-        $userRep->insertUserCachedData($userRep->find(8));
+        $userRep->addUserCachedData($userRep->find(3));
+        $userRep->addUserCachedData($userRep->find(5));
+        $userRep->addUserCachedData($userRep->find(6));
+        $userRep->addUserCachedData($userRep->find(7));
+        $userRep->addUserCachedData($userRep->find(8));
+
+        $repoContainer->setSecurityContext($scApp2);
+        $profileRepo->setRepoContainer($repoContainer);
+        $userRepApp2 = $profileRepo->profileRepository();
+
+        $userRepApp2->addUserCachedData($userRepApp2->find(11));
+
 
         $configRep = (new \MissionNext\Repos\Matching\ConfigRepository())->setSecurityContext($sc);
         $orgConfig = $this->getOrgConfig(1);
@@ -88,6 +128,10 @@ class MatchConfigSeeder extends BaseSeeder
         $scApp2->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
         $configRepApp2 = (new \MissionNext\Repos\Matching\ConfigRepository())->setSecurityContext($scApp2);
         $configRepApp2->insert($this->getOrgConfig(2));
+
+        $queueData = ["appId"=>1, "role" => BaseDataModel::CANDIDATE, "userId" => 0];
+        \MissionNext\Api\Service\Matching\Queue\Master\ConfigUpdateMatching::run($queueData);
+
 
     }
 

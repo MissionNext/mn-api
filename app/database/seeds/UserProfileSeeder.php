@@ -35,25 +35,26 @@ class UserProfileSeeder extends BaseSeeder
         /** @var  $job1 Job */
         $job1 = Job::find(1);
         $job1->jobFields()->attach(5, ["value" => "Administrator" ]);
-        $job1->jobFields()->attach(6, ["value" => "Spanish" ]);
+        $job1->jobFields()->attach(6, ["value" => "Computer & Keyboarding", "dictionary_id" => 11 ]);
         $job1->jobFields()->attach(2, ["value" => "Some title" ]);
-        $job1->jobFields()->attach(9, ["value" => "Bamby" ]);
-        $job1->jobFields()->attach(9, ["value" => "Buratino" ]);
-        $job1->jobFields()->attach(3, ["value" => "Mexico" ]);
+        $job1->jobFields()->attach(9, ["value" => "Buratino" , "dictionary_id" => 15 ]);
+        $job1->jobFields()->attach(9, ["value" => "Terminatorik", "dictionary_id" => 16  ]);
+        $job1->jobFields()->attach(9, ["value" => "(!)Bamby's", "dictionary_id" => 14  ]);
+        $job1->jobFields()->attach(3, ["value" => "Mexico" , "dictionary_id" => 13  ]);
         $job1->jobFields()->attach(10, ["value" => "1988-11-11" ]);
 
         /** @var  $job2 Job */
         $job2 = Job::find(2);
         $job2->jobFields()->attach(5, ["value" => "Administrator" ]);
-        $job2->jobFields()->attach(6, ["value" => "Spanish" ]);
+        $job2->jobFields()->attach(6, ["value" => "Spanish" , "dictionary_id" => 1  ]);
         $job2->jobFields()->attach(2, ["value" => "Some title" ]);
         /** @var  $job3 Job */
         $job3 = Job::find(3);
         $job3->jobFields()->attach(5, ["value" => "Admin" ]); //Administrator -
-        $job3->jobFields()->attach(6, ["value" => "Spanish" ]); //Spanish +
-        $job3->jobFields()->attach(2, ["value" => "Bamby's" ]); // (!)bamby +
+        $job3->jobFields()->attach(6, ["value" => "Spanish" , "dictionary_id" => 1  ]); //Spanish +
+        $job3->jobFields()->attach(2, ["value" => "Bamby's" , "dictionary_id" => 8  ]); // (!)bamby +
         $job3->jobFields()->attach(3, ["value" => "location" ]); //  +
-        $job3->jobFields()->attach(4, ["value" => "Mexico" ]); // not in config
+        $job3->jobFields()->attach(4, ["value" => "Mexico" , "dictionary_id" => 13  ]); // not in config
         $job3->jobFields()->attach(10, ["value" => "1988-11-11" ]); //-
         $job3->jobFields()->attach(1, ["value" => "Another title" ]); // +
         $job3->jobFields()->attach(9, ["value" => "Paraska" ]); // favourite movies
@@ -111,10 +112,10 @@ class UserProfileSeeder extends BaseSeeder
        //4
         $candidate1->candidateFields()->attach(1, array('value' => "1977-11-11"));
         $candidate1->candidateFields()->attach(2, array('value' => "location" ));
-        $candidate1->candidateFields()->attach(13, array('value' => "(!)Bamby"));
-        $candidate1->candidateFields()->attach(13, array('value' => "Buratino"));
-        $candidate1->candidateFields()->attach(5, array('value' => "Administrator"));
-        $candidate1->candidateFields()->attach(4, array('value' => "Spanish"));
+        $candidate1->candidateFields()->attach(13, array('value' => "(!)Bamby" , "dictionary_id" => 8 ));
+        $candidate1->candidateFields()->attach(13, array('value' => "Buratino" , "dictionary_id" => 9));
+        $candidate1->candidateFields()->attach(5, array('value' => "Administrator" ));
+        $candidate1->candidateFields()->attach(4, array('value' => "Spanish" , "dictionary_id" => 1));
         $candidate1->candidateFields()->attach(6, array('value' => "Another title"));
         $candidate1->candidateFields()->attach(10, array('value' => "ParaSkaBB"));//best way to contact
         $candidate1->candidateFields()->attach(3, array('value' => 110));

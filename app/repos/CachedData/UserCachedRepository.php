@@ -12,7 +12,9 @@ use MissionNext\Facade\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\CacheData\UserCachedData;
+use MissionNext\Models\CacheData\UserCachedDataTrans;
 use MissionNext\Models\FolderApps\FolderApps;
+use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\Notes\Notes;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Repos\RepositoryInterface;
@@ -27,6 +29,8 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
 
     public function __construct($type)
     {
+        $oldType = SecurityContext::role();
+
         if ( ! RouteSecurityFilter::isAllowedRole($type) ){
 
             throw new SecurityContextException("'$type' role doesn't exists", SecurityContextException::ON_SET_ROLE);
@@ -34,7 +38,12 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
         $this->currentType = $type;
         SecurityContext::getInstance()->getToken()->setRoles([$type]);
         $this->app = SecurityContext::getInstance()->getApp();
+
         parent::__construct();
+
+        if ($oldType){
+            SecurityContext::getInstance()->getToken()->setRoles([$oldType]);
+        }
     }
 
     public function dataOfType($type)
@@ -75,6 +84,20 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
 
         return
             new UserCachedTransformer($queryBuilder, new UserCachedDataStrategy());
+    }
+
+    /**
+     * @param LanguageModel $languageModel
+     *
+     * @return array
+     */
+    public function transData(LanguageModel $languageModel)
+    {
+        /** @var  $transCache UserCachedDataTrans */
+        $transCache = (new UserCachedDataTrans())->whereLangId($languageModel->id)
+        ->whereId($this->getModel()->id)->get()->first();
+
+        return $transCache ? $transCache->getData() : $this->getModel()->getData();
     }
 
 

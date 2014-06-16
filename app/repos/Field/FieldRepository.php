@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\FieldException;
 use MissionNext\DB\SqlStatement\Sql;
+use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Dictionary\BaseDictionary;
 use MissionNext\Models\Field\Candidate;
@@ -24,7 +25,7 @@ class FieldRepository extends AbstractFieldRepository
      */
     public function fieldsExpandedTrans(LanguageModel $language)
     {
-        $role = $this->securityContext->role();
+        $role = $this->repoContainer->securityContext()->role();
 
         if (!$language->id) {
 
@@ -65,7 +66,7 @@ class FieldRepository extends AbstractFieldRepository
      */
     public function fieldsExpanded()
     {
-        $role = $this->securityContext->role();
+        $role = $this->repoContainer->securityContext()->role();
         /**
          * @var $builder Builder
          */
@@ -93,9 +94,9 @@ class FieldRepository extends AbstractFieldRepository
      */
     public function modelFieldsExpanded()
     {
-        $role = $this->securityContext->role();
+        $role = $this->repoContainer->securityContext()->role();
 
-        $dm = $this->securityContext->getApp()->DM();
+        $dm = $this->repoContainer->securityContext()->getApp()->DM();
 
         $builder = $this->getModel()
 
@@ -124,8 +125,8 @@ class FieldRepository extends AbstractFieldRepository
      */
     public function modelFields()
     {
-        $role = $this->securityContext->role(); // or this->model->roleType
-        $dm = $this->securityContext->getApp()->DM();
+        $role = $this->repoContainer->securityContext()->role(); // or this->model->roleType
+        $dm = $this->repoContainer->securityContext()->getApp()->DM();
 
         return $dm->belongsToMany($this->getModelClassName(), 'data_model_' . $role . '_fields', 'data_model_id', 'field_id')->withPivot('constraints');
     }
@@ -137,7 +138,7 @@ class FieldRepository extends AbstractFieldRepository
      */
     public function profileFields(ProfileInterface $user)
     {
-        $role = $this->securityContext->role(); // or this->model->roleType
+        $role = $this->repoContainer->securityContext()->role(); // or this->model->roleType
         $userName = $role === BaseDataModel::JOB ? BaseDataModel::JOB : "user";
 
         return $user->belongsToMany($this->getModelClassName(), $role . '_profile', $userName . '_id', 'field_id')->withPivot('value');
@@ -184,7 +185,7 @@ class FieldRepository extends AbstractFieldRepository
         if (count($dictionary)) {
             $this->getModel()->choices()->insert($dictionary);
         }
-        $role = $this->securityContext->role();
+        $role = $this->repoContainer->securityContext()->role();
 
         return $this->fieldsExpanded()->whereIn("{$role}_fields.symbol_key", $symbol_keys)->get();
 
@@ -238,7 +239,7 @@ class FieldRepository extends AbstractFieldRepository
             }
 
         }
-        $role = $this->securityContext->role();
+        $role = $this->repoContainer->securityContext();
 
         return $this->fieldsExpanded()->whereIn("{$role}_fields.id", $ids)->get();
     }
@@ -260,7 +261,7 @@ class FieldRepository extends AbstractFieldRepository
         }
 
         $viewFieldRepo = new ViewFieldRepository();
-        $viewFieldRepo->deleteByDMSymbolKeys($this->securityContext->getApp()->DM(), $symbol_keys);
+        $viewFieldRepo->deleteByDMSymbolKeys($this->repoContainer->securityContext()->getApp()->DM(), $symbol_keys);
         $this->getModel()->destroy($ids);
 
         return $this->fieldsExpanded()->get();

@@ -5,7 +5,7 @@ namespace MissionNext\Repos;
 
 use Illuminate\Database\Eloquent\Model;
 
-interface RepositoryInterface {
+interface RepositoryInterface extends RepoContainerAware {
 
     public function create(array $attributes);
 
@@ -16,8 +16,6 @@ interface RepositoryInterface {
     public function with($string);
 
     public function destroy($ids);
-
-    public  function  setRepoContainer(RepositoryContainer $container);
 
     /**
      * @return Model

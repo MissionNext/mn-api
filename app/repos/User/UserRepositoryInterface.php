@@ -10,7 +10,7 @@ use MissionNext\Repos\RepositoryInterface;
 interface UserRepositoryInterface extends RepositoryInterface
 {
 
-    const KEY = "user";
+    const KEY = "user_repo";
     /**
      * @return User
      */

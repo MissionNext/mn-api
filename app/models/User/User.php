@@ -19,6 +19,7 @@ use MissionNext\Models\Field\Candidate as CandidateField;
 use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
+use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 
@@ -98,8 +99,9 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
      */
     public function getRepo()
     {
+        $repoContainer = App::make(RepositoryContainerInterface::class);
 
-        return App::make(UserRepository::class)->setSecurityContext(SecurityContext::getInstance());
+        return $repoContainer[UserRepositoryInterface::KEY];
     }
 
     public function addApp(Application $app)
@@ -113,6 +115,11 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
             }
 
             return false;
+        });
+
+        $this->onCreated(function ($user) use ($app) {
+            /** @var $user User */
+                $user->apps()->attach($app->id);
         });
 
         return $this;
@@ -150,6 +157,8 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
         return $this->belongsToMany(RoleModel::class, 'user_roles', 'user_id', 'role_id');
     }
+
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -244,6 +253,15 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     {
 
         return in_array($check, array_fetch($this->roles->toArray(), 'role'));
+    }
+
+    /**
+     * @return string
+     */
+    public function role()
+    {
+
+        return $this->roles()->first()->role;
     }
 
     /**

@@ -68,8 +68,11 @@ class ConfigUpdateMatching extends MasterMatching
         $roles = array_values(array_diff($this->matchingRoles, [$role]));
         array_unshift($roles, $role);
         foreach($roles as $role){
+
             $cacheRep = new UserCachedRepository($role);
+
             $ids = $cacheRep->all()->lists("id");
+
             $d = ["appId" => $appId, "role" => $role, "userId" => null];
             foreach($ids as $id){
                 $d["userId"] = $id;

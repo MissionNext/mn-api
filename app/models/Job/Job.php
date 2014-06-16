@@ -9,6 +9,7 @@ use MissionNext\Models\ModelObservable;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\ProfileInterface;
 use MissionNext\Models\User\User as UserModel;
+use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\UserRepositoryInterface;
@@ -117,6 +118,15 @@ class Job extends ModelObservable implements ProfileInterface
     }
 
     /**
+     * @return string
+     */
+    public function role()
+    {
+
+        return BaseDataModel::JOB;
+    }
+
+    /**
      * @param Application $app
      *
      * @return bool
@@ -138,7 +148,9 @@ class Job extends ModelObservable implements ProfileInterface
     public function getRepo()
     {
 
-        return App::make(JobRepositoryInterface::class);
+        $repoContainer = App::make(RepositoryContainerInterface::class);
+
+        return $repoContainer[JobRepositoryInterface::KEY];
     }
 
 } 

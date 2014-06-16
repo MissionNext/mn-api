@@ -51,9 +51,30 @@ abstract class AbstractRepository implements RepositoryInterface
         return call_user_func_array("{$this->modelClassName}::all", array($columns));
     }
 
+    /**
+     * @param $id
+     * @param array $columns
+     *
+     * @return Model
+     */
     public function find($id, $columns = array('*'))
     {
-        return call_user_func_array("{$this->modelClassName}::find", array($id, $columns));
+        $this->model = call_user_func_array("{$this->modelClassName}::find", array($id, $columns));
+
+        return $this->model;
+    }
+
+    /**
+     * @param $id
+     * @param array $columns
+     *
+     * @return Model
+     */
+    public function findOrFail($id, $columns = array('*'))
+    {
+        $this->model = call_user_func_array("{$this->modelClassName}::findOrFail", array($id, $columns));
+
+        return $this->model;
     }
 
     public function destroy($ids)

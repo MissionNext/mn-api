@@ -12,12 +12,16 @@ use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Facade\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\Role\Role;
 use MissionNext\Models\User\User;
+use MissionNext\Repos\CachedData\UserCachedRepository;
+use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
+use MissionNext\Repos\Matching\ConfigRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Validators\User as UserValidator;
 
@@ -35,22 +39,19 @@ class UserController extends BaseController
      */
     public function index()
     {
-//        public function clearTube($tube)
-//    {
-//        try
-//        {
-//            while($job = $this->peekReady($tube))
-//            {
-//                var_dump($job->getData());
-//                $this->delete($job);
-//            }
-//        }
-//        catch(\Pheanstalk_Exception_ServerException $e){}
-//    }
+
 //        /** @var  $phn \Pheanstalk_Pheanstalk */
 //        $phn = Queue::getPheanstalk();
-//
 //        $phn->clearTube('default');
+//
+//        $sc = SecurityContext::getInstance();
+//        $sc->getToken()->setRoles(['organization']);
+//        $configRepo = (new ConfigRepository())->setSecurityContext($sc);
+//        $ss = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, 5)->get();
+//
+//        $cacheRep = new UserCachedRepository(BaseDataModel::ORGANIZATION);
+//        $ids = $cacheRep->all()->lists("id");
+//        dd($ids);
 
         return new RestResponse($this->userRepo()->all());
     }
@@ -101,7 +102,9 @@ class UserController extends BaseController
         $user->setRole($role);
         $user->addApp($this->getApp());
 
+
         $this->updateUserProfile($user, $profileData);
+
 
         return new RestResponse($user);
     }
@@ -115,9 +118,11 @@ class UserController extends BaseController
      */
     public function show($id)
     {
+        /** @var  $cacheData UserCachedRepository */
+        $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
+        $cacheData->findOrFail($id);
 
-        return new RestResponse($this->userRepo()->find($id));
-    }
+        return new RestResponse($cacheData->transData($this->getToken()->language()));    }
 
     /**
      * Show the form for editing the specified resource.

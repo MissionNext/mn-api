@@ -27,6 +27,7 @@ use MissionNext\Repos\RepositoryContainer;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
+use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
@@ -42,7 +43,7 @@ class RepositoryProvider extends ServiceProvider
     public function register()
     {
 
-        App::bind(FieldRepositoryInterface::class, function () {
+        App::bind(FieldRepositoryInterface::class, function ($app) {
 
             //@TODO based on condition return different model Repository
             return (new SecurityContextResolver(new FieldRepository()))->getResolvedObject();
@@ -94,13 +95,7 @@ class RepositoryProvider extends ServiceProvider
 
         App::bind(UserCachedRepositoryInterface::class, function () {
 
-            return new UserCachedRepository(BaseDataModel::CANDIDATE);
-        });
-
-        App::bind(RepositoryContainerInterface::class, function(Application $app)
-        {
-
-            return (new SecurityContextResolver( new RepositoryContainer($app)))->getResolvedObject();
+            return new UserCachedRepository(BaseDataModel::AGENCY);
         });
 
         App::bind(LanguageRepositoryInterface::class, function () {
@@ -113,7 +108,17 @@ class RepositoryProvider extends ServiceProvider
             return new TransFieldRepo();
         });
 
+        App::bind(ProfileRepositoryFactory::class, function ($app) {
 
+            return new ProfileRepositoryFactory();
+        });
+
+        //REPO CONTAINER
+        App::bind(RepositoryContainerInterface::class, function(Application $app)
+        {
+
+            return (new SecurityContextResolver( new RepositoryContainer($app)))->getResolvedObject();
+        });
 
     }
 

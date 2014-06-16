@@ -111,7 +111,7 @@ class BaseController extends Controller
     protected function fieldRepo()
     {
 
-        return $this->fieldRepo;
+        return $this->repoContainer[FieldRepositoryInterface::KEY];
     }
 
     /**
@@ -217,7 +217,6 @@ class BaseController extends Controller
     {
         $fieldNames = array_keys($profileData);
         $dependentFields = $this->formGroupRepo()->dependentFields()->get();
-
         foreach($dependentFields as $field){
             $ownerField = $field->depends_on;
             if (isset($profileData[$ownerField])){
@@ -227,9 +226,9 @@ class BaseController extends Controller
                 }
             }
         }
-       // dd($fieldNames);
         /** @var  $fields Collection */
         $fields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $fieldNames)->get();
+
 
         if ($fields->count() !== count($fieldNames)) {
 
@@ -277,10 +276,10 @@ class BaseController extends Controller
 
             return $user;
         }
+
         $fields = $this->validateProfileData($profileData);
 
         $user->touch();
-
 
         $mapping = [];
         $sKeys = [];
@@ -309,8 +308,12 @@ class BaseController extends Controller
         }
         if (!empty($mapping)) {
              //$user->touch();
+            /** @var  $userRepo UserRepository|JobRepository */
+            $userRepo = $this->securityContext()->role() === BaseDataModel::JOB
+                ?  $this->repoContainer[JobRepositoryInterface::KEY]
+                :  $this->repoContainer[UserRepositoryInterface::KEY];
 
-            $this->userRepo()->updateUserCachedData($user);
+            $userRepo->addUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
             ProfileUpdateMatching::run($queueData);
         }

@@ -7,10 +7,15 @@ use Illuminate\Support\Facades\Input;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Models\CacheData\UserCachedDataTrans;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\User\User as UserModel;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as Req;
+use MissionNext\Repos\CachedData\UserCachedRepository;
+use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
+use MissionNext\Repos\User\JobRepository;
+use MissionNext\Repos\User\JobRepositoryInterface;
 
 class JobController extends BaseController
 {
@@ -25,7 +30,11 @@ class JobController extends BaseController
     public function show($id)
     {
 
-        return new RestResponse($this->jobRepo()->profileData($this->jobRepo()->find($id)));
+        /** @var  $cacheData UserCachedRepository */
+        $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
+        $cacheData->findOrFail($id);
+
+        return new RestResponse($cacheData->transData($this->getToken()->language()));
     }
 
 

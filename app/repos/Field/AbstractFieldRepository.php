@@ -29,10 +29,10 @@ abstract class AbstractFieldRepository extends AbstractRepository implements Fie
      */
     protected function bootCurrentFieldModel()
     {
-        if ($this->model instanceof StdClass) {
-            $this->modelClassName = Field::currentFieldModelName($this->securityContext);
+
+            $this->modelClassName = Field::currentFieldModelName($this->repoContainer->securityContext());
             $this->model = new $this->modelClassName;
-        }
+
 
         return $this->model;
     }
