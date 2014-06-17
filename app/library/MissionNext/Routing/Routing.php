@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
+use MissionNext\Controllers\Api\Translation\CustomTransController;
+use MissionNext\Controllers\Api\Translation\FolderTransController;
+use MissionNext\Controllers\Api\Translation\FormGroupTransController;
 use MissionNext\Controllers\Api\Translation\LanguageController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Notes\NotesController;
@@ -152,6 +155,13 @@ class Routing
 
 
             Route::controller('language', LanguageController::class, []);
+            Route::controller('custom/trans', CustomTransController::class);
+
+            Route::get('form/group/trans/{type}/{formName}', FormGroupTransController::class.'@getGroupTrans');
+            Route::controller('form/group/trans', FormGroupTransController::class);
+
+            Route::get('folder/trans/{type}', FolderTransController::class.'@getFolderTrans');
+            Route::controller('folder/trans', FolderTransController::class);
 
             Route::controller('trans/{type}/field', TransFieldController::class, []);
 

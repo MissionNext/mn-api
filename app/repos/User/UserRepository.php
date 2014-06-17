@@ -21,6 +21,64 @@ use MissionNext\Repos\Field\FieldRepositoryInterface;
 
 class UserRepository extends AbstractUserRepository implements UserRepositoryInterface
 {
+
+    /**
+     * @param ProfileInterface $user
+     * @param LanguageModel $languageModel
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function profileDataTransQuery(ProfileInterface $user, LanguageModel $languageModel)
+    {
+        $this->model = $user;
+        $this->languageModel = $languageModel;
+        /** @var  $fieldRepo FieldRepository */
+        $fieldRepo = $this->repoContainer[FieldRepositoryInterface::KEY];
+        $secContext = $this->repoContainer->securityContext();
+        $role = $secContext->role();
+        //dd($this->repoContainer);
+        $builder =  $fieldRepo->getModel()
+            ->leftJoin("{$role}_profile", "{$role}_fields.id", "=", "{$role}_profile.field_id" )
+
+            ->leftJoin("{$role}_dictionary_trans", function($join) use ($role, $languageModel){
+                $join->on("{$role}_profile.dictionary_id", "=", "{$role}_dictionary_trans.dictionary_id")
+                    ->where("{$role}_dictionary_trans.lang_id", "=", $languageModel->id);
+            })
+            ->leftJoin("{$role}_fields_trans", function($join) use ($role, $languageModel){
+                $join->on("{$role}_fields_trans.field_id", "=", "{$role}_fields.id")
+                    ->where("{$role}_fields_trans.lang_id", "=", $languageModel->id);
+            })
+            ->leftJoin("users", "users.id", "=", "{$role}_profile.user_id")
+            ->leftJoin("user_roles", "user_roles.user_id", "=", "{$role}_profile.user_id")
+            ->leftJoin("roles", "roles.id", "=", "user_roles.role_id")
+            ->where("{$role}_profile.user_id", "=", $user->id)
+
+            ->select(
+                'users.id',
+                'users.username',
+                'users.email',
+                'users.created_at',
+                'users.updated_at',
+                'users.last_login',
+                'roles.role as role',
+                "{$role}_dictionary_trans.value as trans_value",
+                "{$role}_profile.value",
+                "{$role}_dictionary_trans.lang_id",
+                "{$role}_fields.id as field_id",
+                "{$role}_fields.type",
+                "{$role}_fields.symbol_key",
+                "{$role}_fields.name",
+                "{$role}_fields_trans.name as trans_name"
+            );
+        if (!$languageModel->id){
+
+            $builder->addSelect("{$role}_profile.value as trans_value");
+        }
+
+        return $builder;
+    }
+
+
     protected $modelClassName = User::class;
 
     /**
@@ -95,62 +153,7 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
     }
 
-    /**
-     * @param ProfileInterface $user
-     * @param LanguageModel $languageModel
-     *
-     * @return Profile
-     */
-    public function profileDataTrans(ProfileInterface $user, LanguageModel $languageModel)
-    {
-        $this->model = $user;
-        $this->languageModel = $languageModel;
-        /** @var  $fieldRepo FieldRepository */
-        $fieldRepo = $this->repoContainer[FieldRepositoryInterface::KEY];
-        $secContext = $this->repoContainer->securityContext();
-        $role = $secContext->role();
-        //dd($this->repoContainer);
-        $builder =  $fieldRepo->getModel()
-            ->leftJoin("{$role}_profile", "{$role}_fields.id", "=", "{$role}_profile.field_id" )
 
-            ->leftJoin("{$role}_dictionary_trans", function($join) use ($role, $languageModel){
-                $join->on("{$role}_profile.dictionary_id", "=", "{$role}_dictionary_trans.dictionary_id")
-                    ->where("{$role}_dictionary_trans.lang_id", "=", $languageModel->id);
-            })
-            ->leftJoin("{$role}_fields_trans", function($join) use ($role, $languageModel){
-                $join->on("{$role}_fields_trans.field_id", "=", "{$role}_fields.id")
-                    ->where("{$role}_fields_trans.lang_id", "=", $languageModel->id);
-            })
-            ->leftJoin("users", "users.id", "=", "{$role}_profile.user_id")
-            ->leftJoin("user_roles", "user_roles.user_id", "=", "{$role}_profile.user_id")
-            ->leftJoin("roles", "roles.id", "=", "user_roles.role_id")
-            ->where("{$role}_profile.user_id", "=", $user->id)
-
-            ->select(
-                'users.id',
-                'users.username',
-                'users.email',
-                'users.created_at',
-                'users.updated_at',
-                'users.last_login',
-                'roles.role as role',
-                "{$role}_dictionary_trans.value as trans_value",
-                "{$role}_profile.value",
-                "{$role}_dictionary_trans.lang_id",
-                "{$role}_fields.id as field_id",
-                "{$role}_fields.type",
-                "{$role}_fields.symbol_key",
-                "{$role}_fields.name",
-                "{$role}_fields_trans.name as trans_name"
-            );
-        if (!$languageModel->id){
-
-            $builder->addSelect("{$role}_profile.value as trans_value");
-        }
-
-        return $this->profileStructureTrans($builder);
-
-    }
 
     public function setUsersBaseData(Profile $profile, ProfileInterface $data)
     {

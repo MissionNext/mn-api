@@ -3,6 +3,7 @@
 namespace MissionNext\Repos\User;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\DataModel\BaseDataModel;
@@ -46,9 +47,10 @@ class JobRepository extends AbstractUserRepository implements JobRepositoryInter
     /**
      * @param ProfileInterface $user
      * @param LanguageModel $languageModel
-     * @return mixed
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function profileDataTrans(ProfileInterface $user, LanguageModel $languageModel)
+    protected function profileDataTransQuery(ProfileInterface $user, LanguageModel $languageModel)
     {
         $this->model = $user;
         $this->languageModel = $languageModel;
@@ -95,9 +97,13 @@ class JobRepository extends AbstractUserRepository implements JobRepositoryInter
             $builder->addSelect("{$role}_profile.value as trans_value");
         }
 
-        return $this->profileStructureTrans($builder);
-
+        return $builder;
     }
+
+
+
+
+
 
     public function setUsersBaseData(Profile $profile, ProfileInterface $data)
     {

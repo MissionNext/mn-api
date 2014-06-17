@@ -98,6 +98,36 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
     }
 
     /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return Profile
+     */
+    public function profileStructureDefault(\Illuminate\Database\Eloquent\Builder $query)
+    {
+        $profile = new Profile();
+        $profile->setModel($this->getModel());
+        $fields = $query->get();
+
+        $this->setUsersBaseData($profile, $this->getModel());
+        $profile->profileData = new \stdClass();
+
+        $fields->each(function ($field) use ($profile) {
+            $key = $field->symbol_key;
+            if (isset($profile->profileData->$key)) {
+                $profile->profileData->$key = array_merge($profile->profileData->$key, [$field->trans_value]);
+            } else {
+                $profile->profileData->$key = $field->value;
+                if (FieldType::isMultiple($field->type)){
+                    $profile->profileData->$key = [$field->trans_value];
+                } elseif (FieldType::hasDictionary($field->type)) {
+                    $profile->profileData->$key = $field->trans_value;
+                }
+            }
+        });
+
+        return $profile;
+    }
+
+    /**
      * @param LanguageModel $languageModel
      *
      * @return callable
@@ -110,13 +140,11 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
               function(Profile $profile, $field){
                   $key = $field->symbol_key;
                   if (isset($profile->profileData->$key)) {
-                      $profile->profileData->$key = array_merge($profile->profileData->$key, [$field->trans_value]);
+                      $profile->profileData->$key = array_merge($profile->profileData->$key, [$field->value => $field->value]);
                   } else {
                       $profile->profileData->$key = $field->value;
-                      if (FieldType::isMultiple($field->type)){
-                          $profile->profileData->$key = [$field->trans_value];
-                      } elseif (FieldType::hasDictionary($field->type)) {
-                          $profile->profileData->$key = $field->trans_value;
+                      if (FieldType::hasDictionary($field->type)) {
+                          $profile->profileData->$key = [$field->value => $field->value];
                       }
                   }
               }
@@ -192,15 +220,19 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
     public function addUserCachedData(ProfileInterface $user)
     {
 
-        $d = $this->profileDataTrans($user, new LanguageModel());
+        $d = $this->profileDataDefault($user, new LanguageModel());
         /** @var  $userCachedData UserCachedData */
         $userCachedData = (new UserCachedData())->find($user->id) ? : new UserCachedData();
 
         $userCachedData->setProfileData($d)
             ->setUser($user)
             ->save();
+        /** @var  $langModels Collection */
+        $langModels = LanguageModel::all();
+        $langModels->prepend(new LanguageModel(['id'=>null]));
 
-        foreach(LanguageModel::all() as $i=>$languageModel){
+        foreach($langModels as $i=>$languageModel){
+
             $dt = $this->profileDataTrans($user, $languageModel);
 
             $userCachedDataTrans = (new UserCachedDataTrans())
@@ -239,7 +271,31 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
      *
      * @return Profile
      */
-    abstract  public function profileDataTrans(ProfileInterface $user, LanguageModel $languageModel);
+    /**
+     * @param ProfileInterface $user
+     * @param LanguageModel $languageModel
+     * @return mixed
+     */
+    public function profileDataTrans(ProfileInterface $user, LanguageModel $languageModel)
+    {
+
+        return $this->profileStructureTrans($this->profileDataTransQuery($user, $languageModel));
+    }
+
+    /**
+     * @param ProfileInterface $user
+     * @param LanguageModel $languageModel
+     *
+     * @return Profile
+     */
+    public function profileDataDefault(ProfileInterface $user, LanguageModel $languageModel)
+    {
+
+        return $this->profileStructureDefault($this->profileDataTransQuery($user, $languageModel));
+    }
+
+
+    abstract  protected  function profileDataTransQuery(ProfileInterface $user, LanguageModel $languageModel);
 
     abstract  public function setUsersBaseData(Profile $profile, ProfileInterface $data);
 

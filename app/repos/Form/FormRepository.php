@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Models\Form\AppForm;
+use MissionNext\Models\Translation\FormGroupTrans;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Repos\Field\FieldDataTransformer;
 use MissionNext\Repos\Field\FieldToArrayTransformStrategy;
@@ -77,7 +78,9 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             //@TODO default_value to array
         }
 
-        return $structuredData;
+
+
+        return $this->transGroupLabels($structuredData);
     }
 
     /**
@@ -145,6 +148,28 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
         return
             new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['field_choices', 'field_default_choices', 'field_default_value', 'field_dictionary_id', 'field_default_dictionary_id', 'dictionary_order']));
 
+    }
+
+    private function transGroupLabels(array $groups)
+    {
+        $secContext = $this->repoContainer->securityContext();
+
+        $ids = array_fetch($groups, 'id') ? : [0];
+
+        $groupTrans =  FormGroupTrans::whereIn('group_id', $ids)
+            ->whereAppId($secContext->getApp()->id())
+            ->whereLangId($secContext->getToken()->language()->id)
+            ->get();
+
+        $groupTrans->each(function($t) use (&$groups){
+             foreach($groups as &$group){
+                 if ($group['id'] == $t->group_id ){
+                     $group['name'] = $t->value;
+                 }
+             }
+        });
+
+        return $groups;
     }
 
     /**

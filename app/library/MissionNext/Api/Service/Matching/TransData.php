@@ -22,6 +22,7 @@ class TransData {
         $transCache = new UserCachedDataTrans([], $userType);
         $data = $transCache->whereIn("id", $ids)->whereLangId($languageModel->id)->get();
 
+
         $data->each(function($el) use (&$result){
             foreach($result as &$r){
                 if ($r['id'] == $el->id){
@@ -38,4 +39,5 @@ class TransData {
 
         return $this->result;
     }
-} 
+
+}

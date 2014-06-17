@@ -8,6 +8,7 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Folder\Folder;
+use MissionNext\Models\Translation\FolderTrans;
 
 class FolderController extends BaseController
 {
@@ -16,6 +17,7 @@ class FolderController extends BaseController
      */
     public function index()
     {
+
         return new RestResponse(Folder::where("app_id", "=", $this->securityContext()->getApp()->id())->get());
     }
 
@@ -88,10 +90,24 @@ class FolderController extends BaseController
      */
     public function role($role)
     {
+        $folders = Folder::where("role","=",$role)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
+            ->get();
 
-        return new RestResponse(Folder::where("role","=",$role)
-                ->where("app_id", "=", $this->securityContext()->getApp()->id())
-                ->get());
+        $foldersIds = $folders->lists('id') ? : [0];
+
+        $foldersTrans = (new FolderTrans())->queryFolderTrans($this->securityContext())->whereIn('folder_id', $foldersIds)->get();
+
+        $folders->each(function($f) use ($foldersTrans) {
+            $f->value = null;
+            foreach($foldersTrans as $ft){
+               if ($f->id == $ft->folder_id){
+                   $f->value = $ft->value;
+               }
+            }
+        });
+
+        return new RestResponse($folders);
     }
 
 

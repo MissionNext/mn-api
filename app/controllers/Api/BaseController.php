@@ -36,6 +36,7 @@ use MissionNext\Repos\RepositoryContainer;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
+use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
@@ -309,10 +310,7 @@ class BaseController extends Controller
         if (!empty($mapping)) {
              //$user->touch();
             /** @var  $userRepo UserRepository|JobRepository */
-            $userRepo = $this->securityContext()->role() === BaseDataModel::JOB
-                ?  $this->repoContainer[JobRepositoryInterface::KEY]
-                :  $this->repoContainer[UserRepositoryInterface::KEY];
-
+            $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
             $userRepo->addUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
             ProfileUpdateMatching::run($queueData);
