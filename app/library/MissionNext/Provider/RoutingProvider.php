@@ -6,6 +6,7 @@ namespace MissionNext\Provider;
 use Illuminate\Support\ServiceProvider;
 use MissionNext\Routing\AdminRouting;
 use MissionNext\Routing\Routing;
+use MissionNext\Routing\UploadsRouting;
 
 class RoutingProvider extends ServiceProvider
 {
@@ -17,8 +18,9 @@ class RoutingProvider extends ServiceProvider
      */
     public function register()
     {
-        new  Routing();
-        new AdminRouting();
+        new  Routing($this->app);
+        new AdminRouting($this->app);
+        new UploadsRouting($this->app);
     }
 
 } 

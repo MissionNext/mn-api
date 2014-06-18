@@ -2,10 +2,12 @@
 
 namespace MissionNext\Routing;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
+use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
 use MissionNext\Controllers\Api\Translation\CustomTransController;
@@ -27,6 +29,7 @@ use MissionNext\Controllers\Api\Matching\CandidateOrganizationsController as Mat
 use MissionNext\Controllers\Api\Matching\JobCandidatesController as MatchJobCandidatesController;
 use MissionNext\Controllers\Api\Matching\OrganizationCandidatesController as MatchOrgCandidatesController;
 use MissionNext\Filter\RoleChecker;
+use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
 use MissionNext\Controllers\Api\Favorite\Controller as FavoriteResource;
@@ -47,7 +50,7 @@ class Routing
     const ROUTE_CREATE_JOB = 'mission.next.job.create';
 
 
-    public function __construct()
+    public function __construct(Application $App)
     {
 
         $requestUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
@@ -56,6 +59,9 @@ class Routing
         }
 
         Route::group(array('prefix' => static::API_PREFIX), function () {
+
+            Route::get('/test', BaseController::class.'@testApi');
+
 
             Route::pattern('type', '[A-Za-z_-]+');
             Route::pattern('form', '[A-Za-z_-]+');

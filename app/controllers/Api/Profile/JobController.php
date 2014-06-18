@@ -60,9 +60,11 @@ class JobController extends BaseController
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
-        $this->updateUserProfile($job, $hash);
+        /** @var  $cacheData UserCachedRepository */
+        $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
+        $cacheData->findOrFail($id);
 
-        return new RestResponse( $this->jobRepo()->profileStructure($this->fieldRepo()->profileFields($job), $this->securityContext()->role()));
+        return new RestResponse( $cacheData->transData($this->getToken()->language()));
     }
 
     /**

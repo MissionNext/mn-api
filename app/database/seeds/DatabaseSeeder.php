@@ -58,20 +58,18 @@ class DatabaseSeeder extends BaseSeeder
 
         $this->call('UserProfileSeeder');
         $this->command->info('UserProfileSeeder table seeded!');
+
         $this->call('MatchConfigSeeder');
         $this->command->info('MatchConfigSeeder table seeded!');
 
         $this->call('SearchSeeder');
         $this->command->info('SearchSeeder table seeded!');
 
-        if (DB::getDefaultConnection() === \MissionNext\DB\SqlStatement\Sql::PostgreSQL) {
-            $this->call('UserCachedProfileSeeder');
-            $this->command->comment('UserCachedProfileSeeder table seeded!');
-        }
-
         $this->call('AdminUsersSeeder');
         $this->command->info('Admin Users seeded!');
 
+        $this->call('UserCachedProfileSeeder');
+        $this->command->comment('UserCachedProfileSeeder table seeded!');
 
     }
 

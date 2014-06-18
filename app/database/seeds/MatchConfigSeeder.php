@@ -13,13 +13,6 @@ class MatchConfigSeeder extends BaseSeeder
 
     public function run()
     {
-        $app = $this->createApp();
-//        $app['router']->enableFilters();
-//        $app->register(\MissionNext\Provider\RoutingProvider::class);
-//        $app->register(\MissionNext\Provider\SecurityProvider::class);
-//        $app->register(\MissionNext\Provider\ErrorProvider::class);
-//        $app->register(\MissionNext\Provider\RepositoryProvider::class);
-
         DB::statement($this->getDbStatement()->truncateTable("matching_job_config"));
         DB::statement($this->getDbStatement()->truncateTable("matching_organization_config"));
         DB::statement($this->getDbStatement()->truncateTable("organization_cached_profile"));
@@ -50,7 +43,7 @@ class MatchConfigSeeder extends BaseSeeder
 
         $configRepApp2->insert($this->getJobConfig(2));
         /** @var  $repoContainer \MissionNext\Repos\RepositoryContainer */
-        $repoContainer = $app->make(RepositoryContainerInterface::class);
+        $repoContainer = \Illuminate\Support\Facades\App::make(RepositoryContainerInterface::class);
         $repoContainer->setSecurityContext($scApp2);
         /** @var  $profileRepo  \MissionNext\Repos\User\ProfileRepositoryFactory */
         $profileRepo = $repoContainer[\MissionNext\Repos\User\ProfileRepositoryFactory::KEY];

@@ -20,20 +20,27 @@ class CustomTransController extends BaseController
             $dataTrans->offsetSet('app_id', $this->getApp()->id());
             $dataTrans->lang_id = !$dataTrans->lang_id ? null : $dataTrans->lang_id;
             /** @var  $customTrans CustomTrans */
-            $customTrans =  CustomTrans::firstOrNew(
-                [
-                    'lang_id' => $dataTrans->lang_id,
-                    'app_id' => $dataTrans->app_id,
-                    'key' => $dataTrans->key
+            $customTrans =  CustomTrans::whereLangId($dataTrans->lang_id)
+                                        ->whereAppId($dataTrans->app_id)
+                                        ->whereKey($dataTrans->key)
+                                        ->first() ? : new CustomTrans();
 
-                ]);
 
-            $customTrans->value  ?   $customTrans->updateTransData($dataTrans)
+            $customTrans->app_id  ?   $customTrans->updateTransData($dataTrans)
                                  :   $customTrans->insertTransData($dataTrans);
 
 
         }
 
         return new RestResponse([$data]);
+    }
+
+    /**
+     * @return RestResponse
+     */
+    public function getIndex()
+    {
+
+         return  new RestResponse( (new CustomTrans())->whereAppId($this->getApp()->id())->get() );
     }
 } 

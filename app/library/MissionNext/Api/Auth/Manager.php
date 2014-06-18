@@ -35,6 +35,8 @@ class Manager
 
         App::instance('rest.token', $token);
 
+        App::setLocale($token->language()->key);
+
         FSecContext::setToken($token);
 
         if (($current_timestamp - $token->created) > 120 ){//@TODO fix timestamp authentication

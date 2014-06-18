@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
+use MissionNext\Api\Service\ResponseDataFormat\FieldChoicesFormat;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
 
@@ -25,7 +26,7 @@ class Controller extends BaseController
     public function getIndex($type)
     {
 
-        return new RestResponse($this->fieldRepo()->fieldsExpanded()->get());
+        return new RestResponse(FieldChoicesFormat::format($this->fieldRepo()->fieldsExpanded()->get()));
     }
 
     /**

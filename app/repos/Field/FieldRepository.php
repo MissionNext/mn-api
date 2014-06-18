@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\FieldException;
+use MissionNext\Api\Service\ResponseDataFormat\FieldChoices;
+use MissionNext\Api\Service\ResponseDataFormat\FieldChoicesFormat;
 use MissionNext\DB\SqlStatement\Sql;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\BaseDataModel;
@@ -241,7 +243,7 @@ class FieldRepository extends AbstractFieldRepository
         }
         $role = $this->repoContainer->securityContext();
 
-        return $this->fieldsExpanded()->whereIn("{$role}_fields.id", $ids)->get();
+        return FieldChoicesFormat::format($this->fieldsExpanded()->whereIn("{$role}_fields.id", $ids)->get());
     }
 
     /**

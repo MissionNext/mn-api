@@ -19,19 +19,16 @@ class FormGroupTransController extends  BaseController
         $data = $this->request->request->all();
         foreach($data['groups'] as $transGroup)
         {
-            $dataGroup = new \ArrayObject($transGroup, \ArrayObject::ARRAY_AS_PROPS);
-            $dataGroup->offsetSet('app_id', $this->getApp()->id());
+            $dataTrans = new \ArrayObject($transGroup, \ArrayObject::ARRAY_AS_PROPS);
+            $dataTrans->offsetSet('app_id', $this->getApp()->id());
             /** @var  $formGroupTrans FormGroupTrans */
-            $formGroupTrans =  FormGroupTrans::firstOrNew(
-                [
-                    'lang_id' => $dataGroup->lang_id,
-                    'group_id' => $dataGroup->group_id,
-                    'app_id' => $dataGroup->app_id,
+            $formGroupTrans =  FormGroupTrans::whereLangId($dataTrans->lang_id)
+                                        ->whereAppId($dataTrans->app_id)
+                                        ->whereGroupId($dataTrans->group_id)
+                                        ->first() ? : new FormGroupTrans();
 
-                ]);
-
-            $formGroupTrans->value  ?   $formGroupTrans->updateTransData($dataGroup)
-                                    :   $formGroupTrans->insertTransData($dataGroup);
+            $formGroupTrans->app_id  ?   $formGroupTrans->updateTransData($dataTrans)
+                                     :   $formGroupTrans->insertTransData($dataTrans);
         }
 
         return new RestResponse([$data]);

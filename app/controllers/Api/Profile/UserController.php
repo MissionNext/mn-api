@@ -68,8 +68,11 @@ class UserController extends BaseController
         }
         $this->updateUserProfile($user, $hash);
 
+        /** @var  $cacheData UserCachedRepository */
+        $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
+        $cacheData->findOrFail($id);
 
-        return new RestResponse( $this->userRepo()->profileStructure($this->fieldRepo()->profileFields($user), $this->securityContext()->role()));
+        return new RestResponse( $cacheData->transData($this->getToken()->language()));
     }
 
     /**

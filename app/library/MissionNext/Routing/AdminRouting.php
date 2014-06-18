@@ -3,13 +3,14 @@
 namespace MissionNext\Routing;
 
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
 class AdminRouting
 {
-    public function __construct()
+    public function __construct(Application $App)
     {
         Route::get('/', array(
             'as' => 'homepage',

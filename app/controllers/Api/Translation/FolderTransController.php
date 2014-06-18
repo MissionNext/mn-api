@@ -21,15 +21,12 @@ class FolderTransController extends BaseController
             $dataTrans = new \ArrayObject($transGroup, \ArrayObject::ARRAY_AS_PROPS);
             $dataTrans->offsetSet('app_id', $this->getApp()->id());
             /** @var  $folderTrans FolderTrans */
-            $folderTrans =  FolderTrans::firstOrNew(
-                [
-                    'lang_id' => $dataTrans->lang_id,
-                    'folder_id' => $dataTrans->folder_id,
-                    'app_id' => $dataTrans->app_id,
+            $folderTrans =  FolderTrans::whereLangId($dataTrans->lang_id)
+                                        ->whereAppId($dataTrans->app_id)
+                                        ->whereFolderId($dataTrans->folder_id)
+                                        ->first() ? : new FolderTrans();
 
-                ]);
-
-            $folderTrans->value  ?   $folderTrans->updateTransData($dataTrans)
+            $folderTrans->app_id  ?   $folderTrans->updateTransData($dataTrans)
                 :   $folderTrans->insertTransData($dataTrans);
         }
 

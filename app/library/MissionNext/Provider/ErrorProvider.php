@@ -2,12 +2,14 @@
 
 namespace MissionNext\Provider;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ErrorProvider extends ServiceProvider
 {
@@ -28,5 +30,6 @@ class ErrorProvider extends ServiceProvider
 
             return new RestResponse($exception);
         });
+
     }
 }

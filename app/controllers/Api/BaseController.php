@@ -9,6 +9,7 @@ use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Exceptions\ValidationException;
+use MissionNext\Api\Response\RestResponse;
 use MissionNext\Api\Service\Matching\Queue\Master\ProfileUpdateMatching;
 use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
@@ -104,6 +105,15 @@ class BaseController extends Controller
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
 
+    }
+
+    /**
+     * @return RestResponse
+     */
+    public function testApi()
+    {
+
+        return new RestResponse(true);
     }
 
     /**
