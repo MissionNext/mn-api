@@ -35,6 +35,7 @@ use MissionNext\Controllers\Api\Folder\FolderController as FolderResource;
 use MissionNext\Controllers\Api\Favorite\Controller as FavoriteResource;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Controllers\Api\Translation\FieldController as TransFieldController;
+use MissionNext\Controllers\Api\AppConfig\ConfigController as AppConfigController;
 
 class Routing
 {
@@ -170,6 +171,9 @@ class Routing
             Route::controller('folder/trans', FolderTransController::class);
 
             Route::controller('trans/{type}/field', TransFieldController::class, []);
+
+            //APP CONFIGS CONTROLLER
+            Route::controller('configs', AppConfigController::class, []);
 
 
         });

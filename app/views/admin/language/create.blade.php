@@ -15,19 +15,17 @@ Dashboard. Creating new language
             @endforeach
         </div>
         @endif
-
         {{ Form::open(array(
             'action' => 'MissionNext\Controllers\Admin\LanguageController@create',
             'class' => 'custom-form',
             'role' => 'form'
         )) }}
 
-        {{ Form::text('key', null, array('class' => 'form-control', 'placeholder' => 'key language', 'autofocus' => 'true')) }}
-        {{ Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'name of language')) }}
-
+        {{ Form::select('key', LanguageInfo::$codes, null, array('class' => 'form-control')) }}
         {{ Form::submit('Create ', array('class' => 'btn btn-sm btn-info')) }}
 
         {{ Form::close() }}
+
     </div>
 </div>
 

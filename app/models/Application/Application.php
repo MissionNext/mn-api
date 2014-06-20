@@ -5,6 +5,7 @@ namespace MissionNext\Models\Application;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\Configs\AppConfigs;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\ModelInterface;
@@ -42,7 +43,7 @@ class Application extends Eloquent implements ModelInterface
     public function dataModels()
     {
 
-        return $this->hasMany(AppDataModel::class, 'app_id');
+        return $this->hasMany(AppDataModel::class, 'app_id', 'id');
     }
 
     public function id()
@@ -70,6 +71,15 @@ class Application extends Eloquent implements ModelInterface
     {
 
         return $this->belongsToMany(User::class, 'user_apps', 'app_id', 'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function configs()
+    {
+
+        return $this->hasMany(AppConfigs::class, 'app_id');
     }
 
 

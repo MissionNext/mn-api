@@ -19,9 +19,8 @@ Dashboard. Editing language
         @endif
 
         {{ Form::model($language, array('route' => array('languageEdit', $language->id))) }}
+        {{ Form::select('key', LanguageInfo::$codes, null, array('class' => 'form-control')) }}
 
-        {{ Form::text('key', null, array('class' => 'form-control', 'placeholder' => 'key language', 'autofocus' => 'true')) }}
-        {{ Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'name of language')) }}
 
         <a href="{{ URL::route('languages') }}" class="btn btn-sm btn-warning pull-left cancel_btm"> Cancel </a>
         <input type="submit" value="Edit" class="btn btn-sm btn-info pull-right">

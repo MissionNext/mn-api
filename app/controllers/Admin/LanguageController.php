@@ -2,6 +2,7 @@
 namespace MissionNext\Controllers\Admin;
 
 use Illuminate\Support\Facades\View;
+use MissionNext\Helpers\Language;
 use MissionNext\Models\Language\LanguageModel;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -32,10 +33,10 @@ class LanguageController extends AdminBaseController {
      */
     public function create() {
         if ($this->request->isMethod('post')) {
+
             Input::flash();
             $rules = array(
-                'key' => 'required',
-                'name' => 'required|min:3',
+                'key' => 'required|unique:languages,key',
             );
 
             $validator = Validator::make(Input::all(), $rules);
@@ -46,7 +47,7 @@ class LanguageController extends AdminBaseController {
 
             $language = new LanguageModel();
             $language->key = Input::get('key');
-            $language->name = Input::get('name');
+            $language->name = Language::$codes[$language->key];
             $language->save();
 
             $name = $language->name;
@@ -77,8 +78,7 @@ class LanguageController extends AdminBaseController {
         if ($this->request->isMethod('post')) {
             Input::flash();
             $rules = array(
-                'key' => 'required',
-                'name' => 'required|min:3',
+                'key' => 'required|unique:languages,key,'.$id,
             );
             $validator = Validator::make(Input::all(), $rules);
             if ($validator->fails()) {
@@ -87,7 +87,7 @@ class LanguageController extends AdminBaseController {
             }
 
             $language->key = Input::get('key');
-            $language->name = Input::get('name');
+            $language->name = Language::$codes[Input::get('key')];
             $language->save();
             $name = $language->name;
             Session::flash('info', "language <strong>$name</strong> successfully updated");

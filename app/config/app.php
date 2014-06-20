@@ -183,6 +183,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
         'Sentry'          => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
         'Breadcrumbs'     => 'DaveJamesMiller\Breadcrumbs\Facade',
+        'LanguageInfo'    => 'MissionNext\Helpers\Language',
 
 	),
 

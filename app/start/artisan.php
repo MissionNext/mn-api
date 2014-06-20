@@ -12,3 +12,4 @@
 */
 
 Artisan::add(new CreateAdminUserCommand);
+Artisan::add(new ProfileUpdateCache);
