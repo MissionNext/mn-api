@@ -110,7 +110,9 @@ class JobRepository extends AbstractUserRepository implements JobRepositoryInter
         $profile->id = $data->id;
         $profile->name = $data->name;
         $profile->role = $data->role();
+        $profile->app_id = $data->app_id;
         $profile->organization = $data->organization->toArray();
+        $profile->organization_id = $data->organization_id;
         $profile->created_at = $data->created_at;
         $profile->updated_at = $data->updated_at;
     }

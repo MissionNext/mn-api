@@ -157,7 +157,7 @@ class FieldTableSeeder extends BaseSeeder
                 array(
                     "symbol_key" => "country",
                     "name" => "Country",
-                    "type" => FieldType::DATE,
+                    "type" => FieldType::SELECT,
                 ),
                 array(
                     "symbol_key" => "zip_code",
@@ -193,6 +193,12 @@ class FieldTableSeeder extends BaseSeeder
                     "symbol_key" => "gender",
                     "name" => "gender",
                     "type" => FieldType::RADIO,
+                ),
+
+                array(
+                    "symbol_key" => "choose", //10
+                    "name" => "choose",
+                    "type" => FieldType::CHECKBOX,
                 ),
 
             ));

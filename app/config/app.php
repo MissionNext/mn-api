@@ -113,6 +113,7 @@ return array(
         'MissionNext\Provider\SecurityProvider',
         'MissionNext\Provider\ErrorProvider',
         'MissionNext\Provider\RepositoryProvider',
+        'MissionNext\Provider\ComposerProvider',
         'MissionNext\Models\Admin\AdminServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
 

@@ -16,20 +16,20 @@ class TransData {
 
              $this->result = $result;
         }
-
         $ids = array_fetch($result, 'id');
+        if ($ids) {
+            $transCache = new UserCachedDataTrans([], $userType);
+            $data = $transCache->whereIn("id", $ids)->whereLangId($languageModel->id)->get();
 
-        $transCache = new UserCachedDataTrans([], $userType);
-        $data = $transCache->whereIn("id", $ids)->whereLangId($languageModel->id)->get();
 
-
-        $data->each(function($el) use (&$result){
-            foreach($result as &$r){
-                if ($r['id'] == $el->id){
-                    $r['profileData'] = $el->getData();
+            $data->each(function ($el) use (&$result) {
+                foreach ($result as &$r) {
+                    if ($r['id'] == $el->id) {
+                        $r['profileData'] = $el->getData()['profileData'];
+                    }
                 }
-            }
-        });
+            });
+        }
 
         $this->result = $result;
     }

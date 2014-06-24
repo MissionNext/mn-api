@@ -27,6 +27,7 @@ abstract class MasterMatching
     {
         $job = null;
         static::$pheanstalk = Queue::getPheanstalk();
+
         if (!empty(static::$pheanstalk->listTubes()) && $tube = static::$pheanstalk->listTubes()[0] ){
 
             try{

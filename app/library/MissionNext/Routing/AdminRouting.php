@@ -4,14 +4,20 @@ namespace MissionNext\Routing;
 
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Illuminate\Foundation\Application;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use MissionNext\Controllers\Admin\Subscription\CouponController;
+use MissionNext\Controllers\Admin\Subscription\SubConfigController;
 
 class AdminRouting
 {
+    /** @var  Router */
+    private  $router;
     public function __construct(Application $App)
     {
+        $this->router = $App->make('router');
         Route::get('/', array(
             'as' => 'homepage',
             function () {
@@ -24,7 +30,7 @@ class AdminRouting
             'uses' => 'MissionNext\Controllers\Admin\AdminBaseController@login'
         ));
 
-        Route::group(array('prefix' => 'dashboard', "before" => "admin_auth" ), function () {
+        Route::group(array('prefix' => 'dashboard', "before" => ["admin_auth"] ), function () {
             Route::get('logout', array(
                 'as' => 'logout',
                 function () {
@@ -38,6 +44,37 @@ class AdminRouting
                     return View::make('admin.adminHomepage');
                 }
             ));
+            // ================ SUBSCRIPTIONS ===========================
+            Route::group(array('prefix' => 'subscription'), function(){
+                $this->router->controller('config', SubConfigController::class,
+                    [
+                        'getIndex' =>  'sub.config.list',
+                        'getCreate' => 'sub.config.create',
+                        'postIndex' => 'sub.config.new',
+                        'getEdit'   => 'sub.config.edit',
+                        'postEdit'  => 'sub.config.update',
+                        'deleteIndex' => 'sub.config.delete',
+
+                    ]);
+
+                $this->router->controller('coupon', CouponController::class,
+                    [
+                        'getIndex' =>  'sub.coupon.list',
+                        'getCreate' => 'sub.coupon.create',
+                        'postIndex' => 'sub.coupon.new',
+                        'getEdit'   => 'sub.coupon.edit',
+                        'postEdit'  => 'sub.coupon.update',
+                        'deleteIndex' => 'sub.coupon.delete',
+
+                    ]);
+            });
+
+
+
+            // ================ END SUBSCRIPTIONS ========================
+
+
+
             // -----------   Applications ----------------------
             Route::get('/application', array(
                 'as' => 'applications',

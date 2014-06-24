@@ -137,6 +137,8 @@ class UserProfileSeeder extends BaseSeeder
 
         $org->organizationFields()->attach(1, array('value' => "1975-11-11"));
         $org->organizationFields()->attach(2, array('value' => $choiceOrg->value));
+        $org->organizationFields()->attach(10, array('value' => 1, "dictionary_id" => 5 ));
+        $org->organizationFields()->attach(10, array('value' => 2, "dictionary_id" => 6 ));
         $org->organizationFields()->attach(3, array('value' => 100));
 
         $org1->organizationFields()->attach(1, array('value' => "1976-11-11"));

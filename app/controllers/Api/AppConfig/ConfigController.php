@@ -7,6 +7,7 @@ namespace MissionNext\Controllers\Api\AppConfig;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Configs\AppConfigs;
+use MissionNext\Models\User\User;
 
 class ConfigController extends BaseController
 {
@@ -15,13 +16,12 @@ class ConfigController extends BaseController
      */
     public function postIndex()
     {
-        $configs = $this->request->request->get('configs');
-        $configsModels = [];
+        $key = $this->request->request->get('key');
+        $value = $this->request->request->get('value');
 
-        foreach($configs as $config){
-            array_push($configsModels, new AppConfigs(['key'=> $config['key'], 'value' => $config['value'] ]));
-        }
-        $this->getApp()->configs()->saveMany($configsModels);
+        $attributes = ['app_id' => $this->getApp()->id(), 'key' => $key];
+        $values = array_merge($attributes, ['value' => $value]);
+        AppConfigs::updateOrCreate( $attributes, $values );
 
         return new RestResponse(true);
     }

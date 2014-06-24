@@ -113,7 +113,7 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
         $fields->each(function ($field) use ($profile) {
             $key = $field->symbol_key;
             if (isset($profile->profileData->$key)) {
-                $profile->profileData->$key = array_merge($profile->profileData->$key, [$field->trans_value]);
+                $profile->profileData->$key = array_replace($profile->profileData->$key, [$field->trans_value]);
             } else {
                 $profile->profileData->$key = $field->value;
                 if (FieldType::isMultiple($field->type)){
@@ -140,19 +140,23 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
               function(Profile $profile, $field){
                   $key = $field->symbol_key;
                   if (isset($profile->profileData->$key)) {
-                      $profile->profileData->$key = array_merge($profile->profileData->$key, [$field->value => $field->value]);
+                      $profile->profileData->$key = array_replace($profile->profileData->$key, [$field->value => $field->value]);
+//                      if ($field->value == 1){
+//                          dd($profile->profileData->choose);
+//                      }
                   } else {
                       $profile->profileData->$key = $field->value;
                       if (FieldType::hasDictionary($field->type)) {
                           $profile->profileData->$key = [$field->value => $field->value];
                       }
                   }
+
               }
             :
             function(Profile $profile, $field){
                 $key = $field->symbol_key;
                 if (isset($profile->profileData->$key)) {
-                    $profile->profileData->$key = array_merge($profile->profileData->$key, [$field->value => $field->trans_value]);
+                    $profile->profileData->$key = array_replace($profile->profileData->$key, [$field->value => $field->trans_value]);
                 } else {
                     $profile->profileData->$key = $field->value;
                     if (FieldType::hasDictionary($field->type)) {

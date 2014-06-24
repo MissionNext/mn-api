@@ -167,7 +167,21 @@ class DictionarySeeder extends BaseSeeder
             array(
                 "field_id" => 2,
                 "value" => "Germany",
+            ),
+
+            array(
+               "field_id" => 10,
+               "value" => 1,
+            ),
+            array(
+                 "field_id" => 10,
+                 "value" => 2,
+            ),
+            array(
+                "field_id" => 10,
+                "value" => 3,
             )
+
         ));
 
         DB::table('agency_dictionary')->insert(array(

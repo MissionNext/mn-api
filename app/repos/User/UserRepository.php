@@ -70,10 +70,13 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
                 "{$role}_fields.name",
                 "{$role}_fields_trans.name as trans_name"
             );
-        if (!$languageModel->id){
+        if (!$languageModel->id) {
 
             $builder->addSelect("{$role}_profile.value as trans_value");
         }
+//        }else{
+//            dd($builder->get()->toArray());
+//        }
 
         return $builder;
     }
@@ -120,6 +123,7 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
     /**
      * @param User $organization
+     * @param User $user
      *
      * @return Collection
      */
@@ -130,8 +134,8 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
 
         $builder =  $jobRepo->getModel()
-                     ->select("job_cached_profile.data", "notes.notes", "folder_apps.folder")
-                     ->leftJoin("job_cached_profile", "job_cached_profile.id", "=", "jobs.id")
+                     ->select("job_cached_profile_trans.data", "notes.notes", "folder_apps.folder")
+                     ->leftJoin("job_cached_profile_trans", "job_cached_profile_trans.id", "=", "jobs.id")
                      ->leftJoin("folder_apps", function($join) use ($user){
                             $join->on("folder_apps.user_id", "=", "jobs.id")
                                 ->where("folder_apps.for_user_id", "=", $user->id)
@@ -146,7 +150,8 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
                                     ->where("notes.user_type", "=", BaseDataModel::JOB);
                     })
                      ->where("jobs.organization_id", "=", $organization->id)
-                     ->where("jobs.app_id", "=", $this->securityContext->getApp()->id());
+                     ->where("jobs.app_id", "=", $this->securityContext->getApp()->id())
+                     ->where("job_cached_profile_trans.lang_id", "=", $this->securityContext->getToken()->language()->id);
 
         return
             (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->get();

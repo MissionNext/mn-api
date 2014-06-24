@@ -57,6 +57,45 @@
                         </li>
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-asterisk"> </span> Subscriptions <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Config</a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ URL::route('sub.config.list')}}">
+                                        <span class="glyphicon glyphicon-list"> </span> List configs
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ URL::route('sub.config.create')}}">
+                                        <span class="glyphicon glyphicon-plus"> </span> New config
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Coupon</a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ URL::route('sub.coupon.list')}}">
+                                        <span class="glyphicon glyphicon-list"> </span> List coupons
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ URL::route('sub.coupon.create')}}">
+                                        <span class="glyphicon glyphicon-plus"> </span> New coupon
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
 <!--                <li><a href="#">Link</a></li>-->
 <!--                <li class="dropdown">-->
 <!--                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown 2<b class="caret"></b></a>-->

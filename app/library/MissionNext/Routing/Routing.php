@@ -157,7 +157,7 @@ class Routing
                 Route::post('inquire/cancel/{inquire_id}/by/organization/{organization}', InquireController::class.'@postCancelInquireByOrganization');
                 Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
                 //END
-                Route::controller( 'organization/jobs/{organization}/for/{user_id}', OrganizationController::class );
+                Route::controller( 'organization/jobs/{organization}/for/{userId}', OrganizationController::class );
             });
 
 

@@ -60,6 +60,8 @@ class JobController extends BaseController
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
+        $this->updateUserProfile($job, $hash);
+
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
         $cacheData->findOrFail($id);

@@ -16,6 +16,8 @@ abstract class Validator
 
     protected $model;
 
+    protected $validator;
+
     public static $rules;
 
     /** @var  Request */
@@ -29,12 +31,25 @@ abstract class Validator
 
     }
 
+    /**
+     * @return \Illuminate\Validation\Validator
+     */
+    public function validator()
+    {
+
+        return $this->validator;
+    }
+
     public function passes()
     {
         /** @var  $validation \Illuminate\Validation\Validator */
         $validation = FValidator::make($this->input, static::$rules);
+        $this->validator = $validation;
 
-        if ($validation->passes()) return true;
+        if ($validation->passes()){
+
+            return true;
+        }
 
         $this->errors = $validation->messages();
 
@@ -52,7 +67,7 @@ abstract class Validator
     /**
      * @return array
      */
-    protected function getInput()
+    protected  function getInput()
     {
         $request = $this->request;
         $fields = array_keys(static::$rules);
@@ -66,5 +81,18 @@ abstract class Validator
         static::$rules =  array_intersect_key( static::$rules, $input );
 
         return $input;
+    }
+
+    /**
+     * @param $id
+     * @param $field
+     *
+     * @return $this
+     */
+    public function updateRuleUnique($id, $field)
+    {
+        static::$rules[$field] = static::$rules[$field].",{$field},".$id;
+
+        return $this;
     }
 } 
