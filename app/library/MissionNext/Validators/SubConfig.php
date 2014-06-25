@@ -13,6 +13,7 @@ class SubConfig extends Validator
         "role" => "required|in:candidate,agency,organization",
         "partnership" => "required|in:limited,basic,plus",
         "cost" => "required|numeric",
-        "period" => "required|integer|between:0,365"
+        "period" => "required|integer|between:0,9999",
+        "is_recurrent" => ""
     ];
 } 

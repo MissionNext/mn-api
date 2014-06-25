@@ -88,4 +88,18 @@ class CouponController extends AdminBaseController
 
         return $this->redirect->route($this->routeName('list'));
     }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function deleteIndex($id)
+    {
+        $model = Coupon::findOrFail($id);
+        $model->delete();
+        $this->session->flash('info', "Coupon successfully deleted");
+
+        return $this->redirect->route($this->routeName('list'));
+    }
 } 

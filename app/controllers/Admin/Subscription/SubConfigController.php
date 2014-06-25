@@ -5,6 +5,7 @@ namespace MissionNext\Controllers\Admin\Subscription;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Models\Subscription\SubConfig;
@@ -20,17 +21,18 @@ class SubConfigController extends AdminBaseController
 
     public function postIndex()
     {
+        /** @var  $repo SubConfigRepository */
+        $repo = $this->repoContainer[SubConfigRepositoryInterface::KEY];
 
-        $validator = new ConfValidator( $this->request );
+        $validator = new ConfValidator( $this->request, $repo->getModel()  );
 
         if (!$validator->passes())
         {
 
             return $this->redirect->route($this->routeName('create'))->withInput()->withErrors($validator->validator());
         }
-        /** @var  $repo SubConfigRepository */
-        $repo = $this->repoContainer[SubConfigRepositoryInterface::KEY];
-        $repo->create($this->request->except('_token'));
+
+        $repo->getModel()->save();
 
         $this->session->flash('info', "Config successfully created");
 
@@ -81,16 +83,17 @@ class SubConfigController extends AdminBaseController
      */
     public function postEdit($id)
     {
-        $validator = new ConfValidator( $this->request );
+        /** @var  $model SubConfig */
+        $model = $this->session->get('model');
+
+        $validator = new ConfValidator( $this->request, $model );
 
         if (!$validator->passes())
         {
 
             return $this->redirect->route($this->routeName('edit'), [$id])->withInput()->withErrors($validator->validator());
         }
-        /** @var  $model SubConfig */
-        $model = $this->session->get('model');
-        $model->update($this->request->except('_token'));
+        $model->save(); // update not work with boolean recurrent
         $this->session->flash('info', "Config successfully updated");
 
         return $this->redirect->route($this->routeName('list'));

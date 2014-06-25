@@ -103,7 +103,9 @@
         </div>
     </div>
 </div>
-
+<span class="token">
+    {{ Form::token() }}
+</span>
 @endsection
 
 @section('javascripts')
@@ -113,7 +115,7 @@
     var count = 1;
 
     $(document).ready(function() {
-        $.post("{{ URL::route('getRoles') }}")
+        $.post("{{ URL::route('getRoles') }}", {'_token' : $('.token input').val() })
             .done(function(msg){
                 $('#apps-select-id').selectize({
                     plugins: ['remove_button'],

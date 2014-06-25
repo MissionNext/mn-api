@@ -9,7 +9,7 @@ Dashboard. Subscription. Coupon
 <div class="row">
     <div class="col-md-11">
         <h3 class="text-center">
-            Config list
+            Coupon list
         </h3>
     </div>
     <div class="col-md-1">
@@ -43,18 +43,18 @@ Dashboard. Subscription. Coupon
     <tr>
         <td>{{ $model->id }}</td>
         <td>{{ $model->code }}</td>
-        <td>{{ $model->is_active }}</td>
+        <td>@if ($model->is_active) <span class="label label-success">Active</span> @else <span class="label label-default">Used</span> @endif  </td>
         <td class="text-center">
             <a href="{{ URL::route('sub.coupon.edit', array(  $model->id) ) }}" class="btn-warning btn btn-xs">
                 <span class="glyphicon glyphicon-edit"> </span> Edit </a>
 
             {{ Form::open(array(
-            'route' => array('sub.config.delete', $model->id),
+            'route' => array('sub.coupon.delete', $model->id),
             'class' => 'pull-right',
             'method' => 'delete',
             )) }}
 
-            <input type="submit" class="btn btn-xs btn-danger" value=" Delete" onclick=' return confirm("confirm delete {{ $model->name }} language?")' >
+            <input type="submit" class="btn btn-xs btn-danger" value=" Delete" onclick=' return confirm("confirm delete coupon?")' >
             {{ Form::close() }}
         </td>
     </tr>

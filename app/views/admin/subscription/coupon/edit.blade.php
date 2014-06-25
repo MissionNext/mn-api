@@ -18,21 +18,29 @@ Dashboard. Editing coupon
         </div>
         @endif
 
-        {{ Form::model($model, array('route' => array('sub.coupon.edit', $model->id))) }}
+        {{ Form::model($model, array('route' => array('sub.coupon.edit', $model->id), 'class' => 'form-horizontal')) }}
 
         <div class="form-group">
             {{ Form::label('code', 'Code', ['class' => 'col-sm-2 control-label']) }}
             <div class="col-sm-10">
-                {{ Form::text('code', null, array('class' => 'form-control', 'placeholder' => 'code', 'autofocus' => 'true')) }}
+                {{ Form::text('code', null, array('class' => 'form-control', 'placeholder' => 'code', 'autofocus' =>
+                'true')) }}
             </div>
         </div>
-
-        <a href="{{ URL::route('sub.coupon.list') }}" class="btn btn-sm btn-warning pull-left cancel_btm"> Cancel </a>
-        <input type="submit" value="Edit" class="btn btn-sm btn-info pull-right">
-
+        <div class="btn-toolbar" role="toolbar">
+            <a href="{{ URL::route('sub.coupon.list') }}" class="btn btn-sm btn-warning pull-left"> Cancel </a>
+            <a id="generate-coupon" href="#generate" class="btn btn-sm btn-danger pull-left"> Generate </a>
+            {{ Form::button('Edit', array('class' => 'btn btn-sm btn-info pull-left', 'type' => 'submit' )) }}
+        </div>
         {{ Form::close() }}
 
     </div>
 </div>
 @endsection
+
+@section('javascripts')
+@parent
+{{ HTML::script(URL::asset('js/md5.js')) }}
+{{ HTML::script(URL::asset('js/generateCoupon.js')) }}
+@stop
 

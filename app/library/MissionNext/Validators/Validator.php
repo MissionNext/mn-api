@@ -28,7 +28,6 @@ abstract class Validator
         $this->request = $request;
         $this->model = $model;
         $this->input = $this->getInput();
-
     }
 
     /**
@@ -47,6 +46,11 @@ abstract class Validator
         $this->validator = $validation;
 
         if ($validation->passes()){
+            if ($this->model){
+                foreach($this->getInput() as $property => $value ){
+                    $this->model->$property = $value;
+                }
+            }
 
             return true;
         }

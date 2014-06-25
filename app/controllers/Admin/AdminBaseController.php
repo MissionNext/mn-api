@@ -48,12 +48,6 @@ class AdminBaseController extends Controller {
         $this->view = $viewFactory;
         $this->redirect = $redirector;
         $this->session = $session;
-
-        Form::macro('myField', function()
-        {
-            return '<input type="awesome">';
-        });
-
     }
 
     /**

@@ -21,7 +21,7 @@ class CreateSubscriptionConfigsTable extends Migration {
             $table->integer('period');
             $table->float('cost');
 
-        }    );
+        } );
 	}
 
 	/**

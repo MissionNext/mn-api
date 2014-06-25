@@ -100,7 +100,7 @@ class UserController extends BaseController
         $user->setEmail(Input::get('email'));
         $user->setUsername(Input::get('username'));
         $user->setRole($role);
-        $user->addApp($this->getApp());
+       // $user->addApp($this->getApp());
 
 
         $this->updateUserProfile($user, $profileData);

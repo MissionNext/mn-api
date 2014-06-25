@@ -64,6 +64,13 @@
                         <li class="dropdown-submenu">
                             <a tabindex="-1" href="#">Config</a>
                             <ul class="dropdown-menu">
+                                @foreach ($applications as $id => $app)
+                                <li>
+                                    <a href="{{ URL::route('sub.config.list' ) }}?app={{ $id }} ">
+                                        <span class="glyphicon glyphicon-list"> </span> {{ $app }}
+                                    </a>
+                                </li>
+                                @endforeach
                                 <li>
                                     <a href="{{ URL::route('sub.config.list')}}">
                                         <span class="glyphicon glyphicon-list"> </span> List configs

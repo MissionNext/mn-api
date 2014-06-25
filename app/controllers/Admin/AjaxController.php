@@ -75,7 +75,8 @@ class AjaxController extends AdminBaseController {
         return Response::make($response);
     }
 
-    public function getRolesApps() {
+    public function getRolesApps()
+    {
         $roles = Role::all()->toArray();
         $apps = Application::all()->toArray();
         $resultArray = array();

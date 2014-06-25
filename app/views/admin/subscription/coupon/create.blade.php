@@ -28,9 +28,12 @@ Dashboard. Creating new coupon
                 {{ Form::text('code', null, array('class' => 'form-control', 'placeholder' => 'code', 'autofocus' => 'true')) }}
             </div>
         </div>
+        <div class="btn-toolbar" role="toolbar">
 
+            <a id="generate-coupon" href="#generate" class="btn btn-sm btn-danger pull-left"> Generate </a>
+            {{ Form::button('create', array('class' => 'btn btn-sm btn-info', 'type' => 'submit' )) }}
+        </div>
 
-        {{ Form::submit('Create ', array('class' => 'btn btn-sm btn-info')) }}
 
         {{ Form::close() }}
 
@@ -38,3 +41,9 @@ Dashboard. Creating new coupon
 </div>
 
 @endsection
+
+@section('javascripts')
+    @parent
+    {{ HTML::script(URL::asset('js/md5.js')) }}
+    {{ HTML::script(URL::asset('js/generateCoupon.js')) }}
+@stop

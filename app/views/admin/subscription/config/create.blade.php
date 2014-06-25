@@ -51,6 +51,15 @@ Dashboard. Creating new config
                 {{ Form::text('period', null, array('class' => 'form-control', 'placeholder' => 'period', 'autofocus' => 'true')) }}
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        {{ Form::checkbox('is_recurrent', 1) }} Is recurrent?
+                    </label>
+                </div>
+            </div>
+        </div>
 
 
         {{ Form::submit('Create ', array('class' => 'btn btn-sm btn-info')) }}

@@ -50,6 +50,16 @@ Dashboard. Editing config
                 {{ Form::text('period', null, array('class' => 'form-control', 'placeholder' => 'period', 'autofocus' => 'true')) }}
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        {{ Form::hidden('is_recurrent', 0); }}
+                        {{ Form::checkbox('is_recurrent', 1) }} Is recurrent?
+                    </label>
+                </div>
+            </div>
+        </div>
 
         <a href="{{ URL::route('sub.config.list') }}" class="btn btn-sm btn-warning pull-left cancel_btm"> Cancel </a>
         <input type="submit" value="Edit" class="btn btn-sm btn-info pull-right">
