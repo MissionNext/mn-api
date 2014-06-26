@@ -207,10 +207,14 @@
 
     $('.container').on('click', '.pagination a', function(e){
         e.preventDefault();
+
         $.get($(this).attr('href')).done(function(data){
-            $('.user-list').html($(data).filter('.user-list').html());
+
+            var $userList = $(data).filter('.user-list');
+            $('.col-md-9').html($userList.find('.col-md-9').html());
             initFilters();
-        });
+
+        } );
     });
 
 </script>
