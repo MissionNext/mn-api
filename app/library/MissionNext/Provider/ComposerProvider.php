@@ -25,6 +25,7 @@ class ComposerProvider extends ServiceProvider
                          SubConfigController::VIEW_PREFIX.'.create',
                          SubConfigController::VIEW_PREFIX.'.index',
                          SubConfigController::VIEW_PREFIX.'.edit',
+                         SubConfigController::VIEW_PREFIX.'.management',
                          'admin.menu.menu',
 
                         ], ApplicationComposer::class);

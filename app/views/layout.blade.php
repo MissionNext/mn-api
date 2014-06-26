@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="mission-next">
 <head>
     <meta charset="utf-8">
     <title>@yield('title')</title>
@@ -25,6 +25,9 @@
 
     @yield('content')
     @yield('footer')
+    <span class="token">
+        {{ Form::token() }}
+    </span>
 </div>
 
 @section('javascripts')
@@ -32,6 +35,19 @@
     {{-- HTML::script(URL::asset('packages/admin/js/jquery-ui.min.js')) --}}
     {{ HTML::script(URL::asset('packages/admin/js/selectize.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/bootstrap.min.js')) }}
+    {{ HTML::script(URL::asset('packages/admin/js/angular.min.js')) }}
+    {{ HTML::script(URL::asset('packages/admin/js/angular-resource.min.js')) }}
+    {{ HTML::script(URL::asset('packages/admin/js/angular-route.min.js')) }}
+    {{ HTML::script(URL::asset('js/project/app.js')) }}
+    <script>
+        (function($){
+            $.ajaxSetup({
+                data:{
+                    '_token' : $('.token input').val()
+                }
+            });
+        })(jQuery)
+    </script>
 @show
 <body>
 </html>

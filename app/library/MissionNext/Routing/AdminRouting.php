@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Admin\Subscription\CouponController;
 use MissionNext\Controllers\Admin\Subscription\SubConfigController;
-
+use MissionNext\Controllers\Admin\Subscription\Ajax\SubConfigController as SubConfigControllerAjax;
 class AdminRouting
 {
     /** @var  Router */
@@ -44,8 +44,22 @@ class AdminRouting
                     return View::make('admin.adminHomepage');
                 }
             ));
+
+            // ================ AJAX SUBSCRIPTIONS ===========================
+            Route::group(array('prefix' => 'ajax/subscription'), function(){
+                $this->router->controller('config', SubConfigControllerAjax::class,
+                    [
+                        'getIndex' =>  'ajax.sub.config.list',
+                    ]);
+            });
+            // ================ END AJAX SUBSCRIPTIONS ===========================
+
+
             // ================ SUBSCRIPTIONS ===========================
             Route::group(array('prefix' => 'subscription'), function(){
+
+
+
                 $this->router->controller('config', SubConfigController::class,
                     [
                         'getIndex' =>  'sub.config.list',
@@ -54,6 +68,7 @@ class AdminRouting
                         'getEdit'   => 'sub.config.edit',
                         'postEdit'  => 'sub.config.update',
                         'deleteIndex' => 'sub.config.delete',
+                        'getManagement' => 'sub.config.management',
 
                     ]);
 
@@ -94,6 +109,11 @@ class AdminRouting
             ));
             // -------------------------------------------------
             // ------------------- Users -----------------------
+            Route::get('/user/list', array(
+                'as' => 'userList',
+                'uses' => 'MissionNext\Controllers\Admin\UserController@getList'
+            ));
+
             Route::get('/user', array(
                 'as' => 'users',
                 'uses' => 'MissionNext\Controllers\Admin\UserController@index'

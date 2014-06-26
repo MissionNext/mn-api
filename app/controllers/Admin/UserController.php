@@ -2,6 +2,7 @@
 namespace MissionNext\Controllers\Admin;
 
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Models\Role\Role;
@@ -135,6 +136,24 @@ class UserController extends AdminBaseController {
             ->paginate(AdminBaseController::PAGINATE);
 
         return View::make('admin.user.users', array(
+            'users' => $users,
+        ));
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function getList()
+    {
+        $users = User::orderBy('id')->paginate(AdminBaseController::PAGINATE);
+
+        if ($this->request->query->has('page')){
+            return $this->view->make('admin.user.ajax.list', array(
+                'users' => $users,
+            ));
+
+        }
+        return $this->view->make('admin.user.ajax.list', array(
             'users' => $users,
         ));
     }

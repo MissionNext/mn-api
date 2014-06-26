@@ -5,9 +5,11 @@ namespace MissionNext\Controllers\Admin\Subscription;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Admin\AdminBaseController;
+use MissionNext\Models\Application\Application;
 use MissionNext\Models\Subscription\SubConfig;
 use MissionNext\Repos\Subscription\SubConfigRepository;
 use MissionNext\Repos\Subscription\SubConfigRepositoryInterface;
@@ -50,6 +52,16 @@ class SubConfigController extends AdminBaseController
         $models = $repo->getModel()->orderBy('id')->paginate(static::PAGINATE);
 
         return $this->view->make($this->viewTemplate('index'), ['models' => $models ]);
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function getManagement()
+    {
+        $application = Application::findOrFail($this->request->query->get('app'));
+
+        return $this->view->make($this->viewTemplate('management'), ['application' => $application ]);
     }
 
     /**
@@ -114,4 +126,5 @@ class SubConfigController extends AdminBaseController
 
         return $this->redirect->route($this->routeName('list'));
     }
+
 } 

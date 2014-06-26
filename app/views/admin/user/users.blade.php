@@ -5,118 +5,22 @@
 @endsection
 
 @section('content')
-
-<div class="row">
-    <div class="col-md-7 col-md-offset-1">
-
-        {{ Form::open(array(
-            'action' => array('MissionNext\Controllers\Admin\UserController@searching'),
-            'class' => 'form-inline user-search-form',
-            'role' => 'form'
-        )) }}
-        {{ Form::text('search', null, array('class' => 'form-control', 'placeholder' => 'search by user or email')) }}
-            <input type="submit" value=" Search " class="btn btn-sm btn-info ">
-        {{ Form::close() }}
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-9">
-        <div class="row">
-            <div class="col-md-10">
-                <h3 class="text-center">
-                    User list
-                </h3>
-            </div>
-            <div class="col-md-2 pagination-info">
-                <span class="pull-right"> {{ $users->getTo() }} / {{ $users->getTotal() }} </span>
-            </div>
-        </div>
-        @if (Session::has('info'))
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ Session::get('info') }}
-        </div>
-        @endif
-        @if (Session::has('warning'))
-        <div class="alert alert-warning alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ Session::get('warning') }}
-        </div>
-        @endif
-
-        <div id="firter-rezult">
-        </div>
-
-        <div id="default-rezult">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>E-mail</th>
-                    <th>Created at</th>
-                    <th>Last login</th>
-                    <th></th>
-                </tr>
-                </thead>
-                @foreach($users as $user)
-                <tr>
-                    <td>{{ $user->id }}</td>
-                    <td>{{ $user->username }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ date("d.m.Y H:i", strtotime($user->created_at)) }}</td>
-                    <td>{{ date("d.m.Y H:i", strtotime($user->last_login)) }}</td>
-                    <td>
-                        <a href="{{ URL::route('userEdit', array('id' => $user->id)) }}" class="btn-warning btn btn-xs">
-                            <span class="glyphicon glyphicon-edit"> </span> Edit </a>
-
-                        {{ Form::open(array(
-                            'action' => array('MissionNext\Controllers\Admin\UserController@delete', $user->id),
-                            'class' => 'pull-right',
-                            'method' => 'delete',
-                        )) }}
-
-                        <input type="submit" class="btn btn-xs btn-danger" value=' Delete' onclick=' return confirm("confirm delete user {{ $user->username }} ?")' >
-                        {{ Form::close() }}
-                    </td>
-                </tr>
-                @endforeach
-            </table>
-
-            <div class="text-center">
-                {{ $users->links() }}
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <h3 class="text-center">Filters:</h3>
-
-        <div class="user-filters pull-right">
-            <label for="apps-select-id">By applications:</label>
-            <textarea id="apps-select-id"></textarea>
-        </div>
-
-        <div class="user-filters pull-right">
-            <label for="role-select-id">By roles:</label>
-            <textarea id="role-select-id"></textarea>
-        </div>
-    </div>
-</div>
-<span class="token">
-    {{ Form::token() }}
-</span>
+<div ng-view></div>
 @endsection
 
 @section('javascripts')
 @parent
+{{ HTML::script(URL::asset('js/project/controllers/user.js')) }}
+
 <script>
     var pagination = 10;
     var count = 1;
 
+
     $(document).ready(function() {
-        $.post("{{ URL::route('getRoles') }}", {'_token' : $('.token input').val() })
+        $.post("{{ URL::route('getRoles') }}")
             .done(function(msg){
+                console.log(msg);
                 $('#apps-select-id').selectize({
                     plugins: ['remove_button'],
                     delimiter: ',',

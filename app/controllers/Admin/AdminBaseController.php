@@ -1,6 +1,7 @@
 <?php
 namespace MissionNext\Controllers\Admin;
 
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -27,7 +28,7 @@ use MissionNext\Repos\RepositoryContainerInterface;
 
 class AdminBaseController extends Controller {
 
-    const PAGINATE = 15;
+    const PAGINATE = 3;
 
     const VIEW_PREFIX = '';
     const ROUTE_PREFIX = '';
@@ -39,8 +40,7 @@ class AdminBaseController extends Controller {
 
     protected $redirect;
     protected $session;
-
-    public function __construct(Store $session,Redirector $redirector, Request $request, RepositoryContainerInterface $containerInterface, Factory $viewFactory)
+    public function __construct( Store $session,Redirector $redirector, Request $request, RepositoryContainerInterface $containerInterface, Factory $viewFactory)
     {
         $this->beforeFilter('csrf', array('on'=>'post'));
         $this->request = $request;

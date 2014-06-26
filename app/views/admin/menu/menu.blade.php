@@ -66,8 +66,8 @@
                             <ul class="dropdown-menu">
                                 @foreach ($applications as $id => $app)
                                 <li>
-                                    <a href="{{ URL::route('sub.config.list' ) }}?app={{ $id }} ">
-                                        <span class="glyphicon glyphicon-list"> </span> {{ $app }}
+                                    <a href="{{ URL::route('sub.config.management' ) }}?app={{ $id }} ">
+                                        <span class="glyphicon glyphicon-globe"> </span> {{ $app }}
                                     </a>
                                 </li>
                                 @endforeach
