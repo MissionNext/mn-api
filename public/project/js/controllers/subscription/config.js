@@ -20,9 +20,7 @@
             if (! self.editing[mainIndex][priceIndex]){
                 self.editing[mainIndex][priceIndex] = 1;
             }
-            if (!self.configs[mainIndex].partnership[priceIndex].price){
-                self.configs[mainIndex].partnership[priceIndex].price = 0;
-            }
+
             console.log(self.configs);
         };
 
