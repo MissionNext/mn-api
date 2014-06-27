@@ -10,6 +10,7 @@
 
 @section('javascripts')
 @parent
-{{ HTML::script(URL::asset('js/project/controllers/user.js')) }}
+{{ HTML::script(URL::asset('project/js/controllers/user.js')) }}
+
 
 @endsection

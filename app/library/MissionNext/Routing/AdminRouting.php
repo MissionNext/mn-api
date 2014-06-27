@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Admin\Subscription\CouponController;
 use MissionNext\Controllers\Admin\Subscription\SubConfigController;
 use MissionNext\Controllers\Admin\Subscription\Ajax\SubConfigController as SubConfigControllerAjax;
+use MissionNext\Controllers\Admin\Subscription\Ajax\UserController as AjaxAdminController;
+
 class AdminRouting
 {
     /** @var  Router */
@@ -45,14 +47,28 @@ class AdminRouting
                 }
             ));
 
-            // ================ AJAX SUBSCRIPTIONS ===========================
-            Route::group(array('prefix' => 'ajax/subscription'), function(){
-                $this->router->controller('config', SubConfigControllerAjax::class,
+            // ================ AJAX ===========================
+            Route::group(array('prefix' => 'ajax/'), function(){
+
+
+                // ------------------- Users -----------------------
+                Route::get('user/list', array(
+                    'as' => 'ajaxUserList',
+                    'uses' => AjaxAdminController::class.'@getList'
+                ));
+                // ------------------- END Users -----------------------
+
+
+                // ------------------- Subscription -----------------------
+
+                $this->router->controller('subscription/config', SubConfigControllerAjax::class,
                     [
                         'getIndex' =>  'ajax.sub.config.list',
                     ]);
+                // ------------------- END Subscription -----------------------
+
             });
-            // ================ END AJAX SUBSCRIPTIONS ===========================
+            // ================ END AJAX ===========================
 
 
             // ================ SUBSCRIPTIONS ===========================
@@ -108,11 +124,12 @@ class AdminRouting
                 'uses' => 'MissionNext\Controllers\Admin\ApplicationController@delete'
             ));
             // -------------------------------------------------
+
+
+
+
+
             // ------------------- Users -----------------------
-            Route::get('/user/list', array(
-                'as' => 'userList',
-                'uses' => 'MissionNext\Controllers\Admin\UserController@getList'
-            ));
 
             Route::get('/user', array(
                 'as' => 'users',

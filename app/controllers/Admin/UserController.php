@@ -139,22 +139,4 @@ class UserController extends AdminBaseController {
             'users' => $users,
         ));
     }
-
-    /**
-     * @return \Illuminate\View\View
-     */
-    public function getList()
-    {
-        $users = User::orderBy('id')->paginate(AdminBaseController::PAGINATE);
-
-        if ($this->request->query->has('page')){
-            return $this->view->make('admin.user.ajax.list', array(
-                'users' => $users,
-            ));
-
-        }
-        return $this->view->make('admin.user.ajax.list', array(
-            'users' => $users,
-        ));
-    }
 }

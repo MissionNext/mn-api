@@ -38,7 +38,7 @@
     {{ HTML::script(URL::asset('packages/admin/js/angular.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/angular-resource.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/angular-route.min.js')) }}
-    {{ HTML::script(URL::asset('js/project/app.js')) }}
+    {{ HTML::script(URL::asset('project/js/app.js')) }}
     <script>
         (function($){
             $.ajaxSetup({
