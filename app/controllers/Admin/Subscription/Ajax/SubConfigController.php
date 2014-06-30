@@ -23,7 +23,7 @@ class SubConfigController extends AdminBaseController
                 "role" => [ "key" => BaseDataModel::CANDIDATE, "label" => "Candidate"],
                 "partnership" =>
                     [
-                        [ "price" => 0, "level" =>'', "term" => 1  ],
+                        [ "price_month" => 0, "level" =>'',  "price_year" => 0  ],
 
                     ],
 
@@ -32,9 +32,9 @@ class SubConfigController extends AdminBaseController
             "role" => [ "key" => BaseDataModel::ORGANIZATION, "label" => "Receiving Organization"],
             "partnership" =>
             [
-              [ "price" => 100, "level" => Partnership::LIMITED, "term" => 1  ],
-              [ "price" => 200, "level" =>  Partnership::BASIC, "term" => 1  ],
-              [ "price" => 300, "level" => Partnership::PLUS, "term" => 1  ],
+              [ "price_month" => 100, "level" => Partnership::LIMITED,  "price_year" => 160   ],
+              [ "price_month" => 200, "level" =>  Partnership::BASIC,  "price_year" => 440   ],
+              [ "price_month" => 300, "level" => Partnership::PLUS,  "price_year" => 550   ],
             ]
 
           ],
@@ -43,7 +43,7 @@ class SubConfigController extends AdminBaseController
                 "role" => [ "key" => BaseDataModel::AGENCY, "label" => "Agency"],
                 "partnership" =>
                     [
-                        [ "price" => 200, "level" =>'', "term" => 1  ],
+                        [ "price_month" => 200, "level" =>'',  "price_year" => 550   ],
 
                     ]
 

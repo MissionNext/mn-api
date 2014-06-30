@@ -48,12 +48,16 @@ Dashboard. Subscription. Config
     <tr ng-repeat="info in config.partnership">
         <td></td>
         <td><% info . level || '-' %></td>
-        <td><span ng-hide="subCtl.editing[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index)"><% (info.price && (info.price) || 0) | currency  %></span>
-            <input ngc-blur="subCtl.blurPrice()"
-                   ng-show="subCtl.editing[$parent.$index][$index]" type="number" min="0"
-                   ng-model="info.price" value=""/>
+        <td><span ng-hide="subCtl.editingMonth[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'month')"><% info.price_month  | currency  %></span>
+            <input class="p-price"
+                   ng-show="subCtl.editingMonth[$parent.$index][$index]" type="number" min="0"
+                   ng-model="info.price_month" value=""  ng-model-options="{ updateOn: 'blur' }" />
         </td>
-        <td><span><% info.price | currency %></span></td>
+        <td><span ng-hide="subCtl.editingYear[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'year')"><% info.price_year  | currency  %></span>
+            <input class="p-price"
+                   ng-show="subCtl.editingYear[$parent.$index][$index]" type="number" min="0"
+                   ng-model="info.price_year" value=""  ng-model-options="{ updateOn: 'blur' }" />
+        </td>
     </tr>
     </tbody>
     <!-- END candidate    ?-->
