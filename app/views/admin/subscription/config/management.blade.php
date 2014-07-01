@@ -27,44 +27,56 @@ Dashboard. Subscription. Config
        border-color: green;
    }
 </style>
-<table class="table table-hover" ng-controller="SubscriptionController as subCtl">
-    <thead>
-    <tr>
-        <th>User Role</th>
-        <th>Partnership Level</th>
-        <th>Price Month</th>
-        <th>Price Year</th>
-    </tr>
-    </thead>
-
-    <!--  BEGIN candidate  -->
-    <tbody ng-repeat="config in subCtl.configs">
-    <tr class="active">
-        <td><% config . role . label %></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr ng-repeat="info in config.partnership">
-        <td></td>
-        <td><% info . level || '-' %></td>
-        <td><span ng-hide="subCtl.editingMonth[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'month')"><% info.price_month  | currency  %></span>
-            <input class="p-price"
-                   ng-show="subCtl.editingMonth[$parent.$index][$index]" type="number" min="0"
-                   ng-model="info.price_month" value=""  ng-model-options="{ updateOn: 'blur' }" />
-        </td>
-        <td><span ng-hide="subCtl.editingYear[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'year')"><% info.price_year  | currency  %></span>
-            <input class="p-price"
-                   ng-show="subCtl.editingYear[$parent.$index][$index]" type="number" min="0"
-                   ng-model="info.price_year" value=""  ng-model-options="{ updateOn: 'blur' }" />
-        </td>
-    </tr>
-    </tbody>
-    <!-- END candidate    ?-->
-
-</table>
 
 
+
+<div class="sub-config" ng-controller="SubscriptionController as subCtl">
+
+    <div  class="save-config alert alert-success alert-dismissable hidden">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        Config successfully saved
+    </div>
+
+    <table class="table table-hover" >
+        <thead>
+        <tr>
+            <th>User Role</th>
+            <th>Partnership Level</th>
+            <th>Price Month</th>
+            <th>Price Year</th>
+        </tr>
+        </thead>
+
+        <!--  BEGIN candidate  -->
+        <tbody ng-repeat="config in subCtl.configs">
+        <tr class="active">
+            <td><% config . role . label %></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr ng-repeat="info in config.partnership">
+            <td></td>
+            <td><% info . level || '-' %></td>
+            <td><span ng-hide="subCtl.editingMonth[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'month')"><% info.price_month  | currency  %></span>
+                <input class="p-price"
+                       ng-show="subCtl.editingMonth[$parent.$index][$index]" type="number" min="0"
+                       ng-model="info.price_month" value="" focus-if="subCtl.editingMonth[$parent.$index][$index]"  ng-model-options="{ updateOn: 'blur' }" />
+            </td>
+            <td><span ng-hide="subCtl.editingYear[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'year')"><% info.price_year  | currency  %></span>
+                <input class="p-price"
+                       ng-show="subCtl.editingYear[$parent.$index][$index]" type="number" min="0"
+                       ng-model="info.price_year" value="" focus-if="subCtl.editingYear[$parent.$index][$index]"  ng-model-options="{ updateOn: 'blur' }" />
+            </td>
+        </tr>
+        </tbody>
+        <!-- END candidate    ?-->
+
+    </table>
+    <div class="text-center">
+        <button ng-click="subCtl.save()" class="btn btn-large btn-primary submit" type="button">Save</button>
+    </div>
+</div>
 @endsection
 @section('javascripts')
 @parent

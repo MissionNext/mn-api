@@ -11,6 +11,17 @@ class BaseDataModel extends Eloquent
 
     const JOB = "job";
 
+    /**
+     * @param $role
+     *
+     * @return string
+     */
+    public static function label($role){
+        $labels = [static::CANDIDATE => "Candidate", static::ORGANIZATION => "Receiving Organization", static::AGENCY => "Agency"];
+
+        return $labels[$role];
+    }
+
 
     public static function createCandidate()
     {

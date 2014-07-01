@@ -21,6 +21,18 @@ App.directive('ngc-blur', function() {
     };
 });
 
+App.directive('focusIf', [function () {
+    return function focusIf(scope, element, attr) {
+        scope.$watch(attr.focusIf, function (newVal) {
+            if (newVal) {
+                scope.$evalAsync(function() {
+                    element[0].focus();
+                });
+            }
+        });
+    }
+}]);
+
 
 
 

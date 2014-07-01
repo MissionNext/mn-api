@@ -4,6 +4,9 @@
     subscriptionControllers.controller('SubscriptionController', [ '$http', '$scope', function ($http, $scope) {
         var self = this;
 
+        self.application = window.CurrentApplication;
+
+
         var watchPrice = function(p, period){
             $scope.$watch(function(){
                 return p['price_'+period];
@@ -18,11 +21,11 @@
         };
 
         self.configs = [];
-        self.application = null;
-        $http.get('/dashboard/ajax/subscription/config')
+
+        $http.get('/dashboard/ajax/subscription/config?app='+self.application.id)
             .success(function (data) {
+                console.log(data);
                 self.configs = data.config;
-                self.application = window.CurrentApplication;
 
                 angular.forEach(self.configs, function(config, indexMain){
                    angular.forEach(config.partnership, function(p, index){
@@ -44,6 +47,15 @@
             }
 
         };
+
+        self.save = function(){
+            $.post('/dashboard/ajax/subscription/config', {configs : self.configs, app : self.application.id})
+                .done(
+                function(data){
+                    $('.save-config').removeClass('hidden');
+                }
+            );
+        }
 
     }]);
 
