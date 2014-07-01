@@ -20,9 +20,10 @@
     }]);
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
-        $scope.user = { 'status' : null };
-        $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(user){
-            $scope.user = user;
+        $scope.user = null;
+        $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
+            $scope.user = data.user;
+            $scope.statuses = data.statuses;
         });
     }]);
 

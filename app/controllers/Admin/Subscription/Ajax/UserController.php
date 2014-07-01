@@ -38,6 +38,6 @@ class UserController extends AdminBaseController
         $repo = $this->repoContainer[UserCachedRepositoryInterface::KEY];
         $repo->findOrFail($id);
 
-        return Response::json($repo->transData(new LanguageModel()));
+        return Response::json(["user" => $repo->transData(new LanguageModel()), "statuses" => User::statuses()]);
     }
 } 

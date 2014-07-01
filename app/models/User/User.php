@@ -31,6 +31,14 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
           STATUS_ACTIVE = 'active',
           STATUS_EXPIRED = 'expired';
 
+
+    public static function statuses()
+    {
+
+        return [static::STATUS_PENDING_APPROVAL, static::STATUS_ACCESS_DENIED,
+            static::STATUS_ACCESS_GRANTED, static::STATUS_ACTIVE, static::STATUS_EXPIRED ];
+    }
+
     /**
      * The database table used by the model.
      *
