@@ -22,7 +22,7 @@
 
         self.configs = [];
 
-        $http.get('/dashboard/ajax/subscription/config?app='+self.application.id)
+        $http.get(Routing.buildUrl('/subscription/config?app='+self.application.id))
             .success(function (data) {
                 console.log(data);
                 self.configs = data.config;

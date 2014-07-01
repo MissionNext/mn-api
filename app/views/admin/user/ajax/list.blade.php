@@ -48,6 +48,7 @@
                         <th>ID</th>
                         <th>Username</th>
                         <th>E-mail</th>
+                        <th>Status</th>
                         <th>Created at</th>
                         <th>Last login</th>
                         <th></th>
@@ -56,8 +57,9 @@
                     @foreach($users as $user)
                     <tr>
                         <td>{{ $user->id }}</td>
-                        <td>{{ $user->username }}</td>
+                        <td><a href="user#/{{$user->id}}">{{ $user->username }}</a></td>
                         <td>{{ $user->email }}</td>
+                        <td><strong>{{ strtoupper($user->status) }}</strong></td>
                         <td>{{ date("d.m.Y H:i", strtotime($user->created_at)) }}</td>
                         <td>{{ date("d.m.Y H:i", strtotime($user->last_login)) }}</td>
                         <td>

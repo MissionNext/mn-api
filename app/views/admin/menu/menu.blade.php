@@ -71,17 +71,6 @@
                                     </a>
                                 </li>
                                 @endforeach
-                                <li>
-                                    <a href="{{ URL::route('sub.config.list')}}">
-                                        <span class="glyphicon glyphicon-list"> </span> List configs
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ URL::route('sub.config.create')}}">
-                                        <span class="glyphicon glyphicon-plus"> </span> New config
-                                    </a>
-                                </li>
-
                             </ul>
                         </li>
                         <li class="divider"></li>

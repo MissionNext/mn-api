@@ -26,6 +26,11 @@ Dashboard. Subscription. Config
    .ng-valid.ng-dirty{
        border-color: green;
    }
+
+  td {
+     width: 250px;
+     height: 40px;
+  }
 </style>
 
 
@@ -42,8 +47,8 @@ Dashboard. Subscription. Config
         <tr>
             <th>User Role</th>
             <th>Partnership Level</th>
-            <th>Price Month</th>
-            <th>Price Year</th>
+            <th>Monthly price</th>
+            <th>Annual price</th>
         </tr>
         </thead>
 

@@ -35,7 +35,6 @@ class SearchController extends BaseController
 
         $profileSearch = $this->request->get("profileData");
         $userSearch = $this->request->except("profileData", "timestamp");
-     //   dd($profileSearch);
 
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
@@ -148,6 +147,8 @@ class SearchController extends BaseController
             $data->favorite = $d->favorite;
             return  new \ArrayObject($data);
         }, DB::select($query, $bindings));
+
+        //dd($result);
 
       return new RestResponse( (new TransData($this->getToken()->language(), $searchType, $result))->get() );
 

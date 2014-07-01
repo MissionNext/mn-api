@@ -48,7 +48,7 @@ class AdminRouting
             ));
 
             // ================ AJAX ===========================
-            Route::group(array('prefix' => 'ajax/'), function(){
+            Route::group(array('prefix' => 'ajax'), function(){
 
 
                 // ------------------- Users -----------------------
@@ -56,6 +56,11 @@ class AdminRouting
                     'as' => 'ajaxUserList',
                     'uses' => AjaxAdminController::class.'@getList'
                 ));
+
+                Route::get('user/{user}', array(
+                    'as' => 'ajaxUser',
+                    'uses' => AjaxAdminController::class.'@getIndex'
+                ))->where('id', '[0-9]+');;
                 // ------------------- END Users -----------------------
 
 

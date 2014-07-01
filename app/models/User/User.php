@@ -25,6 +25,11 @@ use MissionNext\Repos\User\UserRepositoryInterface;
 
 class User extends ModelObservable implements UserInterface, RemindableInterface, ProfileInterface
 {
+    const STATUS_PENDING_APPROVAL = 'pending_approval',
+          STATUS_ACCESS_DENIED = 'access_denied',
+          STATUS_ACCESS_GRANTED = 'access_granted',
+          STATUS_ACTIVE = 'active',
+          STATUS_EXPIRED = 'expired';
 
     /**
      * The database table used by the model.
@@ -42,7 +47,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
     protected $guarded = array('id', 'password');
 
-    protected $fillable = array('username', 'email');
+    protected $fillable = array('username', 'email', 'is_active', 'status');
 
 
 

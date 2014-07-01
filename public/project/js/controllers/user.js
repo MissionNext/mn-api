@@ -1,5 +1,4 @@
 (function(){
-
     var userControllers = angular.module('userControllers', []);
 
     userControllers.config(usersRouter);
@@ -8,9 +7,9 @@
 
         $routeProvider
         .when(
-            '/', { templateUrl: '/dashboard/ajax/user/list', controller: "UserListCtl" }
+            '/', { templateUrl: Routing.buildUrl('/user/list'), controller: "UserListCtl" }
         ).when(
-            '/:user', { templateUrl: '/project/views/partials/users/user.html', controller: "UserCtl" }
+            '/:user', { templateUrl: Routing.buildTemplateUrl('/users/user.html'), controller: "UserCtl" }
         );
 
     }
@@ -20,9 +19,11 @@
 
     }]);
 
-    userControllers.controller("UserCtl",['$scope', '$routeParams',function($scope, $params){
-        console.log($params.user);
-
+    userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
+        $scope.user = { 'status' : null };
+        $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(user){
+            $scope.user = user;
+        });
     }]);
 
     App.requires.push('userControllers');

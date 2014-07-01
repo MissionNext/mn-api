@@ -2,7 +2,23 @@
 var App = angular.module('mission-next', ['ngRoute'], function ($interpolateProvider) {
     $interpolateProvider.startSymbol('<%');
     $interpolateProvider.endSymbol('%>');
-});
+   });
+
+var Routing = {
+    config : { urlPrefix : '/dashboard/ajax', templateUrlPrefix: '/project/views/partials'},
+
+    buildUrl : function(url){
+
+        return this.config.urlPrefix + url;
+    },
+
+    buildTemplateUrl : function(url){
+
+        return this.config.templateUrlPrefix + url;
+    }
+};
+
+
 
 String.prototype.ucfirst = function(){
   return this.toString().toLowerCase().replace(/\b[a-z]/g, function(letter) {
