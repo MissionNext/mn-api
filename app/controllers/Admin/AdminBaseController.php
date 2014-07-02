@@ -27,11 +27,11 @@ use Illuminate\View\Factory;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Repos\RepositoryContainerInterface;
-use MissionNext\Controllers\traits\Controller as Traits;
+use MissionNext\Controllers\traits\Controller as SecurityTraits;
 
 class AdminBaseController extends Controller {
 
-    use Traits;
+    use SecurityTraits;
 
     const PAGINATE = 3;
 

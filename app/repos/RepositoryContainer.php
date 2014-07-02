@@ -14,6 +14,8 @@ use MissionNext\Repos\Form\FormRepositoryInterface;
 use MissionNext\Repos\Inquire\InquireRepository;
 use MissionNext\Repos\Inquire\InquireRepositoryInterface;
 use MissionNext\Repos\Subscription\SubConfigRepositoryInterface;
+use MissionNext\Repos\Subscription\SubscriptionRepository;
+use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepositoryInterface;
@@ -64,6 +66,7 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
             FormRepositoryInterface::KEY => $app->make(FormRepositoryInterface::class)->setRepoContainer($this),
             ProfileRepositoryFactory::KEY => $app->make(ProfileRepositoryFactory::class)->setRepoContainer($this),
             SubConfigRepositoryInterface::KEY => $app->make(SubConfigRepositoryInterface::class)->setRepoContainer($this),
+            SubscriptionRepositoryInterface::KEY => $app->make(SubscriptionRepositoryInterface::class)->setRepoContainer($this),
         ];
     }
 

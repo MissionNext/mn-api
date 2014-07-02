@@ -5,8 +5,9 @@ namespace MissionNext\Models\Translation;
 
 use Illuminate\Database\Eloquent\Model;
 use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\ModelInterface;
 
-class Field extends Model
+class Field extends Model implements ModelInterface
 {
     public $timestamps = false;
 

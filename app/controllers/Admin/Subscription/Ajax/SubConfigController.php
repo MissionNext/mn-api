@@ -5,13 +5,18 @@ namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
+use MissionNext\Models\Configs\AppConfigs;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Subscription\Partnership;
 use MissionNext\Models\Subscription\SubConfig;
+use MissionNext\Repos\Subscription\SubConfigRepository;
+use MissionNext\Repos\Subscription\SubConfigRepositoryInterface;
 
 class SubConfigController extends AdminBaseController
 {
     const ROUTE_PREFIX = 'ajax.sub.config';
+
+    const CON_FEE = 'conFee';
 
     /**
      * @return \Illuminate\Http\JsonResponse
@@ -19,38 +24,11 @@ class SubConfigController extends AdminBaseController
     public function getIndex()
     {
         $appId = $this->request->query->get('app');
-        $configs = SubConfig::whereAppId( $appId )->get();
-        if (!$configs->count()){
+        /** @var  $repo SubConfigRepository */
+        $repo = $this->repoContainer[SubConfigRepositoryInterface::KEY];
+        $conFee = AppConfigs::whereAppId($appId)->whereKey(static::CON_FEE)->first();
 
-            return Response::json([ "config" => SubConfig::defConfig() ]);
-        }
-
-        $return = [];
-        foreach($configs as  $config){
-            $return[$config->role]['role'] = [ 'key' =>$config->role, 'label' => BaseDataModel::label($config->role) ];
-            $return[$config->role]['partnership'][] =
-                ["price_month" => intval($config->price_month), "level" =>$config->partnership,  "price_year" =>  intval($config->price_year)];
-
-        }
-        $conf = [];
-        $conf[] = $return[BaseDataModel::ORGANIZATION];
-        $partnership = $conf[0]['partnership'];
-        $conf[0]['partnership'][0] = current(array_filter($partnership, function($p){
-          return $p['level'] === 'limited';
-        }));
-
-        $conf[0]['partnership'][1] = current(array_filter($partnership, function($p){
-            return $p['level'] === 'basic';
-        }));
-        $conf[0]['partnership'][2] = current(array_filter($partnership, function($p){
-            return $p['level'] === 'plus';
-        }));
-        $conf[] = $return[BaseDataModel::AGENCY];
-        $conf[] = $return[BaseDataModel::CANDIDATE];
-
-
-
-        return Response::json([ "config" => $conf ]);
+        return Response::json([ "config" => $repo->config($appId), "conFee" => $conFee ? intval($conFee->value) : 0 ]);
     }
 
     /**
@@ -60,6 +38,10 @@ class SubConfigController extends AdminBaseController
     {
         $configs = $this->request->request->get('configs');
         $appId = $this->request->request->get('app');
+        $conFee = intval($this->request->request->get('conFee'));
+
+        $attributes = ['app_id' => $appId, 'key' => static::CON_FEE];
+        AppConfigs::updateOrCreate( $attributes, ['value' => $conFee] );
 
         foreach($configs as $config){
            foreach($config['partnership'] as $p ) {

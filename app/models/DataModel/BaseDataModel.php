@@ -12,6 +12,24 @@ class BaseDataModel extends Eloquent
     const JOB = "job";
 
     /**
+     * @return array
+     */
+    public static function userRoles()
+    {
+
+        return [static::CANDIDATE, static::AGENCY, static::ORGANIZATION];
+    }
+
+    /**
+     * @return array
+     */
+    public static function allRoles()
+    {
+
+        return array_merge(static::userRoles(), [static::JOB]);
+    }
+
+    /**
      * @param $role
      *
      * @return string

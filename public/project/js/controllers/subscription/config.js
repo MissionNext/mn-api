@@ -3,6 +3,7 @@
 
     subscriptionControllers.controller('SubscriptionController', [ '$http', '$scope', function ($http, $scope) {
         var self = this;
+        self.conFee = 0;
 
         self.application = window.CurrentApplication;
 
@@ -26,6 +27,7 @@
             .success(function (data) {
                 console.log(data);
                 self.configs = data.config;
+                self.conFee = data.conFee;
 
                 angular.forEach(self.configs, function(config, indexMain){
                    angular.forEach(config.partnership, function(p, index){
@@ -49,7 +51,9 @@
         };
 
         self.save = function(){
-            $.post('/dashboard/ajax/subscription/config', {configs : self.configs, app : self.application.id})
+            $.post(Routing.buildUrl('/subscription/config'),
+                {configs : self.configs, app : self.application.id, conFee : self.conFee}
+            )
                 .done(
                 function(data){
                     $('.save-config').removeClass('hidden');

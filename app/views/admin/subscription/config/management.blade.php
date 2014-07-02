@@ -78,6 +78,10 @@ Dashboard. Subscription. Config
         <!-- END candidate    ?-->
 
     </table>
+    <div class="col-sm-10">
+            <label for="con-fee">Convinience fee$ </label>
+            <input type="number" type="number" min="0" ng-model="subCtl.conFee" id="con-fee" />
+    </div>
     <div class="text-center">
         <button ng-click="subCtl.save()" class="btn btn-large btn-primary submit" type="button">Save</button>
     </div>

@@ -10,6 +10,7 @@ use MissionNext\Controllers\Api\Affiliate\AffiliateController;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
+use MissionNext\Controllers\Api\Subscription\SubConfigController;
 use MissionNext\Controllers\Api\Translation\CustomTransController;
 use MissionNext\Controllers\Api\Translation\FolderTransController;
 use MissionNext\Controllers\Api\Translation\FormGroupTransController;
@@ -174,6 +175,12 @@ class Routing
 
             //APP CONFIGS CONTROLLER
             Route::controller('configs', AppConfigController::class, []);
+
+            Route::group(array('prefix' => 'subscription'), function(){
+
+                Route::controller('configs', SubConfigController::class, []);
+
+            });
 
 
         });

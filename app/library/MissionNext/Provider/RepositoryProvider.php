@@ -27,6 +27,8 @@ use MissionNext\Repos\RepositoryContainer;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\Subscription\SubConfigRepository;
 use MissionNext\Repos\Subscription\SubConfigRepositoryInterface;
+use MissionNext\Repos\Subscription\SubscriptionRepository;
+use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\ProfileRepositoryFactory;
@@ -118,6 +120,11 @@ class RepositoryProvider extends ServiceProvider
         App::bind(SubConfigRepositoryInterface::class, function ($app) {
 
             return new SubConfigRepository();
+        });
+
+        App::bind(SubscriptionRepositoryInterface::class, function ($app) {
+
+            return new SubscriptionRepository();
         });
 
         //REPO CONTAINER

@@ -6,8 +6,9 @@ namespace MissionNext\Models\Subscription;
 use Illuminate\Database\Eloquent\Model;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Models\ModelInterface;
 
-class SubConfig extends Model
+class SubConfig extends Model implements ModelInterface
 {
     public $timestamps = false;
 

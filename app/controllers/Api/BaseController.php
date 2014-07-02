@@ -44,12 +44,12 @@ use MissionNext\Repos\ViewField\ViewFieldRepository;
 use MissionNext\Repos\ViewField\ViewFieldRepositoryInterface;
 use MissionNext\Validators\ValidatorResolver;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use MissionNext\Controllers\traits\Controller as Traits;
+use MissionNext\Controllers\traits\Controller as SecurityTraits;
 
 class BaseController extends Controller
 {
 
-    use Traits;
+    use SecurityTraits;
     /** @var \MissionNext\Repos\Field\FieldRepository */
     private $fieldRepo;
     /** @var \MissionNext\Repos\User\UserRepositoryInterface  */
