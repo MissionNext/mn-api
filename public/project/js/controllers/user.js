@@ -22,9 +22,28 @@
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
         $scope.user = null;
         $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
+            console.log($params.user, data.user);
             $scope.user = data.user;
             $scope.statuses = data.statuses;
         });
+
+        $scope.setDisabled = function($event){
+           $http.get(Routing.buildUrl('/user/disable/'+$scope.user.id))
+               .success(function(data){
+                   console.log(data);
+                    $scope.user.is_active = data.is_active;
+                    $scope.user.status = data.status;
+               });
+        };
+
+        $scope.setActive = function($event){
+            $http.get(Routing.buildUrl('/user/enable/'+$scope.user.id))
+                .success(function(data){
+                    $scope.user.is_active = data.is_active;
+                    $scope.user.status = data.status;
+                });
+        };
+
     }]);
 
     App.requires.push('userControllers');

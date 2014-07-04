@@ -34,11 +34,11 @@ return array(
 			'driver' => 'sync',
 		),
 
-		'beanstalkd' => array(
-			'driver' => 'beanstalkd',
-			'host'   => 'localhost',
-			'queue'  => 'default',
-		),
+        'beanstalkd' => array(
+            'driver' => 'beanstalkd',
+            'host'   => 'localhost',
+            'queue'  => 'default',
+        ),
 
 		'sqs' => array(
 			'driver' => 'sqs',

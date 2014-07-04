@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'default' => 'mysql',
+	'default' => 'pgsql',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -63,16 +63,16 @@ return array(
 			'prefix'    => '',
 		),
 
-		'pgsql' => array(
-			'driver'   => 'pgsql',
-			'host'     => 'localhost',
-			'database' => 'database',
-			'username' => 'root',
-			'password' => '',
-			'charset'  => 'utf8',
-			'prefix'   => '',
-			'schema'   => 'public',
-		),
+        'pgsql' => array(
+            'driver'   => 'pgsql',
+            'host'     => 'localhost',
+            'database' => 'mission_next_prod',
+            'username' => 'admin',
+            'password' => 'kdfFGTss',
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+        ),
 
 		'sqlsrv' => array(
 			'driver'   => 'sqlsrv',

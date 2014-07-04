@@ -60,7 +60,11 @@ class AdminRouting
                 Route::get('user/{user}', array(
                     'as' => 'ajaxUser',
                     'uses' => AjaxAdminController::class.'@getIndex'
-                ))->where('id', '[0-9]+');;
+                ))->where('user', '[0-9]+');
+                Route::get('user/{status}/{user}', array(
+                    'as' => 'ajaxStatusUser',
+                    'uses' => AjaxAdminController::class.'@setStatus'
+                ))->where(['user'=> '[0-9]+', 'status' => '(enable|disable)']);
                 // ------------------- END Users -----------------------
 
 

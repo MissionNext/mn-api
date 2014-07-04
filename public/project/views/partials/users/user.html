@@ -1,5 +1,8 @@
 <div class="profile-data">
-   <p>Is Active</p>
-    <select type="text" ng-model="user.status" ng-options="status for status in statuses" value="">
-    </select>
+    <p>
+        <button ng-click="setActive($event)" type="button" class="btn btn-primary"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
+    </p>
+    <p>
+        <button ng-click="setDisabled($event)" type="button" class="btn btn-danger" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
+    </p>
 </div>

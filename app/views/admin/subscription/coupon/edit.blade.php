@@ -27,10 +27,17 @@ Dashboard. Editing coupon
                 'true')) }}
             </div>
         </div>
+        <div class="form-group">
+            {{ Form::label('value', 'Value', ['class' => 'col-sm-2 control-label']) }}
+            <div class="col-sm-10">
+                {{ Form::text('value', null, array('class' => 'form-control', 'placeholder' => 'value', 'autofocus' =>
+                'true')) }}
+            </div>
+        </div>
         <div class="btn-toolbar" role="toolbar">
             <a href="{{ URL::route('sub.coupon.list') }}" class="btn btn-sm btn-warning pull-left"> Cancel </a>
             <a id="generate-coupon" href="#generate" class="btn btn-sm btn-danger pull-left"> Generate </a>
-            {{ Form::button('Edit', array('class' => 'btn btn-sm btn-info pull-left', 'type' => 'submit' )) }}
+            {{ Form::button('Update', array('class' => 'btn btn-sm btn-info pull-left', 'type' => 'submit' )) }}
         </div>
         {{ Form::close() }}
 

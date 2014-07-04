@@ -26,7 +26,7 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(function(){
     $hosts = array(
       'localhost.mission-next' => 'local',
-      'apimisionnext.masterofcode.com' => 'stage'
+      'apimisionnext.masterofcode.com' => 'stage',
     );
     $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
 

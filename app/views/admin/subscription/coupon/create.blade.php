@@ -28,10 +28,17 @@ Dashboard. Creating new coupon
                 {{ Form::text('code', null, array('class' => 'form-control', 'placeholder' => 'code', 'autofocus' => 'true')) }}
             </div>
         </div>
+        <div class="form-group">
+            {{ Form::label('value', 'Value', ['class' => 'col-sm-2 control-label']) }}
+            <div class="col-sm-10">
+                {{ Form::text('value', null, array('class' => 'form-control', 'placeholder' => 'value', 'autofocus' =>
+                'true')) }}
+            </div>
+        </div>
         <div class="btn-toolbar" role="toolbar">
 
             <a id="generate-coupon" href="#generate" class="btn btn-sm btn-danger pull-left"> Generate </a>
-            {{ Form::button('create', array('class' => 'btn btn-sm btn-info', 'type' => 'submit' )) }}
+            {{ Form::button('Create', array('class' => 'btn btn-sm btn-info', 'type' => 'submit' )) }}
         </div>
 
 

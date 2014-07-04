@@ -12,6 +12,8 @@ use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
+use MissionNext\Repos\User\ProfileRepositoryFactory;
+use MissionNext\Repos\User\UserRepository;
 
 class UserController extends AdminBaseController
 {
@@ -38,6 +40,27 @@ class UserController extends AdminBaseController
         $repo = $this->repoContainer[UserCachedRepositoryInterface::KEY];
         $repo->findOrFail($id);
 
-        return Response::json(["user" => $repo->transData(new LanguageModel()), "statuses" => User::statuses()]);
+        return Response::json(["user" => $repo->transData(new LanguageModel())]);
+    }
+
+    /**
+     * @param $isActive
+     * @param $userId
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setStatus($isActive, $userId)
+    {
+        $user = User::findOrFail($userId);
+        $isActive = $isActive  === 'enable' ? true : false;
+        $user->is_active = $isActive;
+        $user->status = 0;
+        $user->save();
+
+        /** @var  $userRepo UserRepository */
+        $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
+        $userRepo->addUserCachedData($user);
+
+        return Response::json(["is_active" => $isActive, "status" => 0 ]);
     }
 } 

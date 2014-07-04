@@ -25,19 +25,7 @@ use MissionNext\Repos\User\UserRepositoryInterface;
 
 class User extends ModelObservable implements UserInterface, RemindableInterface, ProfileInterface
 {
-    const STATUS_PENDING_APPROVAL = 'pending_approval',
-          STATUS_ACCESS_DENIED = 'access_denied',
-          STATUS_ACCESS_GRANTED = 'access_granted',
-          STATUS_ACTIVE = 'active',
-          STATUS_EXPIRED = 'expired';
-
-
-    public static function statuses()
-    {
-
-        return [static::STATUS_PENDING_APPROVAL, static::STATUS_ACCESS_DENIED,
-            static::STATUS_ACCESS_GRANTED, static::STATUS_ACTIVE, static::STATUS_EXPIRED ];
-    }
+    const STATUS_PENDING_APPROVAL = 1;
 
     /**
      * The database table used by the model.
@@ -92,6 +80,30 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @param $isActive
+     *
+     * @return $this
+     */
+    public function setIsActive($isActive)
+    {
+        $this->is_active = (boolean)$isActive;
+
+        return $this;
+    }
+
+    /**
+     * @param $statusCode
+     *
+     * @return $this
+     */
+    public function setStatus($statusCode)
+    {
+        $this->status = intval($statusCode);
 
         return $this;
     }

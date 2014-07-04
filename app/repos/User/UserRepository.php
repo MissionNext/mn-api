@@ -165,8 +165,8 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
         $profile->id = $data->id;
         $profile->username = $data->username;
         $profile->role = $data->role();
-        $profile->status = $data->status;
         $profile->is_active = $data->is_active;
+        $profile->status = $data->status;
         $profile->email = $data->email;
         $profile->created_at = $data->created_at;
         $profile->updated_at = $data->updated_at;

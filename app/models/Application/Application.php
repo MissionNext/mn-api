@@ -9,6 +9,7 @@ use MissionNext\Models\Configs\AppConfigs;
 use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\ModelInterface;
+use MissionNext\Models\Subscription\SubConfig;
 use MissionNext\Models\User\User;
 
 
@@ -80,6 +81,15 @@ class Application extends Eloquent implements ModelInterface
     {
 
         return $this->hasMany(AppConfigs::class, 'app_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function subConfigs()
+    {
+
+        return $this->hasMany(SubConfig::class, 'app_id');
     }
 
 

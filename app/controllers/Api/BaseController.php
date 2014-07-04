@@ -206,7 +206,6 @@ class BaseController extends Controller
         /** @var  $fields Collection */
         $fields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $fieldNames)->get();
 
-
         if ($fields->count() !== count($fieldNames)) {
 
             throw new ProfileException("Wrong field name(s)", ProfileException::ON_UPDATE);

@@ -34,16 +34,18 @@ Dashboard. Subscription. Coupon
     <tr>
         <th>ID</th>
         <th>Code</th>
+        <th>Value</th>
         <th>Is Active</th>
 
         <th></th>
     </tr>
     </thead>
-    @foreach($models as $model)
+    @foreach($models as $idx=>$model)
     <tr>
         <td>{{ $model->id }}</td>
         <td>{{ $model->code }}</td>
-        <td>@if ($model->is_active) <span class="label label-success">Active</span> @else <span class="label label-default">Used</span> @endif  </td>
+        <td>$ {{ $model->value }}</td>
+        <td>@if ($model->is_active && $idx) <span class="label label-success">Active</span> @else <span class="label label-default">Used</span> @endif  </td>
         <td class="text-center">
             <a href="{{ URL::route('sub.coupon.edit', array(  $model->id) ) }}" class="btn-warning btn btn-xs">
                 <span class="glyphicon glyphicon-edit"> </span> Edit </a>
