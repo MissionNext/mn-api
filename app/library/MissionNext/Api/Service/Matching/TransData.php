@@ -3,6 +3,7 @@
 namespace MissionNext\Api\Service\Matching;
 
 
+use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\CacheData\UserCachedDataTrans;
 use MissionNext\Models\Language\LanguageModel;
 
@@ -18,7 +19,7 @@ class TransData {
         }
         $ids = array_fetch($result, 'id');
         if ($ids) {
-            $transCache = new UserCachedDataTrans([], $userType);
+            $transCache = UserCachedData::table($userType);
             $data = $transCache->whereIn("id", $ids)->whereLangId($languageModel->id)->get();
 
 

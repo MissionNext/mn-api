@@ -99,7 +99,7 @@ class RepositoryProvider extends ServiceProvider
 
         App::bind(UserCachedRepositoryInterface::class, function () {
 
-            return new UserCachedRepository(BaseDataModel::AGENCY);
+            return new UserCachedRepository();
         });
 
         App::bind(LanguageRepositoryInterface::class, function () {

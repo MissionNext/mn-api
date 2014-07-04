@@ -21,31 +21,34 @@ use MissionNext\Repos\RepositoryInterface;
 
 class UserCachedRepository extends AbstractRepository implements UserCachedRepositoryInterface
 {
+
+
     protected $modelClassName = UserCachedData::class;
 
     protected $currentType;
     /** @var  Application */
     protected $app;
 
-    public function __construct($type)
+    public function __construct($type = null)
     {
-        $oldType = SecurityContext::role();
+        if (is_null($type)){
+            parent::__construct();
+        }else {
+            if (!RouteSecurityFilter::isAllowedRole($type)) {
 
-        if ( ! RouteSecurityFilter::isAllowedRole($type) ){
-
-            throw new SecurityContextException("'$type' role doesn't exists", SecurityContextException::ON_SET_ROLE);
-        }
-        $this->currentType = $type;
-        SecurityContext::getInstance()->getToken()->setRoles([$type]);
-        $this->app = SecurityContext::getInstance()->getApp();
-
-        parent::__construct();
-
-        if ($oldType){
-            SecurityContext::getInstance()->getToken()->setRoles([$oldType]);
+                throw new SecurityContextException("'$type' role doesn't exists", SecurityContextException::ON_SET_ROLE);
+            }
+            $this->currentType = $type;
+            $this->app = SecurityContext::getInstance()->getApp();
+            $this->model = UserCachedData::table($type);
         }
     }
 
+    /**
+     * @param $type
+     *
+     * @return UserCachedRepository
+     */
     public function dataOfType($type)
     {
 
@@ -93,8 +96,9 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
      */
     public function transData(LanguageModel $languageModel)
     {
+        $role = $this->repoContainer->securityContext()->role();
         /** @var  $transCache UserCachedDataTrans */
-        $transCache = (new UserCachedDataTrans())->whereLangId($languageModel->id)
+        $transCache =  UserCachedDataTrans::table($role)->whereLangId($languageModel->id)
         ->whereId($this->getModel()->id)->get()->first();
 
         return $transCache ? $transCache->getData() : $this->getModel()->getData();

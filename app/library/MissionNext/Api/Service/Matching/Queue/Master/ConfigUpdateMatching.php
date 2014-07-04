@@ -7,6 +7,7 @@ use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Facade\SecurityContext as fs;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application;
+use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Api\Service\Matching\Queue\CandidateJobs as CanJobsQueue;
 use MissionNext\Api\Service\Matching\Queue\CandidateOrganizations as CanOrgsQueue;
@@ -60,26 +61,17 @@ class ConfigUpdateMatching extends MasterMatching
         Results::truncate();
 
         $appId = $data["appId"];
-        $role = $data["role"];
 
-        $m = $this->match($role);
-        $m($data);
+        foreach($this->matchingRoles as $role){
 
-        $roles = array_values(array_diff($this->matchingRoles, [$role]));
-        array_unshift($roles, $role);
-        foreach($roles as $role){
-
-            $cacheRep = new UserCachedRepository($role);
-
-            $ids = $cacheRep->all()->lists("id");
-
+            $cache = UserCachedData::table($role);
+            $ids = $cache->all()->lists("id");
             $d = ["appId" => $appId, "role" => $role, "userId" => null];
             foreach($ids as $id){
                 $d["userId"] = $id;
                 $m = $this->match($role);
                 $m($d);
             }
-
         }
 
         $job->delete();

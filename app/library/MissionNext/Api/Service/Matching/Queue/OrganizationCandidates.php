@@ -24,15 +24,14 @@ class OrganizationCandidates extends QueueMatching
         $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
         $appId = $data["appId"];
         $this->job = $job;
-
         $this->securityContext()->getToken()->setApp(Application::find($appId));
 
         $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
 
         $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
 
-
         $config = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $userId)->get();
+
         if (!$config->count()) {
 
             $job->delete();

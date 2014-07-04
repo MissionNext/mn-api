@@ -11,9 +11,12 @@ use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Request;
+use MissionNext\Api\Service\Matching\Queue\Master\ConfigUpdateMatching;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
+use MissionNext\Models\CacheData\UserCachedData;
+use MissionNext\Models\CacheData\UserCachedDataTrans;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\Observers\UserObserver;
@@ -39,6 +42,18 @@ class UserController extends BaseController
      */
     public function index()
     {
+//        $this->securityContext()->getToken()->setRoles(['agency']);
+//        foreach(['organization', 'candidate', 'job'] as $role){
+//            $cacheRep = new UserCachedRepository($role);
+//            $ids = $cacheRep->all()->lists("id");
+//            var_dump($ids);
+//        }
+//        UserCachedData::$tablePrefix = null;
+//        dd((new UserCachedData)->getTable());
+
+     //  $this->clearTube(); exit;
+        $queueData = ["appId"=>$this->getApp()->id(), "role" => 'candidate', "userId" => 0];
+        ConfigUpdateMatching::run($queueData);
 
 //        /** @var  $phn \Pheanstalk_Pheanstalk */
 //        $phn = Queue::getPheanstalk();

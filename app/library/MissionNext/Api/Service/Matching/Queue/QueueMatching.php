@@ -111,6 +111,7 @@ abstract class QueueMatching
                 ->get()
                 ->toArray();
 
+
             $data = [
                 "mainData" => $mainData,
                 "matchingData" => $matchingData,

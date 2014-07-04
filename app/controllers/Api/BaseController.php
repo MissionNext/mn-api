@@ -4,6 +4,7 @@ namespace MissionNext\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Auth\Token;
 use Illuminate\Support\Facades\DB;
@@ -107,6 +108,21 @@ class BaseController extends Controller
         $this->beforeFilter(RouteSecurityFilter::AUTHORIZE);
         $this->beforeFilter(RouteSecurityFilter::ROLE);
 
+    }
+
+    /**
+     * @param string $tube
+     */
+    protected  function clearTube($tube = 'default')
+    {
+        try
+        {
+            while($job =  Queue::getPheanstalk()->peekReady($tube))
+            {
+                Queue::getPheanstalk()->delete($job);
+            }
+        }
+        catch(\Pheanstalk_Exception_ServerException $e){}
     }
 
     /**

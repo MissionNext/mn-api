@@ -19,7 +19,7 @@ use MissionNext\Repos\CachedData\UserCachedRepository;
 
 abstract class MasterMatching
 {
-    protected  $matchingRoles = [BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, BaseDataModel::JOB];
+    protected  $matchingRoles = [ BaseDataModel::JOB, BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE ];
     /** @var  \Pheanstalk_Pheanstalk */
     public static $pheanstalk;
 

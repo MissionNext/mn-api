@@ -24,11 +24,11 @@ class JobCandidates extends Matching
         $configArr = $this->matchConfig;
 
         $matchingDataSet = $this->matchAgainstData;
-        $matchingDataSet = $matchingDataSet;
         $mainData = $this->matchData;
 
         $selectMainDataFields = $this->selectFieldsOfType($this->mainMatchingModel);
         $selectMatchingDataFields = $this->selectFieldsOfType($this->matchingModel);
+
 
         $tempMatchingData = $matchingDataSet;
         $matchingKey = $this->matchingModel."_value";

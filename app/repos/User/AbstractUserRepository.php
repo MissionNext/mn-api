@@ -182,51 +182,14 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
 
     }
 
-    public function insertUserCachedData(ProfileInterface $user)
-    {
-        $d = $this->profileData($user);
 
-        $userCachedData = new UserCachedData();
-        $userCachedData->setUser($user)
-                       ->setProfileData($d);
-
-        $userCachedData->save();
-    }
-
-    public function updateUserCachedData(ProfileInterface $user)
-    {
-        $d = $this->profileDataTrans($user, new LanguageModel());
-
-        /** @var  $userCachedData UserCachedData */
-        $userCachedData = (new UserCachedData())->find($user->id) ? : new UserCachedData();
-
-        $userCachedData->setProfileData($d)
-                       ->setUser($user)
-                       ->save();
-
-        foreach(LanguageModel::all() as $languageModel){
-            $dt = $this->profileDataTrans($user, $languageModel);
-            $userCachedDataTrans = (new UserCachedDataTrans())
-                                   ->whereLangId($languageModel->id)
-                                   ->whereId($user->id)
-                                   ->get()->first()
-                                   ? : new UserCachedDataTrans();
-
-            $userCachedDataTrans
-                ->setProfileData($dt)
-                ->setUser($user)
-                ->setLang($languageModel)
-                ->save();
-        }
-
-    }
 
     public function addUserCachedData(ProfileInterface $user)
     {
-
+        $role = $this->repoContainer->securityContext()->role();
         $d = $this->profileDataDefault($user, new LanguageModel());
         /** @var  $userCachedData UserCachedData */
-        $userCachedData = (new UserCachedData())->find($user->id) ? : new UserCachedData();
+        $userCachedData = UserCachedData::table($role)->find($user->id) ? : UserCachedData::table($role);
 
         $userCachedData->setProfileData($d)
             ->setUser($user)
@@ -239,11 +202,11 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
 
             $dt = $this->profileDataTrans($user, $languageModel);
 
-            $userCachedDataTrans = (new UserCachedDataTrans())
+            $userCachedDataTrans = UserCachedDataTrans::table($role)
                 ->whereLangId($languageModel->id)
                 ->whereId($user->id)
                 ->get()->first()
-                ? : new UserCachedDataTrans();
+                ? : UserCachedDataTrans::table($role);
 
             $userCachedDataTrans
                 ->setProfileData($dt)

@@ -21,11 +21,12 @@ class InsertQueue
         $userId = $data["userId"];
         $matchingClass = $data["matchingClass"];
         $config = $data["config"];
-
         /** @var  $Matching ServiceMatching */
         $Matching = new $matchingClass($mainData, $matchingData, $config);
 
         $matchingData = $Matching->matchResults();
+
+
 
         $dateTime = (new \DateTime())->format("Y-m-d H:i:s");
 

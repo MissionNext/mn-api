@@ -48,10 +48,10 @@ class MatchConfigSeeder extends BaseSeeder
         /** @var  $profileRepo  \MissionNext\Repos\User\ProfileRepositoryFactory */
         $profileRepo = $repoContainer[\MissionNext\Repos\User\ProfileRepositoryFactory::KEY];
         $userRepApp2 = $profileRepo->setRepoContainer($repoContainer)->profileRepository();
+
         $userRepApp2->addUserCachedData(Job::find(7));
         $userRepApp2->addUserCachedData(Job::find(8));
         $userRepApp2->addUserCachedData(Job::find(9));
-
 
 
         /**
@@ -61,6 +61,7 @@ class MatchConfigSeeder extends BaseSeeder
         $profileRepo->setRepoContainer($repoContainer);
         $userRep = $profileRepo->profileRepository();
         $userRep->addUserCachedData(Job::find(1));
+
         $userRep->addUserCachedData(Job::find(2));
         $userRep->addUserCachedData(Job::find(3));
         $userRep->addUserCachedData(Job::find(4));
@@ -123,6 +124,7 @@ class MatchConfigSeeder extends BaseSeeder
         $configRepApp2->insert($this->getOrgConfig(2));
 
         $queueData = ["appId"=>1, "role" => BaseDataModel::CANDIDATE, "userId" => 0];
+
         \MissionNext\Api\Service\Matching\Queue\Master\ConfigUpdateMatching::run($queueData);
 
 
@@ -159,14 +161,14 @@ class MatchConfigSeeder extends BaseSeeder
             ],
             [
                 "matching_type" => Config::MATCHING_EQUAL,
-                "weight" => 5,
+                "weight" => 4,
                 "matching_field_id" => 6, //subject_speciality
                 "main_field_id" => 4, // hobby
                 "app_id" => $appId
             ],
             [
                 "matching_type" => Config::MATCHING_EQUAL,
-                "weight" => 5,
+                "weight" => 4,
                 "matching_field_id" => 2, //favourite_movies - checkbox - job
                 "main_field_id" => 13,//favourite_movies - checkbox - candidate
                 "app_id" => $appId

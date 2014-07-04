@@ -8,13 +8,30 @@ use MissionNext\Models\Language\LanguageModel;
 
 class UserCachedDataTrans extends AbstractCachedData
 {
-    protected $fillable = array('user_id', 'data', 'lang_id');
+    public static $tableName = null;
 
-
-    public function __construct( array $attr = [], $type = null )
+    /**
+     * @param $tableName
+     *
+     * @return static
+     */
+    public static function table($tableName)
     {
-        $this->table = !$type ? SecurityContext::getInstance()->role()."_cached_profile_trans"
-                              : $type."_cached_profile_trans";
+        static::$tableName = $tableName."_cached_profile_trans";
+
+        return new static;
+    }
+
+    public static function getTableName()
+    {
+
+        return static::$tableName;
+    }
+
+
+    public function __construct(array $attr = [] )
+    {
+        $this->table = static::getTableName();
 
         parent::__construct($attr);
     }
