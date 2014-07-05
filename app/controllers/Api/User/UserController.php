@@ -51,9 +51,9 @@ class UserController extends BaseController
 //        UserCachedData::$tablePrefix = null;
 //        dd((new UserCachedData)->getTable());
 
-     //  $this->clearTube(); exit;
-        $queueData = ["appId"=>$this->getApp()->id(), "role" => 'candidate', "userId" => 0];
-        ConfigUpdateMatching::run($queueData);
+        //$this->clearTube(); exit;
+       // $queueData = ["appId"=>$this->getApp()->id(), "role" => 'candidate', "userId" => 0];
+        //ConfigUpdateMatching::run($queueData);
 
 //        /** @var  $phn \Pheanstalk_Pheanstalk */
 //        $phn = Queue::getPheanstalk();

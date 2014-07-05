@@ -3,13 +3,14 @@
 namespace MissionNext\Models\CacheData;
 
 use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\AbstractDynamicModel;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\Profile;
 use MissionNext\Models\ProfileInterface;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class AbstractCachedData extends Model implements ModelInterface
+abstract class AbstractCachedData extends AbstractDynamicModel
 {
     /**
      * @param ProfileInterface $user

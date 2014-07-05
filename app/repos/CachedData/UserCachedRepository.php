@@ -39,7 +39,7 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
                 throw new SecurityContextException("'$type' role doesn't exists", SecurityContextException::ON_SET_ROLE);
             }
             $this->currentType = $type;
-            $this->app = SecurityContext::getInstance()->getApp();
+            $this->app =  SecurityContext::getInstance()->getApp(); //@TODO  repoContainer not working in matching
             $this->model = UserCachedData::table($type);
         }
     }

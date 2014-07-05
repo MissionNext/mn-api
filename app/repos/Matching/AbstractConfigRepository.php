@@ -11,7 +11,7 @@ class AbstractConfigRepository extends AbstractRepository implements ConfigRepos
 {
     protected $modelClassName = Config::class;
     /** @var  SecurityContext */
-    protected    $sec_context;
+    protected   $sec_context;
 
     /**
      * @return Config
