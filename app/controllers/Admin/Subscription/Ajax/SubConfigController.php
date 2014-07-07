@@ -58,10 +58,11 @@ class SubConfigController extends AdminBaseController
                ],[
                    "price_month" => $p['price_month'],
                    "price_year" => $p['price_year'],
-                   "partnership_status" => $p["partnership_status"]
+                   "partnership_status" => $p["partnership_status"],
                ]);
            }
         }
+
 
         return Response::json(SubConfig::whereAppId( $appId )->get()->toArray());
     }

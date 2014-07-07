@@ -21,6 +21,7 @@ var Routing = {
 
 
 String.prototype.ucfirst = function(){
+
   return this.toString().toLowerCase().replace(/\b[a-z]/g, function(letter) {
         return letter.toUpperCase();
     });

@@ -13,6 +13,7 @@ use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\User\User as UserModel;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as Req;
+use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\Field\FieldRepository;
@@ -39,6 +40,7 @@ class UserController extends BaseController
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
         $cacheData->findOrFail($id);
+
 
         return new RestResponse($cacheData->transData($this->getToken()->language()));
     }

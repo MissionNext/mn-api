@@ -281,6 +281,40 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     }
 
     /**
+     * @param Application $application
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function appStatus(Application $application)
+    {
+
+        return $this->belongsToMany(Application::class, 'user_apps_status', 'user_id', 'app_id')->withPivot('is_active')
+                ->wherePivot('app_id', $application->id());
+    }
+
+    /**
+     * @param Application $application
+     *
+     * @return boolean
+     */
+    public function isActiveInApp(Application $application)
+    {
+
+        return $this->appStatus($application)->firstOrFail()->pivot->is_active;
+    }
+
+    /**
+     *
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function appsStatuses()
+    {
+
+        return $this->belongsToMany(Application::class, 'user_apps_status', 'user_id', 'app_id')->withPivot('is_active');
+    }
+
+    /**
      * @return string
      */
     public function role()

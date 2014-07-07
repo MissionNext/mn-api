@@ -13,9 +13,11 @@ use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\CacheData\UserCachedDataTrans;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\FolderApps\FolderApps;
 use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\Notes\Notes;
+use MissionNext\Models\User\User;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Repos\RepositoryInterface;
 
@@ -101,7 +103,15 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
         $transCache =  UserCachedDataTrans::table($role)->whereLangId($languageModel->id)
         ->whereId($this->getModel()->id)->get()->first();
 
-        return $transCache ? $transCache->getData() : $this->getModel()->getData();
+        $transData = $transCache ? $transCache->getData() : $this->getModel()->getData();
+
+        if ($role !== BaseDataModel::JOB) {
+            $isAppActive = User::findOrFail($this->getModel()->id)->isActiveInApp($this->repoContainer->securityContext()->getApp());
+            $transData['is_active_app'] = $isAppActive;
+       }
+
+
+        return $transData;
     }
 
 

@@ -40,9 +40,20 @@
         });
 
 
+        var prevEdit = { period : '', m : 0, p : 0};
 
         self.editPrice = function(mainIndex, priceIndex, period){
-            var editing = 'editing'+ period.ucfirst();
+            var editing = 'editing'+ period.ucfirst(),
+                e;
+            if ((period !== prevEdit.period) && (prevEdit.period !== '') ){
+                e = 'editing' + prevEdit.period.ucfirst();
+                console.log(prevEdit);
+                self[e] = [];
+                self[e][prevEdit.m] = [];
+                self[e][prevEdit.m][prevEdit.p] = null;
+            }
+            prevEdit = { period :period, m : mainIndex, p :priceIndex};
+
             self[editing] = [];
             self[editing][mainIndex] = [];
             self[editing][mainIndex][priceIndex] = self.configs[mainIndex].partnership[priceIndex]['price_'+ period];
@@ -50,6 +61,10 @@
                 self[editing][mainIndex][priceIndex] = 1;
             }
 
+        };
+
+        self.blurEdit = function(editing, m, p){
+            editing[m][p] = null;
         };
 
 
