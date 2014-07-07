@@ -4,6 +4,7 @@
     subscriptionControllers.controller('SubscriptionController', [ '$http', '$scope', function ($http, $scope) {
         var self = this;
         self.conFee = 0;
+        self.subscriptionDiscount = 0;
 
         self.application = window.CurrentApplication;
 
@@ -28,6 +29,7 @@
                 console.log(data);
                 self.configs = data.config;
                 self.conFee = data.conFee;
+                self.subscriptionDiscount = data.subscriptionDiscount;
 
                 angular.forEach(self.configs, function(config, indexMain){
                    angular.forEach(config.partnership, function(p, index){
@@ -50,9 +52,10 @@
 
         };
 
+
         self.save = function(){
             $.post(Routing.buildUrl('/subscription/config'),
-                {configs : self.configs, app : self.application.id, conFee : self.conFee}
+                {configs : self.configs, app : self.application.id, conFee : self.conFee, subscriptionDiscount: self.subscriptionDiscount }
             )
                 .done(
                 function(data){

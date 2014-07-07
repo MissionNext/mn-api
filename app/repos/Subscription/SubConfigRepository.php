@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\Configs\AppConfigs;
+use MissionNext\Models\Configs\GlobalConfig;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Subscription\SubConfig;
 use MissionNext\Repos\AbstractRepository;
@@ -42,12 +43,15 @@ class SubConfigRepository extends AbstractRepository implements SubConfigReposit
      */
     public function allConfigs()
     {
+        $discount = GlobalConfig::whereKey(GlobalConfig::SUBSCRIPTION_DISCOUNT)->first();
 
         return  Application::with(['configs' => function($query){
                  $query->whereKey('agency_trigger')
                 ->orWhere('key','=','conFee');
                 }, 'subConfigs'])
-            ->get();
+            ->get()->each(function($el) use ($discount){
+               $el->global_configs = [$discount];
+            });
     }
 
     /**
@@ -67,7 +71,9 @@ class SubConfigRepository extends AbstractRepository implements SubConfigReposit
         foreach($configs as  $config){
             $return[$config->role]['role'] = [ 'key' =>$config->role, 'label' => BaseDataModel::label($config->role) ];
             $return[$config->role]['partnership'][] =
-                ["price_month" => intval($config->price_month), "level" =>$config->partnership,  "price_year" =>  intval($config->price_year)];
+                ["price_month" => intval($config->price_month), "level" =>$config->partnership,  "price_year" =>  intval($config->price_year),
+                  "partnership_status" => (boolean)$config->partnership_status,
+                 ];
 
         }
         $conf = [];

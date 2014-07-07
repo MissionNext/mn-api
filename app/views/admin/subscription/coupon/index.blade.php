@@ -45,7 +45,7 @@ Dashboard. Subscription. Coupon
         <td>{{ $model->id }}</td>
         <td>{{ $model->code }}</td>
         <td>$ {{ $model->value }}</td>
-        <td>@if ($model->is_active && $idx) <span class="label label-success">Active</span> @else <span class="label label-default">Used</span> @endif  </td>
+        <td>@if ($model->is_active) <span class="label label-success">Active</span> @else <span class="label label-default">Used</span> @endif  </td>
         <td class="text-center">
             <a href="{{ URL::route('sub.coupon.edit', array(  $model->id) ) }}" class="btn-warning btn btn-xs">
                 <span class="glyphicon glyphicon-edit"> </span> Edit </a>

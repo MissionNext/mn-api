@@ -41,11 +41,17 @@ Dashboard. Subscription. Config
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         Config successfully saved
     </div>
-
+    <div class="col-sm-10">
+      <p>
+        <label for="subscription_discount">Discount % </label>
+        <input type="number" type="number" min="0" ng-model="subCtl.subscriptionDiscount" id="subscription_discount" />
+      </p>
+    </div>
     <table class="table table-hover" >
         <thead>
         <tr>
             <th>User Role</th>
+            <th>Status</th>
             <th>Partnership Level</th>
             <th>Monthly price</th>
             <th>Annual price</th>
@@ -59,9 +65,12 @@ Dashboard. Subscription. Config
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
         </tr>
+
         <tr ng-repeat="info in config.partnership">
             <td></td>
+            <td><input type="checkbox" ng-disabled="!info . level" ng-checked="info . level && subCtl.configs[$parent.$index].partnership[$index].partnership_status" ng-model = "subCtl.configs[$parent.$index].partnership[$index].partnership_status" /></td>
             <td><% info . level || '-' %></td>
             <td><span ng-hide="subCtl.editingMonth[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'month')"><% info.price_month  | currency  %></span>
                 <input class="p-price"

@@ -6,6 +6,7 @@ namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Models\Configs\AppConfigs;
+use MissionNext\Models\Configs\GlobalConfig;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Subscription\Partnership;
 use MissionNext\Models\Subscription\SubConfig;
@@ -27,8 +28,11 @@ class SubConfigController extends AdminBaseController
         /** @var  $repo SubConfigRepository */
         $repo = $this->repoContainer[SubConfigRepositoryInterface::KEY];
         $conFee = AppConfigs::whereAppId($appId)->whereKey(static::CON_FEE)->first();
+        $discount = GlobalConfig::whereKey(GlobalConfig::SUBSCRIPTION_DISCOUNT)->first();
 
-        return Response::json([ "config" => $repo->config($appId), "conFee" => $conFee ? intval($conFee->value) : 0 ]);
+        return Response::json([ "config" => $repo->config($appId), "conFee" => $conFee ? intval($conFee->value) : 0,
+            GlobalConfig::SUBSCRIPTION_DISCOUNT => $discount ? intval($discount->value) : 0
+                            ]);
     }
 
     /**
@@ -39,9 +43,11 @@ class SubConfigController extends AdminBaseController
         $configs = $this->request->request->get('configs');
         $appId = $this->request->request->get('app');
         $conFee = intval($this->request->request->get('conFee'));
+        $discount = intval($this->request->request->get(GlobalConfig::SUBSCRIPTION_DISCOUNT));
 
         $attributes = ['app_id' => $appId, 'key' => static::CON_FEE];
         AppConfigs::updateOrCreate( $attributes, ['value' => $conFee] );
+        GlobalConfig::updateOrCreate( ['key' => GlobalConfig::SUBSCRIPTION_DISCOUNT], ['value' => $discount] );
 
         foreach($configs as $config){
            foreach($config['partnership'] as $p ) {
@@ -52,6 +58,7 @@ class SubConfigController extends AdminBaseController
                ],[
                    "price_month" => $p['price_month'],
                    "price_year" => $p['price_year'],
+                   "partnership_status" => $p["partnership_status"]
                ]);
            }
         }

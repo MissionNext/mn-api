@@ -14,7 +14,7 @@ class SubConfig extends Model implements ModelInterface
 
     protected $table = "subscription_configs";
 
-    protected $fillable = ['app_id', 'role', 'partnership', 'price_year', 'price_month'];
+    protected $fillable = ['app_id', 'role', 'partnership', 'price_year', 'price_month', 'partnership_status'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -36,9 +36,9 @@ class SubConfig extends Model implements ModelInterface
                 "role" => [ "key" => BaseDataModel::ORGANIZATION, "label" => "Receiving Organization"],
                 "partnership" =>
                     [
-                        [ "price_month" => 0, "level" => Partnership::LIMITED,  "price_year" => 0   ],
-                        [ "price_month" => 0, "level" =>  Partnership::BASIC,  "price_year" => 0   ],
-                        [ "price_month" => 0, "level" => Partnership::PLUS,  "price_year" => 0   ],
+                        [ "price_month" => 0, "level" => Partnership::LIMITED,  "price_year" => 0, "partnership_status" => true   ],
+                        [ "price_month" => 0, "level" =>  Partnership::BASIC,  "price_year" => 0, "partnership_status" => true   ],
+                        [ "price_month" => 0, "level" => Partnership::PLUS,  "price_year" => 0 , "partnership_status" => true  ],
                     ]
 
             ],
@@ -47,7 +47,7 @@ class SubConfig extends Model implements ModelInterface
                 "role" => [ "key" => BaseDataModel::AGENCY, "label" => "Agency"],
                 "partnership" =>
                     [
-                        [ "price_month" => 0, "level" =>'',  "price_year" => 0   ],
+                        [ "price_month" => 0, "level" =>'',  "price_year" => 0, "partnership_status" => false   ],
 
                     ]
 
@@ -56,7 +56,7 @@ class SubConfig extends Model implements ModelInterface
                 "role" => [ "key" => BaseDataModel::CANDIDATE, "label" => "Candidate"],
                 "partnership" =>
                     [
-                        [ "price_month" => 0, "level" =>'',  "price_year" => 0  ],
+                        [ "price_month" => 0, "level" =>'',  "price_year" => 0, "partnership_status" => false  ],
 
                     ],
 
