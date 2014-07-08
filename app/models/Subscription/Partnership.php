@@ -10,4 +10,7 @@ class Partnership
           BASIC = 'basic',
           PLUS  ='plus';
 
+    const PERIOD_YEAR = 'year',
+          PERIOD_MONTH = 'month';
+
 } 

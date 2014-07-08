@@ -12,6 +12,7 @@ use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Exceptions\ValidationException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Api\Service\Matching\Queue\Master\ProfileUpdateMatching;
+use MissionNext\Api\Service\Payment\PaymentGatewayInterface;
 use MissionNext\Facade\SecurityContext as FSecurityContext;
 use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Filter\RouteSecurityFilter;
@@ -75,6 +76,8 @@ class BaseController extends Controller
 
     /** @var \MissionNext\Repos\RepositoryContainer  */
     protected $repoContainer;
+    /** @var \MissionNext\Api\Service\Payment\AuthorizeNet  */
+    protected $paymentGateway;
 
     /**
      * Set filters
@@ -89,7 +92,8 @@ class BaseController extends Controller
                                 ConfigRepositoryInterface $matchingConfigRepo,
                                 ResultsRepositoryInterface $matchResultsRepo,
                                 Request $request,
-                                RepositoryContainerInterface $repoContainer
+                                RepositoryContainerInterface $repoContainer,
+                                PaymentGatewayInterface $paymentGateway
     )
 
     {
@@ -102,6 +106,8 @@ class BaseController extends Controller
         $this->jobRepo = $jobRepo;
         $this->matchingConfigRepo = $matchingConfigRepo;
         $this->matchResultsRepo = $matchResultsRepo;
+
+        $this->paymentGateway = $paymentGateway;
 
         $this->repoContainer = $repoContainer;
 

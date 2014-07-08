@@ -19,7 +19,7 @@ class TransData {
         }
         $ids = array_fetch($result, 'id');
         if ($ids) {
-            $transCache = UserCachedData::table($userType);
+            $transCache = UserCachedDataTrans::table($userType);
             $data = $transCache->whereIn("id", $ids)->whereLangId($languageModel->id)->get();
 
 

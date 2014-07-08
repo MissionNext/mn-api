@@ -5,4 +5,45 @@
     <p>
         <button ng-click="setDisabled($event)" type="button" class="btn btn-danger" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
     </p>
+
+    Subscriptions:
+    <table class="table table-hover" >
+        <thead>
+        <tr>
+            <th>Website</th>
+            <th>Level</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Plan</th>
+            <th>Days Left</th>
+            <th>Status</th>
+            <th>Comment</th>
+        </tr>
+        </thead>
+
+        <tbody ng-repeat="sub in subscriptions">
+        <tr class="active">
+            <td><% sub.app.name %></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr class="active">
+            <td></td>
+            <td><% sub.partnership || '-' %></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        </tbody>
+
+    </table>
 </div>

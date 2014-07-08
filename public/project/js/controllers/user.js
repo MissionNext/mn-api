@@ -21,10 +21,16 @@
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
         $scope.user = null;
+        $scope.subscriptions = [];
         $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
             console.log($params.user, data.user);
             $scope.user = data.user;
             $scope.statuses = data.statuses;
+        });
+
+        $http.get(Routing.buildUrl('/subscription/manager/'+$params.user)).success(function(data){
+            console.log(data);
+            $scope.subscriptions = data;
         });
 
         $scope.setDisabled = function($event){

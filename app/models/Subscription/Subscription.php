@@ -11,11 +11,17 @@ use MissionNext\Models\User\User;
 
 class Subscription extends Model implements ModelInterface
 {
+    const STATUS_ACTIVE = 'active',
+          STATUS_EXPIRED = 'expired',
+          STATUS_GRACE = 'grace';
+
     public $timestamps = false;
 
     protected $table = 'subscriptions';
 
-    protected $fillable = ['app_id', 'user_id', 'partnership', 'price', 'is_recurrent', 'is_active', 'start_date', 'end_date'];
+    protected $fillable =
+        ['comment', 'app_id', 'user_id', 'partnership', 'price', 'is_recurrent',
+             'start_date', 'end_date', 'authorize_id', 'status'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

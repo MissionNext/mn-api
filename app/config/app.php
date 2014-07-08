@@ -114,6 +114,7 @@ return array(
         'MissionNext\Provider\ErrorProvider',
         'MissionNext\Provider\RepositoryProvider',
         'MissionNext\Provider\ComposerProvider',
+        'MissionNext\Provider\PaymentProvider',
         'MissionNext\Models\Admin\AdminServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
 

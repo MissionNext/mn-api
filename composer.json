@@ -8,7 +8,8 @@
         "doctrine/dbal" : "@dev",
 		"pda/pheanstalk": "2.0.*",
         "cartalyst/sentry": "2.1.*",
-        "davejamesmiller/laravel-breadcrumbs": "dev-master"
+        "davejamesmiller/laravel-breadcrumbs": "dev-master",
+        "authorizenet/authorizenet": "~1.8"
 	},
     "require-dev": {
         "mockery/mockery": "dev-master@dev"

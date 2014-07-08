@@ -8,6 +8,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use MissionNext\Controllers\Admin\Subscription\Ajax\SubscriptionController as SubscriptionControllerAjax;
 use MissionNext\Controllers\Admin\Subscription\CouponController;
 use MissionNext\Controllers\Admin\Subscription\SubConfigController;
 use MissionNext\Controllers\Admin\Subscription\Ajax\SubConfigController as SubConfigControllerAjax;
@@ -16,7 +17,8 @@ use MissionNext\Controllers\Admin\Subscription\Ajax\UserController as AjaxAdminC
 class AdminRouting
 {
     /** @var  Router */
-    private  $router;
+    private $router;
+
     public function __construct(Application $App)
     {
         $this->router = $App->make('router');
@@ -32,7 +34,7 @@ class AdminRouting
             'uses' => 'MissionNext\Controllers\Admin\AdminBaseController@login'
         ));
 
-        Route::group(array('prefix' => 'dashboard', "before" => ["admin_auth"] ), function () {
+        Route::group(array('prefix' => 'dashboard', "before" => ["admin_auth"]), function () {
             Route::get('logout', array(
                 'as' => 'logout',
                 function () {
@@ -48,23 +50,23 @@ class AdminRouting
             ));
 
             // ================ AJAX ===========================
-            Route::group(array('prefix' => 'ajax'), function(){
+            Route::group(array('prefix' => 'ajax'), function () {
 
 
                 // ------------------- Users -----------------------
                 Route::get('user/list', array(
                     'as' => 'ajaxUserList',
-                    'uses' => AjaxAdminController::class.'@getList'
+                    'uses' => AjaxAdminController::class . '@getList'
                 ));
 
                 Route::get('user/{user}', array(
                     'as' => 'ajaxUser',
-                    'uses' => AjaxAdminController::class.'@getIndex'
+                    'uses' => AjaxAdminController::class . '@getIndex'
                 ))->where('user', '[0-9]+');
                 Route::get('user/{status}/{user}', array(
                     'as' => 'ajaxStatusUser',
-                    'uses' => AjaxAdminController::class.'@setStatus'
-                ))->where(['user'=> '[0-9]+', 'status' => '(enable|disable)']);
+                    'uses' => AjaxAdminController::class . '@setStatus'
+                ))->where(['user' => '[0-9]+', 'status' => '(enable|disable)']);
                 // ------------------- END Users -----------------------
 
 
@@ -72,8 +74,10 @@ class AdminRouting
 
                 $this->router->controller('subscription/config', SubConfigControllerAjax::class,
                     [
-                        'getIndex' =>  'ajax.sub.config.list',
+                        'getIndex' => 'ajax.sub.config.list',
                     ]);
+
+                $this->router->get('subscription/manager/{user}', SubscriptionControllerAjax::class.'@getIndex')->where(['user' => '[0-9]+']);
                 // ------------------- END Subscription -----------------------
 
             });
@@ -81,17 +85,16 @@ class AdminRouting
 
 
             // ================ SUBSCRIPTIONS ===========================
-            Route::group(array('prefix' => 'subscription'), function(){
-
+            Route::group(array('prefix' => 'subscription'), function () {
 
 
                 $this->router->controller('config', SubConfigController::class,
                     [
-                        'getIndex' =>  'sub.config.list',
+                        'getIndex' => 'sub.config.list',
                         'getCreate' => 'sub.config.create',
                         'postIndex' => 'sub.config.new',
-                        'getEdit'   => 'sub.config.edit',
-                        'postEdit'  => 'sub.config.update',
+                        'getEdit' => 'sub.config.edit',
+                        'postEdit' => 'sub.config.update',
                         'deleteIndex' => 'sub.config.delete',
                         'getManagement' => 'sub.config.management',
 
@@ -99,20 +102,18 @@ class AdminRouting
 
                 $this->router->controller('coupon', CouponController::class,
                     [
-                        'getIndex' =>  'sub.coupon.list',
+                        'getIndex' => 'sub.coupon.list',
                         'getCreate' => 'sub.coupon.create',
                         'postIndex' => 'sub.coupon.new',
-                        'getEdit'   => 'sub.coupon.edit',
-                        'postEdit'  => 'sub.coupon.update',
+                        'getEdit' => 'sub.coupon.edit',
+                        'postEdit' => 'sub.coupon.update',
                         'deleteIndex' => 'sub.coupon.delete',
 
                     ]);
             });
 
 
-
             // ================ END SUBSCRIPTIONS ========================
-
 
 
             // -----------   Applications ----------------------
@@ -133,9 +134,6 @@ class AdminRouting
                 'uses' => 'MissionNext\Controllers\Admin\ApplicationController@delete'
             ));
             // -------------------------------------------------
-
-
-
 
 
             // ------------------- Users -----------------------
@@ -200,7 +198,7 @@ class AdminRouting
             // -------------------------------------------------
 
 
-        });  // end group dashboard
+        }); // end group dashboard
 
-    }  // end construct
+    } // end construct
 } 

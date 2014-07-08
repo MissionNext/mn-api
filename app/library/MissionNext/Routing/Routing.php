@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
+use MissionNext\Controllers\Api\GlobalConfig\GlobalConfigController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
 use MissionNext\Controllers\Api\Subscription\SubConfigController;
+use MissionNext\Controllers\Api\Subscription\SubscriptionController;
 use MissionNext\Controllers\Api\Translation\CustomTransController;
 use MissionNext\Controllers\Api\Translation\FolderTransController;
 use MissionNext\Controllers\Api\Translation\FormGroupTransController;
@@ -176,11 +178,13 @@ class Routing
 
             //APP CONFIGS CONTROLLER
             Route::controller('configs', AppConfigController::class, []);
+            Route::controller('gconfigs', GlobalConfigController::class, []);
             Route::controller('coupon', CouponController::class, []);
 
             Route::group(array('prefix' => 'subscription'), function(){
 
                 Route::controller('configs', SubConfigController::class, []);
+                Route::controller('manager', SubscriptionController::class, []);
 
             });
 

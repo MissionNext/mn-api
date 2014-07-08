@@ -78,7 +78,7 @@ Dashboard. Subscription. Config
                        ng-model="info.price_month" value="" focus-if="subCtl.editingMonth[$parent.$index][$index]"  ng-model-options="{ updateOn: 'blur' }" />
             </td>
             <td><span ng-hide="subCtl.editingYear[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'year')"><% info.price_year  | currency  %></span>
-                <input class="p-price"
+                <input class="p-price" ng-blur="subCtl.blurEdit(subCtl.editingYear, $parent.$index, $index)"
                        ng-show="subCtl.editingYear[$parent.$index][$index]" type="number" min="0"
                        ng-model="info.price_year" value="" focus-if="subCtl.editingYear[$parent.$index][$index]"  ng-model-options="{ updateOn: 'blur' }" />
             </td>
