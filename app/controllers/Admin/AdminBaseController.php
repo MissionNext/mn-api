@@ -33,7 +33,7 @@ class AdminBaseController extends Controller {
 
     use SecurityTraits;
 
-    const PAGINATE = 3;
+    const PAGINATE = 15;
 
     const VIEW_PREFIX = '';
     const ROUTE_PREFIX = '';

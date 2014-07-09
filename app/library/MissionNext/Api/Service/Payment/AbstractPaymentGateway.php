@@ -8,11 +8,15 @@ use MissionNext\Api\Service\Payment;
 
 abstract class AbstractPaymentGateway implements PaymentGatewayInterface
 {
+    /**
+     * @var \AuthorizeNetAIM
+     */
     protected $paymentGateWay;
 
-
-
-    private $securityContext;
+    /**
+     * @var SecurityContext
+     */
+    protected $securityContext;
 
     /**
      * @param SecurityContext $securityContext

@@ -15,7 +15,7 @@ class PaymentProvider extends ServiceProvider
         $this->app->bind(PaymentGatewayInterface::class, function(Application $app)
         {
 
-            return (new SecurityContextResolver( new AuthorizeNet( new \AuthorizeNetAIM('6W9w2XnmkkRj','938c4CBqpj84w9Cs') )))->getResolvedObject();
+            return (new SecurityContextResolver( new AuthorizeNet( new \AuthorizeNetAIM('6W9w2XnmkkRj','938c4CBqpj84w9Cs'), $app )))->getResolvedObject();
         });
     }
 } 

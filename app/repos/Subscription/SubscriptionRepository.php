@@ -48,7 +48,7 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
             }elseif($period === Partnership::PERIOD_YEAR && $partnership !== Partnership::LIMITED){
                 $endDate = Carbon::now()->addYear()->toDateTimeString();
             }
-            $this->forFill['app_id'] = $this->repoContainer->securityContext()->getApp()->id(); //@TODO check right user, status, partnership
+            $this->forFill['app_id'] = $subscription['app_id']; //@TODO check right user, status, partnership
             $this->forFill['authorize_id'] = $subscription['authorize_id'];
             $this->forFill['start_date'] = $startDate;
             $this->forFill['end_date'] = $endDate;

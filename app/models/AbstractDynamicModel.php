@@ -53,7 +53,6 @@ abstract class AbstractDynamicModel extends Model implements ModelInterface
      */
     protected function roleTableName()
     {
-
         return SecurityContext::getInstance()->role()."_".static::$tablePrefix;
     }
 } 

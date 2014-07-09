@@ -10,7 +10,8 @@ final class RestData
 {
     const ERROR = 0,
           SUCCESS = 1,
-          VALIDATION_ERROR = 2;
+          VALIDATION_ERROR = 2,
+          BAD_DATA_ERROR = 3;
 
     public  $data,
             $status = 1;

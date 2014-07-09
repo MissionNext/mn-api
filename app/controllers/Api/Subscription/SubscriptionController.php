@@ -20,9 +20,10 @@ class SubscriptionController extends BaseController
      */
     public function postIndex()
     {
-        //dd($this->paymentGateway->getService());
+        $service = $this->paymentGateway;
+        $readyData = $service->processRequest($this->request->request->all());
+
        /** authorize call */
-        $readyData = $this->request->request->all();
         $subscriptions = $readyData['subscriptions'];
         /** @var  $repo SubscriptionRepository */
         $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
