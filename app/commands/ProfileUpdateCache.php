@@ -21,7 +21,7 @@ class ProfileUpdateCache extends Command
      *
      * @var string
      */
-    protected $description = 'Command description.';
+    protected $description = 'Create or update user cache.';
 
     /**
      * Create a new command instance.

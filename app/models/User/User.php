@@ -120,6 +120,20 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     }
 
     /**
+     * @throws \MissionNext\Api\Exceptions\ModelObservableException
+     */
+    public function setActiveOnApps()
+    {
+         $this->onCreated(function($user){
+             /** @var $user User */
+             $appIds = Application::all()->lists('id');
+             foreach($appIds as $id){
+                 $user->appsStatuses()->sync([$id, ['is_active' => true] ]);
+             }
+         });
+    }
+
+    /**
      * @return UserRepository
      */
     public function getRepo()

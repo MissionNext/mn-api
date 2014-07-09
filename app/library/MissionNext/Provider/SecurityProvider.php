@@ -60,6 +60,7 @@ class SecurityProvider extends ServiceProvider
     {
         Route::filter(RouteSecurityFilter::ROLE, RouteSecurityFilter::class.'@'.RouteSecurityFilter::ROLE_M);
         Route::filter(RouteSecurityFilter::AUTHORIZE,  RouteSecurityFilter::class.'@'.RouteSecurityFilter::AUTHORIZE_M);
+        Route::filter(RouteSecurityFilter::ROLE_ADMIN_AREA,  RouteSecurityFilter::class.'@'.RouteSecurityFilter::ROLE_ADMIN_AREA);
         Route::filter(RoleChecker::CHECK,  RoleChecker::class.'@'.RoleChecker::CHECK);
 
         return $this;

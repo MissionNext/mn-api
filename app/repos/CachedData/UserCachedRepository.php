@@ -105,7 +105,7 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
 
         $transData = $transCache ? $transCache->getData() : $this->getModel()->getData();
 
-        if ($role !== BaseDataModel::JOB) {
+        if ($role !== BaseDataModel::JOB && !$this->repoContainer->securityContext()->isAdminArea()) {
             $isAppActive = User::findOrFail($this->getModel()->id)->isActiveInApp($this->repoContainer->securityContext()->getApp());
             $transData['is_active_app'] = $isAppActive;
        }

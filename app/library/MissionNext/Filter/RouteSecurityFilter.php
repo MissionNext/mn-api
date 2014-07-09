@@ -22,6 +22,7 @@ class RouteSecurityFilter
     const AUTHORIZE = 'authorize';
     const AUTHORIZE_M = 'authorize';
     const ROLE = 'role';
+    const ROLE_ADMIN_AREA = 'adminAreaRole';
     const ROLE_M = 'role';
 
     static public $ALLOWED_ROLES = [BaseDataModel::AGENCY, BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, BaseDataModel::JOB];
@@ -49,13 +50,23 @@ class RouteSecurityFilter
 
         if ($role) {
             if (static::isAllowedRole($role)) {
-
                 SecurityContext::getToken()->setRoles([$role]);
             } else {
 
                 throw new SecurityContextException("'$role' role doesn't exists", SecurityContextException::ON_SET_ROLE);
             }
         }
+    }
+
+    /**
+     * @param Router $route
+     * @param LRequest $request
+     * @throws \MissionNext\Api\Exceptions\SecurityContextException
+     */
+    public function adminAreaRole(Router $route, LRequest $request)
+    {
+        $this->role($route, $request);
+        SecurityContext::getFacadeRoot()->setIsAdminArea(true);
     }
 
     public function authorize($route, $request)

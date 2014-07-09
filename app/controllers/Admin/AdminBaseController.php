@@ -50,7 +50,7 @@ class AdminBaseController extends Controller {
     public function __construct( Store $session,Redirector $redirector, Request $request, RepositoryContainerInterface $containerInterface, Factory $viewFactory)
     {
         $this->beforeFilter('csrf', array('on'=>'post'));
-        $this->beforeFilter(RouteSecurityFilter::ROLE);
+        $this->beforeFilter(RouteSecurityFilter::ROLE_ADMIN_AREA);
         $this->request = $request;
         $this->repoContainer = $containerInterface;
         $this->view = $viewFactory;
