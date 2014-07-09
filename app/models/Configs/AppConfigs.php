@@ -9,8 +9,6 @@ use MissionNext\Models\Application\Application;
 
 class AppConfigs extends Model
 {
-    const CON_FEE = 'conFee';
-
     protected $table = 'app_config';
 
     public $timestamps = false;

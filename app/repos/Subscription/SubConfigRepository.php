@@ -43,15 +43,11 @@ class SubConfigRepository extends AbstractRepository implements SubConfigReposit
      */
     public function allConfigs()
     {
-        $discount = GlobalConfig::whereKey(GlobalConfig::SUBSCRIPTION_DISCOUNT)->first();
 
         return  Application::with(['configs' => function($query){
-                 $query->whereKey('agency_trigger')
-                ->orWhere('key','=','conFee');
+                 $query->whereKey('agency_trigger');
                 }, 'subConfigs'])
-            ->get()->each(function($el) use ($discount){
-               $el->global_configs = [$discount];
-            });
+            ->get();
     }
 
     /**

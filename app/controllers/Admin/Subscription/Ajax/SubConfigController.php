@@ -17,7 +17,6 @@ class SubConfigController extends AdminBaseController
 {
     const ROUTE_PREFIX = 'ajax.sub.config';
 
-    const CON_FEE = 'conFee';
 
     /**
      * @return \Illuminate\Http\JsonResponse
@@ -27,7 +26,7 @@ class SubConfigController extends AdminBaseController
         $appId = $this->request->query->get('app');
         /** @var  $repo SubConfigRepository */
         $repo = $this->repoContainer[SubConfigRepositoryInterface::KEY];
-        $conFee = AppConfigs::whereAppId($appId)->whereKey(static::CON_FEE)->first();
+        $conFee = GlobalConfig::whereKey(GlobalConfig::CON_FEE)->first();
         $discount = GlobalConfig::whereKey(GlobalConfig::SUBSCRIPTION_DISCOUNT)->first();
 
         return Response::json([ "config" => $repo->config($appId), "conFee" => $conFee ? intval($conFee->value) : 0,
@@ -42,11 +41,10 @@ class SubConfigController extends AdminBaseController
     {
         $configs = $this->request->request->get('configs');
         $appId = $this->request->request->get('app');
-        $conFee = intval($this->request->request->get('conFee'));
+        $conFee = intval($this->request->request->get(GlobalConfig::CON_FEE));
         $discount = intval($this->request->request->get(GlobalConfig::SUBSCRIPTION_DISCOUNT));
 
-        $attributes = ['app_id' => $appId, 'key' => static::CON_FEE];
-        AppConfigs::updateOrCreate( $attributes, ['value' => $conFee] );
+        GlobalConfig::updateOrCreate( ['key' => GlobalConfig::CON_FEE], ['value' => $conFee] );
         GlobalConfig::updateOrCreate( ['key' => GlobalConfig::SUBSCRIPTION_DISCOUNT], ['value' => $discount] );
 
         foreach($configs as $config){

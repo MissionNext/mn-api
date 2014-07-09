@@ -70,7 +70,12 @@
 
         self.save = function(){
             $.post(Routing.buildUrl('/subscription/config'),
-                {configs : self.configs, app : self.application.id, conFee : self.conFee, subscriptionDiscount: self.subscriptionDiscount }
+                {
+                    configs : self.configs,
+                    app : self.application.id,
+                    conFee : self.conFee,
+                    subscriptionDiscount: self.subscriptionDiscount
+                }
             )
                 .done(
                 function(data){

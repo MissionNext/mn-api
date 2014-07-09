@@ -9,7 +9,8 @@ use MissionNext\Models\ModelInterface;
 
 class GlobalConfig extends Model implements ModelInterface
 {
-    const SUBSCRIPTION_DISCOUNT = 'subscriptionDiscount';
+    const SUBSCRIPTION_DISCOUNT = 'subscriptionDiscount',
+          CON_FEE = 'conFee';
 
     protected $table = 'global_config';
 

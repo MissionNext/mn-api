@@ -47,6 +47,12 @@ Dashboard. Subscription. Config
         <input type="number" type="number" min="0" ng-model="subCtl.subscriptionDiscount" id="subscription_discount" />
       </p>
     </div>
+    <div class="col-sm-10">
+        <p>
+            <label for="con-fee">Convinience fee$ </label>
+            <input type="number" type="number" min="0" ng-model="subCtl.conFee" id="con-fee" />
+        </p>
+    </div>
     <table class="table table-hover" >
         <thead>
         <tr>
@@ -70,7 +76,7 @@ Dashboard. Subscription. Config
 
         <tr ng-repeat="info in config.partnership">
             <td></td>
-            <td><input type="checkbox" ng-disabled="!info . level" ng-checked="info . level && subCtl.configs[$parent.$index].partnership[$index].partnership_status" ng-model = "subCtl.configs[$parent.$index].partnership[$index].partnership_status" /></td>
+            <td><input type="checkbox" ng-disabled="!info . level || info.level === 'basic'" ng-checked="info . level && subCtl.configs[$parent.$index].partnership[$index].partnership_status" ng-model = "subCtl.configs[$parent.$index].partnership[$index].partnership_status" /></td>
             <td><% info . level || '-' %></td>
             <td><span ng-hide="subCtl.editingMonth[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'month')"><% info.price_month  | currency  %></span>
                 <input class="p-price" ng-blur="subCtl.blurEdit(subCtl.editingMonth, $parent.$index, $index)"
@@ -87,10 +93,7 @@ Dashboard. Subscription. Config
         <!-- END candidate    ?-->
 
     </table>
-    <div class="col-sm-10">
-            <label for="con-fee">Convinience fee$ </label>
-            <input type="number" type="number" min="0" ng-model="subCtl.conFee" id="con-fee" />
-    </div>
+
     <div class="text-center">
         <button ng-click="subCtl.save()" class="btn btn-large btn-primary submit" type="button">Save</button>
     </div>
