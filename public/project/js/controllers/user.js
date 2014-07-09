@@ -3,6 +3,10 @@
 
     userControllers.config(usersRouter);
 
+
+
+
+
     function usersRouter($routeProvider){
 
         $routeProvider
@@ -20,11 +24,22 @@
     }]);
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
+
+        $scope.dateOptions = {
+            changeYear: true,
+            changeMonth: true,
+            dateFormat: 'yy-mm-dd'
+        };
+
+        $scope.myDate = "Thursday, 11 October, 2012";
+
         $scope.user = null;
         $scope.subscriptions = [];
+        $scope.showLevel = false;
         $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
             console.log($params.user, data.user);
             $scope.user = data.user;
+            $scope.showLevel = data.user.role === 'organization';
             $scope.statuses = data.statuses;
         });
 
@@ -49,6 +64,16 @@
                     $scope.user.status = data.status;
                 });
         };
+
+        $scope.updateSub = function(subscription, property){
+            $http.put(Routing.buildUrl('/subscription/'+ subscription.id), [{ field: property, value : subscription[property] }])
+                .success(function(data){
+                    subscription.days_left = data.subscription.days_left;
+
+                  console.log(data);
+                });
+
+        }
 
     }]);
 

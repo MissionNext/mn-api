@@ -13,4 +13,10 @@ class Partnership
     const PERIOD_YEAR = 'year',
           PERIOD_MONTH = 'month';
 
+    public static function levels()
+    {
+
+        return [static::LIMITED, static::BASIC, static::PLUS];
+    }
+
 } 
