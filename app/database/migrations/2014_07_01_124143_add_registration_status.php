@@ -20,7 +20,7 @@ class AddRegistrationStatus extends Migration {
 
 		});
 
-        (new User)->update(['status' => User::STATUS_ACTIVE, 'is_active' => true]);
+        (new User)->update(['status' => 0, 'is_active' => true]);
 	}
 
 	/**
