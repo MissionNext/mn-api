@@ -4,6 +4,7 @@
 namespace MissionNext\Models\Subscription;
 
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\ModelInterface;
@@ -16,6 +17,51 @@ class Subscription extends Model implements ModelInterface
           STATUS_GRACE = 'grace';
 
     public $timestamps = false;
+
+    protected $appends = ['statuses', 'days_left', 'partnership_levels'];
+
+    public function getDates()
+    {
+        return ['start_date', 'end_date'];
+    }
+
+    /**
+     * @return array
+     */
+    public function getPartnershipLevelsAttribute()
+    {
+
+        return Partnership::levels();
+    }
+
+    /**
+     * @return array
+     */
+    public function getStatusesAttribute()
+    {
+
+        return [static::STATUS_ACTIVE, static::STATUS_EXPIRED, static::STATUS_GRACE];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDaysLeftAttribute()
+    {
+
+        return $this->end_date->diffInDays(Carbon::now());
+    }
+
+
+    /**
+     * @return array
+     */
+    public static function statuses()
+    {
+
+        return [static::STATUS_ACTIVE, static::STATUS_EXPIRED, static::STATUS_GRACE];
+    }
+
 
     protected $table = 'subscriptions';
 

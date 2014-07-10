@@ -11,6 +11,7 @@
         {{ HTML::style(URL::asset('packages/admin/css/selectize-bootstrap3.css')) }}
         {{-- HTML::style(URL::asset('packages/admin/css/selectize.css')) --}}
         {{ HTML::style(URL::asset('packages/admin/css/base.css')) }}
+        {{ HTML::style(URL::asset('packages/admin/css/jquery-ui.css')) }}
     @show
 </head>
 <body>
@@ -32,12 +33,13 @@
 
 @section('javascripts')
     {{ HTML::script(URL::asset('packages/admin/js/jquery-1.11.1.min.js')) }}
-    {{-- HTML::script(URL::asset('packages/admin/js/jquery-ui.min.js')) --}}
+    {{ HTML::script(URL::asset('packages/admin/js/jquery-ui.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/selectize.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/bootstrap.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/angular.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/angular-resource.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/angular-route.min.js')) }}
+    {{ HTML::script(URL::asset('packages/admin/js/date.js')) }}
     {{ HTML::script(URL::asset('project/js/app.js')) }}
     <script>
         (function($){

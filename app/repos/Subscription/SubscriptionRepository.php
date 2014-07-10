@@ -71,8 +71,13 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
      */
     public function userSubscriptions($userId)
     {
-        $subscriptions = $this->with('app')->with('user.appsStatuses')->whereUserId($userId)->get();
+        $subscriptions = $this->with('app')
+                              ->with('user.appsStatuses')
+                              ->with('user.roles')
+                              ->whereUserId($userId)
+                              ->get();
         $subscriptions->each(function($sub){
+            $sub->user->role = $sub->user->roles->first()->role;
             foreach($sub->user->apps_statuses as $appStatus){
                 if ($appStatus->id == $sub->app->id){
                     $sub->app->is_active = $appStatus->pivot->is_active;

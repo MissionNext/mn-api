@@ -1,3 +1,8 @@
+<style>
+    select{
+        color: black !important;
+    }
+</style>
 <div class="profile-data">
     <p>
         <button ng-click="setActive($event)" type="button" class="btn btn-primary"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
@@ -10,21 +15,22 @@
     <table class="table table-hover" >
         <thead>
         <tr>
-            <th>Website</th>
-            <th>Level</th>
+            <th>Website </th>
+
+            <th ng-show="showLevel">Level</th>
             <th>Start</th>
             <th>End</th>
-            <th>Plan</th>
+            <th>Price</th>
             <th>Days Left</th>
             <th>Status</th>
             <th>Comment</th>
         </tr>
         </thead>
 
-        <tbody ng-repeat="sub in subscriptions">
+        <tbody ng-repeat="sub in subscriptions | orderBy:'id'">
         <tr class="active">
-            <td><% sub.app.name %></td>
-            <td></td>
+            <td><% sub.app.name %> </td>
+            <td ng-show="showLevel"></td>
             <td></td>
             <td></td>
             <td></td>
@@ -34,13 +40,18 @@
         </tr>
         <tr class="active">
             <td></td>
-            <td><% sub.partnership || '-' %></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td ng-show="showLevel" >
+                <select ng-change="updateSub(sub, 'partnership')" ng-model="sub.partnership" ng-options="level for level in sub.partnership_levels">
+
+                </select>
+            </td>
+            <td><% sub.start_date  %></td>
+            <td><input ng-change="updateSub(sub, 'end_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.end_date"></td>
+            <td><% sub.price | currency  %></td>
+            <td><% sub.days_left  %></td>
+            <td><select ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>
+            </td>
+            <td><% sub.comment %></td>
         </tr>
 
         </tbody>

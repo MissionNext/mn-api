@@ -18,7 +18,7 @@
                 }
                 var editing = 'editing'+ period.ucfirst();
                 self[editing] = null;
-                console.log(oldVal, newVal);
+//                console.log(oldVal, newVal);
             });
         };
 
