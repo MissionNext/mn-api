@@ -9,6 +9,7 @@ use MissionNext\Api\Exceptions\AuthorizeException;
 use MissionNext\Api\Exceptions\BadDataException;
 use MissionNext\Models\Configs\GlobalConfig;
 use MissionNext\Models\Application\Application as AppModel;
+use MissionNext\Models\Coupon\Coupon;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Subscription\Partnership;
 use MissionNext\Models\User\User;
@@ -67,6 +68,10 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             if($response->approved){
 
+                if($data['coupon']){
+                    Coupon::disable($data['coupon']['code']);
+                }
+
                 $transaction_id = $response->transaction_id;
 
                 $response = $this->prepareSubscriptionResponse($transaction_id, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions']);
@@ -76,6 +81,11 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 throw new AuthorizeException($response->response_reason_text);
             }
         } else {
+
+            if($data['coupon']){
+                Coupon::disable($data['coupon']['code']);
+            }
+
             $transaction_id = 0;
 
             $response = $this->prepareSubscriptionResponse($transaction_id, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions']);
