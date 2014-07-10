@@ -9,7 +9,9 @@ use MissionNext\Api\Exceptions\AuthorizeException;
 use MissionNext\Api\Exceptions\BadDataException;
 use MissionNext\Models\Configs\GlobalConfig;
 use MissionNext\Models\Application\Application as AppModel;
+use MissionNext\Models\Coupon\Coupon;
 use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Models\Subscription\Partnership;
 use MissionNext\Models\User\User;
 
 class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAware
@@ -54,12 +56,21 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             $this->paymentGateWay->invoice_num = time();
 
-            //TODO additional data
+            $description = $this->addAppsToPayment($data['subscriptions'], $user->role(), $data['period']);
+
+            $this->paymentGateWay->description = $description;
+
             $this->paymentGateWay->setFields($data['required_data']);
+
+            $this->paymentGateWay->setCustomFields($data['additional_data']);
 
             $response = $this->paymentGateWay->authorizeAndCapture();
 
             if($response->approved){
+
+                if($data['coupon']){
+                    Coupon::disable($data['coupon']['code']);
+                }
 
                 $transaction_id = $response->transaction_id;
 
@@ -67,9 +78,14 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
                 return $response;
             } else {
-                throw new AuthorizeException(trim(explode( 'Response Reason Text:' , $response->error_message)[1]));
+                throw new AuthorizeException($response->response_reason_text);
             }
         } else {
+
+            if($data['coupon']){
+                Coupon::disable($data['coupon']['code']);
+            }
+
             $transaction_id = 0;
 
             $response = $this->prepareSubscriptionResponse($transaction_id, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions']);
@@ -85,6 +101,33 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     public function getService()
     {
         return $this->paymentGateWay;
+    }
+
+    private function addAppsToPayment($sites, $role, $period){
+
+        $description = '';
+
+        foreach($sites as $site){
+
+            $app = $this->apps[$site['id']];
+
+            $price = $this->apps[$site['id']]['sub_configs'][$role][$site['partnership']]['price_'.$period];
+
+            $this->paymentGateWay->addLineItem($site['id'], $app['name'], $app['name'] . " for " . $period, 1, $price, 'NO');
+
+            $description .= $this->buildSiteDescription($app['name'], $role, $site['partnership'], $period, $price ) . ", ";
+        }
+
+        return $description;
+    }
+
+    private function buildSiteDescription($name, $role, $partnership, $period, $price){
+
+        if($partnership == Partnership::LIMITED && $period == Partnership::PERIOD_YEAR){
+            $period = '90 days';
+        }
+
+        return sprintf("%s: %s%s - %s/$%s", $name, $role, $partnership?'/' . $partnership:'', $period, $price);
     }
 
     private function prepareApps($apps){

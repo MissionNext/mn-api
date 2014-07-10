@@ -45,6 +45,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
     protected $fillable = array('username', 'email', 'is_active', 'status');
 
+    protected $userRole;
 
 
     /**
@@ -333,8 +334,11 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
      */
     public function role()
     {
+        if(!$this->userRole){
+            $this->userRole = $this->roles()->first()->role;
+        }
 
-        return $this->roles()->first()->role;
+        return $this->userRole;
     }
 
     /**
