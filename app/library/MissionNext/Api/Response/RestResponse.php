@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
+use MissionNext\Api\Exceptions\AuthorizeException;
 use MissionNext\Api\Exceptions\BadDataException;
 use MissionNext\Api\Exceptions\ResponseDataException;
 use Illuminate\Database\Eloquent\Model;
@@ -42,6 +43,9 @@ class RestResponse extends JsonResponse
         } elseif ($data instanceof BadDataException){
             $rawData = $data->getMessage();
             $status = RestData::BAD_DATA_ERROR;
+        } elseif ($data instanceof AuthorizeException){
+            $rawData = $data->getMessage();
+            $status = RestData::VALIDATION_ERROR;
         }
 
         return RestData::setData($rawData, $status);
