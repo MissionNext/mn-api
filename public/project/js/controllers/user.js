@@ -44,6 +44,8 @@
             $http.get(Routing.buildUrl('/user/app/'+ status+'/'+$scope.isActiveOnSite.sub.user_id+'/'+$scope.isActiveOnSite.sub.app_id))
                 .success(function(data){
                     console.log(data);
+                }).error(function(error){
+                    console.log(error);
                 });
 
             $scope.modalShown = !$scope.modalShown;

@@ -129,7 +129,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
              /** @var $user User */
              $appIds = Application::all()->lists('id');
              foreach($appIds as $id){
-                 $user->appsStatuses()->sync([$id, ['is_active' => true] ]);
+                 $user->appsStatuses()->attach($id, ['is_active' => true]);
              }
          });
     }

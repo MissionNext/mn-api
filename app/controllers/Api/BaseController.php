@@ -44,7 +44,7 @@ use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
 use MissionNext\Repos\ViewField\ViewFieldRepositoryInterface;
-use MissionNext\Validators\ValidatorResolver;
+use MissionNext\Custom\Validators\ValidatorResolver;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use MissionNext\Controllers\traits\Controller as SecurityTraits;
 

@@ -18,7 +18,7 @@
         /* A centered div above the overlay with a box shadow. */
         z-index:10000;
         position: absolute;
-        width: 20%; /* Default */
+        width: 30%; /* Default */
 
         /* Center the dialog */
         top: 50%;
@@ -55,7 +55,7 @@
     </p>
 
     Subscriptions:
-    <table class="table table-hover" >
+    <table ng-show="subscriptions.length" class="table table-hover" >
         <thead>
         <tr>
             <th>Website </th>
@@ -64,6 +64,7 @@
             <th>Start</th>
             <th>End</th>
             <th>Price</th>
+            <th>Paid</th>
             <th>Days Left</th>
             <th>Status</th>
             <th>Comment</th>
@@ -91,8 +92,9 @@
 
                 </select>
             </td>
-            <td><% sub.start_date  %></td>
+            <td><input ng-change="updateSub(sub, 'start_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.start_date"></td>
             <td><input ng-change="updateSub(sub, 'end_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.end_date"></td>
+            <td><% sub.price | currency  %></td>
             <td><% sub.price | currency  %></td>
             <td><% sub.days_left  %></td>
             <td><select ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>
@@ -103,8 +105,8 @@
         </tbody>
 
     </table>
-    <modal-dialog show='modalShown' height='20%'>
-        <p><% isActiveOnSite.label %> user. Are you sure?</p>
+    <modal-dialog show='modalShown' height='30%'>
+        <p><strong><% isActiveOnSite.label %> user on <% isActiveOnSite.sub.app.name %>.</strong> Are you sure?</p>
             <button ng-click="activateOnSite(isActiveOnSite.value)" type="button" class="btn btn-danger" >Yes</button>
             <button type="button" ng-click="activateOnSite(!isActiveOnSite.value)" class="btn btn-primary">No</button>
     </modal-dialog>

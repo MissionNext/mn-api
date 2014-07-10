@@ -49,7 +49,7 @@ Dashboard. Subscription. Config
     </div>
     <div class="col-sm-10">
         <p>
-            <label for="con-fee">Convinience fee$ </label>
+            <label for="con-fee">Convinience fee $ </label>
             <input type="number" type="number" min="0" ng-model="subCtl.conFee" id="con-fee" />
         </p>
     </div>

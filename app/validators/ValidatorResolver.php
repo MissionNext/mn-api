@@ -1,6 +1,6 @@
 <?php
 
-namespace MissionNext\Validators;
+namespace MissionNext\Custom\Validators;
 
 use Illuminate\Support\Facades\Validator;
 

@@ -1,5 +1,5 @@
 <?php
-namespace MissionNext\Validators;
+namespace MissionNext\Custom\Validators;
 
 use Illuminate\Validation\Validator;
 

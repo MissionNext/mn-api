@@ -27,7 +27,7 @@
         "psr-4": {
             "MissionNext\\Repos\\": "app/repos",
             "MissionNext\\Models\\": "app/models",
-            "MissionNext\\Validators\\": "app/validators",
+            "MissionNext\\Custom\\Validators\\": "app/validators",
             "MissionNext\\Controllers\\": "app/controllers"
         }
 	},

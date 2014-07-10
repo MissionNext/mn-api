@@ -74,9 +74,11 @@ class UserController extends AdminBaseController
     public function setAppStatus($isActive, $userId, $appId)
     {
         $isActive = $isActive  === 'enable' ? true : false;
+       // dd($isActive, $userId, $appId);
         User::find($userId)->appsStatuses()->updateExistingPivot($appId, ['is_active' => $isActive]);
 
 
+       // return Response::json(User::find($userId)->appsStatuses()->get());
         return Response::json(["is_active" =>  User::find($userId)->isActiveInApp(Application::find($appId)) ]);
     }
 } 

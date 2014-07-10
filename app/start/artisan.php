@@ -13,3 +13,4 @@
 
 Artisan::add(new CreateAdminUserCommand);
 Artisan::add(new ProfileUpdateCache);
+Artisan::add(new SetUserAppStatuses);
