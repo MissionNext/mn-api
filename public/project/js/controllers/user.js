@@ -24,6 +24,32 @@
     }]);
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
+        $scope.modalShown = false;
+        $scope.toggleModal = function(isActive, sub) {
+            $scope.isActiveOnSite = isActive ? { 'label' : 'Activate', value: isActive, sub: sub } :  { 'label' : 'Block', value: isActive, sub: sub };
+
+            $scope.modalShown = !$scope.modalShown;
+        };
+
+        $scope.activateOnSite = function(bool)
+        {
+            var status = bool && $scope.isActiveOnSite.value ? 'enable' : 'disable';
+            if (bool && !$scope.isActiveOnSite.value){
+                status = 'enable';
+                bool = true;
+                $scope.isActiveOnSite.value = true;
+            }
+
+            $scope.isActiveOnSite.sub.app.is_active = bool && $scope.isActiveOnSite.value;
+            $http.get(Routing.buildUrl('/user/app/'+ status+'/'+$scope.isActiveOnSite.sub.user_id+'/'+$scope.isActiveOnSite.sub.app_id))
+                .success(function(data){
+                    console.log(data);
+                });
+
+            $scope.modalShown = !$scope.modalShown;
+
+        };
+
 
         $scope.dateOptions = {
             changeYear: true,

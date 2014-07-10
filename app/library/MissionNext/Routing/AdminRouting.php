@@ -67,6 +67,11 @@ class AdminRouting
                     'as' => 'ajaxStatusUser',
                     'uses' => AjaxAdminController::class . '@setStatus'
                 ))->where(['user' => '[0-9]+', 'status' => '(enable|disable)']);
+
+                Route::get('user/app/{status}/{user}/{app}', array(
+                    'as' => 'ajaxSetAppStatus',
+                    'uses' => AjaxAdminController::class . '@setAppStatus'
+                ))->where(['user' => '[0-9]+', 'status' => '(enable|disable)']);
                 // ------------------- END Users -----------------------
 
 

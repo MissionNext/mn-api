@@ -2,6 +2,49 @@
     select{
         color: black !important;
     }
+
+    .ng-modal-overlay {
+        /* A dark translucent div that covers the whole screen */
+        position:absolute;
+        z-index:9999;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background-color:#000000;
+        opacity: 0.8;
+    }
+    .ng-modal-dialog {
+        /* A centered div above the overlay with a box shadow. */
+        z-index:10000;
+        position: absolute;
+        width: 20%; /* Default */
+
+        /* Center the dialog */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+
+        background-color: #fff;
+        box-shadow: 4px 4px 80px #000;
+    }
+    .ng-modal-dialog-content {
+        padding:10px;
+        text-align: left;
+    }
+    .ng-modal-close {
+        position: absolute;
+        top: 3px;
+        right: 5px;
+        padding: 5px;
+        cursor: pointer;
+        font-size: 120%;
+        display: inline-block;
+        font-weight: bold;
+        font-family: 'arial', 'sans-serif';
+    }
 </style>
 <div class="profile-data">
     <p>
@@ -35,7 +78,10 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
+            <td>
+                <label for='is_active_site<% $index %>'><span style="font-weight: 100;">Is active on site</span></label>
+                <input ng-click='toggleModal(!sub.app.is_active, sub)' id="is_active_site<% $index %>" type="checkbox" ng-model="sub.app.is_active"  ng-checked="sub.app.is_active" />
+            </td>
             <td></td>
         </tr>
         <tr class="active">
@@ -57,4 +103,9 @@
         </tbody>
 
     </table>
+    <modal-dialog show='modalShown' height='20%'>
+        <p><% isActiveOnSite.label %> user. Are you sure?</p>
+            <button ng-click="activateOnSite(isActiveOnSite.value)" type="button" class="btn btn-danger" >Yes</button>
+            <button type="button" ng-click="activateOnSite(!isActiveOnSite.value)" class="btn btn-primary">No</button>
+    </modal-dialog>
 </div>

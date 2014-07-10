@@ -7,6 +7,7 @@ namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Helpers\Language;
+use MissionNext\Models\Application\Application;
 use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\User\User;
@@ -62,5 +63,20 @@ class UserController extends AdminBaseController
         $userRepo->addUserCachedData($user);
 
         return Response::json(["is_active" => $isActive, "status" => 0 ]);
+    }
+
+    /**
+     * @param $isActive
+     * @param $userId
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setAppStatus($isActive, $userId, $appId)
+    {
+        $isActive = $isActive  === 'enable' ? true : false;
+        User::find($userId)->appsStatuses()->updateExistingPivot($appId, ['is_active' => $isActive]);
+
+
+        return Response::json(["is_active" =>  User::find($userId)->isActiveInApp(Application::find($appId)) ]);
     }
 } 
