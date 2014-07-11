@@ -9,12 +9,12 @@
         self.application = window.CurrentApplication;
 
 
-        var watchPrice = function(p, period){
+        var watchPrice = function(p, period, role){
             $scope.$watch(function(){
                 return p['price_'+period];
             }, function(newVal, oldVal){
                 if (!newVal){
-                    p['price_'+period] = 0;
+                    p['price_'+period] = role !== 'candidate' ? oldVal : 0;
                 }
                 var editing = 'editing'+ period.ucfirst();
                 self[editing] = null;
@@ -33,8 +33,8 @@
 
                 angular.forEach(self.configs, function(config, indexMain){
                    angular.forEach(config.partnership, function(p, index){
-                        watchPrice(p, 'month');
-                        watchPrice(p, 'year');
+                        watchPrice(p, 'month', config.role.key);
+                        watchPrice(p, 'year', config.role.key);
                    });
                 });
         });
@@ -64,7 +64,9 @@
         };
 
         self.blurEdit = function(editing, m, p){
-            editing[m][p] = null;
+            if (editing){
+                editing[m][p] = null;
+            }
         };
 
 
