@@ -121,16 +121,21 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     }
 
     /**
+     * @param Application $application
+     *
      * @throws \MissionNext\Api\Exceptions\ModelObservableException
      */
-    public function setActiveOnApps()
+    public function setActiveOnApps(Application $application)
     {
-         $this->onCreated(function($user){
+         $this->onCreated(function($user) use ($application){
              /** @var $user User */
-             $appIds = Application::all()->lists('id');
+             $appIds = array_diff(Application::all()->lists('id'), [$application->id()]);
+
              foreach($appIds as $id){
-                 $user->appsStatuses()->attach($id, ['is_active' => true]);
+                 $user->appsStatuses()->attach($id, ['is_active' => false]);
              }
+
+             $user->appsStatuses()->attach($application->id(), ['is_active' => true]);
          });
     }
 

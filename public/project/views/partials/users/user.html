@@ -95,7 +95,7 @@
             <td><input ng-change="updateSub(sub, 'start_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.start_date"></td>
             <td><input ng-change="updateSub(sub, 'end_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.end_date"></td>
             <td><% sub.price | currency  %></td>
-            <td><% sub.price | currency  %></td>
+            <td><% sub.paid | currency  %></td>
             <td><% sub.days_left  %></td>
             <td><select ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>
             </td>

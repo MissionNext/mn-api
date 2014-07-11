@@ -16,6 +16,7 @@ use MissionNext\Repos\Inquire\InquireRepositoryInterface;
 use MissionNext\Repos\Subscription\SubConfigRepositoryInterface;
 use MissionNext\Repos\Subscription\SubscriptionRepository;
 use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
+use MissionNext\Repos\Subscription\TransactionRepositoryInterface;
 use MissionNext\Repos\User\JobRepositoryInterface;
 use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepositoryInterface;
@@ -67,6 +68,7 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
             ProfileRepositoryFactory::KEY => $app->make(ProfileRepositoryFactory::class)->setRepoContainer($this),
             SubConfigRepositoryInterface::KEY => $app->make(SubConfigRepositoryInterface::class)->setRepoContainer($this),
             SubscriptionRepositoryInterface::KEY => $app->make(SubscriptionRepositoryInterface::class)->setRepoContainer($this),
+            TransactionRepositoryInterface::KEY => $app->make(TransactionRepositoryInterface::class)->setRepoContainer($this),
         ];
     }
 

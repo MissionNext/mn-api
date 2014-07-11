@@ -12,6 +12,8 @@ use MissionNext\Api\Service\Payment\PaymentGatewayInterface;
 use MissionNext\Models\Subscription\Partnership;
 use MissionNext\Repos\Subscription\SubscriptionRepository;
 use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
+use MissionNext\Repos\Subscription\TransactionRepository;
+use MissionNext\Repos\Subscription\TransactionRepositoryInterface;
 
 class SubscriptionController extends BaseController
 {
@@ -25,10 +27,17 @@ class SubscriptionController extends BaseController
 
        /** authorize call */
         $subscriptions = $readyData['subscriptions'];
+        $transactionData = array_except($readyData, 'subscriptions');
         /** @var  $repo SubscriptionRepository */
         $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
 
-       return new RestResponse($repo->saveMany($subscriptions));
+        /** @var  $transactionRepo TransactionRepository */
+        $transactionRepo = $this->repoContainer[TransactionRepositoryInterface::KEY];
+
+
+        return new RestResponse($transactionRepo
+                           ->syncWithSubscriptions($repo->saveMany($subscriptions), $transactionData)
+                          );
     }
 
 } 

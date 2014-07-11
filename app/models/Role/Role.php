@@ -19,10 +19,11 @@ class Role extends Eloquent implements ModelInterface
     protected $fillable = array('name','role');
 
     /**
-     * Get users with a certain role
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()
     {
+
         return $this->belongsToMany(UserModel::class, 'user_roles');
     }
 } 

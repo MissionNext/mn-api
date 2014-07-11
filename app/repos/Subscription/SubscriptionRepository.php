@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use MissionNext\Models\Subscription\Partnership;
 use MissionNext\Models\Subscription\Subscription;
+use MissionNext\Models\Subscription\Transaction;
 use MissionNext\Repos\AbstractRepository;
 
 class SubscriptionRepository extends AbstractRepository implements SubscriptionRepositoryInterface
@@ -17,7 +18,7 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
     protected  $forFill = [
         'comment' => null, 'app_id' => null, 'user_id' => null, 'partnership' => null,
         'price' => null,   'is_recurrent' => null,  'start_date' => null, 'end_date' => null,
-        'authorize_id' => null, 'status' => null,
+        'authorize_id' => null, 'status' => null, 'paid' => null,
     ];
     /**
      * @return Subscription
@@ -57,11 +58,23 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
             $this->forFill['is_recurrent'] = (bool)$subscription['is_recurrent'];
             $this->forFill['user_id'] = $subscription['user_id'];
             $this->forFill['price'] = $subscription['price'];
+            $this->forFill['paid'] = $subscription['price'];
+
+            $this->updateClosed($this->forFill);
 
             $return[] = $this->getModel()->create($this->forFill);
         }
 
         return new Collection($return);
+    }
+
+    private function updateClosed(array $forFill)
+    {
+
+      return  $this->getModel()
+            ->whereAppId($forFill['app_id'])
+            ->whereUserId($forFill['user_id'])
+            ->update(['status' => Subscription::STATUS_CLOSED]);
     }
 
     /**
@@ -75,6 +88,7 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
                               ->with('user.appsStatuses')
                               ->with('user.roles')
                               ->whereUserId($userId)
+                              ->where('status', '<>', Subscription::STATUS_CLOSED)
                               ->get();
         $subscriptions->each(function($sub){
             $sub->user->role = $sub->user->roles->first()->role;

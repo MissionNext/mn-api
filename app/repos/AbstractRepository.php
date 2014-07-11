@@ -23,10 +23,16 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->model = new $this->modelClassName;
     }
 
+    /**
+     * @param array $attributes
+     *
+     * @return Model
+     */
     public function create(array $attributes)
     {
+        $this->model = call_user_func_array("{$this->modelClassName}::create", array($attributes));
 
-        return call_user_func_array("{$this->modelClassName}::create", array($attributes));
+        return $this->model;
     }
 
     /**

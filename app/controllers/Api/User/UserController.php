@@ -115,7 +115,7 @@ class UserController extends BaseController
         $user->setEmail(Input::get('email'));
         $user->setUsername(Input::get('username'));
         $user->setRole($role);
-        $user->setActiveOnApps();
+        $user->setActiveOnApps($this->getApp());
         if ($roleName === BaseDataModel::CANDIDATE){
             $user->setIsActive(true);
             $user->setStatus(0);
