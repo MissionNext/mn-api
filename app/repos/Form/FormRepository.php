@@ -33,7 +33,6 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
     private function structureData(Collection $collection)
     {
         $structuredData = [];
-
         foreach($collection as $groupField){
             $groupId = $groupField->id;
             $fieldId = $groupField->field_id;
@@ -55,6 +54,8 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             $structuredData[$groupId]['fields'][$fieldId]['type'] = $groupField->field_type;
             $structuredData[$groupId]['fields'][$fieldId]['name'] = $groupField->field_trans_name;
             $structuredData[$groupId]['fields'][$fieldId]['default_name'] = $groupField->field_name;
+            $structuredData[$groupId]['fields'][$fieldId]['default_note'] = $groupField->field_note;
+            $structuredData[$groupId]['fields'][$fieldId]['note'] = $groupField->field_trans_note;
             //$structuredData[$groupId]['fields'][$fieldId]['choices'] = $choices;
             //$structuredData[$groupId]['fields'][$fieldId]['field_dictionary_ids'] = $groupField->field_dictionary_id ? : [];
             //  $structuredData[$groupId]['fields'][$fieldId]['default_choices'] = $defChoices;
@@ -112,6 +113,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             ->where('data_model_' . $type . '_fields.data_model_id', '=', $dm->id)
             ->where("form_groups.form_id", "=", $form->id)
             ->groupBy('field_trans_name',
+                      'field_trans_note',
                       $type . '_fields.id',
                       'field_types.name',
                 'data_model_' . $type . '_fields.constraints',
@@ -124,7 +126,9 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             ->select(
                 'field_types.name as field_type',
                 $type . '_fields_trans.name as field_trans_name',
+                $type . '_fields_trans.note as field_trans_note',
                 $type . '_fields.name as field_name',
+                $type . '_fields.note as field_note',
                 $type . '_fields.default_value as field_default_value',
 
                 DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary_trans.value", "field_choices", "{$type}_dictionary_trans.dictionary_id" )),

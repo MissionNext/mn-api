@@ -33,7 +33,7 @@ class Candidate extends BaseField implements ModelInterface, IRoleField
     public function languages()
     {
 
-        return $this->belongsToMany(LanguageModel::class, 'candidate_fields_trans', 'field_id', 'lang_id')->withPivot('name');
+        return $this->belongsToMany(LanguageModel::class, 'candidate_fields_trans', 'field_id', 'lang_id')->withPivot('name', 'note');
     }
 
     /**

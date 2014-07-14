@@ -157,9 +157,9 @@ class FieldRepository extends AbstractFieldRepository
         $symbol_keys = [];
         $withoutChoices = array_map(function ($field) use (&$symbol_keys) {
             $symbol_keys[] = $field["symbol_key"];
+
             return array_except($field, "choices");
         }, $fields);
-
         // dd($symbol_keys, $fields, $withoutChoices);
         $this->getModel()->insert(
             $withoutChoices

@@ -36,6 +36,7 @@ class Controller extends BaseController
         $dm = $application->DM();
 
         $reqGroups = Request::instance()->request->get("groups");
+        dd($reqGroups);
 
         $form = $dm->forms()->whereSymbolKey($formName)->first();
 
@@ -61,7 +62,7 @@ class Controller extends BaseController
         }
 
 
-        return new RestResponse( $this->syncGroupFields($reqGroups, $form) );
+        return new RestResponse($this->syncGroupFields($reqGroups, $form));
 
     }
 
@@ -124,15 +125,25 @@ class Controller extends BaseController
 
         $timestamp = (new \DateTime)->format("Y-m-d H:i:s");
 
+
+
         foreach ($formGroups as $group) {
 
             $fieldsToIns = array_map(function ($field) use ($timestamp, $group) { //@TODO cannot be associated field_group has no id
 
 
-               $searchOptions =   ["search_options"=>["is_expanded" => false ]];
-               if  (isset($field["is_expanded"])){
-                  $searchOptions["search_options"]["is_expanded"] = (bool)$field["is_expanded"];
-               }
+                $searchOptions = ["search_options" => ["is_expanded" => false], "before_notes" => [], "after_notes" => []];
+                if (isset($field["is_expanded"])) {
+                    $searchOptions["search_options"]["is_expanded"] = (bool)$field["is_expanded"];
+                }
+
+
+                if (isset($field['before_notes'])) {
+                   $searchOptions['before_notes'] = $field['before_notes'];
+                }
+                if (isset($field['after_notes'])) {
+                    $searchOptions['after_notes'] = $field['after_notes'];
+                }
 
                 return
                     array(
@@ -145,7 +156,7 @@ class Controller extends BaseController
                     );
             }, $group["fields"]);
 
-         //   print_r($fieldsToIns); exit;
+            //   print_r($fieldsToIns); exit;
 
 
             FieldGroup::insert($fieldsToIns);

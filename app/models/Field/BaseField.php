@@ -22,7 +22,7 @@ abstract class BaseField extends Eloquent
     protected $table = 'fields';
 
 
-    protected $fillable = array('name', 'multiple', 'symbol_key', 'default_value');
+    protected $fillable = array('name', 'multiple', 'symbol_key', 'default_value', 'type', 'meta');
 
 
 

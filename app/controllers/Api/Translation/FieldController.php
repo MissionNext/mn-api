@@ -71,7 +71,7 @@ class FieldController extends BaseController
                 }
             }
             $fieldModel->languages()->detach([ $langId ]);
-            $fieldModel->languages()->attach([ $langId => [ 'name' => $trans['label']] ]);
+            $fieldModel->languages()->attach([ $langId => [ 'name' => $trans['label'], 'note' => $trans['note'] ] ]);
         }
 
 

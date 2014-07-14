@@ -40,6 +40,7 @@ class Controller extends BaseController
         $request = Request::instance()->request;
         $fields = $request->has("fields") ? $request->get("fields") : [];
 
+
         return new RestResponse($this->fieldRepo()->addFields($fields));
     }
 
@@ -54,6 +55,7 @@ class Controller extends BaseController
         $request = Request::instance()->request;
 
         $fields = $request->has("fields") ? $request->get("fields") : [];
+
 
         return new RestResponse($this->fieldRepo()->updateFields($fields));
     }

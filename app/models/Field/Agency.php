@@ -32,7 +32,7 @@ class Agency extends BaseField implements ModelInterface, IRoleField
     public function languages()
     {
 
-        return $this->belongsToMany(LanguageModel::class, 'agency_fields_trans', 'field_id', 'lang_id')->withPivot('name');
+        return $this->belongsToMany(LanguageModel::class, 'agency_fields_trans', 'field_id', 'lang_id')->withPivot('name', 'note');
     }
 
     /**
