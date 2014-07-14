@@ -4,6 +4,7 @@
 namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Helpers\Language;
@@ -19,15 +20,15 @@ use MissionNext\Repos\User\UserRepository;
 class UserController extends AdminBaseController
 {
     /**
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getList()
     {
+        /** @var  $users Paginator */
         $users = User::orderBy('id')->paginate(static::PAGINATE);
+        $totalCount = User::remember(120)->get()->count();
 
-        return $this->view->make('admin.user.ajax.list', array(
-            'users' => $users,
-        ));
+        return Response::json(["users" => $users->toArray(), 'totalUsers' => $totalCount, 'itemsPerPage' => static::PAGINATE ]);
     }
 
     /**

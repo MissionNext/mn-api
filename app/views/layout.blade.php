@@ -37,6 +37,8 @@
     {{ HTML::script(URL::asset('packages/admin/js/selectize.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/bootstrap.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/angular.min.js')) }}
+    {{ HTML::script(URL::asset('packages/admin/js/sanitize.js')) }}
+    {{ HTML::script(URL::asset('packages/admin/js/dirPagination.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/angular-resource.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/angular-route.min.js')) }}
     {{ HTML::script(URL::asset('packages/admin/js/date.js')) }}

@@ -1,0 +1,74 @@
+<div class="user-list">
+    <div class="row">
+        <div class="col-md-7 col-md-offset-1">
+            <form method="POST" action="http://localhost.mission-next/dashboard/user/searching" accept-charset="UTF-8" class="form-inline user-search-form ng-pristine ng-valid" role="form">
+                <input ng-model="search" class="form-control" placeholder="search by user or email" name="search" type="text">
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-10">
+                    <h3 class="text-center">
+                        User list
+                    </h3>
+                </div>
+                <!--<div class="col-md-2 pagination-info">-->
+                    <!--<span class="pull-right"> <% to %> / <%  total %> </span>-->
+                <!--</div>-->
+            </div>
+
+
+            <div id="firter-rezult">
+            </div>
+
+            <div id="default-rezult">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>E-mail</th>
+                        <th>Status</th>
+                        <th>Created at</th>
+                        <th>Last login</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody >
+                    <tr total-items="totalUsers" dir-paginate="user in users | itemsPerPage: itemsPerPage | filter:search" >
+                        <td><% user.id %></td>
+                        <td><a href="user#/<% user.id %>"><% user.username %></a></td>
+                        <td><% user.email %></td>
+                        <td><strong><% user.status %></strong></td>
+                        <td><% user.created_at | date %></td>
+                        <td><% user.last_login | date %></td>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="text-center">
+                    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)">
+
+                    </dir-pagination-controls>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h3 class="text-center">Filters:</h3>
+
+            <div class="user-filters pull-right">
+                <label for="apps-select-id">By applications:</label>
+                <textarea id="apps-select-id"></textarea>
+            </div>
+
+            <div class="user-filters pull-right">
+                <label for="role-select-id">By roles:</label>
+                <textarea id="role-select-id"></textarea>
+            </div>
+        </div>
+    </div>
+</div>

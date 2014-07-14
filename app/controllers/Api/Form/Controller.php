@@ -36,7 +36,6 @@ class Controller extends BaseController
         $dm = $application->DM();
 
         $reqGroups = Request::instance()->request->get("groups");
-        dd($reqGroups);
 
         $form = $dm->forms()->whereSymbolKey($formName)->first();
 

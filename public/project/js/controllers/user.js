@@ -1,5 +1,5 @@
 (function(){
-    var userControllers = angular.module('userControllers', []);
+    var userControllers = angular.module('userControllers', ['ngSanitize', 'angularUtils.directives.dirPagination']);
 
     userControllers.config(usersRouter);
 
@@ -10,16 +10,41 @@
     function usersRouter($routeProvider){
 
         $routeProvider
-        .when(
-            '/', { templateUrl: Routing.buildUrl('/user/list'), controller: "UserListCtl" }
-        ).when(
+//        .when(
+//            '/', { templateUrl: Routing.buildUrl('/user/list'), controller: "UserListCtl" }
+//        )
+            .when(
+            '/', { templateUrl: Routing.buildTemplateUrl('/users/list.html'), controller: "UserListCtl" }
+        )
+            .when(
             '/:user', { templateUrl: Routing.buildTemplateUrl('/users/user.html'), controller: "UserCtl" }
         );
 
     }
 
-    userControllers.controller("UserListCtl",['$scope',function($scope){
-        console.log("user list");
+    userControllers.controller("UserListCtl",['$scope', '$http', '$sce', function($scope, $http, $sce){
+
+        $scope.pagination = {
+            current: 1
+        };
+        getResultsPage($scope.pagination.current);
+
+        $scope.pageChanged = function(newPage) {
+            getResultsPage(newPage);
+        };
+
+        function getResultsPage(pageNumber) {
+            // this is just an example, in reality this stuff should be in a service
+            $http.get(Routing.buildUrl('/user/list?page='+pageNumber))
+                .success(function(result) {
+                    console.log(result);
+                    $scope.users = result.users.data;
+                    $scope.totalUsers = result.totalUsers;
+                    $scope.itemsPerPage = result.itemsPerPage;
+                });
+        }
+
+
 
     }]);
 
