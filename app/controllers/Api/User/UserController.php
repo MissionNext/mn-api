@@ -142,6 +142,7 @@ class UserController extends BaseController
      */
     public function show($id)
     {
+        return new RestResponse(User::find($id)->apps()->get(['id', 'name']));
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
         $cacheData->findOrFail($id);

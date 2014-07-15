@@ -8,6 +8,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use MissionNext\Controllers\Admin\Filter\FilterController;
 use MissionNext\Controllers\Admin\Subscription\Ajax\SubscriptionController as SubscriptionControllerAjax;
 use MissionNext\Controllers\Admin\Subscription\CouponController;
 use MissionNext\Controllers\Admin\Subscription\SubConfigController;
@@ -85,6 +86,14 @@ class AdminRouting
                 $this->router->get('subscription/manager/{user}', SubscriptionControllerAjax::class.'@getIndex')->where(['user' => '[0-9]+']);
                 $this->router->put('subscription/{subscription}', SubscriptionControllerAjax::class.'@updateIndex')->where(['user' => '[0-9]+']);
                 // ------------------- END Subscription -----------------------
+
+                // ------------ FILTER --------------------------------
+                $this->router->get('filter/roles', FilterController::class.'@getRoles');
+                $this->router->get('filter/apps', FilterController::class.'@getApps');
+
+
+
+                //-------------------- END FILTER -------------------------
 
             });
             // ================ END AJAX ===========================

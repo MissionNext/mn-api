@@ -107,7 +107,7 @@
 
         $.post("{{ URL::route('getRoles') }}")
             .done(function(msg){
-//                console.log(msg);
+               console.log(msg);
                 $('#apps-select-id').selectize({
                     plugins: ['remove_button'],
                     delimiter: ',',

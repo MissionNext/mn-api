@@ -42,6 +42,7 @@ class FieldRepository extends AbstractFieldRepository
             $role . '_fields.symbol_key',
             $role . '_fields.default_value',
             $role . '_fields_trans.name',
+            $role . '_fields_trans.note',
             DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary_trans.value", "choices", "{$role}_dictionary_trans.dictionary_id")),
             DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary_trans.dictionary_id", "dictionary_id", "{$role}_dictionary_trans.dictionary_id")),
             DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.order", "dictionary_order", "{$role}_dictionary.id")))
@@ -56,7 +57,7 @@ class FieldRepository extends AbstractFieldRepository
                     ->where($role . '_dictionary_trans.lang_id', '=', $language->id);
             })
 
-            ->groupBy($role . '_fields.id', 'field_types.name', $role . '_fields_trans.name');
+            ->groupBy($role . '_fields.id', 'field_types.name', $role . '_fields_trans.name',  $role . '_fields_trans.note');
 
         return
             new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices', 'default_value', 'dictionary_id']));
@@ -77,6 +78,7 @@ class FieldRepository extends AbstractFieldRepository
             'field_types.name as type',
             $role . '_fields.symbol_key',
             $role . '_fields.name',
+            $role . '_fields.note',
             $role . '_fields.default_value',
             DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices", "{$role}_dictionary.id")),
             DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.id", "dictionary_id", "{$role}_dictionary.id")),
@@ -106,6 +108,7 @@ class FieldRepository extends AbstractFieldRepository
                 'field_types.name as type',
                 $role . '_fields.symbol_key',
                 $role . '_fields.name',
+                $role . '_fields.note',
                 $role . '_fields.default_value',
                 'data_model_' . $role . '_fields.constraints',
                 \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices", "{$role}_dictionary.id" )),
@@ -206,6 +209,7 @@ class FieldRepository extends AbstractFieldRepository
             $this->getModel()->where("id", "=", $field["id"])
                 ->update(["name" => $field["name"],
                     "default_value" => $field["default_value"],
+                    "note" => $field['note'],
                 ]);
 
             if ($field["choices"]) {

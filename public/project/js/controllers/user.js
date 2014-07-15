@@ -6,7 +6,6 @@
 
 
 
-
     function usersRouter($routeProvider){
 
         $routeProvider
@@ -21,8 +20,105 @@
         );
 
     }
+    function intersect(a, b) {
+        var t;
+        if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
+        return a.filter(function (e) {
+            if (b.indexOf(e) !== -1) return true;
+        });
+    }
+    userControllers.controller("UserListCtl",['$scope', '$http', '$sce', '$timeout', 'filterFilter', function($scope, $http, $sce, $timeout, filterFilter){
 
-    userControllers.controller("UserListCtl",['$scope', '$http', '$sce', function($scope, $http, $sce){
+        $scope.search = {role: null, app: null};
+
+        $scope.userMatchProfile = function(query){
+
+            return function(user) {
+                return user.username.match(query) || user.email.match(query);
+            };
+        };
+
+        $scope.userMatchRole = function(query){
+
+            var roles = query ? query.split('|') : null;
+
+            return function(user) {
+
+                return roles ? $.inArray(user.roleName, roles)  !== -1 : true;
+            }
+        };
+
+        $scope.userMatchApp = function(query){
+
+            var apps = query ? query.split('|') : null;
+            console.log(apps);
+
+            return function(user) {
+
+                return true;
+            }
+        };
+
+
+        $('#role-select-id').selectize({
+            plugins: ['remove_button'],
+            delimiter: '|',
+            maxItems: null,
+            valueField: 'role',
+            preload: true,
+            openOnFocus: true,
+            labelField: 'role',
+            searchField: 'role',
+            options: [],
+            create: false,
+            onChange: function(value){
+                $scope.$apply(function(){
+                    $scope.search.role = value;
+                });
+            },
+            initUrl: Routing.buildUrl('/filter/roles'),
+            remoteUrl:Routing.buildUrl('/filter/roles'),
+            load : function(query, callback){
+                var selectize = this;
+                console.log(selectize.settings.initUrl);
+                $http.get(selectize.settings.initUrl).success(function(data){
+                    $.each(data, function(idx, el){
+                        selectize.addOption(el);
+                    });
+                });
+
+            }
+        });
+
+        $('#apps-select-id').selectize({
+            plugins: ['remove_button'],
+            delimiter: '|',
+            maxItems: null,
+            valueField: 'id',
+            preload: true,
+            openOnFocus: true,
+            labelField: 'name',
+            searchField: 'name',
+            options: [],
+            create: false,
+            onChange: function(value){
+                $scope.$apply(function(){
+                    $scope.search.app = value;
+                });
+            },
+            initUrl: Routing.buildUrl('/filter/apps'),
+            remoteUrl:Routing.buildUrl('/filter/apps'),
+            load : function(query, callback){
+                var selectize = this;
+                console.log(selectize.settings.initUrl);
+                $http.get(selectize.settings.initUrl).success(function(data){
+                    $.each(data, function(idx, el){
+                        selectize.addOption(el);
+                    });
+                });
+
+            }
+        });
 
         $scope.pagination = {
             current: 1
@@ -40,9 +136,31 @@
                     console.log(result);
                     $scope.users = result.users.data;
                     $scope.totalUsers = result.totalUsers;
+                    $scope.oldTotalUsers = result.totalUsers;
                     $scope.itemsPerPage = result.itemsPerPage;
+                    $scope.oldItemsPerPage = $scope.itemsPerPage;
+
+
                 });
         }
+
+//        $scope.filter = function() {
+//            $timeout(function() {
+//                $scope.totalUsers = $scope.filtered.length;
+//               console.log($scope.filtered);
+//               // $scope.noOfPages = Math.ceil($scope.filtered.length/$scope.entryLimit);
+//            });
+//        };
+//        console.log(filterFilter);
+//        $scope.$watch('search', function(term) {
+//           var filtered  = filterFilter($scope.users, term);
+//            if (filtered) {
+//                $scope.totalUsers = filtered.length == $scope.oldItemsPerPage ? $scope.oldTotalUsers : filtered.length;
+//            }
+//
+//            // Then calculate noOfPages
+//            //$scope.noOfPages = Math.ceil($scope.users.length/2);
+//        })
 
 
 
