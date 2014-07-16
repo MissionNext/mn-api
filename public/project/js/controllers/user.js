@@ -20,6 +20,7 @@
         );
 
     }
+
     function intersect(a, b) {
         var t;
         if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
@@ -27,6 +28,13 @@
             if (b.indexOf(e) !== -1) return true;
         });
     }
+
+//    var a = ['1'];
+//
+//    var b = ['1', '2'];
+//
+//    console.log("HERE", intersect(a, b));
+
     userControllers.controller("UserListCtl",['$scope', '$http', '$sce', '$timeout', 'filterFilter', function($scope, $http, $sce, $timeout, filterFilter){
 
         $scope.search = {role: null, app: null};
@@ -51,10 +59,16 @@
         $scope.userMatchApp = function(query){
 
             var apps = query ? query.split('|') : null;
-            console.log(apps);
 
             return function(user) {
+                if (apps){
+                   var interApps =  intersect(apps, user.appsIds);
+                   if (!interApps.length || apps.length !== interApps.length){
 
+                       return false;
+                   }
+
+                }
                 return true;
             }
         };
@@ -80,7 +94,6 @@
             remoteUrl:Routing.buildUrl('/filter/roles'),
             load : function(query, callback){
                 var selectize = this;
-                console.log(selectize.settings.initUrl);
                 $http.get(selectize.settings.initUrl).success(function(data){
                     $.each(data, function(idx, el){
                         selectize.addOption(el);
@@ -110,7 +123,6 @@
             remoteUrl:Routing.buildUrl('/filter/apps'),
             load : function(query, callback){
                 var selectize = this;
-                console.log(selectize.settings.initUrl);
                 $http.get(selectize.settings.initUrl).success(function(data){
                     $.each(data, function(idx, el){
                         selectize.addOption(el);
@@ -133,8 +145,12 @@
             // this is just an example, in reality this stuff should be in a service
             $http.get(Routing.buildUrl('/user/list?page='+pageNumber))
                 .success(function(result) {
-                    console.log(result);
                     $scope.users = result.users.data;
+                    $.each($scope.users,function(idx, user){
+                        $.each(user.appsIds, function(ix, id){
+                            $scope.users[idx].appsIds[ix] = id.toString();
+                        });
+                    });
                     $scope.totalUsers = result.totalUsers;
                     $scope.oldTotalUsers = result.totalUsers;
                     $scope.itemsPerPage = result.itemsPerPage;

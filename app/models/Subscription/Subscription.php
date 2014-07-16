@@ -72,7 +72,7 @@ class Subscription extends Model implements ModelInterface
     public function getDaysLeftAttribute()
     {
 
-        return $this->end_date->diffInDays(Carbon::now(), false);
+        return $this->end_date->diffInDays(Carbon::now(), false) * -1;
     }
 
 

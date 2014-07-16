@@ -45,15 +45,18 @@ class UpdateSubscriptionStatus extends Command
         $subscriptions = Subscription::where('status', '<>', Subscription::STATUS_CLOSED)
                                      ->where('status', '<>', Subscription::STATUS_EXPIRED)
                                      ->get();
-        $subscriptions->each(function($subscription) use ($gracePeriod){
-            /** @var $subscription Subscription */
-            if ($subscription->days_left > $gracePeriod){
-                $subscription->status = Subscription::STATUS_EXPIRED;
-                $subscription->save();
-            }
 
-            if ($subscription->days_left > 0 && $subscription->days_left < $gracePeriod){
-                $subscription->status = Subscription::STATUS_GRACE;
+        $subscriptions->each(function($subscription) use ($gracePeriod){
+
+            $absDaysLeft = abs($subscription->days_left);
+            /** @var $subscription Subscription */
+            if ($subscription->days_left < 0){
+                if ($absDaysLeft < $gracePeriod) {
+                    $subscription->status = Subscription::STATUS_GRACE;
+                }elseif($absDaysLeft > $gracePeriod){
+                    $subscription->status = Subscription::STATUS_EXPIRED;
+
+                }
                 $subscription->save();
             }
 
