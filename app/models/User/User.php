@@ -19,6 +19,7 @@ use MissionNext\Models\Field\Candidate as CandidateField;
 use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
+use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
@@ -46,26 +47,6 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     protected $fillable = array('username', 'email', 'is_active', 'status');
 
     protected $userRole;
-
-    protected $appends = ['roleName', 'appsData'];
-
-    /**
-     * @return string
-     */
-    public function getRoleNameAttribute()
-    {
-
-        return $this->role();
-    }
-
-    /**
-     * @return array
-     */
-    public function getAppsDataAttribute()
-    {
-
-        return $this->apps()->get(['id', 'name'])->toArray();
-    }
 
     /**
      * @param $email
@@ -406,5 +387,14 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
      * @return string
      */
     public function getRememberTokenName(){}
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subscriptions()
+    {
+
+        return $this->hasMany(Subscription::class, 'user_id', 'id');
+    }
 
 }

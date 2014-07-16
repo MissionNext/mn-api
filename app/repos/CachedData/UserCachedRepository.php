@@ -17,6 +17,7 @@ use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\FolderApps\FolderApps;
 use MissionNext\Models\Language\LanguageModel;
 use MissionNext\Models\Notes\Notes;
+use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Repos\RepositoryInterface;
@@ -107,7 +108,13 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
 
         if ($role !== BaseDataModel::JOB && !$this->repoContainer->securityContext()->isAdminArea()) {
             $isAppActive = User::findOrFail($this->getModel()->id)->isActiveInApp($this->repoContainer->securityContext()->getApp());
+            $subscription = Subscription::whereUserId($this->getModel()->id)
+                                         ->whereAppId($this->repoContainer->securityContext()->getApp()->id())
+                                         ->where('status', '<>', Subscription::STATUS_CLOSED)
+                                         ->first();
+
             $transData['is_active_app'] = $isAppActive;
+            $transData['subscription'] = $subscription;
        }
 
 
@@ -184,4 +191,5 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
           //  ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id()])
             ->firstOrFail();
     }
+
 }

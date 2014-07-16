@@ -53,6 +53,12 @@ Dashboard. Subscription. Config
             <input type="number" type="number" min="0" ng-model="subCtl.conFee" id="con-fee" />
         </p>
     </div>
+    <div class="col-sm-10">
+        <p>
+            <label for="con-fee">Grace Period (days) </label>
+            <input type="number" type="number" min="0" ng-model="subCtl.gracePeriod" id="con-fee" />
+        </p>
+    </div>
     <table class="table table-hover" >
         <thead>
         <tr>

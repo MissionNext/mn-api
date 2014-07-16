@@ -26,11 +26,14 @@ class SubConfigController extends AdminBaseController
         $appId = $this->request->query->get('app');
         /** @var  $repo SubConfigRepository */
         $repo = $this->repoContainer[SubConfigRepositoryInterface::KEY];
-        $conFee = GlobalConfig::whereKey(GlobalConfig::CON_FEE)->first();
-        $discount = GlobalConfig::whereKey(GlobalConfig::SUBSCRIPTION_DISCOUNT)->first();
+        $globalConfig = new GlobalConfig();
+        $conFee = $globalConfig->conFee();
+        $discount = $globalConfig->subscriptionDiscount();
+        $gracePeriod = $globalConfig->gracePeriod();
 
-        return Response::json([ "config" => $repo->config($appId), "conFee" => $conFee ? intval($conFee->value) : 0,
-            GlobalConfig::SUBSCRIPTION_DISCOUNT => $discount ? intval($discount->value) : 0
+        return Response::json([ "config" => $repo->config($appId), GlobalConfig::CON_FEE => $conFee,
+            GlobalConfig::SUBSCRIPTION_DISCOUNT => $discount,
+            GlobalConfig::GRACE_PERIOD => $gracePeriod
                             ]);
     }
 
@@ -43,9 +46,11 @@ class SubConfigController extends AdminBaseController
         $appId = $this->request->request->get('app');
         $conFee = intval($this->request->request->get(GlobalConfig::CON_FEE));
         $discount = intval($this->request->request->get(GlobalConfig::SUBSCRIPTION_DISCOUNT));
+        $gracePeriod = intval($this->request->request->get(GlobalConfig::GRACE_PERIOD));
 
         GlobalConfig::updateOrCreate( ['key' => GlobalConfig::CON_FEE], ['value' => $conFee] );
         GlobalConfig::updateOrCreate( ['key' => GlobalConfig::SUBSCRIPTION_DISCOUNT], ['value' => $discount] );
+        GlobalConfig::updateOrCreate( ['key' => GlobalConfig::GRACE_PERIOD], ['value' => $gracePeriod] );
 
         foreach($configs as $config){
            foreach($config['partnership'] as $p ) {

@@ -11,6 +11,7 @@ use MissionNext\Helpers\Language;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\Language\LanguageModel;
+use MissionNext\Models\User\ExtendedUser;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
@@ -25,8 +26,8 @@ class UserController extends AdminBaseController
     public function getList()
     {
         /** @var  $users Paginator */
-        $users = User::orderBy('id')->paginate(static::PAGINATE);
-        $totalCount = User::remember(120)->get()->count();
+        $users = ExtendedUser::orderBy('id')->paginate(static::PAGINATE);
+        $totalCount = ExtendedUser::remember(120)->get()->count();
 
         return Response::json(["users" => $users->toArray(), 'totalUsers' => $totalCount, 'itemsPerPage' => static::PAGINATE ]);
     }

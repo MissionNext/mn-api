@@ -29,6 +29,7 @@
                 console.log(data);
                 self.configs = data.config;
                 self.conFee = data.conFee;
+                self.gracePeriod = data.gracePeriod;
                 self.subscriptionDiscount = data.subscriptionDiscount;
 
                 angular.forEach(self.configs, function(config, indexMain){
@@ -76,6 +77,7 @@
                     configs : self.configs,
                     app : self.application.id,
                     conFee : self.conFee,
+                    gracePeriod : self.gracePeriod,
                     subscriptionDiscount: self.subscriptionDiscount
                 }
             )

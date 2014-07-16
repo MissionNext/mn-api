@@ -21,6 +21,7 @@ use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\Role\Role;
+use MissionNext\Models\User\ExtendedUser;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
@@ -142,12 +143,12 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-        return new RestResponse(User::find($id)->apps()->get(['id', 'name']));
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
         $cacheData->findOrFail($id);
 
-        return new RestResponse($cacheData->transData($this->getToken()->language()));    }
+        return new RestResponse($cacheData->transData($this->getToken()->language()));
+    }
 
     /**
      * Show the form for editing the specified resource.

@@ -41,7 +41,6 @@ class UserController extends BaseController
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
         $cacheData->findOrFail($id);
 
-
         return new RestResponse($cacheData->transData($this->getToken()->language()));
     }
 

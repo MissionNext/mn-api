@@ -36,6 +36,9 @@ class Subscription extends Model implements ModelInterface
 
     protected $appends = ['statuses', 'days_left', 'partnership_levels'];
 
+
+
+
     /**
      * @return array
      */
@@ -69,7 +72,7 @@ class Subscription extends Model implements ModelInterface
     public function getDaysLeftAttribute()
     {
 
-        return $this->end_date->diffInDays(Carbon::now());
+        return $this->end_date->diffInDays(Carbon::now(), false);
     }
 
 
