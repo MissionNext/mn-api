@@ -21,6 +21,8 @@ class Subscription extends Model implements ModelInterface
         parent::observe(new SubscriptionObserver());
     }
 
+    public $force_close = false;
+
     protected $table = 'subscriptions';
 
     protected $fillable =
@@ -30,7 +32,8 @@ class Subscription extends Model implements ModelInterface
     const STATUS_ACTIVE = 'active',
           STATUS_EXPIRED = 'expired',
           STATUS_GRACE = 'grace',
-          STATUS_CLOSED = 'closed';
+          STATUS_CLOSED = 'closed',
+          STATUS_PAYMENT_FAILED = 'payment_failed';
 
     public $timestamps = false;
 
@@ -72,7 +75,7 @@ class Subscription extends Model implements ModelInterface
     public function getDaysLeftAttribute()
     {
 
-        return $this->end_date->diffInDays(Carbon::now(), false) * -1;
+        return $this->end_date->diffInDays(Carbon::now()->hour(00)->minute(0)->second(0), false) * -1;
     }
 
 

@@ -6,6 +6,9 @@ use MissionNext\Repos\RepositoryContainerInterface;
 use Symfony\Component\Console\Helper\ProgressHelper;
 use MissionNext\Models\Configs\GlobalConfig;
 use MissionNext\Models\Subscription\Subscription;
+use MissionNext\Models\User\User;
+use MissionNext\Models\DataModel\BaseDataModel;
+use Carbon\Carbon;
 
 class UpdateSubscriptionStatus extends Command
 {
@@ -40,25 +43,38 @@ class UpdateSubscriptionStatus extends Command
      */
     public function fire()
     {
+
+
         $gracePeriod = (new GlobalConfig())->gracePeriod();
 
         $subscriptions = Subscription::where('status', '<>', Subscription::STATUS_CLOSED)
-                                     ->where('status', '<>', Subscription::STATUS_EXPIRED)
                                      ->get();
 
         $subscriptions->each(function($subscription) use ($gracePeriod){
 
-            $absDaysLeft = abs($subscription->days_left);
-            /** @var $subscription Subscription */
-            if ($subscription->days_left < 0){
-                if ($absDaysLeft < $gracePeriod) {
-                    $subscription->status = Subscription::STATUS_GRACE;
-                }elseif($absDaysLeft > $gracePeriod){
-                    $subscription->status = Subscription::STATUS_EXPIRED;
+           if  ( ( $subscription->status === Subscription::STATUS_EXPIRED || $subscription->status === Subscription::STATUS_GRACE  )
+               && $subscription->price == 0
+               )  {
 
-                }
-                $subscription->save();
-            }
+                   $subscription->end_date = $subscription->is_recurrent ? Carbon::now()->addMonth()
+                                                                         : Carbon::now()->addYear();
+
+                   $subscription->status = Subscription::STATUS_ACTIVE;
+                   $subscription->save();
+           }else {
+
+               $absDaysLeft = abs($subscription->days_left);
+               /** @var $subscription Subscription */
+               if ($subscription->days_left < 0) {
+                   if ($absDaysLeft < $gracePeriod) {
+                       $subscription->status = Subscription::STATUS_GRACE;
+                   } elseif ($absDaysLeft > $gracePeriod) {
+                       $subscription->status = Subscription::STATUS_EXPIRED;
+
+                   }
+                   $subscription->save();
+               }
+           }
 
         });
 

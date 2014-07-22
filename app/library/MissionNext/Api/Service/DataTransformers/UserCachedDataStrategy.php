@@ -4,6 +4,8 @@
 namespace MissionNext\Api\Service\DataTransformers;
 
 
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use MissionNext\Repos\TransformDataStrategy;
 use Illuminate\Support\Collection;
 
@@ -17,13 +19,15 @@ class UserCachedDataStrategy extends TransformDataStrategy
     }
 
     /**
-     * @param Collection $dataCollection
+     * @param \IteratorAggregate $dataCollection
      *
      * @return Collection
      */
-    public function transform(Collection $dataCollection)
+    public function transform(\IteratorAggregate $dataCollection)
     {
       $keys = [];
+      $totalPages = $dataCollection instanceof Paginator ? $dataCollection->getLastPage() : null;
+
       foreach($this->jsonDataKeys as $data){
           if (is_array($data)){
               $keys[] = key($data);
@@ -32,8 +36,10 @@ class UserCachedDataStrategy extends TransformDataStrategy
           }
       }
 
-      return $dataCollection->each(function($d) use ($keys){
-
+      return $dataCollection->each(function($d) use ($keys, $totalPages){
+           if (!is_null($totalPages)){
+               $d->totalPages = $totalPages;
+           }
            foreach($this->jsonDataKeys as $jsonKey){
                if (is_array($jsonKey)){
                    if (current($jsonKey)){
@@ -68,7 +74,6 @@ class UserCachedDataStrategy extends TransformDataStrategy
                    $d->$prop = $d->data[$prop];
                }
                unset($d->data);
-
            }
 
        });

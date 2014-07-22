@@ -15,7 +15,7 @@ class AddFieldsToSubscriptions extends Migration {
 		Schema::table('subscriptions', function(Blueprint $table)
 		{
             $table->string('authorize_id')->nullable(); //if recurrent
-            $table->string('status')->nullable(); //if recurrent
+            $table->string('status')->nullable();
 		});
 	}
 

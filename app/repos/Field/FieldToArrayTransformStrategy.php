@@ -19,11 +19,11 @@ class FieldToArrayTransformStrategy extends TransformDataStrategy {
     }
 
     /**
-     * @param Collection $dataCollection
+     * @param \IteratorAggregate $dataCollection
      *
      * @return Collection
      */
-    public function transform(Collection $dataCollection)
+    public function transform(\IteratorAggregate $dataCollection)
     {
         return $dataCollection->each(function ($field) {
           //  dd($field->toArray());

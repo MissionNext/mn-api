@@ -19,6 +19,7 @@ use MissionNext\Models\Field\Candidate as CandidateField;
 use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
+use MissionNext\Models\Subscription\GlobalSubscription;
 use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\UserRepository;
@@ -395,6 +396,15 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     {
 
         return $this->hasMany(Subscription::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function globalSubscription()
+    {
+
+        return $this->hasOne(GlobalSubscription::class, 'user_id', 'id');
     }
 
 }

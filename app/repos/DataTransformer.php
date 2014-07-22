@@ -14,6 +14,8 @@ abstract class DataTransformer
     /** @var  TransformDataStrategy */
     private $dataStrategy;
 
+    protected  $totalCount;
+
     /**
      * @param QueryBuilder $builder
      * @param TransformDataStrategy $dataStrategy
@@ -21,12 +23,23 @@ abstract class DataTransformer
     public function __construct(QueryBuilder $builder, TransformDataStrategy $dataStrategy)
     {
         $this->builder = $builder;
+        //$this->totalCount = $builder->count();
         $this->dataStrategy = $dataStrategy;
     }
 
     public function get($columns = array('*'))
     {
         return $this->dataStrategy->get($this, $columns = array('*'));
+    }
+
+    /**
+     * @param $pages
+     * @return mixed
+     */
+    public function paginate($pages)
+    {
+
+        return $this->dataStrategy->paginate($this, $pages);
     }
 
 

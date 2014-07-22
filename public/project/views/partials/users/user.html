@@ -46,13 +46,42 @@
         font-family: 'arial', 'sans-serif';
     }
 </style>
+
+<table class="table table-bordered" >
+    <tbody>
+    <tr>
+        <th>Username </th>
+        <td><% user.username %></td>
+        <th ROWSPAN=10 style="    text-align: center;     vertical-align: middle;">
+                <button ng-click="setActive($event)" type="button" class="btn btn-primary"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
+                <button ng-click="setDisabled($event)" type="button" class="btn btn-danger" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
+        </th>
+    </tr>
+    <tr>
+        <th>Email </th>
+        <td><% user.email %></td>
+    </tr>
+    <tr ng-show="user.role === 'candidate'">
+        <th >First Name</th>
+        <td ><% user.profileData.first_name  %></td>
+    </tr>
+    <tr ng-show="user.role === 'candidate'">
+        <th >Last Name</th>
+        <td><% user.profileData.second_name  %></td>
+    </tr>
+    <tr ng-show="user.role === 'candidate'">
+        <th >Country</th>
+        <td ><% user.profileData.country  %></td>
+    </tr>
+    <tr>
+        <th>Registered </th>
+        <td><% user.created_at %></td>
+    </tr>
+    </tbody>
+</table>
 <div class="profile-data">
-    <p>
-        <button ng-click="setActive($event)" type="button" class="btn btn-primary"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
-    </p>
-    <p>
-        <button ng-click="setDisabled($event)" type="button" class="btn btn-danger" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
-    </p>
+
+
 
     Subscriptions:
     <table ng-show="subscriptions.length" class="table table-hover" >
@@ -68,11 +97,12 @@
             <th>Days Left</th>
             <th>Status</th>
             <th>Comment</th>
+            <th></th>
         </tr>
         </thead>
 
         <tbody ng-repeat="sub in subscriptions | orderBy:'id'">
-        <tr class="active">
+        <tr  ng-hide="sub.status == 'closed'">
             <td><% sub.app.name %> </td>
             <td ng-show="showLevel"></td>
             <td></td>
@@ -85,7 +115,7 @@
             </td>
             <td></td>
         </tr>
-        <tr class="active">
+        <tr  ng-hide="sub.status == 'closed'">
             <td></td>
             <td ng-show="showLevel" >
                 <select ng-change="updateSub(sub, 'partnership')" ng-model="sub.partnership" ng-options="level for level in sub.partnership_levels">
@@ -100,11 +130,19 @@
             <td><select ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>
             </td>
             <td><% sub.comment %></td>
+            <td>
+                <button ng-confirm-click="Are you sure?" ng-click="closeSubscription(sub)" type="button" class="btn btn-danger">Cancel Subscription</button>
+            </td>
         </tr>
 
         </tbody>
 
     </table>
+    <button ng-init="showHistory = false;" type="button" ng-click="showHistory = !showHistory; getHistory(showHistory);" class="btn btn-success"><% showHistory  && 'Hide' || 'Show'  %> History</button>
+    <div ng-show="showHistory" class="transaction-history">
+        transaction history
+    </div>
+
     <modal-dialog show='modalShown' height='30%'>
         <p><strong><% isActiveOnSite.label %> user on <% isActiveOnSite.sub.app.name %>.</strong> Are you sure?</p>
             <button ng-click="activateOnSite(isActiveOnSite.value)" type="button" class="btn btn-danger" >Yes</button>

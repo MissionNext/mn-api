@@ -2,6 +2,7 @@
 
 namespace MissionNext\Routing;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
@@ -57,7 +58,6 @@ class Routing
 
     public function __construct(Application $App)
     {
-
         $requestUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
         if(starts_with($requestUri, '/login') or starts_with($requestUri, '/logout') or starts_with($requestUri, '/dashboard')) {
             Config::set('session.driver','file');
@@ -185,6 +185,7 @@ class Routing
 
                 Route::controller('configs', SubConfigController::class, []);
                 Route::controller('manager', SubscriptionController::class, []);
+                Route::get('for/{userId}', SubscriptionController::class.'@getFor');
 
             });
 

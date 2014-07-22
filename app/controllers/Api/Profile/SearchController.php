@@ -3,8 +3,11 @@
 namespace MissionNext\Controllers\Api\Profile;
 
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Paginator;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Api\Service\Matching\TransData;
@@ -17,6 +20,7 @@ use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\FolderApps\FolderApps;
 use MissionNext\Models\Notes\Notes;
 use MissionNext\Models\SearchData\SearchData;
+use MissionNext\Models\User\User;
 use MissionNext\Repos\Field\Field;
 
 class SearchController extends BaseController
@@ -34,7 +38,7 @@ class SearchController extends BaseController
         SecurityContext::getInstance()->getToken()->setRoles([$searchType]);
 
         $profileSearch = $this->request->get("profileData");
-        $userSearch = $this->request->except("profileData", "timestamp");
+        $userSearch = $this->request->except("profileData", "timestamp", "page");
 
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
@@ -43,7 +47,7 @@ class SearchController extends BaseController
         $folderAppsTable = (new FolderApps)->getTable();
         $favoriteTable = (new Favorite)->getTable();
 
-        $query = "SELECT  n.notes, cp.data, fA.folder as folderName, f.id as favorite FROM {$tableName} as cp
+        $query = "SELECT n.notes, cp.data, fA.folder as folderName, f.id as favorite   FROM {$tableName} as cp
                   LEFT JOIN {$folderNotesTable} n ON cp.id = n.user_id
                               AND n.for_user_id = ? AND n.user_type = ?
                   LEFT JOIN {$folderAppsTable} fA ON cp.id = fA.user_id
@@ -134,12 +138,13 @@ class SearchController extends BaseController
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
             //$query .= "  ) ";
-             $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids')  ) ";
+             $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids')  ) LIMIT 500";
              $bindings[] = $this->securityContext()->getApp()->id();
         }else{
 
             throw new SearchProfileException("No search params specified");
         }
+
       $result =  array_map(function ($d) {
             $data = json_decode($d->data);
             $data->notes = $d->notes;
@@ -147,8 +152,6 @@ class SearchController extends BaseController
             $data->favorite = $d->favorite;
             return  new \ArrayObject($data);
         }, DB::select($query, $bindings));
-
-        //dd($result);
 
       return new RestResponse( (new TransData($this->getToken()->language(), $searchType, $result))->get() );
 

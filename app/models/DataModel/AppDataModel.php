@@ -20,6 +20,9 @@ class AppDataModel extends BaseDataModel implements ModelInterface
     public $timestamps = false;
 
 
+    public $fillable = ['type', 'app_id'];
+
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

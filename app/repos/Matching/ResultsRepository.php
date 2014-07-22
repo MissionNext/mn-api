@@ -13,12 +13,16 @@ use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\CacheData\UserCachedDataTrans;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
+use MissionNext\Models\Subscription\Partnership;
+use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Repos\AbstractRepository;
 use MissionNext\Api\Auth\SecurityContext as SC;
 
 class ResultsRepository extends AbstractRepository implements ResultsRepositoryInterface
 {
     protected $modelClassName = Results::class;
+
+    const PAGINATION = 100;
 
     /**
      * @return Results
@@ -35,7 +39,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
     public function securityContext()
     {
 
-      return SecurityContext::getInstance();
+        return SecurityContext::getInstance();
     }
 
     /**
@@ -50,7 +54,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
         $builder =
             $this->getModel()
-                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type) matching_results.data, folder_apps.folder, notes.notes") )
+                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id") )
                  ->leftJoin("folder_apps", function($join) use ($forUserId, $forUserType, $userType){
                     $join->on("folder_apps.user_id", "=", "matching_results.user_id")
                          ->where("matching_results.for_user_type", "=", $forUserType)
@@ -61,17 +65,35 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
                  })
                  ->leftJoin("notes", function($join) use ($forUserId, $forUserType, $userType){
-                    $join->on("notes.user_id", "=", "matching_results.user_id")
+                     $join->on("notes.user_id", "=", "matching_results.user_id")
                         ->where("notes.for_user_id", "=", $this->securityContext()->getToken()->currentUser()->id)
                         ->where("notes.user_type", "=", $userType);
                  })
                  ->where("matching_results.for_user_type","=", $forUserType)
                  ->where("matching_results.user_type", "=", $userType)
-                 ->where("matching_results.for_user_id", "=", $forUserId)
+                 ->where("matching_results.for_user_id", "=",  $this->securityContext()->getToken()->currentUser()->id)
                  ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
-         $result =
-            (new UserCachedTransformer($builder, new UserCachedDataStrategy( )))->get();
+            $builder = $userType === BaseDataModel::JOB ? $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"))
+                                                     : $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->>'id')::int"));
+
+            $builder->where('subscriptions.app_id', '=', $this->securityContext()->getApp()->id() )
+                ->where('subscriptions.status', '<>', Subscription::STATUS_CLOSED)
+                ->where('subscriptions.partnership', "<>", Partnership::LIMITED)
+                ->whereNotNull('subscriptions.id')
+                ->where(function($query){
+                    $query->where('subscriptions.status', '<>', Subscription::STATUS_EXPIRED)
+                          ->orWhere('subscriptions.price', "=", 0);
+
+                });
+
+
+            $result =
+               (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
+
+      //  dd(DB::getQueryLog());
+
+
 
          return (new TransData($this->securityContext()->getToken()->language(), $userType, $result->toArray()))->get();
 

@@ -108,8 +108,40 @@ App.directive('focusIf', [function () {
         });
     };
 
-
 }]);
+
+App.directive('ngReallyClick', [function() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind('click', function() {
+                var message = attrs.ngReallyMessage;
+                if (message && confirm(message)) {
+                    console.log(attrs.ngReallyClick);
+                    scope.$apply(attrs.ngReallyClick);
+                }
+            });
+        }
+    }
+}]);
+
+App.directive('ngConfirmClick', [
+    function(){
+        return {
+            priority: -1,
+            restrict: 'A',
+            link: function(scope, element, attrs){
+                element.bind('click', function(e){
+                    var message = attrs.ngConfirmClick;
+                    if(message && !confirm(message)){
+                        e.stopImmediatePropagation();
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
+    }
+]);
 
 
 

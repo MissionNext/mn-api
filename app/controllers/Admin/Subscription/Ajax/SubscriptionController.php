@@ -24,14 +24,24 @@ class SubscriptionController extends AdminBaseController
         return Response::json($repo->userSubscriptions($userId));
     }
 
+    /**
+     * @param $subId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateIndex($subId)
     {
         $update = [];
+        $forceClose = false;
         foreach($this->request->request->all() as $property)
         {
             $update[$property['field']] = $property['value'];
+            $forceClose = isset($property['forceClose']) ? $property['forceClose'] : false;
         }
-        $update = Subscription::findOrFail($subId)->update($update);
+
+        $subscription = Subscription::findOrFail($subId);
+        $subscription->force_close = $forceClose;
+
+        $update = $subscription->update($update);
         /** @var  $repo SubscriptionRepository */
         $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
 

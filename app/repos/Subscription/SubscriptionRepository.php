@@ -15,6 +15,8 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
 {
     protected $modelClassName = Subscription::class;
 
+    const RECURRENT_DAY = 15;
+
     protected  $forFill = [
         'comment' => null, 'app_id' => null, 'user_id' => null, 'partnership' => null,
         'price' => null,   'is_recurrent' => null,  'start_date' => null, 'end_date' => null,
@@ -29,33 +31,61 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
         return $this->model;
     }
 
+
     /**
-     * @param array $subscriptions
+     * @param array $data
      *
      * @return Collection
      */
-    public function saveMany(array $subscriptions)
+    public function saveMany(array $data)
     {
         $return = [];
+        $fromNow = null;
+        $period = null;
+        $isRecurrent = null;
+        $endDate = null;
 
-        foreach($subscriptions as $subscription){
+        if (count($data)) {
+            $fromNow = (bool)$data[0]['from_now'];
+            $period = $data[0]['period'];
+            $isRecurrent = (bool)$data[0]['is_recurrent'];
+            //@TODO keep the expiration date where not limited and userId and status not closed
+            if (!$fromNow) {
+                foreach ($this->subEndDate($data) as $sub) {
+                    if ($sub) {
+                        $endDate = $sub->end_date->addYear()->toDateTimeString();
+                        $this->subEndDate($data)->send('stop');
+                    }
+                }
+            }elseif($isRecurrent){
+                $endDate = Carbon::now()->day >= static::RECURRENT_DAY
+                    ? Carbon::now()->addMonth()->day(static::RECURRENT_DAY)->toDateTimeString()
+                    : Carbon::now()->day(static::RECURRENT_DAY)->toDateTimeString();
+            }
+        }
+
+        foreach($data as $subscription){
             $period = $subscription['period'];
             $partnership = $subscription['partnership'];
+            $isRecurrent = (bool)$subscription['is_recurrent'];
 
-            $startDate = Carbon::now()->toDateTimeString();
-            $endDate = Carbon::now()->addMonth()->toDateTimeString();
-            if ($period === Partnership::PERIOD_YEAR && $partnership === Partnership::LIMITED){
-                $endDate  = Carbon::now()->addMonths(3)->toDateTimeString();
-            }elseif($period === Partnership::PERIOD_YEAR && $partnership !== Partnership::LIMITED){
-                $endDate = Carbon::now()->addYear()->toDateTimeString();
+            $startDate = Carbon::now()->toDateTimeString(); //@TODO can be changed
+
+            if ($fromNow) {
+                if ($period === Partnership::PERIOD_YEAR && $partnership === Partnership::LIMITED) {
+                    $endDate = Carbon::now()->addMonths(3)->toDateTimeString();
+                } elseif ($period === Partnership::PERIOD_YEAR && $partnership !== Partnership::LIMITED) {
+                    $endDate = Carbon::now()->addYear()->toDateTimeString();
+                }
             }
+
             $this->forFill['app_id'] = $subscription['app_id']; //@TODO check right user, status, partnership
             $this->forFill['authorize_id'] = $subscription['authorize_id'];
             $this->forFill['start_date'] = $startDate;
             $this->forFill['end_date'] = $endDate;
             $this->forFill['status'] = Subscription::STATUS_ACTIVE;
             $this->forFill['partnership'] = $partnership;
-            $this->forFill['is_recurrent'] = (bool)$subscription['is_recurrent'];
+            $this->forFill['is_recurrent'] = $isRecurrent;
             $this->forFill['user_id'] = $subscription['user_id'];
             $this->forFill['price'] = $subscription['price'];
             $this->forFill['paid'] = $subscription['price'];
@@ -63,19 +93,53 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
             $this->updateClosed($this->forFill);
 
             $return[] = $this->getModel()->create($this->forFill);
+
+        }
+        $return = new Collection($return);
+        if (!empty($return)){
+            $subIds = array_fetch($return->toArray(), 'id');
+            $this->getModel()->whereNotIn('id', $subIds)->update(['status' => Subscription::STATUS_CLOSED]);
         }
 
-        return new Collection($return);
+
+        return $return;
     }
 
+    /**
+     * @param array $subscriptions
+     *
+     * @return \Generator;
+     */
+    private function subEndDate(array $subscriptions)
+    {
+        foreach($subscriptions as $sub){
+          $cmd = ( yield  $this->getModel()
+                ->whereAppId($sub['app_id'])  //@TODO payment pending check
+                ->whereUserId($sub['user_id'])
+                ->where('status', '<>', Subscription::STATUS_CLOSED)
+                ->first());
+
+           if ($cmd === 'stop'){
+
+               return;
+           }
+        }
+    }
+
+    /**
+     * @param array $forFill
+     *
+     * @return boolean
+     */
     private function updateClosed(array $forFill)
     {
 
-      return  $this->getModel()
+        return  $this->getModel()
             ->whereAppId($forFill['app_id'])
             ->whereUserId($forFill['user_id'])
             ->update(['status' => Subscription::STATUS_CLOSED]);
     }
+
 
     /**
      * @param $userId

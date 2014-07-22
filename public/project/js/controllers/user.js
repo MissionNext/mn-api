@@ -183,11 +183,30 @@
     }]);
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
+
+        var readyHistory = false;
+
         $scope.modalShown = false;
         $scope.toggleModal = function(isActive, sub) {
             $scope.isActiveOnSite = isActive ? { 'label' : 'Activate', value: isActive, sub: sub } :  { 'label' : 'Block', value: isActive, sub: sub };
 
             $scope.modalShown = !$scope.modalShown;
+        };
+
+        $scope.getHistory = function(showHistory){
+            if (!readyHistory){
+                //getHistory
+
+            }
+
+            readyHistory = true;
+
+            console.log(showHistory);
+        };
+
+        $scope.closeSubscription = function(sub){
+            sub.status = 'closed';
+            $scope.updateSub(sub, 'status', true);
         };
 
         $scope.activateOnSite = function(bool)
@@ -224,7 +243,7 @@
         $scope.subscriptions = [];
         $scope.showLevel = false;
         $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
-            console.log($params.user, data.user);
+            console.log(data.user);
             $scope.user = data.user;
             $scope.showLevel = data.user.role === 'organization';
             $scope.statuses = data.statuses;
@@ -252,10 +271,12 @@
                 });
         };
 
-        $scope.updateSub = function(subscription, property){
-            $http.put(Routing.buildUrl('/subscription/'+ subscription.id), [{ field: property, value : subscription[property] }])
+        $scope.updateSub = function(subscription, property, forceClose){
+            $http.put(Routing.buildUrl('/subscription/'+ subscription.id), [{ field: property, value : subscription[property], forceClose : forceClose }])
                 .success(function(data){
                     subscription.days_left = data.subscription.days_left;
+                    console.log('Status', data.subscription.status );
+                    subscription.status = data.subscription.status;
 
                   console.log(data);
                 });
