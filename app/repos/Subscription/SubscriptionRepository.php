@@ -90,11 +90,11 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
                     break;
             }
         }
-
+        $oldEndDate = $endDate;
         foreach ($data as $subscription) {
             $partnership = $subscription['partnership'];
             $isRecurrent = (bool)$subscription['is_recurrent'];
-
+            $endDate = $oldEndDate;
             if ($type !== static::RENEW_TYPE_MONTHLY && $partnership === Partnership::LIMITED) {
 
                     $endDate = Carbon::now()->addMonths(static::LIMITED_YEAR)->toDateTimeString();
