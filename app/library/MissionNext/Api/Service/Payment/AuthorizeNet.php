@@ -328,15 +328,15 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                     break;
                 }
                 case 't' : {
-                    $total += $this->apps[$id][$role][$partnerships[$id]]['sub_configs']['price_year'];
+                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'];
                     break;
                 }
                 case 'e' : {
-                    $total += $this->apps[$id][$role][$partnerships[$id]]['sub_configs']['price_year'] + $part_price;
+                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'] + $part_price;
                     break;
                 }
                 case 'm' : {
-                    $total += $this->apps[$id][$role][$partnerships[$id]]['sub_configs']['price_month'];
+                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
                     break;
                 }
             }
