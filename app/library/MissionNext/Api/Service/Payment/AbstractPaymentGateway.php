@@ -13,6 +13,9 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
      */
     protected $paymentGateWay;
 
+    /** @var  \AuthorizeNetARB */
+    protected $recurringBilling;
+
     /**
      * @var SecurityContext
      */

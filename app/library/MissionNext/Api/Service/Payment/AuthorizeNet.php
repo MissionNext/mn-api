@@ -3,6 +3,7 @@
 namespace MissionNext\Api\Service\Payment;
 
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Application;
 use MissionNext\Api\Auth\ISecurityContextAware;
 use MissionNext\Api\Exceptions\AuthorizeException;
@@ -13,6 +14,7 @@ use MissionNext\Models\Coupon\Coupon;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Subscription\Partnership;
 use MissionNext\Models\User\User;
+use MissionNext\Repos\Subscription\SubscriptionRepository;
 use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
 
 class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAware
@@ -27,8 +29,9 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
     private $app;
 
-    public  function __construct(\AuthorizeNetAIM $authorizeNet, Application $app)
+    public  function __construct(\AuthorizeNetAIM $authorizeNet, \AuthorizeNetARB $authorizeNetARB, Application $app)
     {
+        $this->recurringBilling = $authorizeNetARB;
         $this->paymentGateWay = $authorizeNet;
         $this->app = $app;
 
@@ -125,50 +128,65 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     }
 
     private function processARB($user, $data, $price){
+
         $this->paymentGateWay->amount   = $price;
 
-        if($data['type'] == 'cc'){
-            $this->paymentGateWay->card_num = $data['payment_data']['card_num'];
-            $this->paymentGateWay->exp_date = $data['payment_data']['exp_date'];
-        } elseif( $data['type'] == 'echeck'){
-            $this->paymentGateWay->setECheck(
-                $data['payment_data']['aba_number'],
-                $data['payment_data']['acct_number'],
-                $data['payment_data']['acct_type'],
-                $data['payment_data']['bank_name'],
-                $data['payment_data']['bank_name'],
-                'WEB'
-            );
-        } else {
-            throw new BadDataException("Wrong payment type");
+        $sub = new \AuthorizeNet_Subscription();
+
+        $sub->amount = "100.00";
+
+        $sub->bankAccountNameOnAccount = $data['payment_data']['bank_name'];
+        $sub->bankAccountRoutingNumber = $data['payment_data']['aba_number'];
+        $sub->bankAccountAccountNumber = $data['payment_data']['acct_number'];
+        $sub->bankAccountAccountType = strtolower($data['payment_data']['acct_type']);
+        $sub->bankAccountBankName = $data['payment_data']['bank_name'];
+        $sub->bankAccountEcheckType = "WEB";
+
+        $sub->startDate = Carbon::now()->day >= SubscriptionRepository::RECURRENT_DAY
+            ? Carbon::now()->addMonth()->day(SubscriptionRepository::RECURRENT_DAY)->toDateString()
+            : Carbon::now()->day(SubscriptionRepository::RECURRENT_DAY)->toDateString();
+        $sub->intervalLength = "1";
+        $sub->intervalUnit = "months";
+        $sub->totalOccurrences = "9999";
+
+        $sub->billToFirstName = $data['required_data']['first_name'];
+        $sub->billToLastName = $data['required_data']['last_name'];
+        $sub->billToAddress = $data['required_data']['address'];
+        $sub->billToZip = $data['required_data']['zip'];
+        $sub->billToState = $data['required_data']['state'];
+        $sub->billToCountry = $data['required_data']['country'];
+        $sub->billToCity = $data['required_data']['city'];
+
+        $sub->customerId = $user['id'];
+
+        if($data['coupon']){
+            $sub->trialOccurrences = 1;
+            $sub->trialAmount = ($price >= $data['coupon']['value'])?$price >= $data['coupon']['value']:0;
         }
 
-        $this->paymentGateWay->invoice_num = time();
+        $response = $this->recurringBilling->createSubscription($sub);
 
-        $description = $this->addAppsToPayment($data['subscriptions'], $user->role(), $data['period']);
-
-        $this->paymentGateWay->description = $description;
-
-        $this->paymentGateWay->setFields($data['required_data']);
-
-        $this->paymentGateWay->setCustomFields($data['additional_data']);
-
-        $response = $this->paymentGateWay->authorizeAndCapture();
-
-        if($response->approved){
+        if($sub_id = $response->getSubscriptionId()){
 
             if($data['coupon']){
                 Coupon::disable($data['coupon']['code']);
             }
 
-            $transaction_id = $response->transaction_id;
-
-            $response = $this->prepareSubscriptionResponse($transaction_id, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions']);
+            $response = $this->prepareSubscriptionResponse('', $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions'], '', $sub_id);
 
             return $response;
         } else {
-            throw new AuthorizeException($response->response_reason_text);
+            throw new AuthorizeException($response->getErrorMessage());
         }
+    }
+
+    /**
+     * @return \AuthorizeNetARB
+     */
+    public function getRecurringBilling()
+    {
+
+        return $this->recurringBilling;
     }
 
     private function addAppsToPayment($sites, $role, $period){

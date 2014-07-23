@@ -25,6 +25,7 @@ use Cartalyst\Sentry\Users\UserExistsException as UserExist;
 use Cartalyst\Sentry\Users\UserAlreadyActivatedException as UserAlreadyActivated;
 use Illuminate\View\Factory;
 use MissionNext\Api\Auth\SecurityContext;
+use MissionNext\Api\Service\Payment\PaymentGatewayInterface;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Controllers\traits\Controller as SecurityTraits;
@@ -46,8 +47,11 @@ class AdminBaseController extends Controller {
     protected $redirect;
     protected $session;
 
+    /** @var \MissionNext\Api\Service\Payment\AuthorizeNet  */
+    protected $paymentGateway;
 
-    public function __construct( Store $session,Redirector $redirector, Request $request, RepositoryContainerInterface $containerInterface, Factory $viewFactory)
+
+    public function __construct( PaymentGatewayInterface $paymentGateway, Store $session, Redirector $redirector, Request $request, RepositoryContainerInterface $containerInterface, Factory $viewFactory)
     {
         //$this->beforeFilter('csrf', array('on'=>'post'));
         $this->beforeFilter(RouteSecurityFilter::ROLE_ADMIN_AREA);
@@ -56,6 +60,7 @@ class AdminBaseController extends Controller {
         $this->view = $viewFactory;
         $this->redirect = $redirector;
         $this->session = $session;
+        $this->paymentGateway = $paymentGateway;
     }
 
 

@@ -1,6 +1,7 @@
 <?php
 namespace MissionNext\Models\User;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Auth\UserInterface;
@@ -411,7 +412,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     /**
      * @param $userId
      *
-     * @return Collection
+     * @return array
      */
     public function transactions($userId)
     {
@@ -427,17 +428,15 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
             }
         });
         $transactions->sort(function($trans1, $trans2){
-            dd($trans1->created_at, $trans2->created_at);
+            if ($trans1->created_at == $trans2->created_at){
 
+                return 0;
+            }
+            return ($trans1->created_at < $trans2->created_at) ? -1 : 1;
         });
-//        $transactions = $transactions->toBase();
-//
-//        $transactions = $transactions->sortBy(function($transaction)
-//        {
-//            return $transaction->created_at;
-//        });
 
-        return $transactions;
+
+        return array_values($transactions->toArray());
     }
 
 }
