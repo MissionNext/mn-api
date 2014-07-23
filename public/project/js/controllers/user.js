@@ -196,7 +196,8 @@
 
         $http.get(Routing.buildUrl('/subscription/manager/transactions/'+$params.user))
             .success(function(data){
-                $scope.transactions = data;
+                console.log(data);
+                $scope.transactions = $.map(data, function(el) { return el; });
             }).error(function(error){
                 console.log(error);
         });
@@ -270,11 +271,16 @@
         $scope.updateSub = function(subscription, property, forceClose){
             $http.put(Routing.buildUrl('/subscription/'+ subscription.id), [{ field: property, value : subscription[property], forceClose : forceClose }])
                 .success(function(data){
+                    console.log(data.authorizeCancelCode);
+                    if (data.authorizeCancelCode){
+                        if (data.authorizeCancelCode === 'Error'){
+                            console.log(data.authorizeCancelCode);
+                            alert('Error cancelling subscription');
+                        }
+                    }
                     subscription.days_left = data.subscription.days_left;
-                    console.log('Status', data.subscription.status );
                     subscription.status = data.subscription.status;
 
-                  console.log(data);
                 });
 
         }
