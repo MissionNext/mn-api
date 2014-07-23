@@ -52,6 +52,9 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
         if($price > 0){
             if($data['renew_type'] == 'm'){
+
+                $this->cancelAuthorizeSubs();
+
                 return $this->processARB($user, $data, $price);
             } else {
                 return $this->processAIM($user, $data, $price);
@@ -399,6 +402,23 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $this->part_multiplier = $total_days > 0 ? $days_left / $total_days : 0;
 
         return $defaults;
+    }
+
+    private function cancelAuthorizeSubs(){
+
+        $ids = array();
+
+        foreach($this->defaults as $default){
+            if($default['authorize_id']){
+                $ids[] = $default['authorize_id'];
+            }
+        }
+
+        $ids = array_unique($ids);
+
+        foreach($ids as $id){
+            $this->recurringBilling->cancelSubscription($id);
+        }
     }
 
 } 
