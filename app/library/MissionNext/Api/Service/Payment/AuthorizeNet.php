@@ -253,9 +253,11 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     private function prepareSubscriptionResponse($transaction_id, $amount, $user_id, $role, $period, $recurrent, $sites, $comment = '', $subscription_id = 0){
 
         $response = array(
-            'transaction_id' => $transaction_id,
-            'comment' => $comment,
-            'amount' => $amount,
+            'transaction' => array(
+                'transaction_id' => $transaction_id,
+                'comment' => $comment,
+                'amount' => $amount
+            ),
             'subscriptions' => array()
         );
 
