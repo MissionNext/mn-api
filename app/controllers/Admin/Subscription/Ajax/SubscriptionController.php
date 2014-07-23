@@ -7,6 +7,7 @@ namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Models\Subscription\Subscription;
+use MissionNext\Models\User\User;
 use MissionNext\Repos\Subscription\SubscriptionRepository;
 use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
 
@@ -22,6 +23,17 @@ class SubscriptionController extends AdminBaseController
         $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
 
         return Response::json($repo->userSubscriptions($userId));
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTransactions($userId)
+    {
+
+        return Response::json((new User)->transactions($userId));
     }
 
     /**

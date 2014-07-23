@@ -1,6 +1,7 @@
 <?php
 namespace MissionNext\Models\User;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
@@ -405,6 +406,34 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     {
 
         return $this->hasOne(GlobalSubscription::class, 'user_id', 'id');
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return Collection
+     */
+    public function transactions($userId)
+    {
+        $user = static::findOrFail($userId);
+        $transactions = new Collection();
+
+        $user->subscriptions()->getEager()->each(function(Subscription $subscription) use($transactions){
+            $subTrans = $subscription->transactions()->getEager();
+            if ($subTrans->count()){
+                $subTrans->each(function($transaction) use ($transactions){
+                    $transactions->add($transaction);
+                });
+            }
+        });
+//        $transactions = $transactions->toBase();
+//
+//        $transactions = $transactions->sortBy(function($transaction)
+//        {
+//            return $transaction->created_at;
+//        });
+
+        return $transactions;
     }
 
 }

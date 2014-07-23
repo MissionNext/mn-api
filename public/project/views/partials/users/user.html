@@ -52,10 +52,6 @@
     <tr>
         <th>Username </th>
         <td><% user.username %></td>
-        <th ROWSPAN=10 style="    text-align: center;     vertical-align: middle;">
-                <button ng-click="setActive($event)" type="button" class="btn btn-primary"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
-                <button ng-click="setDisabled($event)" type="button" class="btn btn-danger" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
-        </th>
     </tr>
     <tr>
         <th>Email </th>
@@ -77,13 +73,23 @@
         <th>Registered </th>
         <td><% user.created_at %></td>
     </tr>
+    <tr>
+        <th>Global Status</th>
+        <td>Access Granted
+            <p>
+            <button ng-click="setActive($event)" type="button" class="btn btn-success btn-xs"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
+            <button ng-click="setDisabled($event)" type="button" class="btn btn-danger btn-xs" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
+            </p>
+        </td>
+    </tr>
     </tbody>
 </table>
 <div class="profile-data">
 
 
 
-    Subscriptions:
+    <h3>Subscriptions:</h3>
+    <p ng-hide="subscriptions.length">No subscriptions</p>
     <table ng-show="subscriptions.length" class="table table-hover" >
         <thead>
         <tr>
@@ -138,9 +144,29 @@
         </tbody>
 
     </table>
-    <button ng-init="showHistory = false;" type="button" ng-click="showHistory = !showHistory; getHistory(showHistory);" class="btn btn-success"><% showHistory  && 'Hide' || 'Show'  %> History</button>
+    <button  ng-init="showHistory = false;" type="button" ng-click="showHistory = !showHistory;" class="btn btn-default"><% showHistory  && 'Hide' || 'Show'  %> History</button>
+
     <div ng-show="showHistory" class="transaction-history">
-        transaction history
+        <h3>Transactions</h3>
+        <p ng-hide="transactions.length">No Transactions</p>
+        <table ng-show="transactions.length"   class="table table-hover">
+            <thead>
+            <tr>
+                <th>Created Date </th>
+                <th>Amount $</th>
+                <th>Comment</th>
+                <th>Transaction ID</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="transaction in transactions">
+                <tr>
+                    <td><% transaction.created_at %> </td>
+                    <td><% transaction.amount %></td>
+                    <td><% transaction.comment %></td>
+                    <td><% transaction.transaction_id %></td>
+                </tr>
+            </tbody>
+    </table>
     </div>
 
     <modal-dialog show='modalShown' height='30%'>

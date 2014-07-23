@@ -84,6 +84,7 @@ class AdminRouting
                     ]);
 
                 $this->router->get('subscription/manager/{user}', SubscriptionControllerAjax::class.'@getIndex')->where(['user' => '[0-9]+']);
+                $this->router->get('subscription/manager/transactions/{user}', SubscriptionControllerAjax::class.'@getTransactions')->where(['user' => '[0-9]+']);
                 $this->router->put('subscription/{subscription}', SubscriptionControllerAjax::class.'@updateIndex')->where(['user' => '[0-9]+']);
                 // ------------------- END Subscription -----------------------
 

@@ -184,7 +184,6 @@
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
 
-        var readyHistory = false;
 
         $scope.modalShown = false;
         $scope.toggleModal = function(isActive, sub) {
@@ -193,16 +192,14 @@
             $scope.modalShown = !$scope.modalShown;
         };
 
-        $scope.getHistory = function(showHistory){
-            if (!readyHistory){
-                //getHistory
+        $scope.transactions = [];
 
-            }
-
-            readyHistory = true;
-
-            console.log(showHistory);
-        };
+        $http.get(Routing.buildUrl('/subscription/manager/transactions/'+$params.user))
+            .success(function(data){
+                $scope.transactions = data;
+            }).error(function(error){
+                console.log(error);
+        });
 
         $scope.closeSubscription = function(sub){
             sub.status = 'closed';
@@ -242,6 +239,7 @@
         $scope.user = null;
         $scope.subscriptions = [];
         $scope.showLevel = false;
+
         $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
             console.log(data.user);
             $scope.user = data.user;
@@ -250,14 +248,12 @@
         });
 
         $http.get(Routing.buildUrl('/subscription/manager/'+$params.user)).success(function(data){
-            console.log(data);
             $scope.subscriptions = data;
         });
 
         $scope.setDisabled = function($event){
            $http.get(Routing.buildUrl('/user/disable/'+$scope.user.id))
                .success(function(data){
-                   console.log(data);
                     $scope.user.is_active = data.is_active;
                     $scope.user.status = data.status;
                });
