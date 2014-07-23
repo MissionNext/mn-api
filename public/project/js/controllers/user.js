@@ -271,18 +271,9 @@
         $scope.updateSub = function(subscription, property, forceClose){
             $http.put(Routing.buildUrl('/subscription/'+ subscription.id), [{ field: property, value : subscription[property], forceClose : forceClose }])
                 .success(function(data){
-                    console.log(data.authorizeCancelCode);
-                    if (data.authorizeCancelCode){
-                        if (data.authorizeCancelCode === 'Error'){
-                            console.log(data.authorizeCancelCode);
-                            alert('Error cancelling subscription');
-                        }
-                    }
                     subscription.days_left = data.subscription.days_left;
                     subscription.status = data.subscription.status;
-
                 });
-
         }
 
     }]);
