@@ -24,8 +24,8 @@ class SubscriptionController extends BaseController
     {
         $service = $this->paymentGateway;
 
-       // $readyData = $service->processRequest($this->request->request->all());
-        $readyData = $this->request->request->all();
+        $readyData = $service->processRequest($this->request->request->all());
+       // $readyData = $this->request->request->all();
        /** authorize call */
         $subscriptions = $readyData['subscriptions'];
         $transactionData = $readyData['transaction'];

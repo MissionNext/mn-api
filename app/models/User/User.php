@@ -426,6 +426,10 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
                 });
             }
         });
+        $transactions->sort(function($trans1, $trans2){
+            dd($trans1->created_at, $trans2->created_at);
+
+        });
 //        $transactions = $transactions->toBase();
 //
 //        $transactions = $transactions->sortBy(function($transaction)
