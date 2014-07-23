@@ -271,7 +271,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 'is_recurrent' => $recurrent,
                 'period' => $period,
                 'authorize_id' => $subscription_id,
-                'type' => $this->renew_type
+                'renew_type' => $this->renew_type
             );
         }
 
