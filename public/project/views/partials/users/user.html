@@ -169,7 +169,7 @@
     </table>
     </div>
 
-    <modal-dialog show='modalShown' height='30%'>
+    <modal-dialog show='modalShown' configurator="configurator" height='30%'>
         <p><strong><% isActiveOnSite.label %> user on <% isActiveOnSite.sub.app.name %>.</strong> Are you sure?</p>
             <button ng-click="activateOnSite(isActiveOnSite.value)" type="button" class="btn btn-danger" >Yes</button>
             <button type="button" ng-click="activateOnSite(!isActiveOnSite.value)" class="btn btn-primary">No</button>

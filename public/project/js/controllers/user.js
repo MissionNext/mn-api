@@ -184,11 +184,13 @@
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
 
-
         $scope.modalShown = false;
         $scope.toggleModal = function(isActive, sub) {
-            $scope.isActiveOnSite = isActive ? { 'label' : 'Activate', value: isActive, sub: sub } :  { 'label' : 'Block', value: isActive, sub: sub };
 
+            $scope.isActiveOnSite = isActive ? { 'label' : 'Activate', value: isActive, sub: sub } :  { 'label' : 'Block', value: isActive, sub: sub };
+            $scope.configurator = function(){
+                sub.app.is_active = !sub.app.is_active;
+            };
             $scope.modalShown = !$scope.modalShown;
         };
 
