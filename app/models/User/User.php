@@ -423,7 +423,8 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
             $subTrans = $subscription->transactions()->getEager();
             if ($subTrans->count()){
                 $subTrans->each(function($transaction) use ($transactions){
-                    $transactions->add($transaction);
+                    $transactions->contains($transaction) ?: $transactions->add($transaction);
+
                 });
             }
         });

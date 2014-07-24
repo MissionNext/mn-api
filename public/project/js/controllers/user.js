@@ -183,8 +183,9 @@
     }]);
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
-
         $scope.modalShown = false;
+        $scope.modalCancelSub = false;
+
         $scope.toggleModal = function(isActive, sub) {
 
             $scope.isActiveOnSite = isActive ? { 'label' : 'Activate', value: isActive, sub: sub } :  { 'label' : 'Block', value: isActive, sub: sub };
@@ -194,7 +195,21 @@
             $scope.modalShown = !$scope.modalShown;
         };
 
+        $scope.toggleModalCancelSub = function(sub){
+            $scope.cancelSubModel = sub;
+            $scope.modalCancelSub = !$scope.modalCancelSub;
+        };
+
         $scope.transactions = [];
+
+        $scope.closeModal = function (isActiveOnSite) {
+            isActiveOnSite.sub.app.is_active = !isActiveOnSite.sub.app.is_active;
+            $scope.modalShown = !$scope.modalShown;
+        };
+        $scope.closeModalCancelSub = function(){
+
+            $scope.modalCancelSub = !$scope.modalCancelSub;
+        };
 
         $http.get(Routing.buildUrl('/subscription/manager/transactions/'+$params.user))
             .success(function(data){
@@ -205,6 +220,11 @@
         });
 
         $scope.closeSubscription = function(sub){
+            $scope.modalCancelSub = !$scope.modalCancelSub;
+//            $.each($scope.subscriptions, function(idx, sub){
+//               sub.status = 'closed';
+//            });
+//            return;
             sub.status = 'closed';
             $scope.updateSub(sub, 'status', true);
         };
@@ -257,6 +277,7 @@
 
         $http.get(Routing.buildUrl('/subscription/manager/'+$params.user)).success(function(data){
             $scope.subscriptions = data;
+            console.log($scope.subscriptions);
         });
 
         $scope.userStatusMessage = 'Pending Approval';
