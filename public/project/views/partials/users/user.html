@@ -75,7 +75,7 @@
     </tr>
     <tr>
         <th>Global Status</th>
-        <td>Access Granted
+        <td><span style="text-transform: uppercase;"><% userStatusMessage %></span><hr>
             <p>
             <button ng-click="setActive($event)" type="button" class="btn btn-success btn-xs"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
             <button ng-click="setDisabled($event)" type="button" class="btn btn-danger btn-xs" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
@@ -117,27 +117,27 @@
             <td></td>
             <td>
                 <label for='is_active_site<% $index %>'><span style="font-weight: 100;">Is active on site</span></label>
-                <input ng-click='toggleModal(!sub.app.is_active, sub)' id="is_active_site<% $index %>" type="checkbox" ng-model="sub.app.is_active"  ng-checked="sub.app.is_active" />
+                <input  ng-click='toggleModal(!sub.app.is_active, sub)' id="is_active_site<% $index %>" type="checkbox" ng-model="sub.app.is_active"  ng-checked="sub.app.is_active" />
             </td>
             <td></td>
         </tr>
         <tr  ng-hide="sub.status == 'closed'">
             <td></td>
             <td ng-show="showLevel" >
-                <select ng-change="updateSub(sub, 'partnership')" ng-model="sub.partnership" ng-options="level for level in sub.partnership_levels">
 
-                </select>
+                <select style="width: auto !important;" class="form-control" ng-change="updateSub(sub, 'partnership')" ng-model="sub.partnership" ng-options="level for level in sub.partnership_levels"></select>
             </td>
-            <td><input ng-change="updateSub(sub, 'start_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.start_date"></td>
-            <td><input ng-change="updateSub(sub, 'end_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.end_date"></td>
+            <td><input style="width: 100px !important;" class="form-control" ng-change="updateSub(sub, 'start_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.start_date"></td>
+            <td><input style="width: 100px !important;" class="form-control" ng-change="updateSub(sub, 'end_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.end_date"></td>
             <td><% sub.price | currency  %></td>
             <td><% sub.paid | currency  %></td>
             <td><% sub.days_left  %></td>
-            <td><select ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>
+            <td><select style="width: auto !important;" class="form-control" ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>
             </td>
-            <td><% sub.comment %></td>
+            <td><textarea ng-model="sub.comment" ng-change="updateSub(sub, 'status')" class="form-control"><% sub.comment %></textarea>
+                </td>
             <td>
-                <button ng-confirm-click="Are you sure?" ng-click="closeSubscription(sub)" type="button" class="btn btn-danger">Cancel Subscription</button>
+                <button ng-confirm-click="Are you sure?" ng-click="closeSubscription(sub)" type="button" class="btn btn-danger btn-sm">Cancel <br>Subscription</button>
             </td>
         </tr>
 
@@ -147,9 +147,9 @@
     <button  ng-init="showHistory = false;" type="button" ng-click="showHistory = !showHistory;" class="btn btn-default"><% showHistory  && 'Hide' || 'Show'  %> History</button>
 
     <div ng-show="showHistory" class="transaction-history">
-        <h3>Transactions</h3>
+        <h3>Transactions</h3><a name="transaction-history"></a>
         <p ng-hide="transactions.length">No Transactions</p>
-        <table ng-show="transactions.length"   class="table table-hover">
+        <table  ng-show="transactions.length"   class="table table-hover">
             <thead>
             <tr>
                 <th>Created Date </th>

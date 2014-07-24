@@ -61,7 +61,7 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
                     foreach ($this->subEndDate($data) as $sub) {
                         if ($sub) {
                             $endDate = $sub->end_date->addYear()->toDateTimeString();
-                            $startDate = $sub->start_date->toDateTimeString();
+                            $startDate = $sub->end_date->toDateTimeString();
                             $this->subEndDate($data)->send('stop');
                         }
                     }

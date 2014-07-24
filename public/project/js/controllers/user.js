@@ -244,6 +244,11 @@
         $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
             console.log(data.user);
             $scope.user = data.user;
+            if ($scope.user.status != 1 &&  $scope.user.is_active){
+                $scope.userStatusMessage = 'Access Granted';
+            }else if($scope.user.status != 1 &&  !$scope.user.is_active){
+                $scope.userStatusMessage = 'Access Denied';
+            }
             $scope.showLevel = data.user.role === 'organization';
             $scope.statuses = data.statuses;
         });
@@ -252,11 +257,14 @@
             $scope.subscriptions = data;
         });
 
+        $scope.userStatusMessage = 'Pending Approval';
+
         $scope.setDisabled = function($event){
            $http.get(Routing.buildUrl('/user/disable/'+$scope.user.id))
                .success(function(data){
                     $scope.user.is_active = data.is_active;
                     $scope.user.status = data.status;
+                    $scope.userStatusMessage = 'Access Denied';
                });
         };
 
@@ -265,6 +273,7 @@
                 .success(function(data){
                     $scope.user.is_active = data.is_active;
                     $scope.user.status = data.status;
+                    $scope.userStatusMessage = 'Access Granted';
                 });
         };
 
