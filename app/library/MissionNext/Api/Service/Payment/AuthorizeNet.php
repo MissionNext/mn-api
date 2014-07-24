@@ -26,6 +26,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
     private $part_multiplier;
     private $renew_type;
+    private $first_payment;
 
     private $app;
 
@@ -136,7 +137,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
         $sub = new \AuthorizeNet_Subscription();
 
-        $sub->amount = "100.00";
+        $sub->amount = $price;
 
         $sub->bankAccountNameOnAccount = $data['payment_data']['bank_name'];
         $sub->bankAccountRoutingNumber = $data['payment_data']['aba_number'];
@@ -162,12 +163,21 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
         $sub->customerId = $user['id'];
 
-        if($data['coupon']){
+        if($data['coupon'] || $this->first_payment !== null){
+
+            $trial_price = $this->first_payment === null ? 0 : $this->first_payment;
+
+            if($data['coupon']){
+                $trial_price -= $data['coupon']['value'];
+            }
+
             $sub->trialOccurrences = 1;
-            $sub->trialAmount = ($price >= $data['coupon']['value'])?$price >= $data['coupon']['value']:0;
+            $sub->trialAmount = ($trial_price > 0)?$trial_price:0;
         }
 
-        $response = $this->recurringBilling->createSubscription($sub);
+        $arb = clone $this->recurringBilling;
+
+        $response = $arb->createSubscription($sub);
 
         if($sub_id = $response->getSubscriptionId()){
 
@@ -175,7 +185,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 Coupon::disable($data['coupon']['code']);
             }
 
-            $response = $this->prepareSubscriptionResponse('', $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions'], '', $sub_id);
+            $response = $this->prepareSubscriptionResponse(0, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions'], '', $sub_id);
 
             return $response;
         } else {
@@ -188,7 +198,6 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
      */
     public function getRecurringBilling()
     {
-
         return $this->recurringBilling;
     }
 
@@ -292,7 +301,6 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $removed = array_diff_key($this->defaults, $data);
         $keeped = array_intersect_key($this->defaults, $data);
 
-        $total = 0;
         $renew_price = 0;
         $new_price = 0;
         $old_price = 0;
@@ -315,6 +323,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                     break;
                 }
                 case 'm' : {
+                    $old_price += $site['left_amount'];
                     $renew_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
                     break;
                 }
@@ -342,6 +351,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 }
                 case 'm' : {
                     $new_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
+                    $renew_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
                     break;
                 }
             }
@@ -352,18 +362,19 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             switch($renew_type){
                 case 'k' : {
-                    $old_price -= $site['left_amount'];
+                    $old_price += $site['left_amount'];
                     break;
                 }
                 case 't' : {
-                    $old_price -= $site['left_amount'];
+                    $old_price += $site['left_amount'];
                     break;
                 }
                 case 'e' : {
-                    $old_price -= $site['left_amount'];
+                    $old_price += $site['left_amount'];
                     break;
                 }
                 case 'm' : {
+                    $old_price += $site['left_amount'];
                     break;
                 }
             }
@@ -371,8 +382,14 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         }
 
         $compensation = $new_price - $old_price;
-        $total = $compensation > 0 ? $compensation : 0;
+        $total = ( $renew_type != 'm' && $compensation > 0 ) ? $compensation : 0;
         $total += $renew_price;
+
+        if($renew_type == 'm'){
+            $this->first_payment = $compensation > 0 ? $compensation : 0;
+        } else {
+            $this->first_payment = null;
+        }
 
         if($site_number > 1){
             $total -= ( $total * $this->discount ) / 100;
@@ -427,7 +444,8 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $ids = array_unique($ids);
 
         foreach($ids as $id){
-            $this->recurringBilling->cancelSubscription($id);
+            $arb = clone $this->recurringBilling;
+            $arb->cancelSubscription($id);
         }
     }
 
