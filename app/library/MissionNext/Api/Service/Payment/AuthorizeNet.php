@@ -293,6 +293,9 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $keeped = array_intersect_key($this->defaults, $data);
 
         $total = 0;
+        $renew_price = 0;
+        $new_price = 0;
+        $old_price = 0;
         $site_number = 0;
 
         foreach($keeped as $id => $site){
@@ -304,15 +307,15 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                     break;
                 }
                 case 't' : {
-                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'] - $site['left_amount'];
+                    $renew_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'] - $site['left_amount'];
                     break;
                 }
                 case 'e' : {
-                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'];
+                    $renew_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'];
                     break;
                 }
                 case 'm' : {
-                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
+                    $renew_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
                     break;
                 }
             }
@@ -326,19 +329,19 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             switch($renew_type){
                 case 'k' : {
-                    $total += $part_price;
+                    $new_price += $part_price;
                     break;
                 }
                 case 't' : {
-                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'];
+                    $new_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'];
                     break;
                 }
                 case 'e' : {
-                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'] + $part_price;
+                    $new_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_year'] + $part_price;
                     break;
                 }
                 case 'm' : {
-                    $total += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
+                    $new_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
                     break;
                 }
             }
@@ -349,15 +352,15 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             switch($renew_type){
                 case 'k' : {
-                    $total -= $site['left_amount'];
+                    $old_price -= $site['left_amount'];
                     break;
                 }
                 case 't' : {
-                    $total -= $site['left_amount'];
+                    $old_price -= $site['left_amount'];
                     break;
                 }
                 case 'e' : {
-                    $total -= $site['left_amount'];
+                    $old_price -= $site['left_amount'];
                     break;
                 }
                 case 'm' : {
@@ -366,6 +369,10 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
             }
 
         }
+
+        $compensation = $new_price - $old_price;
+        $total = $compensation > 0 ? $compensation : 0;
+        $total += $renew_price;
 
         if($site_number > 1){
             $total -= ( $total * $this->discount ) / 100;
@@ -378,6 +385,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         if($type == 'echeck'){
             $total += $this->fee;
         }
+
 
         return round($total);
     }
