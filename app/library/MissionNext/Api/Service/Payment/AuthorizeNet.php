@@ -137,7 +137,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
         $sub = new \AuthorizeNet_Subscription();
 
-        $sub->amount = "100.00";
+        $sub->amount = $price;
 
         $sub->bankAccountNameOnAccount = $data['payment_data']['bank_name'];
         $sub->bankAccountRoutingNumber = $data['payment_data']['aba_number'];
@@ -175,7 +175,9 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
             $sub->trialAmount = ($trial_price > 0)?$trial_price:0;
         }
 
-        $response = $this->recurringBilling->createSubscription($sub);
+        $arb = clone $this->recurringBilling;
+
+        $response = $arb->createSubscription($sub);
 
         if($sub_id = $response->getSubscriptionId()){
 
@@ -183,7 +185,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 Coupon::disable($data['coupon']['code']);
             }
 
-            $response = $this->prepareSubscriptionResponse('', $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions'], '', $sub_id);
+            $response = $this->prepareSubscriptionResponse(0, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions'], '', $sub_id);
 
             return $response;
         } else {
@@ -196,7 +198,6 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
      */
     public function getRecurringBilling()
     {
-
         return $this->recurringBilling;
     }
 
@@ -443,7 +444,8 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $ids = array_unique($ids);
 
         foreach($ids as $id){
-            $this->recurringBilling->cancelSubscription($id);
+            $arb = clone $this->recurringBilling;
+            $arb->cancelSubscription($id);
         }
     }
 
