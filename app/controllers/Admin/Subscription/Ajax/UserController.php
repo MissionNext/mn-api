@@ -25,9 +25,38 @@ class UserController extends AdminBaseController
      */
     public function getList()
     {
+        $filters = $this->request->query->get('filters');
+        $profileFilter = $filters['profile'];
+        $appFilter = $filters['app'];
+        $roleFilter = $filters['role'];
+
+        if ($appFilter){
+            $appFilter = explode('|',$appFilter);
+        }
+
+        if ($roleFilter){
+            $roleFilter = explode('|',$roleFilter);
+        }
+
+
+
         /** @var  $users Paginator */
-        $users = ExtendedUser::orderBy('id')->paginate(static::PAGINATE);
-        $totalCount = ExtendedUser::remember(120)->get()->count();
+        $usersQuery =   ExtendedUser::where( function($query) use ($profileFilter){
+                 $query->where('username', 'LIKE', '%'.$profileFilter.'%' )
+                       ->orWhere('email', 'LIKE', '%'.$profileFilter.'%');
+             });
+
+        $usersQuery = $appFilter ?  $usersQuery->leftJoin('user_apps', 'user_apps.user_id','=', 'users.id')
+            ->whereIn('user_apps.app_id', $appFilter) : $usersQuery;
+
+        $usersQuery = $roleFilter ?  $usersQuery->leftJoin('user_roles', 'user_roles.user_id','=', 'users.id')
+            ->whereIn('user_roles.role_id', $roleFilter) : $usersQuery;
+
+        $totalCount = $usersQuery->get()->count();
+        //dd($this->getLogQueries());
+
+        $users =  $usersQuery->orderBy('id')->paginate(static::PAGINATE);
+
 
         return Response::json(["users" => $users->toArray(), 'totalUsers' => $totalCount, 'itemsPerPage' => static::PAGINATE ]);
     }

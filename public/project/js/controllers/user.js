@@ -42,6 +42,7 @@
         $scope.userMatchProfile = function(query){
 
             return function(user) {
+
                 return user.username.match(query) || user.email.match(query);
             };
         };
@@ -52,7 +53,7 @@
 
             return function(user) {
 
-                return roles ? $.inArray(user.roleName, roles)  !== -1 : true;
+                return roles ? $.inArray(user.roleId.toString(), roles)  !== -1 : true;
             }
         };
 
@@ -73,12 +74,22 @@
             }
         };
 
+        function buildFilterQuery(){
+
+            return 'filters[role]='+($scope.search.role || '')+'&filters[app]='+($scope.search.app || '')+'&filters[profile]='+($scope.search.profile || '');
+        }
+
+        $scope.customFiltering = function() {
+            console.log($scope.search);
+            getResultsPage(1);
+        };
+
 
         $('#role-select-id').selectize({
             plugins: ['remove_button'],
             delimiter: '|',
             maxItems: null,
-            valueField: 'role',
+            valueField: 'id',
             preload: true,
             openOnFocus: true,
             labelField: 'role',
@@ -88,6 +99,7 @@
             onChange: function(value){
                 $scope.$apply(function(){
                     $scope.search.role = value;
+                    $scope.customFiltering();
                 });
             },
             initUrl: Routing.buildUrl('/filter/roles'),
@@ -95,6 +107,7 @@
             load : function(query, callback){
                 var selectize = this;
                 $http.get(selectize.settings.initUrl).success(function(data){
+                    console.log('roles', data);
                     $.each(data, function(idx, el){
                         selectize.addOption(el);
                     });
@@ -117,6 +130,7 @@
             onChange: function(value){
                 $scope.$apply(function(){
                     $scope.search.app = value;
+                    $scope.customFiltering();
                 });
             },
             initUrl: Routing.buildUrl('/filter/apps'),
@@ -143,9 +157,10 @@
 
         function getResultsPage(pageNumber) {
             // this is just an example, in reality this stuff should be in a service
-            $http.get(Routing.buildUrl('/user/list?page='+pageNumber))
+            $http.get(Routing.buildUrl('/user/list?page='+pageNumber+'&'+buildFilterQuery()))
                 .success(function(result) {
                     $scope.users = result.users.data;
+                    console.log($scope.users);
                     $.each($scope.users,function(idx, user){
                         $.each(user.appsIds, function(ix, id){
                             $scope.users[idx].appsIds[ix] = id.toString();
