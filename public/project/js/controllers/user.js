@@ -37,7 +37,7 @@
 
     userControllers.controller("UserListCtl",['$scope', '$http', '$sce', '$timeout', 'filterFilter', function($scope, $http, $sce, $timeout, filterFilter){
 
-        $scope.search = {role: null, app: null};
+        $scope.search = {};
 
         $scope.userMatchProfile = function(query){
 
@@ -75,12 +75,11 @@
         };
 
         function buildFilterQuery(){
-
+            console.log($scope.search);
             return 'filters[role]='+($scope.search.role || '')+'&filters[app]='+($scope.search.app || '')+'&filters[profile]='+($scope.search.profile || '');
         }
 
         $scope.customFiltering = function() {
-            console.log($scope.search);
             getResultsPage(1);
         };
 
@@ -97,10 +96,8 @@
             options: [],
             create: false,
             onChange: function(value){
-                $scope.$apply(function(){
                     $scope.search.role = value;
                     $scope.customFiltering();
-                });
             },
             initUrl: Routing.buildUrl('/filter/roles'),
             remoteUrl:Routing.buildUrl('/filter/roles'),
@@ -128,10 +125,8 @@
             options: [],
             create: false,
             onChange: function(value){
-                $scope.$apply(function(){
                     $scope.search.app = value;
                     $scope.customFiltering();
-                });
             },
             initUrl: Routing.buildUrl('/filter/apps'),
             remoteUrl:Routing.buildUrl('/filter/apps'),
@@ -159,41 +154,18 @@
             // this is just an example, in reality this stuff should be in a service
             $http.get(Routing.buildUrl('/user/list?page='+pageNumber+'&'+buildFilterQuery()))
                 .success(function(result) {
+                    console.log('Result', result);
+                    $scope.totalUsers = result.totalUsers ? result.totalUsers : 1;
+                    $scope.itemsPerPage = result.itemsPerPage;
                     $scope.users = result.users.data;
-                    console.log($scope.users);
                     $.each($scope.users,function(idx, user){
                         $.each(user.appsIds, function(ix, id){
                             $scope.users[idx].appsIds[ix] = id.toString();
                         });
                     });
-                    $scope.totalUsers = result.totalUsers;
-                    $scope.oldTotalUsers = result.totalUsers;
-                    $scope.itemsPerPage = result.itemsPerPage;
-                    $scope.oldItemsPerPage = $scope.itemsPerPage;
-
 
                 });
         }
-
-//        $scope.filter = function() {
-//            $timeout(function() {
-//                $scope.totalUsers = $scope.filtered.length;
-//               console.log($scope.filtered);
-//               // $scope.noOfPages = Math.ceil($scope.filtered.length/$scope.entryLimit);
-//            });
-//        };
-//        console.log(filterFilter);
-//        $scope.$watch('search', function(term) {
-//           var filtered  = filterFilter($scope.users, term);
-//            if (filtered) {
-//                $scope.totalUsers = filtered.length == $scope.oldItemsPerPage ? $scope.oldTotalUsers : filtered.length;
-//            }
-//
-//            // Then calculate noOfPages
-//            //$scope.noOfPages = Math.ceil($scope.users.length/2);
-//        })
-
-
 
     }]);
 

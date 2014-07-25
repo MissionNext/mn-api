@@ -26,9 +26,10 @@ class UserController extends AdminBaseController
     public function getList()
     {
         $filters = $this->request->query->get('filters');
-        $profileFilter = $filters['profile'];
-        $appFilter = $filters['app'];
-        $roleFilter = $filters['role'];
+
+        $profileFilter = isset($filters['profile']) ? $filters['profile'] : null;
+        $appFilter = isset($filters['app']) ? $filters['app'] : null;
+        $roleFilter = isset($filters['role']) ? $filters['role'] : null;
 
         if ($appFilter){
             $appFilter = explode('|',$appFilter);
@@ -38,25 +39,26 @@ class UserController extends AdminBaseController
             $roleFilter = explode('|',$roleFilter);
         }
 
+        $usersQuery =   ExtendedUser::query();
 
-
-        /** @var  $users Paginator */
-        $usersQuery =   ExtendedUser::where( function($query) use ($profileFilter){
-                 $query->where('username', 'LIKE', '%'.$profileFilter.'%' )
-                       ->orWhere('email', 'LIKE', '%'.$profileFilter.'%');
-             });
+        $usersQuery = $profileFilter ? $usersQuery->where( function($query) use ($profileFilter){
+            $query->where('username', 'LIKE', '%'.$profileFilter.'%' )
+                ->orWhere('email', 'LIKE', '%'.$profileFilter.'%');
+        }) : $usersQuery;
 
         $usersQuery = $appFilter ?  $usersQuery->leftJoin('user_apps', 'user_apps.user_id','=', 'users.id')
-            ->whereIn('user_apps.app_id', $appFilter) : $usersQuery;
+                                       ->leftJoin('application', 'application.id','=', 'user_apps.app_id')
+            ->whereIn('application.id', $appFilter) : $usersQuery;
 
         $usersQuery = $roleFilter ?  $usersQuery->leftJoin('user_roles', 'user_roles.user_id','=', 'users.id')
             ->whereIn('user_roles.role_id', $roleFilter) : $usersQuery;
 
+
         $totalCount = $usersQuery->get()->count();
         //dd($this->getLogQueries());
 
-        $users =  $usersQuery->orderBy('id')->paginate(static::PAGINATE);
-
+        $users =  $usersQuery->orderBy('users.id')->paginate(static::PAGINATE);
+        //dd($users->toArray());
 
         return Response::json(["users" => $users->toArray(), 'totalUsers' => $totalCount, 'itemsPerPage' => static::PAGINATE ]);
     }

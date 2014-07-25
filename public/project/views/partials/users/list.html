@@ -36,7 +36,9 @@
                     </tr>
                     </thead>
                     <tbody >
-                    <tr total-items="totalUsers" dir-paginate="user in filtered = (users | filter : userMatchProfile(search.profile) | filter : userMatchRole(search.role) | filter : userMatchApp(search.app))  | itemsPerPage: itemsPerPage" >
+                    <tr total-items="totalUsers" dir-paginate="user in users
+
+                        | itemsPerPage: itemsPerPage" >
                         <td><% user.id %></td>
                         <td><a href="user#/<% user.id %>"><% user.username %></a></td>
                         <td><% user.email %></td>
