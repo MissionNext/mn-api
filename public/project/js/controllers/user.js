@@ -221,10 +221,13 @@
 
         $scope.closeSubscription = function(sub){
             $scope.modalCancelSub = !$scope.modalCancelSub;
-//            $.each($scope.subscriptions, function(idx, sub){
-//               sub.status = 'closed';
-//            });
-//            return;
+
+            if (sub.is_recurrent && sub.authorize_id){
+                $.each($scope.subscriptions, function(idx, s){
+                    s.status = 'closed';
+                });
+            }
+
             sub.status = 'closed';
             $scope.updateSub(sub, 'status', true);
         };

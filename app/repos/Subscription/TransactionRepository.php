@@ -30,8 +30,10 @@ class TransactionRepository extends AbstractRepository implements TransactionRep
      */
     public function syncWithSubscriptions(Collection $subscriptions, array $transaction)
     {
-        $this->create($transaction);
-        $this->getModel()->subscriptions()->sync($subscriptions->lists('id'));
+        if (!empty($transaction)) {
+            $this->create($transaction);
+            $this->getModel()->subscriptions()->sync($subscriptions->lists('id'));
+        }
 
         return $subscriptions;
     }
