@@ -85,6 +85,9 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     }
 
     private function processAIM($user, $data, $price){
+
+        $note = isset($data['additional_data']['note'])?$data['additional_data']['note']:'';
+
         $this->paymentGateWay->amount   = $price;
 
         if($data['type'] == 'cc'){
@@ -123,7 +126,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             $transaction_id = $response->transaction_id;
 
-            $response = $this->prepareSubscriptionResponse($transaction_id, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions']);
+            $response = $this->prepareSubscriptionResponse($transaction_id, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions'], $note);
 
             return $response;
         } else {
@@ -132,6 +135,8 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     }
 
     private function processARB($user, $data, $price){
+
+        $note = isset($data['additional_data']['note'])?$data['additional_data']['note']:'';
 
         $this->paymentGateWay->amount   = $price;
 
@@ -185,7 +190,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 Coupon::disable($data['coupon']['code']);
             }
 
-            $response = $this->prepareSubscriptionResponse(0, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions'], '', $sub_id);
+            $response = $this->prepareSubscriptionResponse(0, $price, $user['id'], $user->role(), $data['period'], $data['recurring'], $data['subscriptions'], $note, $sub_id);
 
             return $response;
         } else {
@@ -262,11 +267,11 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     private function prepareSubscriptionResponse($transaction_id, $amount, $user_id, $role, $period, $recurrent, $sites, $comment = '', $subscription_id = 0){
 
         $response = array(
-            'transaction' => array(
+            'transaction' => $transaction_id ? array(
                 'transaction_id' => $transaction_id,
                 'comment' => $comment,
                 'amount' => $amount
-            ),
+            ) : '',
             'subscriptions' => array()
         );
 
