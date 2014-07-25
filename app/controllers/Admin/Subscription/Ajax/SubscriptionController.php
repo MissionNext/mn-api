@@ -60,7 +60,7 @@ class SubscriptionController extends AdminBaseController
         $subscription = Subscription::whereId($subId)->get();
         $initSub = $subscription->first();
         $authorizeCode = null;
-        if ($initSub->is_recurrent && $initSub->authorize_id){
+        if ($initSub->is_recurrent && $initSub->authorize_id && $forceClose){
                 $subscription = Subscription::where('authorize_id','=', $initSub->authorize_id)
                             ->where('status', '<>', Subscription::STATUS_CLOSED)
                             ->get();
@@ -68,11 +68,13 @@ class SubscriptionController extends AdminBaseController
                 //$authorizeCode = strip_tags($response->xpath('messages/message')[0]->code->asXML());
                 $authorizeCode = $response->getMessageCode();
                 //code -  E00003, I00001- successful,  I00002 - has already been cancelled
-        }
+                $subscription->each(function($sub) use ($update){
+                    $sub->update($update);
+                });
+        }else{
 
-        $subscription->each(function($sub) use ($update){
-            $sub->update($update);
-        });
+            $initSub->update($update);
+        }
 
         /** @var  $repo SubscriptionRepository */
         $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
