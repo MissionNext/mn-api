@@ -306,6 +306,7 @@
         $scope.updateSub = function(subscription, property, forceClose){
             $http.put(Routing.buildUrl('/subscription/'+ subscription.id), [{ field: property, value : subscription[property], forceClose : forceClose }])
                 .success(function(data){
+                    console.log(data);
                     subscription.days_left = data.subscription.days_left;
                     subscription.status = data.subscription.status;
                 });

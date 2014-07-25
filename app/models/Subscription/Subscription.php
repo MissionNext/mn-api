@@ -18,10 +18,14 @@ class Subscription extends Model implements ModelInterface
     protected static function boot()
     {
         parent::boot();
-        parent::observe(new SubscriptionObserver());
-    }
+        static::created(function($model){
 
-    public $force_close = false;
+            /** @var  $user User */
+            $user = User::find( $model->user_id );
+            $user->appsStatuses()->detach( $model->app_id );
+            $user->appsStatuses()->attach( $model->app_id, ['is_active' => true] );
+        });
+    }
 
     protected $table = 'subscriptions';
 
