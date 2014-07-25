@@ -16,24 +16,21 @@ class Controller extends \Illuminate\Routing\Controller
 {
     public function postIndex()
     {
-        Log::info('Subscription Renewal', array('context' => json_encode(Input::all())));
+        Log::info('Subscription Renewal', array('callback_data' => json_encode(Input::all())));
 
         $renewal =  new Renewal(Input::all());
 
-        if (!$renewal->x_subscription_id){
+        $subscriptionsQuery = Subscription::where('authorize_id', '=', $renewal->x_subscription_id)
+            ->where('status', '<>', Subscription::STATUS_CLOSED);
+
+        $oldSubs = $subscriptionsQuery->get();
+
+        if (!$renewal->x_subscription_id || !$oldSubs->count()){
 
             return;
         }
 
-        $subscriptionsQuery = Subscription::where('authorize_id', '=', $renewal->x_subscription_id)
-                                     ->where('status', '<>', Subscription::STATUS_CLOSED);
-
-        $oldSubs = $subscriptionsQuery->get();
-
-        if ($oldSubs->count()) {
-            Subscription::whereIn('id', $oldSubs->lists('id'))->update(['status' => Subscription::STATUS_CLOSED]);
-        }
-
+        Subscription::whereIn('id', $oldSubs->lists('id'))->update(['status' => Subscription::STATUS_CLOSED]);
 
         if ($renewal->isApproved()){
             $subs = [];
