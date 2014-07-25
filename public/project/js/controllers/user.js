@@ -183,16 +183,33 @@
     }]);
 
     userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
-
-
         $scope.modalShown = false;
-        $scope.toggleModal = function(isActive, sub) {
-            $scope.isActiveOnSite = isActive ? { 'label' : 'Activate', value: isActive, sub: sub } :  { 'label' : 'Block', value: isActive, sub: sub };
+        $scope.modalCancelSub = false;
 
+        $scope.toggleModal = function(isActive, sub) {
+
+            $scope.isActiveOnSite = isActive ? { 'label' : 'Activate', value: isActive, sub: sub } :  { 'label' : 'Block', value: isActive, sub: sub };
+            $scope.configurator = function(){
+                sub.app.is_active = !sub.app.is_active;
+            };
             $scope.modalShown = !$scope.modalShown;
         };
 
+        $scope.toggleModalCancelSub = function(sub){
+            $scope.cancelSubModel = sub;
+            $scope.modalCancelSub = !$scope.modalCancelSub;
+        };
+
         $scope.transactions = [];
+
+        $scope.closeModal = function (isActiveOnSite) {
+            isActiveOnSite.sub.app.is_active = !isActiveOnSite.sub.app.is_active;
+            $scope.modalShown = !$scope.modalShown;
+        };
+        $scope.closeModalCancelSub = function(){
+
+            $scope.modalCancelSub = !$scope.modalCancelSub;
+        };
 
         $http.get(Routing.buildUrl('/subscription/manager/transactions/'+$params.user))
             .success(function(data){
@@ -203,6 +220,11 @@
         });
 
         $scope.closeSubscription = function(sub){
+            $scope.modalCancelSub = !$scope.modalCancelSub;
+//            $.each($scope.subscriptions, function(idx, sub){
+//               sub.status = 'closed';
+//            });
+//            return;
             sub.status = 'closed';
             $scope.updateSub(sub, 'status', true);
         };
@@ -244,19 +266,28 @@
         $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
             console.log(data.user);
             $scope.user = data.user;
+            if ($scope.user.status != 1 &&  $scope.user.is_active){
+                $scope.userStatusMessage = 'Access Granted';
+            }else if($scope.user.status != 1 &&  !$scope.user.is_active){
+                $scope.userStatusMessage = 'Access Denied';
+            }
             $scope.showLevel = data.user.role === 'organization';
             $scope.statuses = data.statuses;
         });
 
         $http.get(Routing.buildUrl('/subscription/manager/'+$params.user)).success(function(data){
             $scope.subscriptions = data;
+            console.log($scope.subscriptions);
         });
+
+        $scope.userStatusMessage = 'Pending Approval';
 
         $scope.setDisabled = function($event){
            $http.get(Routing.buildUrl('/user/disable/'+$scope.user.id))
                .success(function(data){
                     $scope.user.is_active = data.is_active;
                     $scope.user.status = data.status;
+                    $scope.userStatusMessage = 'Access Denied';
                });
         };
 
@@ -265,6 +296,7 @@
                 .success(function(data){
                     $scope.user.is_active = data.is_active;
                     $scope.user.status = data.status;
+                    $scope.userStatusMessage = 'Access Granted';
                 });
         };
 

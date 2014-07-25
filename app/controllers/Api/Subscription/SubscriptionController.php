@@ -22,6 +22,7 @@ class SubscriptionController extends BaseController
      */
     public function postIndex()
     {
+        dd($this->request->request->all());
         $service = $this->paymentGateway;
 
         $readyData = $service->processRequest($this->request->request->all());
