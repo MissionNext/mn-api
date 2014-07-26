@@ -5,6 +5,7 @@ namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Helpers\Language;
@@ -47,8 +48,9 @@ class UserController extends AdminBaseController
         }) : $usersQuery;
 
         $usersQuery = $appFilter ?  $usersQuery->leftJoin('user_apps', 'user_apps.user_id','=', 'users.id')
-                                       ->leftJoin('application', 'application.id','=', 'user_apps.app_id')
-            ->whereIn('application.id', $appFilter) : $usersQuery;
+                                       //->leftJoin('application', 'application.id','=', 'user_apps.app_id')
+                                       ->select(DB::raw("distinct on (users.id)  *") )
+            ->whereIn('user_apps.app_id', $appFilter) : $usersQuery;
 
         $usersQuery = $roleFilter ?  $usersQuery->leftJoin('user_roles', 'user_roles.user_id','=', 'users.id')
             ->whereIn('user_roles.role_id', $roleFilter) : $usersQuery;
