@@ -386,26 +386,37 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
         }
 
+        $total = 0;
+
         $compensation = $new_price - $old_price;
-        $total = ( $renew_type != 'm' && $compensation > 0 ) ? $compensation : 0;
-        $total += $renew_price;
 
         if($renew_type == 'm'){
-            $this->first_payment = $compensation > 0 ? $compensation : 0;
+            $total = $new_price + $renew_price + $this->fee;
+
+            if($old_price > 0){
+                $this->first_payment = $compensation > 0 ? $compensation : 0;
+                $this->first_payment += $renew_price;
+            }
+
         } else {
-            $this->first_payment = null;
-        }
 
-        if($site_number > 1){
-            $total -= ( $total * $this->discount ) / 100;
-        }
+            if($site_number > 1){
+                $total += ($renew_price + $new_price) * ( ( 100 - $this->discount ) / 100 );
+            } else {
+                $total += $renew_price + $new_price;
+            }
 
-        if($coupon && $renew_type != 'm'){
-            $total -= $coupon['value'];
-        }
+            if($old_price > 0 && $new_price > 0){
+                if($compensation > 0){
+                    $total -= $old_price;
+                } else {
+                    $total -= $old_price + $compensation;
+                }
+            }
 
-        if($type == 'echeck'){
-            $total += $this->fee;
+            if($coupon && $renew_type != 'm'){
+                $total -= $coupon['value'];
+            }
         }
 
 
@@ -427,8 +438,14 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             if($default['partnership'] != Partnership::LIMITED && $default['days_left'] > $days_left){
                 $days_left = $default['days_left'];
-                $total_days = round( (strtotime($default['end_date']) - strtotime($default['start_date'])) / (24*60*60));
+                if(!$default['is_recurrent']){
+                    $total_days = round( (strtotime($default['end_date']) - strtotime($default['start_date'])) / (24*60*60));
+                }
             }
+        }
+
+        if($total_days <= 0){
+            $total_days = date('L')?366:365;
         }
 
         $this->part_multiplier = $total_days > 0 ? $days_left / $total_days : 0;
