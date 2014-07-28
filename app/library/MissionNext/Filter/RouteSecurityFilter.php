@@ -69,7 +69,7 @@ class RouteSecurityFilter
         SecurityContext::getFacadeRoot()->setIsAdminArea(true);
     }
 
-    public function authorize($route, $request)
+    public function authorize(Router $route, $request)
     {
         App::make("rest.listener.sync")->handle();
     }

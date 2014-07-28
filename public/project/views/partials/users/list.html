@@ -1,9 +1,7 @@
 <div class="user-list">
     <div class="row">
         <div class="col-md-7 col-md-offset-1">
-            <form method="POST" action="http://localhost.mission-next/dashboard/user/searching" accept-charset="UTF-8" class="form-inline user-search-form ng-pristine ng-valid" role="form">
-                <input  ng-model="search.profile" class="form-control" placeholder="search by user or email" name="search" type="text">
-            </form>
+                <input ng-change="customFiltering()" ng-model="search.profile" class="form-control" placeholder="search by user or email" name="search" type="text">
         </div>
     </div>
 
@@ -38,11 +36,16 @@
                     </tr>
                     </thead>
                     <tbody >
-                    <tr total-items="totalUsers" dir-paginate="user in filtered = (users | filter : userMatchProfile(search.profile) | filter : userMatchRole(search.role) | filter : userMatchApp(search.app))  | itemsPerPage: itemsPerPage" >
+                    <tr total-items="totalUsers" dir-paginate="user in users
+
+                        | itemsPerPage: itemsPerPage" >
                         <td><% user.id %></td>
                         <td><a href="user#/<% user.id %>"><% user.username %></a></td>
                         <td><% user.email %></td>
-                        <td><strong><% user.status %></strong></td>
+                        <td>
+                            <span class="glyphicon <% user.status == 1 && 'glyphicon-warning-sign'%>
+                            <% user.is_active && 'glyphicon-ok' || 'glyphicon-remove' %>
+                            "></span></td>
                         <td><% user.created_at | date %></td>
                         <td><% user.last_login | date %></td>
 

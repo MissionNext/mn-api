@@ -37,11 +37,12 @@
 
     userControllers.controller("UserListCtl",['$scope', '$http', '$sce', '$timeout', 'filterFilter', function($scope, $http, $sce, $timeout, filterFilter){
 
-        $scope.search = {role: null, app: null};
+        $scope.search = {};
 
         $scope.userMatchProfile = function(query){
 
             return function(user) {
+
                 return user.username.match(query) || user.email.match(query);
             };
         };
@@ -52,7 +53,7 @@
 
             return function(user) {
 
-                return roles ? $.inArray(user.roleName, roles)  !== -1 : true;
+                return roles ? $.inArray(user.roleId.toString(), roles)  !== -1 : true;
             }
         };
 
@@ -73,12 +74,21 @@
             }
         };
 
+        function buildFilterQuery(){
+            console.log($scope.search);
+            return 'filters[role]='+($scope.search.role || '')+'&filters[app]='+($scope.search.app || '')+'&filters[profile]='+($scope.search.profile || '');
+        }
+
+        $scope.customFiltering = function() {
+            getResultsPage(1);
+        };
+
 
         $('#role-select-id').selectize({
             plugins: ['remove_button'],
             delimiter: '|',
             maxItems: null,
-            valueField: 'role',
+            valueField: 'id',
             preload: true,
             openOnFocus: true,
             labelField: 'role',
@@ -86,15 +96,15 @@
             options: [],
             create: false,
             onChange: function(value){
-                $scope.$apply(function(){
                     $scope.search.role = value;
-                });
+                    $scope.customFiltering();
             },
             initUrl: Routing.buildUrl('/filter/roles'),
             remoteUrl:Routing.buildUrl('/filter/roles'),
             load : function(query, callback){
                 var selectize = this;
                 $http.get(selectize.settings.initUrl).success(function(data){
+                    console.log('roles', data);
                     $.each(data, function(idx, el){
                         selectize.addOption(el);
                     });
@@ -115,9 +125,8 @@
             options: [],
             create: false,
             onChange: function(value){
-                $scope.$apply(function(){
                     $scope.search.app = value;
-                });
+                    $scope.customFiltering();
             },
             initUrl: Routing.buildUrl('/filter/apps'),
             remoteUrl:Routing.buildUrl('/filter/apps'),
@@ -143,42 +152,20 @@
 
         function getResultsPage(pageNumber) {
             // this is just an example, in reality this stuff should be in a service
-            $http.get(Routing.buildUrl('/user/list?page='+pageNumber))
+            $http.get(Routing.buildUrl('/user/list?page='+pageNumber+'&'+buildFilterQuery()))
                 .success(function(result) {
+                    console.log('Result', result);
+                    $scope.totalUsers = result.totalUsers ? result.totalUsers : 1;
+                    $scope.itemsPerPage = result.itemsPerPage;
                     $scope.users = result.users.data;
                     $.each($scope.users,function(idx, user){
                         $.each(user.appsIds, function(ix, id){
                             $scope.users[idx].appsIds[ix] = id.toString();
                         });
                     });
-                    $scope.totalUsers = result.totalUsers;
-                    $scope.oldTotalUsers = result.totalUsers;
-                    $scope.itemsPerPage = result.itemsPerPage;
-                    $scope.oldItemsPerPage = $scope.itemsPerPage;
-
 
                 });
         }
-
-//        $scope.filter = function() {
-//            $timeout(function() {
-//                $scope.totalUsers = $scope.filtered.length;
-//               console.log($scope.filtered);
-//               // $scope.noOfPages = Math.ceil($scope.filtered.length/$scope.entryLimit);
-//            });
-//        };
-//        console.log(filterFilter);
-//        $scope.$watch('search', function(term) {
-//           var filtered  = filterFilter($scope.users, term);
-//            if (filtered) {
-//                $scope.totalUsers = filtered.length == $scope.oldItemsPerPage ? $scope.oldTotalUsers : filtered.length;
-//            }
-//
-//            // Then calculate noOfPages
-//            //$scope.noOfPages = Math.ceil($scope.users.length/2);
-//        })
-
-
 
     }]);
 
@@ -221,10 +208,13 @@
 
         $scope.closeSubscription = function(sub){
             $scope.modalCancelSub = !$scope.modalCancelSub;
-//            $.each($scope.subscriptions, function(idx, sub){
-//               sub.status = 'closed';
-//            });
-//            return;
+
+            if (sub.is_recurrent && sub.authorize_id){
+                $.each($scope.subscriptions, function(idx, s){
+                    s.status = 'closed';
+                });
+            }
+
             sub.status = 'closed';
             $scope.updateSub(sub, 'status', true);
         };
@@ -303,6 +293,7 @@
         $scope.updateSub = function(subscription, property, forceClose){
             $http.put(Routing.buildUrl('/subscription/'+ subscription.id), [{ field: property, value : subscription[property], forceClose : forceClose }])
                 .success(function(data){
+                    console.log(data);
                     subscription.days_left = data.subscription.days_left;
                     subscription.status = data.subscription.status;
                 });

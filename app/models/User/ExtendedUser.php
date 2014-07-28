@@ -5,7 +5,7 @@ namespace MissionNext\Models\User;
 class ExtendedUser extends User
 {
 
-    protected $appends = ['roleName', 'appsData', 'appsIds'];
+    protected $appends = ['roleName', 'appsData', 'appsIds', 'roleId'];
 
     /**
      * @return string
@@ -14,6 +14,15 @@ class ExtendedUser extends User
     {
 
         return $this->role();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoleIdAttribute()
+    {
+
+        return $this->roleId();
     }
 
     /**

@@ -202,14 +202,14 @@
         </div><!-- /.modal-content -->
     </modal-dialog>
 
-    <modal-dialog show='modalCancelSub' >
+    <modal-dialog show='modalCancelSub' configurator="" >
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" ng-click="closeModalCancelSub()" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title"><strong>Cancel Subscription</strong></h4>
             </div>
             <div class="modal-body">
-                <p ng-show="cancelSub.is_recurrent && cancelSub.authorize_id">This user uses a monthly recurrent subscription, if you cancel one of the subscriptions all other will be canceled as well.</p>
+                <p ng-show="cancelSubModel.is_recurrent && cancelSubModel.authorize_id">This user uses a monthly recurrent subscription, if you cancel one of the subscriptions all other will be canceled as well.</p>
                 <p>Are you sure? <%  dump(cancelSubModel)  %></p>
             </div>
             <div class="modal-footer">

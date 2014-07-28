@@ -5,6 +5,7 @@ namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Helpers\Language;
@@ -25,9 +26,41 @@ class UserController extends AdminBaseController
      */
     public function getList()
     {
-        /** @var  $users Paginator */
-        $users = ExtendedUser::orderBy('id')->paginate(static::PAGINATE);
-        $totalCount = ExtendedUser::remember(120)->get()->count();
+        $filters = $this->request->query->get('filters');
+
+        $profileFilter = isset($filters['profile']) ? $filters['profile'] : null;
+        $appFilter = isset($filters['app']) ? $filters['app'] : null;
+        $roleFilter = isset($filters['role']) ? $filters['role'] : null;
+
+        if ($appFilter){
+            $appFilter = explode('|',$appFilter);
+        }
+
+        if ($roleFilter){
+            $roleFilter = explode('|',$roleFilter);
+        }
+
+        $usersQuery =   ExtendedUser::query();
+
+        $usersQuery = $profileFilter ? $usersQuery->where( function($query) use ($profileFilter){
+            $query->where('username', 'LIKE', '%'.$profileFilter.'%' )
+                ->orWhere('email', 'LIKE', '%'.$profileFilter.'%');
+        }) : $usersQuery;
+
+        $usersQuery = $appFilter ?  $usersQuery->leftJoin('user_apps', 'user_apps.user_id','=', 'users.id')
+                                       //->leftJoin('application', 'application.id','=', 'user_apps.app_id')
+                                       ->select(DB::raw("distinct on (users.id)  *") )
+            ->whereIn('user_apps.app_id', $appFilter) : $usersQuery;
+
+        $usersQuery = $roleFilter ?  $usersQuery->leftJoin('user_roles', 'user_roles.user_id','=', 'users.id')
+            ->whereIn('user_roles.role_id', $roleFilter) : $usersQuery;
+
+
+        $totalCount = $usersQuery->get()->count();
+        //dd($this->getLogQueries());
+
+        $users =  $usersQuery->orderBy('users.id')->paginate(static::PAGINATE);
+        //dd($users->toArray());
 
         return Response::json(["users" => $users->toArray(), 'totalUsers' => $totalCount, 'itemsPerPage' => static::PAGINATE ]);
     }

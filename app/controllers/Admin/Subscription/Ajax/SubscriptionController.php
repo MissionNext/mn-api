@@ -4,8 +4,10 @@
 namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
+use MissionNext\Models\Observers\SubscriptionObserver;
 use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\Subscription\SubscriptionRepository;
@@ -49,20 +51,31 @@ class SubscriptionController extends AdminBaseController
             $update[$property['field']] = $property['value'];
             $forceClose = isset($property['forceClose']) ? $property['forceClose'] : false;
         }
+        if (!$forceClose){
 
-        $subscription = Subscription::findOrFail($subId);
-        $subscription->force_close = $forceClose;
+            Subscription::observe(new SubscriptionObserver());
+        }
+
+        /** @var  $subscription Collection */
+        $subscription = Subscription::whereId($subId)->get();
+        $initSub = $subscription->first();
         $authorizeCode = null;
-        if ($forceClose){
-            if ($subscription->is_recurrent && $subscription->authorize_id){
-                $response = $this->paymentGateway->getRecurringBilling()->cancelSubscription($subscription->authorize_id);
+        if ($initSub->is_recurrent && $initSub->authorize_id && $forceClose){
+                $subscription = Subscription::where('authorize_id','=', $initSub->authorize_id)
+                            ->where('status', '<>', Subscription::STATUS_CLOSED)
+                            ->get();
+                $response = $this->paymentGateway->getRecurringBilling()->cancelSubscription($initSub->authorize_id);
                 //$authorizeCode = strip_tags($response->xpath('messages/message')[0]->code->asXML());
                 $authorizeCode = $response->getMessageCode();
                 //code -  E00003, I00001- successful,  I00002 - has already been cancelled
-            }
+                $subscription->each(function($sub) use ($update){
+                    $sub->update($update);
+                });
+        }else{
+
+            $initSub->update($update);
         }
 
-        $subscription->update($update);
         /** @var  $repo SubscriptionRepository */
         $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
 

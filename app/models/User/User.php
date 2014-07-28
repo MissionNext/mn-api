@@ -50,6 +50,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     protected $fillable = array('username', 'email', 'is_active', 'status');
 
     protected $userRole;
+    protected $userRoleId;
 
     /**
      * @param $email
@@ -350,6 +351,18 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function roleId()
+    {
+        if(!$this->userRoleId){
+            $this->userRoleId = $this->roles()->first()->id;
+        }
+
+        return $this->userRoleId;
+    }
+
+    /**
      * @param Application $app
      *
      * @return bool
@@ -424,18 +437,11 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
             if ($subTrans->count()){
                 $subTrans->each(function($transaction) use ($transactions){
                     $transactions->contains($transaction) ?: $transactions->add($transaction);
-
                 });
             }
         });
-        $transactions->sort(function($trans1, $trans2){
-            if ($trans1->created_at == $trans2->created_at){
 
-                return 0;
-            }
-            return ($trans1->created_at < $trans2->created_at) ? -1 : 1;
-        });
-
+        $transactions = $transactions->sortBy('created_at');
 
         return array_values($transactions->toArray());
     }

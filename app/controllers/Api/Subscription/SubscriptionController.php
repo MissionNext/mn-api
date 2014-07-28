@@ -22,14 +22,13 @@ class SubscriptionController extends BaseController
      */
     public function postIndex()
     {
-        dd($this->request->request->all());
         $service = $this->paymentGateway;
 
         $readyData = $service->processRequest($this->request->request->all());
-       // $readyData = $this->request->request->all();
+        //$readyData = $this->request->request->all();
        /** authorize call */
         $subscriptions = $readyData['subscriptions'];
-        $transactionData = $readyData['transaction'];
+        $transactionData = $readyData['transaction'] ?: [];
         /** @var  $repo SubscriptionRepository */
         $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
 

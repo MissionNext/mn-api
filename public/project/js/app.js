@@ -90,6 +90,7 @@ App.directive('modalDialog', function() {
             scope.hideModal = function() {
                 //scope.configurator.app.is_active = !scope.configurator.app.is_active;
                 scope.show = false;
+
                 scope.configurator.call(scope);
             };
         },
