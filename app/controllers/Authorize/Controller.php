@@ -16,9 +16,18 @@ class Controller extends \Illuminate\Routing\Controller
 {
     public function postIndex()
     {
-        Log::info('Subscription Renewal', array('callback_data' => json_encode(Input::all())));
+        Log::info('Before Renewal Class', array('callback_data' => json_encode(Input::all())));
 
         $renewal =  new Renewal(Input::all());
+
+        if ($renewal->x_subscription_id){
+
+            Log::info('Monthly', array('callback_data' => var_export( Input::all() ) ) );
+
+        }else{
+            Log::info('Annually', array('callback_data' => var_export( Input::all() ) ) );
+
+        }
 
         $subscriptionsQuery = Subscription::where('authorize_id', '=', $renewal->x_subscription_id)
             ->where('status', '<>', Subscription::STATUS_CLOSED);
