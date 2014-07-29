@@ -44,19 +44,19 @@ Dashboard. Subscription. Config
     <div class="col-sm-10">
       <p>
         <label for="subscription_discount">Discount % </label>
-        <input ng-change="subCtl.updateGlobalConfig('subscriptionDiscount')" type="number" type="number" min="0" ng-model="subCtl.subscriptionDiscount" id="subscription_discount" />
+        <input ng-change="subCtl.updateGlobalConfig('subscriptionDiscount')" type="number" min="0" ng-model="subCtl.subscriptionDiscount" id="subscription_discount" />
       </p>
     </div>
     <div class="col-sm-10">
         <p>
             <label for="con-fee">Convinience fee $ </label>
-            <input ng-change="subCtl.updateGlobalConfig('conFee')" type="number" type="number" min="0" ng-model="subCtl.conFee" id="con-fee" />
+            <input ng-change="subCtl.updateGlobalConfig('conFee')" type="number"  min="0" ng-model="subCtl.conFee" id="con-fee" />
         </p>
     </div>
     <div class="col-sm-10">
         <p>
             <label for="grace-period">Grace Period (days) </label>
-            <input ng-change="subCtl.updateGlobalConfig('gracePeriod')" type="number" type="number" min="0" ng-model="subCtl.gracePeriod" id="grace-period" />
+            <input ng-change="subCtl.updateGlobalConfig('gracePeriod')" type="number"  min="0" ng-model="subCtl.gracePeriod" id="grace-period" />
         </p>
     </div>
     <table class="table table-hover" >

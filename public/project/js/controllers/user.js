@@ -29,11 +29,7 @@
         });
     }
 
-//    var a = ['1'];
-//
-//    var b = ['1', '2'];
-//
-//    console.log("HERE", intersect(a, b));
+
 
     userControllers.controller("UserListCtl",['$scope', '$http', '$sce', '$timeout', 'filterFilter', function($scope, $http, $sce, $timeout, filterFilter){
 
@@ -89,7 +85,6 @@
             load : function(query, callback){
                 var selectize = this;
                 $http.get(selectize.settings.initUrl).success(function(data){
-                    console.log('roles', data);
                     $.each(data, function(idx, el){
                         selectize.addOption(el);
                     });
@@ -190,11 +185,9 @@
             // this is just an example, in reality this stuff should be in a service
             $http.get(Routing.buildUrl('/user/list?page='+pageNumber+'&'+buildFilterQuery()))
                 .success(function(result) {
-                    console.log('Result', result);
                     $scope.totalUsers = result.totalUsers ? result.totalUsers : 1;
                     $scope.itemsPerPage = result.itemsPerPage;
                     $scope.users = result.users.data;
-                    console.log($scope.users);
                     $.each($scope.users,function(idx, user){
                         $.each(user.appsIds, function(ix, id){
                             $scope.users[idx].appsIds[ix] = id.toString();
@@ -237,7 +230,6 @@
 
         $http.get(Routing.buildUrl('/subscription/manager/transactions/'+$params.user))
             .success(function(data){
-                console.log(data);
                 $scope.transactions = $.map(data, function(el) { return el; });
             }).error(function(error){
                 console.log(error);
@@ -268,7 +260,6 @@
             $scope.isActiveOnSite.sub.app.is_active = bool && $scope.isActiveOnSite.value;
             $http.get(Routing.buildUrl('/user/app/'+ status+'/'+$scope.isActiveOnSite.sub.user_id+'/'+$scope.isActiveOnSite.sub.app_id))
                 .success(function(data){
-                    console.log(data);
                 }).error(function(error){
                     console.log(error);
                 });
@@ -291,7 +282,6 @@
         $scope.showLevel = false;
 
         $http.get(Routing.buildUrl('/user/'+$params.user)).success(function(data){
-            console.log(data.user);
             $scope.user = data.user;
             if ($scope.user.status != 1 &&  $scope.user.is_active){
                 $scope.userStatusMessage = 'Access Granted';
@@ -302,9 +292,19 @@
             $scope.statuses = data.statuses;
         });
 
+        var watchPaid  = function(){
+
+        };
+
         $http.get(Routing.buildUrl('/subscription/manager/'+$params.user)).success(function(data){
             $scope.subscriptions = data;
-            console.log($scope.subscriptions);
+            angular.forEach($scope.subscriptions, function(sub, index){
+                $scope.$watch(function(){
+                    return $scope.subscriptions[index].paid;
+                },function(val, old){
+                   sub.paid = parseInt(val) || 0;
+                });
+            });
         });
 
         $scope.userStatusMessage = 'Pending Approval';
@@ -330,7 +330,6 @@
         $scope.updateSub = function(subscription, property, forceClose){
             $http.put(Routing.buildUrl('/subscription/'+ subscription.id), [{ field: property, value : subscription[property], forceClose : forceClose }])
                 .success(function(data){
-                    console.log(data);
                     subscription.days_left = data.subscription.days_left;
                     subscription.status = data.subscription.status;
                 });

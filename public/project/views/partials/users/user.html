@@ -97,8 +97,8 @@
             <th ng-show="showLevel">Level</th>
             <th>Start</th>
             <th>End</th>
-            <th>Price</th>
-            <th>Paid</th>
+            <th>Price $</th>
+            <th>Paid $</th>
             <th>Days Left</th>
             <th>Status</th>
             <th>Comment</th>
@@ -129,7 +129,7 @@
             <td><input style="width: 100px !important;" class="form-control" ng-change="updateSub(sub, 'start_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.start_date"></td>
             <td><input style="width: 100px !important;" class="form-control" ng-change="updateSub(sub, 'end_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.end_date"></td>
             <td><% sub.price | currency  %></td>
-            <td><% sub.paid | currency  %></td>
+            <td> <input type="number" min="0" ng-change="updateSub(sub, 'paid')" class="form-control" style="width: 80px !important;"  ng-model="sub.paid" ></td>
             <td><% sub.days_left  %></td>
             <td><select style="width: auto !important;" class="form-control" ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>
             </td>
