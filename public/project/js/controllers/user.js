@@ -39,45 +39,30 @@
 
         $scope.search = {};
 
-        $scope.userMatchProfile = function(query){
+        $scope.sortUser = {
+            p : 'created_at',
+            order : 0,
+            getProperty  : function(){
 
-            return function(user) {
+                return this.p;
+            },
+            getOrder : function(){
 
-                return user.username.match(query) || user.email.match(query);
-            };
-        };
+                return this.order ? 'ASC' : 'DESC';
+            },
 
-        $scope.userMatchRole = function(query){
+            getCssClass: function(){
 
-            var roles = query ? query.split('|') : null;
-
-            return function(user) {
-
-                return roles ? $.inArray(user.roleId.toString(), roles)  !== -1 : true;
+                return this.order ? 'glyphicon glyphicon-arrow-up' : 'glyphicon glyphicon-arrow-down';
             }
         };
 
-        $scope.userMatchApp = function(query){
 
-            var apps = query ? query.split('|') : null;
-
-            return function(user) {
-                if (apps){
-                   var interApps =  intersect(apps, user.appsIds);
-                   if (!interApps.length || apps.length !== interApps.length){
-
-                       return false;
-                   }
-
-                }
-                return true;
-            }
-        };
 
         function buildFilterQuery(){
-            console.log($scope.search);
-            return 'filters[role]='+($scope.search.role || '')+'&filters[app]='+($scope.search.app || '')+'&filters[profile]='+($scope.search.profile || '');
-        }
+
+            return 'filters[sub_status]='+($scope.search.sub_status || '')+'&filters[status]='+($scope.search.status || '')+'&filters[role]='+($scope.search.role || '')+'&filters[app]='+($scope.search.app || '')+'&filters[profile]='+($scope.search.profile || '')+'&sort[p]='+$scope.sortUser.getProperty()+'&sort[o]='+$scope.sortUser.getOrder();
+        };
 
         $scope.customFiltering = function() {
             getResultsPage(1);
@@ -113,6 +98,49 @@
             }
         });
 
+        $('#status-select-id').selectize({
+            plugins: ['remove_button'],
+            delimiter: '|',
+            maxItems: null,
+            preload: true,
+            openOnFocus: true,
+            valueField: 'id',
+            labelField: 'status',
+            searchField: 'status',
+            options: [
+                {id: 1, status: 'Pending Approval'},
+                {id: 2, status: 'Active' },
+                {id: 3, status: 'Disabled'}
+            ],
+            create: false,
+            onChange: function(value){
+                    $scope.search.status = value;
+                    $scope.customFiltering();
+            }
+
+        });
+        $('#sub-status-select-id').selectize({
+            plugins: ['remove_button'],
+            delimiter: '|',
+            maxItems: null,
+            preload: true,
+            openOnFocus: true,
+            valueField: 'id',
+            labelField: 'status',
+            searchField: 'status',
+            options: [
+                {id: 'active', status: 'Active'},
+                {id: 'grace', status: 'Grace' },
+                {id: 'expired', status: 'Expired'}
+            ],
+            create: false,
+            onChange: function(value){
+                    $scope.search.sub_status = value;
+                    $scope.customFiltering();
+            }
+
+        });
+
         $('#apps-select-id').selectize({
             plugins: ['remove_button'],
             delimiter: '|',
@@ -125,8 +153,8 @@
             options: [],
             create: false,
             onChange: function(value){
-                    $scope.search.app = value;
-                    $scope.customFiltering();
+                $scope.search.app = value;
+                $scope.customFiltering();
             },
             initUrl: Routing.buildUrl('/filter/apps'),
             remoteUrl:Routing.buildUrl('/filter/apps'),
@@ -144,6 +172,14 @@
         $scope.pagination = {
             current: 1
         };
+
+        $scope.sort = function(property){
+           $scope.sortUser.p = property;
+           $scope.sortUser.order = !$scope.sortUser.order;
+           $scope.pagination.current = 1;
+           $scope.customFiltering();
+        };
+
         getResultsPage($scope.pagination.current);
 
         $scope.pageChanged = function(newPage) {
@@ -158,6 +194,7 @@
                     $scope.totalUsers = result.totalUsers ? result.totalUsers : 1;
                     $scope.itemsPerPage = result.itemsPerPage;
                     $scope.users = result.users.data;
+                    console.log($scope.users);
                     $.each($scope.users,function(idx, user){
                         $.each(user.appsIds, function(ix, id){
                             $scope.users[idx].appsIds[ix] = id.toString();

@@ -1,7 +1,31 @@
+<style>
+    .sub-grace {
+        background-color: #ffff00;
+    }
+
+    .sub-expired {
+        background-color: #c30100;
+    }
+    .dashed {
+
+    }
+
+    .sortable{
+        border-bottom: 1px dashed #000000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .sortable-glyph{
+        color: blue; cursor: pointer;
+        font-size: small;
+    }
+</style>
 <div class="user-list">
     <div class="row">
         <div class="col-md-7 col-md-offset-1">
-                <input ng-change="customFiltering()" ng-model="search.profile" class="form-control" placeholder="search by user or email" name="search" type="text">
+            <input ng-change="customFiltering()" ng-model="search.profile" class="form-control"
+                   placeholder="search by user or email" name="search" type="text">
         </div>
     </div>
 
@@ -14,7 +38,7 @@
                     </h3>
                 </div>
                 <!--<div class="col-md-2 pagination-info">-->
-                    <!--<span class="pull-right"> <% to %> / <%  total %> </span>-->
+                <!--<span class="pull-right"> <% to %> / <%  total %> </span>-->
                 <!--</div>-->
             </div>
 
@@ -26,20 +50,18 @@
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Username</th>
+                        <th>#</th>
+                        <th  ng-click="sort('username');"><span class="sortable">Username</span> <span ng-show="sortUser.p === 'username'"  class="sortable-glyph <% sortUser.getCssClass(); %>"></span></th>
                         <th>E-mail</th>
                         <th>Status</th>
-                        <th>Created at</th>
-                        <th>Last login</th>
-                        <th></th>
+                        <th  ng-click="sort('created_at');"><span class="sortable">Created at</span> <span ng-show="sortUser.p === 'created_at'"  class="sortable-glyph <% sortUser.getCssClass(); %>"></span></th>
+                        <th  ng-click="sort('last_login');"><span class="sortable">Last login</span> <span ng-show="sortUser.p === 'last_login'"  class="sortable-glyph <% sortUser.getCssClass(); %>"></span></th>
                     </tr>
                     </thead>
-                    <tbody >
-                    <tr total-items="totalUsers" dir-paginate="user in users
-
-                        | itemsPerPage: itemsPerPage" >
-                        <td><% user.id %></td>
+                    <tbody>
+                    <tr class="sub-<% user.general_status %>" current-page="pagination.current" total-items="totalUsers" dir-paginate="user in users
+                        | itemsPerPage: itemsPerPage">
+                        <td><% $index + 1%></td>
                         <td><a href="user#/<% user.id %>"><% user.username %></a></td>
                         <td><% user.email %></td>
                         <td>
@@ -71,6 +93,14 @@
             <div class="user-filters pull-right">
                 <label for="role-select-id">By roles:</label>
                 <textarea id="role-select-id"></textarea>
+            </div>
+            <div class="user-filters pull-right">
+                <label for="status-select-id">By status:</label>
+                <textarea id="status-select-id"></textarea>
+            </div>
+            <div class="user-filters pull-right">
+                <label for="sub-status-select-id">Subscription Status:</label>
+                <textarea id="sub-status-select-id"></textarea>
             </div>
         </div>
     </div>
