@@ -44,19 +44,19 @@ Dashboard. Subscription. Config
     <div class="col-sm-10">
       <p>
         <label for="subscription_discount">Discount % </label>
-        <input type="number" type="number" min="0" ng-model="subCtl.subscriptionDiscount" id="subscription_discount" />
+        <input ng-change="subCtl.updateGlobalConfig('subscriptionDiscount')" type="number" type="number" min="0" ng-model="subCtl.subscriptionDiscount" id="subscription_discount" />
       </p>
     </div>
     <div class="col-sm-10">
         <p>
             <label for="con-fee">Convinience fee $ </label>
-            <input type="number" type="number" min="0" ng-model="subCtl.conFee" id="con-fee" />
+            <input ng-change="subCtl.updateGlobalConfig('conFee')" type="number" type="number" min="0" ng-model="subCtl.conFee" id="con-fee" />
         </p>
     </div>
     <div class="col-sm-10">
         <p>
-            <label for="con-fee">Grace Period (days) </label>
-            <input type="number" type="number" min="0" ng-model="subCtl.gracePeriod" id="con-fee" />
+            <label for="grace-period">Grace Period (days) </label>
+            <input ng-change="subCtl.updateGlobalConfig('gracePeriod')" type="number" type="number" min="0" ng-model="subCtl.gracePeriod" id="grace-period" />
         </p>
     </div>
     <table class="table table-hover" >
@@ -82,15 +82,15 @@ Dashboard. Subscription. Config
 
         <tr ng-repeat="info in config.partnership">
             <td></td>
-            <td><input type="checkbox" ng-show="info.level" ng-disabled="info.level === 'basic'" ng-checked="info . level && subCtl.configs[$parent.$index].partnership[$index].partnership_status" ng-model = "subCtl.configs[$parent.$index].partnership[$index].partnership_status" /></td>
+            <td><input ng-change="subCtl.updateConfigPrice(config.role.key, this)" type="checkbox" ng-show="info.level" ng-disabled="info.level === 'basic'" ng-checked="info . level && subCtl.configs[$parent.$index].partnership[$index].partnership_status" ng-model = "subCtl.configs[$parent.$index].partnership[$index].partnership_status" /></td>
             <td><% info . level || '-' %></td>
             <td><span ng-hide="subCtl.editingMonth[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'month')"><% info.price_month  | currency  %></span>
-                <input class="p-price" ng-blur="subCtl.blurEdit(subCtl.editingMonth, $parent.$index, $index)"
+                <input ng-change="subCtl.updateConfigPrice(config.role.key, this)" class="p-price" ng-blur="subCtl.blurEdit(subCtl.editingMonth, $parent.$index, $index)"
                        ng-show="subCtl.editingMonth[$parent.$index][$index]" type="number" min="0"
                        ng-model="info.price_month" value="" focus-if="subCtl.editingMonth[$parent.$index][$index]"  ng-model-options="{ updateOn: 'blur' }" />
             </td>
             <td><span ng-hide="subCtl.editingYear[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'year')"><% info.price_year  | currency  %></span>
-                <input class="p-price" ng-blur="subCtl.blurEdit(subCtl.editingYear, $parent.$index, $index)"
+                <input  ng-change="subCtl.updateConfigPrice(config.role.key, this)" class="p-price" ng-blur="subCtl.blurEdit(subCtl.editingYear, $parent.$index, $index)"
                        ng-show="subCtl.editingYear[$parent.$index][$index]" type="number" min="0"
                        ng-model="info.price_year" value="" focus-if="subCtl.editingYear[$parent.$index][$index]"  ng-model-options="{ updateOn: 'blur' }" />
             </td>
@@ -99,10 +99,6 @@ Dashboard. Subscription. Config
         <!-- END candidate    ?-->
 
     </table>
-
-    <div class="text-center">
-        <button ng-click="subCtl.save()" class="btn btn-large btn-primary submit" type="button">Save</button>
-    </div>
 </div>
 @endsection
 @section('javascripts')

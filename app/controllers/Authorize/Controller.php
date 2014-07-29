@@ -22,10 +22,10 @@ class Controller extends \Illuminate\Routing\Controller
 
         if ($renewal->x_subscription_id){
 
-            Log::info('Monthly', array('callback_data' => var_export( Input::all() ) ) );
+            Log::info('Monthly', array('callback_data' => var_export( Input::all(), true ) ) );
 
         }else{
-            Log::info('Annually', array('callback_data' => var_export( Input::all() ) ) );
+            Log::info('Annually', array('callback_data' => var_export( Input::all(), true ) ) );
 
         }
 

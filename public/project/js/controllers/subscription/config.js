@@ -8,6 +8,49 @@
 
         self.application = window.CurrentApplication;
 
+        self.updateGlobalConfig = function(key){
+
+            var config = {
+                where : {
+                    key : key
+                },
+                update : {
+                    value : self[key]
+                }
+            };
+
+            $http.put(Routing.buildUrl('/subscription/config/global'),
+                config)
+                .success(function(data){
+                    console.log(data);
+                });
+        };
+
+        self.updateConfigPrice = function(role, el){
+            var currentObj = el.info,
+                config = {
+                  where : {
+                      partnership: currentObj.level,
+                      role: role,
+                      app_id: self.application.id
+                  },
+                  update : {
+                      price_month : currentObj['price_month'],
+                      price_year  : currentObj['price_year'],
+                      partnership_status : currentObj['partnership_status']
+                  }
+                };
+
+           console.log(currentObj);
+
+            $http.put(Routing.buildUrl('/subscription/config/price'),
+                config)
+                .success(function(data){
+                    console.log(data);
+                });
+        };
+
+
 
         var watchPrice = function(p, period, role){
             $scope.$watch(function(){

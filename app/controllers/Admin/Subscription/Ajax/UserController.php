@@ -58,7 +58,7 @@ class UserController extends AdminBaseController
 
         $usersQuery =   ExtendedUser::query();
 
-        $usersQuery = $usersQuery->select(DB::raw("distinct on (users.id, users.created_at, users.username)   users.*") )
+        $usersQuery = $usersQuery->select(DB::raw("distinct on (users.id, users.created_at, users.username, users.last_login)   users.*") )
                             ->leftJoin('subscriptions','subscriptions.user_id', '=', 'users.id');
 
         $usersQuery = $subStatusFilter ?  $usersQuery->whereIn('subscriptions.status', $subStatusFilter) : $usersQuery;

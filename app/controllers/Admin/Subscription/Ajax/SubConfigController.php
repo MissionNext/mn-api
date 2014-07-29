@@ -70,4 +70,26 @@ class SubConfigController extends AdminBaseController
         return Response::json(SubConfig::whereAppId( $appId )->get()->toArray());
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function putPrice()
+    {
+        $data = $this->request->request->all();
+        SubConfig::updateOrCreate($data['where'], $data['update']);
+
+        return Response::json(SubConfig::whereAppId( $data['where']['app_id'] )->get()->toArray());
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function putGlobal()
+    {
+        $data = $this->request->request->all();
+        GlobalConfig::updateOrCreate( $data['where'], $data['update']);
+
+        return Response::json(GlobalConfig::where($data['where'])->first());
+    }
+
 } 
