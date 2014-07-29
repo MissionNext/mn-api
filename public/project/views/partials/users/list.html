@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-md-7 col-md-offset-1">
             <input ng-change="customFiltering()" ng-model="search.profile" class="form-control"
-                   placeholder="search by user or email" name="search" type="text">
+                   placeholder="Search by username or email" name="search" type="text">
         </div>
     </div>
 
@@ -33,7 +33,7 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-10">
-                    <h3 class="text-center">
+                    <h3>
                         User list
                     </h3>
                 </div>
@@ -83,7 +83,9 @@
             </div>
         </div>
         <div class="col-md-3">
-            <h3 class="text-center">Filters:</h3>
+            <div class="user-filters pull-right">
+                <h3>Filters:</h3>
+            </div>
 
             <div class="user-filters pull-right">
                 <label for="apps-select-id">By applications:</label>

@@ -13,11 +13,6 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="{{ URL::route('users')}}"> <span class="glyphicon glyphicon-user"> </span> Users </a>
-
-                </li>
-
-                <li>
                     <a href="{{ URL::route('applications')}}" > <span class="glyphicon glyphicon-globe"> </span> Applications</a>
 
 
@@ -47,6 +42,10 @@
                             <a tabindex="-1" href="{{ URL::route('sub.coupon.list')}}">Coupon</a>
                         </li>
                     </ul>
+                </li>
+                <li>
+                    <a href="{{ URL::route('users')}}"> <span class="glyphicon glyphicon-user"> </span> Users </a>
+
                 </li>
 <!--                <li><a href="#">Link</a></li>-->
 <!--                <li class="dropdown">-->
