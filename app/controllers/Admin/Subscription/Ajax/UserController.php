@@ -6,6 +6,7 @@ namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Helpers\Language;
@@ -167,6 +168,12 @@ class UserController extends AdminBaseController
         $user->is_active = $isActive;
         $user->status = 0;
         $user->save();
+
+        Mail::queue('admin.mail.user.status', ['user' => $user->toArray()], function($message) use ($user)
+        {
+            $message->from('missionnext@mission.com', 'MissionNext');
+            $message->to('nslv84@gmail.com', 'John Smith')->subject('Status Changed');
+        });
 
         /** @var  $userRepo UserRepository */
         $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();

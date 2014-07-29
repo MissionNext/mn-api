@@ -51,6 +51,7 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
         $type = static::RENEW_TYPE_FROM_TODAY;
         $startDate = Carbon::now()->toDateTimeString();
         $endDate = Carbon::now()->addYear()->toDateTimeString();
+        $user_id = -1;
         //type e -  start date = end date current subscription, end date add year
         if (count($data)) {
             $type = $data[0]['renew_type'];
