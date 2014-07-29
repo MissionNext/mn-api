@@ -54,6 +54,7 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
         //type e -  start date = end date current subscription, end date add year
         if (count($data)) {
             $type = $data[0]['renew_type'];
+            $user_id = $data[0]['user_id'];
             $period = $data[0]['period'];
 
             switch ($type) {
@@ -121,7 +122,7 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
 
         if (!empty($return)) {
             $subIds = array_fetch($return->toArray(), 'id');
-            $this->getModel()->whereNotIn('id', $subIds)->update(['status' => Subscription::STATUS_CLOSED]);
+            $this->getModel()->whereNotIn('id', $subIds)->where('user_id', '=', $user_id)->update(['status' => Subscription::STATUS_CLOSED]);
         }
 
 
