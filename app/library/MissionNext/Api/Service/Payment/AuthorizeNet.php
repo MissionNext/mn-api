@@ -328,7 +328,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                     break;
                 }
                 case 'm' : {
-                    $old_price += $site['left_amount'];
+                    $old_price += min($site['left_amount'], $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month']);
                     $renew_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
                     break;
                 }
@@ -356,7 +356,6 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 }
                 case 'm' : {
                     $new_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
-                    $renew_price += $this->apps[$id]['sub_configs'][$role][$partnerships[$id]]['price_month'];
                     break;
                 }
             }
@@ -389,19 +388,41 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $total = 0;
 
         $compensation = $new_price - $old_price;
+        $discount_on = $site_number > 1;
+        $discount_percent = ( 100 - $this->discount ) / 100;
 
         if($renew_type == 'm'){
-            $total = $new_price + $renew_price + $this->fee;
+
+            $compensation = ($discount_on? $new_price * $discount_percent : $new_price) - $old_price;
+
+            $total = $new_price + $renew_price;
+
+            if($discount_on){
+                $total = $total * $discount_percent;
+            }
+
+            $total += $this->fee;
 
             if($old_price > 0){
-                $this->first_payment = $compensation > 0 ? $compensation : 0;
-                $this->first_payment += $renew_price;
+                $this->first_payment = $compensation + ($discount_on ? $renew_price * $discount_percent : $renew_price);
+
+                $this->first_payment += $this->fee;
+
+                if($coupon){
+                    $this->first_payment -= $coupon['value'];
+                }
+
+                if($this->first_payment < 0){
+                    $this->first_payment = 0;
+                }
+
+                $this->first_payment = round($this->first_payment);
             }
 
         } else {
 
-            if($site_number > 1){
-                $total += ($renew_price + $new_price) * ( ( 100 - $this->discount ) / 100 );
+            if($discount_on){
+                $total += ($renew_price + $new_price) * $discount_percent;
             } else {
                 $total += $renew_price + $new_price;
             }
@@ -414,11 +435,10 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 }
             }
 
-            if($coupon && $renew_type != 'm'){
+            if($coupon){
                 $total -= $coupon['value'];
             }
         }
-
 
         return round($total);
     }
