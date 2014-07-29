@@ -33,7 +33,7 @@ class SubConfig extends Model implements ModelInterface
         return [
 
             [
-                "role" => [ "key" => BaseDataModel::ORGANIZATION, "label" => "Receiving Organization"],
+                "role" => [ "key" => BaseDataModel::ORGANIZATION, "label" => BaseDataModel::label(BaseDataModel::ORGANIZATION)],
                 "partnership" =>
                     [
                         [ "price_month" => 0, "level" => Partnership::LIMITED,  "price_year" => 0, "partnership_status" => true   ],
@@ -44,7 +44,7 @@ class SubConfig extends Model implements ModelInterface
             ],
 
             [
-                "role" => [ "key" => BaseDataModel::AGENCY, "label" => "Agency"],
+                "role" => [ "key" => BaseDataModel::AGENCY, "label" => BaseDataModel::label(BaseDataModel::AGENCY)],
                 "partnership" =>
                     [
                         [ "price_month" => 0, "level" =>'',  "price_year" => 0, "partnership_status" => false   ],
@@ -53,7 +53,7 @@ class SubConfig extends Model implements ModelInterface
 
             ],
             [
-                "role" => [ "key" => BaseDataModel::CANDIDATE, "label" => "Candidate"],
+                "role" => [ "key" => BaseDataModel::CANDIDATE, "label" => BaseDataModel::label(BaseDataModel::CANDIDATE)],
                 "partnership" =>
                     [
                         [ "price_month" => 0, "level" =>'',  "price_year" => 0, "partnership_status" => false  ],

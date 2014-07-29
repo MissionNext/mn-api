@@ -23,7 +23,7 @@ Dashboard. Editing language
 
 
         <a href="{{ URL::route('languages') }}" class="btn btn-sm btn-warning pull-left cancel_btm"> Cancel </a>
-        <input type="submit" value="Edit" class="btn btn-sm btn-info pull-right">
+        <input type="submit" value="Save" class="btn btn-sm btn-info pull-right">
 
         {{ Form::close() }}
 

@@ -76,7 +76,7 @@
             valueField: 'id',
             preload: true,
             openOnFocus: true,
-            labelField: 'role',
+            labelField: 'label',
             searchField: 'role',
             options: [],
             create: false,

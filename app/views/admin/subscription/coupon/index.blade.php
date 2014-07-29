@@ -6,6 +6,11 @@ Dashboard. Subscription. Coupon
 
 @section('content')
 
+<div class="row ">
+    <div class="col-md-2 pull-right">
+        <a href="{{ URL::route('sub.coupon.create')}}"><span class="glyphicon glyphicon-plus"> </span> Add Coupon</a>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-11">
         <h3 class="text-center">

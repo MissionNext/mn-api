@@ -1,5 +1,5 @@
 <!-- Static navbar -->
-<div class="navbar navbar-default" role="navigation">
+<div class="navbar navbar-default" style="margin-bottom: 50px;" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -12,50 +12,19 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-user"> </span> Users <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{{ URL::route('users')}}">
-                                <span class="glyphicon glyphicon-list"> </span> List users
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ URL::route('userCreate')}}">
-                                <span class="glyphicon glyphicon-plus"> </span> New user
-                            </a>
-                        </li>
-                    </ul>
+                <li>
+                    <a href="{{ URL::route('users')}}"> <span class="glyphicon glyphicon-user"> </span> Users </a>
+
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-globe"> </span> Applications <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{{ URL::route('applications')}}">
-                                <span class="glyphicon glyphicon-list"> </span> List apps
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ URL::route('applicationCreate')}}">
-                                <span class="glyphicon glyphicon-plus"> </span> New app
-                            </a>
-                        </li>
-                    </ul>
+
+                <li>
+                    <a href="{{ URL::route('applications')}}" > <span class="glyphicon glyphicon-globe"> </span> Applications</a>
+
+
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-flag"> </span> Languages <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{{ URL::route('languages')}}">
-                                <span class="glyphicon glyphicon-list"> </span> List lang
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ URL::route('languageCreate')}}">
-                                <span class="glyphicon glyphicon-plus"> </span> New lang
-                            </a>
-                        </li>
-                    </ul>
+                <li>
+                    <a href="{{ URL::route('languages')}}" > <span class="glyphicon glyphicon-flag"> </span> Languages</a>
+
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-asterisk"> </span> Subscriptions <b class="caret"></b></a>
@@ -74,21 +43,8 @@
                             </ul>
                         </li>
                         <li class="divider"></li>
-                        <li class="dropdown-submenu">
-                            <a tabindex="-1" href="#">Coupon</a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{{ URL::route('sub.coupon.list')}}">
-                                        <span class="glyphicon glyphicon-list"> </span> List coupons
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ URL::route('sub.coupon.create')}}">
-                                        <span class="glyphicon glyphicon-plus"> </span> New coupon
-                                    </a>
-                                </li>
-
-                            </ul>
+                        <li>
+                            <a tabindex="-1" href="{{ URL::route('sub.coupon.list')}}">Coupon</a>
                         </li>
                     </ul>
                 </li>

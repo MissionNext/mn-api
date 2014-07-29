@@ -82,7 +82,7 @@ Dashboard. Subscription. Config
 
         <tr ng-repeat="info in config.partnership">
             <td></td>
-            <td><input type="checkbox" ng-disabled="!info . level || info.level === 'basic'" ng-checked="info . level && subCtl.configs[$parent.$index].partnership[$index].partnership_status" ng-model = "subCtl.configs[$parent.$index].partnership[$index].partnership_status" /></td>
+            <td><input type="checkbox" ng-show="info.level" ng-disabled="info.level === 'basic'" ng-checked="info . level && subCtl.configs[$parent.$index].partnership[$index].partnership_status" ng-model = "subCtl.configs[$parent.$index].partnership[$index].partnership_status" /></td>
             <td><% info . level || '-' %></td>
             <td><span ng-hide="subCtl.editingMonth[$parent.$index][$index]" ng-click="subCtl.editPrice($parent.$index, $index, 'month')"><% info.price_month  | currency  %></span>
                 <input class="p-price" ng-blur="subCtl.blurEdit(subCtl.editingMonth, $parent.$index, $index)"

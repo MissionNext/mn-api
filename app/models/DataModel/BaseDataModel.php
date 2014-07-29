@@ -35,7 +35,11 @@ class BaseDataModel extends Eloquent
      * @return string
      */
     public static function label($role){
-        $labels = [static::CANDIDATE => "Candidate", static::ORGANIZATION => "Receiving Organization", static::AGENCY => "Agency"];
+        $labels = [
+                   static::CANDIDATE => "Candidate",
+                   static::ORGANIZATION => "Receiving Organization",
+                   static::AGENCY => "Service Organization"
+                  ];
 
         return $labels[$role];
     }

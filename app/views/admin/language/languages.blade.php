@@ -5,7 +5,11 @@ Dashboard. Languages
 @endsection
 
 @section('content')
-
+<div class="row ">
+    <div class="col-md-2 pull-right">
+        <a href="{{ URL::route('languageCreate')}}"><span class="glyphicon glyphicon-plus"> </span> Add Language</a>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-11">
         <h3 class="text-center">

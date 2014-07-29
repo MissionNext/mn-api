@@ -6,6 +6,12 @@
 
 @section('content')
 
+<div class="row ">
+    <div class="col-md-2 pull-right">
+        <a href="{{ URL::route('applicationCreate')}}"><span class="glyphicon glyphicon-plus"> </span> Add App</a>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-11">
         <h3 class="text-center">
