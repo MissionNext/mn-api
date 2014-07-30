@@ -18,7 +18,7 @@ Dashboard. Editing coupon
         </div>
         @endif
 
-        {{ Form::model($model, array('route' => array('sub.coupon.edit', $model->id), 'class' => 'form-horizontal')) }}
+        {{ Form::model($model, array('route' => array('sub.coupon.update', $model->id), 'class' => 'form-horizontal')) }}
 
         <div class="form-group">
             {{ Form::label('code', 'Code', ['class' => 'col-sm-2 control-label']) }}

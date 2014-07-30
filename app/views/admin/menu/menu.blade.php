@@ -45,7 +45,9 @@
                 </li>
                 <li>
                     <a href="{{ URL::route('users')}}"> <span class="glyphicon glyphicon-user"> </span> Users </a>
-
+                </li>
+                <li>
+                    <a href="{{ URL::route('administrator.list')}}"> <span class="glyphicon glyphicon-user"> </span> Administrators </a>
                 </li>
 <!--                <li><a href="#">Link</a></li>-->
 <!--                <li class="dropdown">-->

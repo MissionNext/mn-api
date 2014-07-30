@@ -182,6 +182,7 @@
         };
 
         function getResultsPage(pageNumber) {
+            $scope.pagination.current = pageNumber;
             // this is just an example, in reality this stuff should be in a service
             $http.get(Routing.buildUrl('/user/list?page='+pageNumber+'&'+buildFilterQuery()))
                 .success(function(result) {

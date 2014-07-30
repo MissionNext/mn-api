@@ -29,6 +29,7 @@ use MissionNext\Api\Service\Payment\PaymentGatewayInterface;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Controllers\traits\Controller as SecurityTraits;
+use Cartalyst\Sentry\Sentry as MainSentry;
 
 class AdminBaseController extends Controller {
 
@@ -50,11 +51,15 @@ class AdminBaseController extends Controller {
     /** @var \MissionNext\Api\Service\Payment\AuthorizeNet  */
     protected $paymentGateway;
 
+    /** @var  MainSentry */
+    protected $sentry;
 
-    public function __construct( PaymentGatewayInterface $paymentGateway, Store $session, Redirector $redirector, Request $request, RepositoryContainerInterface $containerInterface, Factory $viewFactory)
+
+    public function __construct(PaymentGatewayInterface $paymentGateway, Store $session, Redirector $redirector, Request $request, RepositoryContainerInterface $containerInterface, Factory $viewFactory)
     {
         //$this->beforeFilter('csrf', array('on'=>'post'));
         $this->beforeFilter(RouteSecurityFilter::ROLE_ADMIN_AREA);
+        $this->sentry = Sentry::getFacadeRoot();
         $this->request = $request;
         $this->repoContainer = $containerInterface;
         $this->view = $viewFactory;

@@ -44,6 +44,7 @@
         font-weight: bold;
         font-family: 'arial', 'sans-serif';
     }
+
 </style>
 
 <table class="table table-bordered" >
@@ -79,6 +80,7 @@
             <button ng-click="setActive($event)" type="button" class="btn btn-success btn-xs"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
             <button ng-click="setDisabled($event)" type="button" class="btn btn-danger btn-xs" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
             </p>
+            <p class="help-block"><span style="font-weight: bold;">Note:</span> User is notified by email on status changes.</p>
         </td>
     </tr>
     </tbody>

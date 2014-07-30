@@ -25,6 +25,7 @@ abstract class Validator
 
     public function __construct(Request $request, Model $model = null)
     {
+        $this->validator = FValidator::make([], []);
         $this->request = $request;
         $this->model = $model;
         $this->input = $this->getInput();
@@ -95,7 +96,7 @@ abstract class Validator
      */
     public function updateRuleUnique($id, $field)
     {
-        static::$rules[$field] = static::$rules[$field].",{$field},".$id;
+        static::$rules[$field] = static::$rules[$field].",".$id;
 
         return $this;
     }
