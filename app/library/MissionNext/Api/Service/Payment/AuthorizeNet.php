@@ -167,6 +167,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $sub->billToCity = $data['required_data']['city'];
         $sub->customerPhoneNumber = $data['required_data']['phone'];
 
+        $sub->name = "MissionNext network subscription";
         $sub->orderDescription = $this->addAppsToPayment($data['subscriptions'], $user->role(), $data['period']);
 
         $sub->customerId = $user['id'];
