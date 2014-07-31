@@ -410,8 +410,6 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
             if($old_price > 0){
                 $this->first_payment = $compensation + ($discount_on ? $renew_price * $discount_percent : $renew_price);
 
-                $this->first_payment += $this->fee;
-
                 if($coupon){
                     $this->first_payment -= $coupon['value'];
                 }
@@ -421,6 +419,8 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 }
 
                 $this->first_payment = round($this->first_payment);
+
+                $this->first_payment += $this->fee;
             }
 
         } else {
@@ -441,6 +441,10 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             if($coupon){
                 $total -= $coupon['value'];
+            }
+
+            if($total < 0){
+                $total = 0;
             }
         }
 
