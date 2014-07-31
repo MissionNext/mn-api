@@ -8,6 +8,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use MissionNext\Controllers\Admin\Administrator;
 use MissionNext\Controllers\Admin\Filter\FilterController;
 use MissionNext\Controllers\Admin\Subscription\Ajax\SubscriptionController as SubscriptionControllerAjax;
 use MissionNext\Controllers\Admin\Subscription\CouponController;
@@ -178,6 +179,22 @@ class AdminRouting
                 'as' => 'search',
                 'uses' => 'MissionNext\Controllers\Admin\UserController@search'
             ));
+
+            //------------------- Admin Users --------------------------------
+             $this->router->controller('administrator', Administrator::class,
+                 [
+                     'getIndex' => 'administrator.list',
+                     'getCreate' => 'administrator.create',
+                     'postIndex' => 'administrator.new',
+                     'getEdit' => 'administrator.edit',
+                     'postEdit' => 'administrator.update',
+                     'deleteIndex' => 'administrator.delete',
+
+                 ]);
+
+
+
+            //------------------- End Admin Users ---------------------------
 
             // -------------------------------------------------
             // ------------------- Language --------------------

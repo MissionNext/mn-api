@@ -14,9 +14,11 @@
         {{ HTML::style(URL::asset('packages/admin/css/jquery-ui.css')) }}
     @show
 </head>
+
 <body>
 
 <div class="container">
+
     @section('menu')
         @include('admin.menu.menu')
         @if (Breadcrumbs::exists())
