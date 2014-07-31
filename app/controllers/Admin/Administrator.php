@@ -118,4 +118,19 @@ class Administrator extends AdminBaseController
 
         return $this->redirect->route($this->routeName('list'));
     }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function deleteIndex($id)
+    {
+        $model = $this->sentry->findUserById($id);
+
+        $model->remove();
+        $this->session->flash('info', "Admin successfully deleted");
+
+        return $this->redirect->route($this->routeName('list'));
+    }
 } 

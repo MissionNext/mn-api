@@ -188,6 +188,7 @@ class AdminRouting
                      'postIndex' => 'administrator.new',
                      'getEdit' => 'administrator.edit',
                      'postEdit' => 'administrator.update',
+                     'deleteIndex' => 'administrator.delete',
 
                  ]);
 

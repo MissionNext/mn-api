@@ -25,6 +25,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     private $defaults;
 
     private $part_multiplier;
+
     private $renew_type;
     private $first_payment;
 
