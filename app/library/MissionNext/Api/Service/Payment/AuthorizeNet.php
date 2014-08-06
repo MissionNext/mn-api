@@ -280,12 +280,15 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
             'subscriptions' => array()
         );
 
+        $discount_on = count($sites) > 1;
+
         foreach($sites as $site){
 
             $response['subscriptions'][] = array(
                 'app_id' => $site['id'],
                 'user_id' => $user_id,
                 'price' => $this->apps[$site['id']]['sub_configs'][$role][$site['partnership']]['price_'.$period],
+                'paid' => $discount_on?$this->apps[$site['id']]['sub_configs'][$role][$site['partnership']]['price_'.$period]*((100 - $this->discount)/100):$this->apps[$site['id']]['sub_configs'][$role][$site['partnership']]['price_'.$period],
                 'partnership' => $site['partnership'],
                 'is_recurrent' => $recurrent,
                 'period' => $period,
