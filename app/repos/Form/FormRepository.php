@@ -80,7 +80,6 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
         }
 
 
-
         return $this->transGroupLabels($structuredData);
     }
 
@@ -148,6 +147,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
                 'form_groups.is_outer_dependent',
                 'form_groups.order'
             );
+
 
         return
             new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['field_choices', 'field_default_choices', 'field_default_value', 'field_dictionary_id', 'field_default_dictionary_id', 'dictionary_order']));

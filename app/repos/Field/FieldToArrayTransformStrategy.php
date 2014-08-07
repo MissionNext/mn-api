@@ -28,8 +28,8 @@ class FieldToArrayTransformStrategy extends TransformDataStrategy {
         return $dataCollection->each(function ($field) {
           //  dd($field->toArray());
            foreach($this->fields as $fieldName){
-               $field->{$fieldName} =
-                   $field->{$fieldName} ? explode("|", $field->{$fieldName}) : null;
+               $field->{$fieldName} = //explode("|", $field->{$fieldName});
+                   strlen($field->{$fieldName}) > 0  ? explode("|", $field->{$fieldName}) : null;
            }
 
            return $field;
