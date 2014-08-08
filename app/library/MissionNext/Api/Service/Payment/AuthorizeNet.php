@@ -36,9 +36,8 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $this->recurringBilling = $authorizeNetARB;
         $this->paymentGateWay = $authorizeNet;
         $this->app = $app;
-
-        $this->discount = GlobalConfig::whereKey(GlobalConfig::SUBSCRIPTION_DISCOUNT)->firstOrFail()->value;
-        $this->fee = GlobalConfig::whereKey(GlobalConfig::CON_FEE)->firstOrFail()->value;
+        $this->discount = (new GlobalConfig)->subscriptionDiscount();
+        $this->fee = (new GlobalConfig())->conFee();
         $this->apps = $this->prepareApps(AppModel::with('configs')->with('subConfigs')->get()->toArray());
     }
 
