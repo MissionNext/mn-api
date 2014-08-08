@@ -4,6 +4,7 @@
 namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 
 
+use Illuminate\Mail\Message;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -169,7 +170,7 @@ class UserController extends AdminBaseController
         $user->status = 0;
         $user->save();
 
-        Mail::queue('admin.mail.user.status', ['user' => $user->toArray()], function($message) use ($user)
+        Mail::queue(['text'=>'admin.mail.user.status'], ['user' => $user->toArray()], function(Message $message) use ($user)
         {
             $message->from('missionnext@mission.com', 'MissionNext');
             $message->to($user->email, $user->username)->subject('Your access was changed');
