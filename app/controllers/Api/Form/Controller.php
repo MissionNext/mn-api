@@ -131,17 +131,20 @@ class Controller extends BaseController
             $fieldsToIns = array_map(function ($field) use ($timestamp, $group) { //@TODO cannot be associated field_group has no id
 
 
-                $searchOptions = ["search_options" => ["is_expanded" => false], "before_notes" => [], "after_notes" => []];
+                $meta = ["search_options" => ["is_expanded" => false], "before_notes" => [], "after_notes" => [],
+                    "css" => [ "attributes" => [ "size" => "default" ] ]
+                ];
                 if (isset($field["is_expanded"])) {
-                    $searchOptions["search_options"]["is_expanded"] = (bool)$field["is_expanded"];
+                    $meta["search_options"]["is_expanded"] = (bool)$field["is_expanded"];
                 }
-
-
+                if (isset($field["css"]["attributes"]["size"])) {
+                    $meta["css"]["attributes"]["size"] = $field["css"]["attributes"]["size"];
+                }
                 if (isset($field['before_notes'])) {
-                   $searchOptions['before_notes'] = $field['before_notes'];
+                    $meta['before_notes'] = $field['before_notes'];
                 }
                 if (isset($field['after_notes'])) {
-                    $searchOptions['after_notes'] = $field['after_notes'];
+                    $meta['after_notes'] = $field['after_notes'];
                 }
 
                 return
@@ -149,7 +152,7 @@ class Controller extends BaseController
                         "group_id" => $group["id"],
                         "symbol_key" => $field["symbol_key"],
                         "order" => $field["order"],
-                        "meta" => json_encode($searchOptions),
+                        "meta" => json_encode($meta),
                         "created_at" => $timestamp,
                         "updated_at" => $timestamp,
                     );
