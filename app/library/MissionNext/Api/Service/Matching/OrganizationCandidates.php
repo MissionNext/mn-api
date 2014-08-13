@@ -60,21 +60,15 @@ class OrganizationCandidates extends Matching
 //                      var_dump("job_key = $matchingDataKey", "can_key = $candidateKey", "job_value =", $matchingDataValue, "can_value=", $canValue, "weight = {$conf['weight']}");
 //                  }
                     /** if value starts with (!) any value  matches */
-                    if (in_array($matchingDataKey, $selectMatchingDataFields) && $this->isNoPreference($matchingDataValue) ) {
+                    if (
+                        ( in_array($matchingDataKey, $selectMatchingDataFields) && $this->isNoPreference($matchingDataValue) )
+                        ||
+                        ( in_array($mainDataKey, $selectMainDataFields) &&  $this->isNoPreference($mainDataValue) )
+                    )
+                    {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         $matchingDataSet[$k]['results'][$matchingDataKey] =
                             [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
-                        continue;
-                    }
-                    /** if value starts with (!) any value  matches */
-                    if (in_array($mainDataKey, $selectMainDataFields) &&  $this->isNoPreference($mainDataValue)) {
-
-                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
-
-                        [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
-                        $matchingDataSet[$k]['results'][$matchingDataKey] =
-                            [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
-
                         continue;
                     }
 
