@@ -245,7 +245,7 @@ class FieldRepository extends AbstractFieldRepository
             }
 
         }
-        $role = $this->repoContainer->securityContext();
+        $role = $this->repoContainer->securityContext()->role();
 
         return FieldChoicesFormat::format($this->fieldsExpanded()->whereIn("{$role}_fields.id", $ids)->get());
     }
