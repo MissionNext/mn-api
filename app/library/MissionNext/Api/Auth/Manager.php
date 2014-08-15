@@ -28,6 +28,7 @@ class Manager
         $application = Application::wherePublicKey($token->publicKey)->first();
 
         if (!$application){
+
             throw new AuthenticationException("Authentication failed", 5);
         }
 
@@ -39,11 +40,13 @@ class Manager
 
         FSecContext::setToken($token);
 
-//        if (($current_timestamp - $token->created) > 120 ){//@TODO fix timestamp authentication
-//            throw new AuthenticationException("Timedout", 1);
-//        } elseif ( ($current_timestamp < $token->created) && !App::environment('local','stage') ) {
-//            throw new AuthenticationException("Invalid timestamp", 2);
-//        }
+        if (!App::environment('local','stage')) {
+            if (($current_timestamp - $token->created) > 120) { //@TODO fix timestamp authentication
+                throw new AuthenticationException("Timed out", 1);
+            } elseif (($current_timestamp < $token->created)) {
+                throw new AuthenticationException("Invalid timestamp", 2);
+            }
+        }
 
         if (!$this->validateHash($application)){
             throw new AuthenticationException("Private Key Exception", 4);

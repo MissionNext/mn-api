@@ -112,7 +112,7 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
             $this->forFill['is_recurrent'] = $isRecurrent;
             $this->forFill['user_id'] = $subscription['user_id'];
             $this->forFill['price'] = $subscription['price'];
-            $this->forFill['paid'] = $subscription['price'];
+            $this->forFill['paid'] = $subscription['paid'];
 
             $this->updateClosed($this->forFill);
 

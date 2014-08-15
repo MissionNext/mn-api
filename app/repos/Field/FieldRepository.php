@@ -257,7 +257,7 @@ class FieldRepository extends AbstractFieldRepository
      *
      * @throws \MissionNext\Api\Exceptions\FieldException
      */
-    public function deleteFields(array $ids)
+    public function redeleteFields(array $ids)
     {
         $symbol_keys = $this->getModel()->whereIn("id", $ids)->lists('symbol_key');
 

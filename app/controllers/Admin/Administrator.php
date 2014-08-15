@@ -4,6 +4,10 @@
 namespace MissionNext\Controllers\Admin;
 
 
+use Carbon\Carbon;
+use MissionNext\Models\Admin\AdminUserModel;
+use MissionNext\Models\Subscription\Subscription;
+use MissionNext\Repos\Subscription\SubscriptionRepository;
 use MissionNext\Validators\Administrator as AdminValidator;
 
 class Administrator extends AdminBaseController
@@ -18,11 +22,10 @@ class Administrator extends AdminBaseController
     public function getIndex()
     {
         $users = $this->sentry->findAllUsers();
-
-        $users = array_filter($users, function($user){
-
-            return $this->sentry->getUser()->id != $user->id;
-        });
+//        $users = array_filter($users, function($user){
+//
+//            return $this->sentry->getUser()->id != $user->id;
+//        });
         return $this->view->make($this->viewTemplate('index'), ['models' => $users ]);
 
     }

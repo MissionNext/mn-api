@@ -20,6 +20,7 @@ use MissionNext\Controllers\Api\Translation\FormGroupTransController;
 use MissionNext\Controllers\Api\Translation\LanguageController;
 use MissionNext\Controllers\Api\Matching\ConfigController;
 use MissionNext\Controllers\Api\Notes\NotesController;
+use MissionNext\Controllers\Api\User\AdminController;
 use MissionNext\Controllers\Api\User\OrganizationController;
 use MissionNext\Controllers\Api\Profile\SearchController;
 use MissionNext\Controllers\Api\User\UserController;
@@ -66,6 +67,8 @@ class Routing
         Route::group(array('prefix' => static::API_PREFIX), function () {
 
             Route::get('/test', BaseController::class.'@testApi');
+
+            Route::controller('administrator', AdminController::class);
 
 
             Route::pattern('type', '[A-Za-z_-]+');

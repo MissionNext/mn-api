@@ -41,14 +41,18 @@ Dashboard. Users
         <td class="text-center">
             <a href="{{ URL::route('administrator.edit', array(  $model->id) ) }}" class="btn-warning btn btn-xs">
                 <span class="glyphicon glyphicon-edit"> </span> Edit </a>
-
             {{ Form::open(array(
             'route' => array('administrator.delete', $model->id),
             'class' => 'pull-right',
             'method' => 'delete',
             )) }}
+            @if (Sentry::getUser()->id !== $model->id)
 
-            <input type="submit" class="btn btn-xs btn-danger" value=" Delete" onclick=' return confirm("confirm delete admin?")' >
+
+                <input type="submit" class="btn btn-xs btn-danger" value=" Delete" onclick=' return confirm("confirm delete admin?")' >
+            @else
+                <input disabled="disabled" type="submit" class="btn btn-xs btn-danger" value=" Delete" onclick=' return confirm("confirm delete admin?")' >
+            @endif
             {{ Form::close() }}
         </td>
     </tr>
