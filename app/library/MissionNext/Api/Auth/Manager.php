@@ -48,6 +48,7 @@ class Manager
             }
         }
 
+
         if (!$this->validateHash($application)){
             throw new AuthenticationException("Private Key Exception", 4);
         }

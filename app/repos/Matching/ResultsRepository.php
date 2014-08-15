@@ -71,7 +71,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                  })
                  ->where("matching_results.for_user_type","=", $forUserType)
                  ->where("matching_results.user_type", "=", $userType)
-                 ->where("matching_results.for_user_id", "=",  $this->securityContext()->getToken()->currentUser()->id)
+                 ->where("matching_results.for_user_id", "=",  $forUserId)
                  ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
             $builder = $userType === BaseDataModel::JOB ? $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"))

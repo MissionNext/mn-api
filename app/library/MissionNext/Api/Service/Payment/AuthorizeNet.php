@@ -36,9 +36,8 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $this->recurringBilling = $authorizeNetARB;
         $this->paymentGateWay = $authorizeNet;
         $this->app = $app;
-
-        $this->discount = GlobalConfig::whereKey(GlobalConfig::SUBSCRIPTION_DISCOUNT)->firstOrFail()->value;
-        $this->fee = GlobalConfig::whereKey(GlobalConfig::CON_FEE)->firstOrFail()->value;
+        $this->discount = (new GlobalConfig)->subscriptionDiscount();
+        $this->fee = (new GlobalConfig())->conFee();
         $this->apps = $this->prepareApps(AppModel::with('configs')->with('subConfigs')->get()->toArray());
     }
 
@@ -280,12 +279,15 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
             'subscriptions' => array()
         );
 
+        $discount_on = count($sites) > 1;
+
         foreach($sites as $site){
 
             $response['subscriptions'][] = array(
                 'app_id' => $site['id'],
                 'user_id' => $user_id,
                 'price' => $this->apps[$site['id']]['sub_configs'][$role][$site['partnership']]['price_'.$period],
+                'paid' => $discount_on?$this->apps[$site['id']]['sub_configs'][$role][$site['partnership']]['price_'.$period]*((100 - $this->discount)/100):$this->apps[$site['id']]['sub_configs'][$role][$site['partnership']]['price_'.$period],
                 'partnership' => $site['partnership'],
                 'is_recurrent' => $recurrent,
                 'period' => $period,
@@ -411,8 +413,6 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
             if($old_price > 0){
                 $this->first_payment = $compensation + ($discount_on ? $renew_price * $discount_percent : $renew_price);
 
-                $this->first_payment += $this->fee;
-
                 if($coupon){
                     $this->first_payment -= $coupon['value'];
                 }
@@ -422,6 +422,8 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
                 }
 
                 $this->first_payment = round($this->first_payment);
+
+                $this->first_payment += $this->fee;
             }
 
         } else {
@@ -442,6 +444,10 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             if($coupon){
                 $total -= $coupon['value'];
+            }
+
+            if($total < 0){
+                $total = 0;
             }
         }
 

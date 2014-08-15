@@ -79,7 +79,7 @@ class AdminBaseController extends Controller {
             $input = Input::only('username', 'password');
             $rules = array(
                 'username' => 'required|min:3|max:200',
-                'password' => 'required|min:6'
+                'password' => 'required|min:4'
             );
             $validator = Validator::make($input, $rules);
             if ($validator->fails()) {

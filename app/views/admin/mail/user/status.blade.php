@@ -1,9 +1,6 @@
-<body>
 
-<p>Dear {{ ucfirst($user['username']) }},</p>
-<p>Your global MissionNext network status changed</p>
-<p>Current status: {{{ $user['is_active'] ? 'Access Granted.' : 'Access Denied.'  }}}</p>
-<p>Thank you,</p>
+Dear {{ ucfirst($user['username']) }},
+Your global MissionNext network status changed
+Current status: {{{ $user['is_active'] ? 'Access Granted.' : 'Access Denied.'  }}}
+Thank you,
 MissionNext Team
-
-</body>
