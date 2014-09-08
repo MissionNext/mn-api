@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Api\Affiliate\AffiliateController;
+use MissionNext\Controllers\Api\AppConfig\UserConfigController;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\GlobalConfig\GlobalConfigController;
@@ -181,6 +182,7 @@ class Routing
 
             //APP CONFIGS CONTROLLER
             Route::controller('configs', AppConfigController::class, []);
+            Route::controller('uconfigs', UserConfigController::class, []);
             Route::controller('gconfigs', GlobalConfigController::class, []);
             Route::controller('coupon', CouponController::class, []);
 

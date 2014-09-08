@@ -30,6 +30,15 @@ trait Controller
     }
 
     /**
+     * @return \MissionNext\Models\User\User
+     */
+    protected function getUser()
+    {
+
+        return $this->getToken()->currentUser();
+    }
+
+    /**
      * @return Application
      */
     protected function getApp()
