@@ -20,6 +20,7 @@ class FieldChoicesFormat extends AbstractFormat
                 foreach($el->choices as $key=>$choice){
                     $choiceObject = new FieldChoices();
                     $choiceObject->setDefaultValue($choice);
+                    $choiceObject->setMeta($el->dictionary_meta[$key]);
                     $choiceObject->setValue('');
                     $choiceObject->setId($el->dictionary_id[$key]);
                     $choiceObject->setDictionaryOrder($el->dictionary_order[$key]);
@@ -29,6 +30,7 @@ class FieldChoicesFormat extends AbstractFormat
             }
             unset($el->dictionary_id);
             unset($el->dictionary_order);
+            unset($el->dictionary_meta);
         });
 
         return $collection;

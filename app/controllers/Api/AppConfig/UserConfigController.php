@@ -25,11 +25,29 @@ class UserConfigController extends BaseController
     }
 
     /**
+     * @return RestResponse
+     */
+    public function getIndex($userId)
+    {
+
+        return new RestResponse(UserConfigs::where(['app_id' => $this->getApp()->id(), 'user_id' => $userId])->get());
+    }
+
+    /**
+     * @return RestResponse
+     */
+    public function getCurrent()
+    {
+
+        return new RestResponse(UserConfigs::where(['app_id' => $this->getApp()->id(), 'user_id' => $this->getUser()->id])->get());
+    }
+
+    /**
      * @param $key
      *
      * @return RestResponse
      */
-    public function getKey($key)
+    public function getKey($key, $userId)
     {
 
 
@@ -38,7 +56,7 @@ class UserConfigController extends BaseController
                 [
                     'key' => $key,
                     'app_id' => $this->getApp()->id(),
-                    'user_id' => $this->getUser()->id,
+                    'user_id' => $userId,
                 ]
             )->first()
         );

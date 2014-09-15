@@ -42,11 +42,13 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             $structuredData[$groupId]['depends_on'] = $groupField->depends_on;
             $structuredData[$groupId]['is_outer_dependent'] = $groupField->is_outer_dependent;
             $structuredData[$groupId]['order'] = $groupField->order;
+            $structuredData[$groupId]['meta'] = $groupField->group_meta ? json_decode($groupField->group_meta, true) : [];
 
             $choices = $groupField->field_choices ? : [];
             $defChoices = $groupField->field_default_choices ? : [];
             $choicesIds = $groupField->field_default_dictionary_id ? : [];
             $dictionaryOrder = $groupField->dictionary_order ? : [];
+            $dictionaryMeta = $groupField->dictionary_meta ? : [];
 
             $structuredData[$groupId]['fields'][$fieldId]['id'] = $fieldId;
             $structuredData[$groupId]['fields'][$fieldId]['symbol_key'] = $groupField->field_symbol_key;
@@ -63,6 +65,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             $structuredData[$groupId]['fields'][$fieldId]['default_value'] = $groupField->field_default_value;
             $structuredData[$groupId]['fields'][$fieldId]['order'] = $groupField->field_order;
             $structuredData[$groupId]['fields'][$fieldId]['meta'] = json_decode($groupField->field_meta, true);
+            $structuredData[$groupId]['fields'][$fieldId]['model_meta'] = json_decode($groupField->model_field_meta, true);
 
             $dictionary = [];
 
@@ -71,7 +74,8 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
                 $dictionary[$key]['value'] = isset($choices[$key]) ? $choices[$key] : null;
                 $dictionary[$key]['default_value'] = $defChoice;
                 $dictionary[$key]['id'] = intval($choicesIds[$key]);
-                $dictionary[$key]['order'] = intval($dictionaryOrder[$key]);
+                $dictionary[$key]['dictionary_order'] = intval($dictionaryOrder[$key]);
+                $dictionary[$key]['dictionary_meta'] = isset($dictionaryMeta[$key]) ? json_decode($dictionaryMeta[$key], true) : [];
             }
 
             $structuredData[$groupId]['fields'][$fieldId]['choices'] = $dictionary;
@@ -128,6 +132,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
                 $type . '_fields_trans.note as field_trans_note',
                 $type . '_fields.name as field_name',
                 $type . '_fields.note as field_note',
+                DB::raw("({$type}_fields.meta)::text as model_field_meta"),
                 $type . '_fields.default_value as field_default_value',
 
                 DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary_trans.value", "field_choices", "{$type}_dictionary_trans.dictionary_id" )),
@@ -135,6 +140,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
                 //DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary_trans.dictionary_id", "field_dictionary_id","{$type}_dictionary_trans.dictionary_id")),
                 DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary.id", "field_default_dictionary_id","{$type}_dictionary.id")),
                 DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary.order", "dictionary_order", "{$type}_dictionary.id")),
+                DB::raw(Sql::getDbStatement()->groupConcat("{$type}_dictionary.meta", "dictionary_meta", "{$type}_dictionary.id")),
                 $type.'_fields.symbol_key as field_symbol_key',
                 'data_model_' . $type . '_fields.constraints as field_constraints',
                 $type."_fields.id as field_id",
@@ -143,6 +149,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
                 DB::raw('(group_fields.meta)::text as field_meta'),
                 'form_groups.id',
                 'form_groups.name',
+                DB::raw('(form_groups.meta)::text as group_meta'),
                 'form_groups.depends_on',
                 'form_groups.is_outer_dependent',
                 'form_groups.order'
@@ -150,7 +157,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
 
 
         return
-            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['field_choices', 'field_default_choices', 'field_default_value', 'field_dictionary_id', 'field_default_dictionary_id', 'dictionary_order']));
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['field_choices', 'field_default_choices', 'field_default_value', 'field_dictionary_id', 'field_default_dictionary_id', 'dictionary_order', 'dictionary_meta']));
 
     }
 

@@ -58,7 +58,6 @@ class UserController extends BaseController
 
         /** @var  $request Req */
         $request = Request::instance();
-        //echo "<pre>"; print_r($request); exit;
         $hash = $request->request->all();
         if ($files = Input::file()){
             $this->checkFile($files, $hash);

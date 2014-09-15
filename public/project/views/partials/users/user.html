@@ -87,7 +87,16 @@
 </table>
 <div class="profile-data">
 
-
+    <button  ng-init="showProfile = false;" type="button" ng-click="showProfile = !showProfile;" class="btn btn-default"><% showProfile  && 'Hide' || 'Show'  %> Profile</button>
+    <h3 ng-show="showProfile">Profile Data:</h3>
+    <table ng-show="showProfile" class="table table-hover" >
+        <tbody ng-repeat="(fieldName, value) in user.profileData" >
+        <tr>
+            <th><% fieldName %></th>
+            <td><% value %></td>
+        </tr>
+        </tbody>
+    </table>
 
     <h3>Subscriptions:</h3>
     <p ng-hide="subscriptions.length">No subscriptions</p>

@@ -22,14 +22,38 @@ abstract class BaseField extends Eloquent
     protected $table = 'fields';
 
 
-    protected $fillable = array('name', 'multiple', 'symbol_key', 'default_value', 'type', 'meta');
+    protected $fillable = array('name',  'symbol_key', 'default_value', 'type', 'meta', 'note');
 
 
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function type()
     {
 
         return $this->belongsTo(FieldType::class, 'type');
     }
+
+    /**
+     * @param array $meta
+     *
+     * @return $this
+     */
+    public function setMeta(array $meta)
+    {
+        $this->meta = json_encode($meta);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMeta()
+    {
+
+        return json_decode($this->meta, true);
+    }
+
 
 } 

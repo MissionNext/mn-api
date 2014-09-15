@@ -291,6 +291,7 @@
             }
             $scope.showLevel = data.user.role === 'organization';
             $scope.statuses = data.statuses;
+            //console.log($scope.user.profileData);
         });
 
         var watchPaid  = function(){

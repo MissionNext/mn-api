@@ -6,7 +6,21 @@ use Illuminate\Support\Collection;
 
 abstract class TransformDataStrategy
 {
+    /**
+     * @var \IteratorAggregate
+     */
+    protected  $dataCollection;
+
     public abstract function transform(\IteratorAggregate $collection);
+
+    /**
+     * @return \IteratorAggregate
+     */
+    public function getCollection()
+    {
+
+        return $this->dataCollection;
+    }
 
     /**
      * @param DataTransformer $transformer

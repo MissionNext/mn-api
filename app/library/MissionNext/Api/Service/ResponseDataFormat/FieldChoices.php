@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FieldChoices extends Model
 {
 
-    protected $fillable = ['value', 'default_value', 'id', 'order', 'dictionary_order'];
+    protected $fillable = ['value', 'default_value', 'id', 'order', 'dictionary_order', 'meta'];
 
     #protected  $value, $default_value, $id, $order, $dictionary_order;
 
@@ -51,6 +51,14 @@ class FieldChoices extends Model
     public function setDictionaryOrder($dictionary_order)
     {
         $this->dictionary_order = $dictionary_order;
+    }
+
+    /**
+     * @param $meta
+     */
+    public function setMeta($meta)
+    {
+        $this->meta = json_decode($meta, true);
     }
 
 } 

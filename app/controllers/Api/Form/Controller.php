@@ -108,6 +108,7 @@ class Controller extends BaseController
             return [
                 "symbol_key" => $group["symbol_key"],
                 "name" => $group["name"],
+                "meta" => isset($group["meta"]) && !is_string($group['meta']) ? json_encode($group['meta']) : json_encode([]),
                 "order" => $group["order"],
                 "form_id" => $form->id,
                 "depends_on" => $group["depends_on"],
@@ -132,14 +133,12 @@ class Controller extends BaseController
 
 
                 $meta = ["search_options" => ["is_expanded" => false], "before_notes" => [], "after_notes" => [],
-                    "css" => [ "attributes" => [ "size" => "default" ] ]
+
                 ];
                 if (isset($field["is_expanded"])) {
                     $meta["search_options"]["is_expanded"] = (bool)$field["is_expanded"];
                 }
-                if (isset($field["css"]["attributes"]["size"])) {
-                    $meta["css"]["attributes"]["size"] = $field["css"]["attributes"]["size"];
-                }
+
                 if (isset($field['before_notes'])) {
                     $meta['before_notes'] = $field['before_notes'];
                 }

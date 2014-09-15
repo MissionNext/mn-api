@@ -216,6 +216,7 @@ class BaseController extends Controller
     {
         $fieldNames = array_keys($profileData);
         $dependentFields = $this->formGroupRepo()->dependentFields()->get();
+        //dd($dependentFields->toArray());
         foreach($dependentFields as $field){
             $ownerField = $field->depends_on;
             if (isset($profileData[$ownerField])){
