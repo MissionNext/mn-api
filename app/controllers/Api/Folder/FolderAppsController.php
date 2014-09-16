@@ -8,8 +8,16 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\FolderApps\FolderApps;
 
+/**
+ * Class FolderAppsController
+ *
+ * @package MissionNext\Controllers\Api\Folder
+ */
 class FolderAppsController extends BaseController
 {
+    /**
+     * @return RestResponse
+     */
     public function postIndex()
     {
         $request = $this->request->request;

@@ -9,9 +9,16 @@ use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Configs\AppConfigs;
 use MissionNext\Models\User\User;
 
+/**
+ * Class ConfigController
+ *
+ * @package MissionNext\Controllers\Api\AppConfig
+ */
 class ConfigController extends BaseController
 {
     /**
+     * Create App Config
+     *
      * @return RestResponse
      */
     public function postIndex()
@@ -27,6 +34,8 @@ class ConfigController extends BaseController
     }
 
     /**
+     * Get All configs
+     *
      * @return RestResponse
      */
     public function getIndex()
@@ -36,7 +45,9 @@ class ConfigController extends BaseController
     }
 
     /**
-     * @param $key
+     * Get App Config by Key
+     *
+     * @param string $key
      *
      * @return RestResponse
      */

@@ -31,9 +31,10 @@ class FieldToArrayTransformStrategy extends TransformDataStrategy {
         return $this->dataCollection->each(function ($field) {
           //  dd($field->toArray());
            foreach($this->fields as $fieldName){
+
                if (is_string($fieldName)) {
                    $field->{$fieldName} = //explode("|", $field->{$fieldName});
-                       strlen($field->{$fieldName}) > 0 ? explode("|", $field->{$fieldName}) : null;
+                       strlen($field->{$fieldName}) > 0  ? explode("|", $field->{$fieldName}) : null;
                }else{
                    $name = key($fieldName);
                    $field->{$name} =  json_decode($field->{$name}, true);

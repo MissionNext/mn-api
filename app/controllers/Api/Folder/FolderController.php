@@ -10,6 +10,11 @@ use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Models\Folder\Folder;
 use MissionNext\Models\Translation\FolderTrans;
 
+/**
+ * Class FolderController
+ *
+ * @package MissionNext\Controllers\Api\Folder
+ */
 class FolderController extends BaseController
 {
     /**
@@ -39,7 +44,8 @@ class FolderController extends BaseController
     }
 
     /**
-     * @param $id
+     * @param integer $id
+     *
      * @return RestResponse
      */
     public function show($id)
@@ -52,7 +58,7 @@ class FolderController extends BaseController
     }
 
     /**
-     * @param $id
+     * @param integer $id
      *
      * @return RestResponse
      */
@@ -68,7 +74,7 @@ class FolderController extends BaseController
     }
 
     /**
-     * @param $id
+     * @param integer $id
      *
      * @return RestResponse
      */
@@ -84,7 +90,7 @@ class FolderController extends BaseController
     }
 
     /**
-     * @param $role
+     * @param string $role
      *
      * @return RestResponse
      */
@@ -109,8 +115,5 @@ class FolderController extends BaseController
 
         return new RestResponse($folders);
     }
-
-
-
 
 } 

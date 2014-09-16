@@ -11,11 +11,18 @@ use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Favorite\Favorite;
 use MissionNext\Models\Notes\Notes;
 
+/**
+ * Class Favourite Controller
+ *
+ * @package MissionNext\Controllers\Api\Favorite
+ */
 class Controller extends BaseController {
 
     /**
-     * @param $user_id
-     * @param $role
+     * Get User Favourites by role and userId
+     *
+     * @param integer $user_id
+     * @param string $role
      *
      * @return RestResponse
      */
@@ -56,6 +63,8 @@ class Controller extends BaseController {
     }
 
     /**
+     * Save Favourite
+     *
      * @return RestResponse
      */
     public function store(){
@@ -67,7 +76,9 @@ class Controller extends BaseController {
     }
 
     /**
-     * @param $favorite_id
+     * Delete Favourite
+     *
+     * @param integer $favorite_id
      *
      * @return RestResponse
      */

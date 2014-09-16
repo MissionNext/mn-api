@@ -12,14 +12,15 @@ use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
 
 /**
- * Class Controller
+ * Class Field Controller
+ *
  * @package MissionNext\Controllers\Api\Field
  */
 class Controller extends BaseController
 {
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return RestResponse
      */
@@ -30,7 +31,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return RestResponse
      */
@@ -45,7 +46,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return RestResponse
      */
@@ -61,7 +62,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return RestResponse
      */
@@ -77,20 +78,20 @@ class Controller extends BaseController
 
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return RestResponse
      */
     public function getModel($type)
     {
 
-        return new RestResponse($this->fieldRepo()->modelFieldsExpanded()->get());
+        return new RestResponse(FieldChoicesFormat::format($this->fieldRepo()->modelFieldsExpanded()->get()));
 
     }
 
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return RestResponse
      */

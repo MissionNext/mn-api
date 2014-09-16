@@ -16,10 +16,9 @@ class AddMetaToDictionaryTable extends Migration {
         {
             Schema::table($role.'_dictionary', function(Blueprint $table)
             {
-               $table->text('meta')->nullable();
+                $table->text('meta')->default('');
             });
         }
-
 	}
 
 	/**

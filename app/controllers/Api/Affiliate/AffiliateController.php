@@ -13,13 +13,21 @@ use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Role\Role;
 use MissionNext\Models\User\User;
+use MissionNext\Routing\Routing;
 
-
+/**
+ * Class AffiliateController
+ *
+ * @package MissionNext\Controllers\Api\Affiliate
+ *
+ */
 class AffiliateController extends BaseController
 {
     /**
-     * @param $affiliateId
-     * @param $affiliateType
+     * Get affiliates <br>
+     *
+     * @param integer $affiliateId
+     * @param string $affiliateType
      *
      * @return RestResponse
      */
@@ -70,7 +78,9 @@ class AffiliateController extends BaseController
     }
 
     /**
-     * @param $affiliateId
+     * Get Agency jobs <br>
+     *
+     * @param integer $affiliateId
      *
      * @return RestResponse
      *
@@ -117,14 +127,15 @@ class AffiliateController extends BaseController
             array_push($data[$r->id]["jobs"], json_decode($r->job_data) );
         }
 
-      //  echo "<pre>"; print_r($data); exit;
 
         return new RestResponse(array_values($data));
     }
 
     /**
-     * @param $requesterId
-     * @param $approverId
+     * Get Affiliates<br>
+     *
+     * @param integer $requesterId
+     * @param integer $approverId
      *
      * @return RestResponse
      */
@@ -139,25 +150,30 @@ class AffiliateController extends BaseController
     }
 
     /**
-     * @param $requesterId
-     * @param $approverId
+     * Create Affiliate
+     *
+     * @param integer $requesterId
+     * @param  integer $approverId
      *
      * @return RestResponse
      * @throws \MissionNext\Api\Exceptions\AffiliateException
      */
     public function postIndex($requesterId, $approverId)
     {
-//        /** @var  $pheanstalk \Pheanstalk_Pheanstalk */
-//        $pheanstalk=Queue::getPheanstalk();
-//        dd($pheanstalk->clearTube("default"));
-
-
         $affiliateData = $this->affiliateCheck($requesterId, $approverId);
         $affiliateData["status"] = Affiliate::STATUS_PENDING;
 
         return new RestResponse(Affiliate::create($affiliateData));
     }
 
+    /**
+     * Approve Affiliate
+     *
+     * @param integer $requesterId
+     * @param integer $approverId
+     *
+     * @return RestResponse
+     */
     public function postApprove($requesterId, $approverId)
     {
         $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
@@ -173,6 +189,8 @@ class AffiliateController extends BaseController
     }
 
     /**
+     * Cancel Affiliate
+     *
      * @param $requesterId
      * @param $approverId
      *
@@ -189,6 +207,8 @@ class AffiliateController extends BaseController
     }
 
     /**
+     * Pend Affiliate
+     *
      * @param $requesterId
      * @param $approverId
      *
@@ -259,6 +279,7 @@ class AffiliateController extends BaseController
 
     /**
      * @param $requesterId
+     *
      * @return User
      */
     private function getRequester($requesterId)
@@ -280,6 +301,7 @@ class AffiliateController extends BaseController
 
     /**
      * @param $affiliateId
+     *
      * @return Role
      */
     private function getRole($affiliateId)

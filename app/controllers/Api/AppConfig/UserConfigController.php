@@ -7,9 +7,16 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Configs\UserConfigs;
 
+/**
+ * Class UserConfigController
+ *
+ * @package MissionNext\Controllers\Api\AppConfig
+ */
 class UserConfigController extends BaseController
 {
     /**
+     * Create User Config
+     *
      * @return RestResponse
      */
     public function postIndex()
@@ -25,6 +32,10 @@ class UserConfigController extends BaseController
     }
 
     /**
+     * Get Config by userId
+     *
+     * @param integer $userId
+     *
      * @return RestResponse
      */
     public function getIndex($userId)
@@ -34,6 +45,8 @@ class UserConfigController extends BaseController
     }
 
     /**
+     * Get Config by current user
+     *
      * @return RestResponse
      */
     public function getCurrent()
@@ -43,7 +56,10 @@ class UserConfigController extends BaseController
     }
 
     /**
-     * @param $key
+     * Get User Config by userId and key
+     *
+     * @param string $key
+     * @param integer $userId
      *
      * @return RestResponse
      */

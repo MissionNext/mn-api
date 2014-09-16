@@ -90,6 +90,7 @@ class FieldRepository extends AbstractFieldRepository
             ->leftJoin($role . '_dictionary', $role . '_dictionary.field_id', '=', $role . '_fields.id')
             ->groupBy($role . '_fields.id', 'field_types.name');
 
+
         return
             new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices', 'default_value', 'dictionary_id', "dictionary_order", "dictionary_meta", ['meta' => 'json'] ]));
 
@@ -117,7 +118,8 @@ class FieldRepository extends AbstractFieldRepository
                 'data_model_' . $role . '_fields.constraints',
                 \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.value", "choices", "{$role}_dictionary.id" )),
                 \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.id", "dictionary_id", "{$role}_dictionary.id")),
-                \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.order", "dictionary_order", "{$role}_dictionary.id")))
+                \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.order", "dictionary_order", "{$role}_dictionary.id")),
+                \DB::raw(Sql::getDbStatement()->groupConcat("{$role}_dictionary.meta", "dictionary_meta", "{$role}_dictionary.id")))
             ->leftJoin('data_model_' . $role . '_fields', $role . '_fields.id', '=', 'data_model_' . $role . '_fields.field_id')
             ->leftJoin('field_types', 'field_types.id', '=', $role . '_fields.type')
             ->leftJoin($role . '_dictionary', $role . '_dictionary.field_id', '=', $role . '_fields.id')
@@ -125,7 +127,7 @@ class FieldRepository extends AbstractFieldRepository
             ->groupBy($role . '_fields.id', 'field_types.name', 'data_model_' . $role . '_fields.constraints');
 
         return
-            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices', 'default_value', 'dictionary_id', 'dictionary_order', ['meta' => 'json']]));
+            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices', 'default_value', 'dictionary_id', 'dictionary_order', 'dictionary_meta', ['meta' => 'json']]));
     }
 
     /**
@@ -195,7 +197,7 @@ class FieldRepository extends AbstractFieldRepository
                     $dictionary[] = ["field_id" => $addedField["id"],
                                       "value" => $choice['value'],
                                       "order" => $choice['order'],
-                                      "meta" => isset($choice['meta']) && !is_string($choice['meta']) ? json_encode($choice['meta']) : json_encode([]),
+                                      "meta" => isset($choice['meta']) && !is_string($choice['meta']) ? json_encode($choice['meta']) : '',
                                     ];
                 }
             }
@@ -222,7 +224,7 @@ class FieldRepository extends AbstractFieldRepository
                 ->update(["name" => $field["name"],
                     "default_value" => $field["default_value"],
                     "note" => $field['note'],
-                    "meta" => isset($field['meta']) && is_array($field['meta']) ? json_encode($field['meta']) : json_encode([]),
+                    "meta" => isset($field['meta']) && is_array($field['meta']) ? json_encode($field['meta']) : '',
                 ]);
 
             if ($field["choices"]) {
@@ -246,13 +248,13 @@ class FieldRepository extends AbstractFieldRepository
                             return $value["id"] == $activeChoiceId;
                         }));
 
-                        $choice->update(["value" => $updateChoice['value'], "order" => $updateChoice['order'], "meta" => isset($updateChoice['meta']) && is_array($updateChoice['meta']) ? json_encode($updateChoice['meta']) : json_encode([]) ]);
+                        $choice->update(["value" => $updateChoice['value'], "order" => $updateChoice['order'], "meta" => isset($updateChoice['meta']) && is_array($updateChoice['meta']) ? json_encode($updateChoice['meta']) : '' ]);
                     }
                 }
 
                 foreach($newChoices as $newChoice){ // CREATE NEW ONE
 
-                    $model->choices()->save($model->choices()->create(["value"=>$newChoice['value'], "order" => $newChoice['order'], "meta" => isset($newChoice['meta']) && is_array($newChoice['meta']) ? json_encode($newChoice['meta']) : json_encode([]) ]));
+                    $model->choices()->save($model->choices()->create(["value"=>$newChoice['value'], "order" => $newChoice['order'], "meta" => isset($newChoice['meta']) && is_array($newChoice['meta']) ? json_encode($newChoice['meta']) : '' ]));
                 }
 
             }

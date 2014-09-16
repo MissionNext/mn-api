@@ -12,7 +12,8 @@
         "authorizenet/authorizenet": "~1.8"
 	},
     "require-dev": {
-        "mockery/mockery": "dev-master@dev"
+        "mockery/mockery": "dev-master@dev",
+         "apigen/apigen" : "2.8.1"
     },
 	"autoload": {
 		"classmap": [
