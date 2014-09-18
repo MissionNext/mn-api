@@ -7,7 +7,10 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Translation\FolderTrans;
 
-
+/**
+ * Class FolderTransController
+ * @package MissionNext\Controllers\Api\Translation
+ */
 class FolderTransController extends BaseController
 {
     /**

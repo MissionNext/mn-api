@@ -9,6 +9,10 @@ use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Form\AppForm;
 use MissionNext\Models\Translation\FormGroupTrans;
 
+/**
+ * Class FormGroupTransController
+ * @package MissionNext\Controllers\Api\Translation
+ */
 class FormGroupTransController extends  BaseController
 {
     /**

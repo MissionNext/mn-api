@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FieldChoices extends Model
 {
 
-    protected $fillable = ['value', 'default_value', 'id', 'order', 'dictionary_order', 'meta'];
+    protected $fillable = ['value', 'default_value', 'id', 'order', 'dictionary_order', 'dictionary_meta'];
 
     #protected  $value, $default_value, $id, $order, $dictionary_order;
 
@@ -58,7 +58,7 @@ class FieldChoices extends Model
      */
     public function setMeta($meta)
     {
-        $this->meta = json_decode($meta, true);
+        $this->dictionary_meta = json_decode($meta, true);
     }
 
 } 

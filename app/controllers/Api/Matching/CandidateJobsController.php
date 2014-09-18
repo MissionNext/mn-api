@@ -13,6 +13,11 @@ use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Api\Service\Matching\CandidateJobs;
 
+/**
+ * Class CandidateJobsController
+ *
+ * @package MissionNext\Controllers\Api\Matching
+ */
 class CandidateJobsController extends BaseController
 {
     /**

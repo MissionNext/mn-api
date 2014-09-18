@@ -5,12 +5,15 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\Role\Role;
 use MissionNext\Models\User\User;
 use MissionNext\Models\Application\Application;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
+use MissionNext\Repos\CachedData\UserCachedRepository;
+use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 
 class UserController extends AdminBaseController {
 
@@ -23,6 +26,19 @@ class UserController extends AdminBaseController {
 
         return View::make('admin.user.users', array(
             'users' => $users,
+        ));
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function profile($userId) {
+        /** @var  $repo UserCachedRepository */
+        $repo = $this->repoContainer[UserCachedRepositoryInterface::KEY];
+
+        return $this->view->make('admin.user.profile', array(
+
+            'user' => $repo->findOrFail($userId)->getData()
         ));
     }
 
@@ -103,21 +119,6 @@ class UserController extends AdminBaseController {
         }
 
         return View::make('admin.user.edit', array('user' => $user));
-    }
-
-    public function delete($id) {
-        if($this->request->isMethod('delete')) {
-
-            $user = User::find($id);
-            $name = $user->username;
-            $user->delete();
-            Session::flash('info', "user <strong>$name</strong> successfully deleted");
-
-            return Redirect::route('users');
-        } else {
-
-            return Redirect::route('users');
-        }
     }
 
     public function searching() {

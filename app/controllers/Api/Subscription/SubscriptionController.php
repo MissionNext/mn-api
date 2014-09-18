@@ -15,6 +15,10 @@ use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
 use MissionNext\Repos\Subscription\TransactionRepository;
 use MissionNext\Repos\Subscription\TransactionRepositoryInterface;
 
+/**
+ * Class SubscriptionController
+ * @package MissionNext\Controllers\Api\Subscription
+ */
 class SubscriptionController extends BaseController
 {
     /**

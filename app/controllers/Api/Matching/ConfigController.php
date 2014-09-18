@@ -9,7 +9,10 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Api\Service\Matching\Queue\Master\ConfigUpdateMatching;
 use MissionNext\Controllers\Api\BaseController;
 
-
+/**
+ * Class ConfigController
+ * @package MissionNext\Controllers\Api\Matching
+ */
 class ConfigController extends BaseController
 {
     /**

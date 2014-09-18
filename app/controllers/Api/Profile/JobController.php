@@ -17,6 +17,10 @@ use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
 
+/**
+ * Class JobController
+ * @package MissionNext\Controllers\Api\Profile
+ */
 class JobController extends BaseController
 {
 
@@ -40,7 +44,9 @@ class JobController extends BaseController
 
     /**
      * @param $id
+     *
      * @return RestResponse
+     *
      * @throws \MissionNext\Api\Exceptions\ProfileException
      */
     public function update($id)

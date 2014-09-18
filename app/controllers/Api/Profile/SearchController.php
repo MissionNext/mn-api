@@ -23,6 +23,10 @@ use MissionNext\Models\SearchData\SearchData;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\Field\Field;
 
+/**
+ * Class SearchController
+ * @package MissionNext\Controllers\Api\Profile
+ */
 class SearchController extends BaseController
 {
     /**

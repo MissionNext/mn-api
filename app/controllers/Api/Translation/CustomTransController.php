@@ -8,6 +8,10 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Translation\CustomTrans;
 
+/**
+ * Class CustomTransController
+ * @package MissionNext\Controllers\Api\Translation
+ */
 class CustomTransController extends BaseController
 {
 

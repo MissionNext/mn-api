@@ -24,6 +24,7 @@ class AdminRouting
     public function __construct(Application $App)
     {
         $this->router = $App->make('router');
+
         Route::get('/', array(
             'as' => 'homepage',
             function () {
@@ -37,6 +38,7 @@ class AdminRouting
         ));
 
         Route::group(array('prefix' => 'dashboard', "before" => ["admin_auth"]), function () {
+
             Route::get('logout', array(
                 'as' => 'logout',
                 function () {
@@ -158,6 +160,10 @@ class AdminRouting
             Route::get('/user', array(
                 'as' => 'users',
                 'uses' => 'MissionNext\Controllers\Admin\UserController@index'
+            ));
+            Route::get('/user/profile/{user}', array(
+                'as' => 'userProfile',
+                'uses' => 'MissionNext\Controllers\Admin\UserController@profile'
             ));
             Route::match(array('GET', 'POST'), '/user/create', array(
                 'as' => 'userCreate',

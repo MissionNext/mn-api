@@ -9,6 +9,10 @@ use MissionNext\Models\User\User;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 
+/**
+ * Class OrganizationController
+ * @package MissionNext\Controllers\Api\User
+ */
 class OrganizationController extends BaseController
 {
     /**

@@ -1,0 +1,4 @@
+source:
+    - ../controllers # directory API is generated for
+
+destination: ../apidoc # target dir for documentation

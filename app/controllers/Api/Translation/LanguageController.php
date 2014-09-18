@@ -8,6 +8,10 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Language\LanguageModel;
 
+/**
+ * Class LanguageController
+ * @package MissionNext\Controllers\Api\Translation
+ */
 class LanguageController extends BaseController
 {
     /**

@@ -12,6 +12,11 @@ use MissionNext\Models\User\User;
 use MissionNext\Repos\Inquire\InquireRepository;
 use MissionNext\Repos\Inquire\InquireRepositoryInterface;
 
+/**
+ * Class InquireController
+ *
+ * @package MissionNext\Controllers\Api\Inquire
+ */
 class InquireController extends BaseController
 {
     /**

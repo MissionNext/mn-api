@@ -31,7 +31,8 @@ use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Controllers\traits\Controller as SecurityTraits;
 use Cartalyst\Sentry\Sentry as MainSentry;
 
-class AdminBaseController extends Controller {
+class AdminBaseController extends Controller
+{
 
     use SecurityTraits;
 
@@ -48,7 +49,7 @@ class AdminBaseController extends Controller {
     protected $redirect;
     protected $session;
 
-    /** @var \MissionNext\Api\Service\Payment\AuthorizeNet  */
+    /** @var \MissionNext\Api\Service\Payment\AuthorizeNet */
     protected $paymentGateway;
 
     /** @var  MainSentry */
@@ -73,8 +74,9 @@ class AdminBaseController extends Controller {
      *
      * @return \Illuminate\View\View
      */
-    public function login() {
-        if($this->request->isMethod('post')) {
+    public function login()
+    {
+        if ($this->request->isMethod('post')) {
             Input::flash();
             $input = Input::only('username', 'password');
             $rules = array(
@@ -100,8 +102,7 @@ class AdminBaseController extends Controller {
                 Session::flash('info', 'User was not found.');
             } catch (UserNotActivated $e) {
                 Session::flash('info', 'User is not activated.');
-            }
-                // The following is only required if the throttling is enabled
+            } // The following is only required if the throttling is enabled
             catch (UserSuspended $e) {
                 Session::flash('info', 'User is suspended.');
             } catch (UserBanned $e) {
@@ -120,7 +121,7 @@ class AdminBaseController extends Controller {
     protected function viewTemplate($name)
     {
 
-        return static::VIEW_PREFIX.".{$name}";
+        return static::VIEW_PREFIX . ".{$name}";
     }
 
     /**
@@ -131,7 +132,7 @@ class AdminBaseController extends Controller {
     protected function routeName($name)
     {
 
-        return static::ROUTE_PREFIX.".{$name}";
+        return static::ROUTE_PREFIX . ".{$name}";
     }
 
-} 
+}

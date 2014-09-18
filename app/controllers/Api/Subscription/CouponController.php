@@ -8,6 +8,10 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Coupon\Coupon;
 
+/**
+ * Class CouponController
+ * @package MissionNext\Controllers\Api\Subscription
+ */
 class CouponController extends BaseController
 {
     /**

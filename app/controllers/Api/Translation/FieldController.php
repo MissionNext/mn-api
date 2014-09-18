@@ -16,6 +16,10 @@ use MissionNext\Repos\Field\FieldRepositoryInterface;
 use MissionNext\Repos\Translation\FieldRepository as TransFieldRepo;
 use MissionNext\Repos\Translation\FieldRepositoryInterface as TransFieldRepoInterface;
 
+/**
+ * Class FieldController
+ * @package MissionNext\Controllers\Api\Translation
+ */
 class FieldController extends BaseController
 {
 

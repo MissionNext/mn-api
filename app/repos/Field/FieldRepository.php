@@ -254,7 +254,9 @@ class FieldRepository extends AbstractFieldRepository
 
                 foreach($newChoices as $newChoice){ // CREATE NEW ONE
 
-                    $model->choices()->save($model->choices()->create(["value"=>$newChoice['value'], "order" => $newChoice['order'], "meta" => isset($newChoice['meta']) && is_array($newChoice['meta']) ? json_encode($newChoice['meta']) : '' ]));
+                    $model->choices()->save(
+                        $model->choices()
+                        ->create(["value"=>$newChoice['value'], "order" => $newChoice['order'], "meta" => isset($newChoice['meta']) && is_array($newChoice['meta']) ? json_encode($newChoice['meta']) : '' ]));
                 }
 
             }

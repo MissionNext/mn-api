@@ -7,6 +7,10 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\Notes\Notes;
 
+/**
+ * Class NotesController
+ * @package MissionNext\Controllers\Api\Notes
+ */
 class NotesController extends BaseController
 {
     public function postIndex()

@@ -12,6 +12,10 @@ use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 
+/**
+ * Class OrganizationCandidatesController
+ * @package MissionNext\Controllers\Api\Matching
+ */
 class OrganizationCandidatesController extends BaseController
 {
     /**
