@@ -144,8 +144,7 @@ abstract class Matching
                 if (isset($prof['matches']) && $prof['matches']) {
                     $profileData['matching_percentage'] += $prof['weight'];
                 } elseif (!isset($prof['matches'])) {
-                    //dd($key);
-                    //@TODO job field not in matching config
+
                     $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
                 }
             }

@@ -130,7 +130,7 @@ class Controller extends BaseController
 
         foreach ($formGroups as $group) {
 
-            $fieldsToIns = array_map(function ($field) use ($timestamp, $group) { //@TODO cannot be associated field_group has no id
+            $fieldsToIns = array_map(function ($field) use ($timestamp, $group) {
 
 
                 $meta = ["search_options" => ["is_expanded" => false], "before_notes" => [], "after_notes" => [],

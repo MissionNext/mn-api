@@ -120,11 +120,9 @@ class UserController extends AdminBaseController
 
 
         $totalCount = $usersQuery->get()->count();
-        //dd($this->getLogQueries());
         $users =  $usersQuery->with(['subscriptions'=> function($q){
             $q->where('status', '<>', Subscription::STATUS_CLOSED );
         } ] )->orderBy(DB::raw("users.".$sorting['p'] ), $sorting['o'])->paginate(static::PAGINATE);
-        //dd($this->getLogQueries());
 
         $users->each(function($user){
 
@@ -192,11 +190,10 @@ class UserController extends AdminBaseController
     public function setAppStatus($isActive, $userId, $appId)
     {
         $isActive = $isActive  === 'enable' ? true : false;
-       // dd($isActive, $userId, $appId);
+
         User::find($userId)->appsStatuses()->updateExistingPivot($appId, ['is_active' => $isActive]);
 
 
-       // return Response::json(User::find($userId)->appsStatuses()->get());
         return Response::json(["is_active" =>  User::find($userId)->isActiveInApp(Application::find($appId)) ]);
     }
 } 

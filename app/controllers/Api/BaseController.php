@@ -287,7 +287,7 @@ class BaseController extends Controller
             if (isset($profileData[$field->symbol_key])) {
                 $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]['value'], "dictionary_id" => $profileData[$field->symbol_key]['dictionary_id'] ? : null  ];
                 $sKeys[$field->id] = $field->symbol_key;
-            }//@TODO if example favourite_movies[] = '', no errors;
+            }
         }
         foreach ($mapping as $key => $map) {
             $this->fieldRepo()->profileFields($user)->detach($key, true);

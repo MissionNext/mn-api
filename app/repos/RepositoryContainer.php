@@ -82,7 +82,7 @@ class RepositoryContainer implements \ArrayAccess, ISecurityContextAware, Reposi
         return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
 
-    public function   offsetSet (  $offset ,  $value )
+    public function  offsetSet (  $offset ,  $value )
     {
         if (is_null($offset)) {
             $this->container[] = $value;

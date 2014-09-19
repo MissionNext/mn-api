@@ -43,8 +43,6 @@ class UpdateSubscriptionStatus extends Command
      */
     public function fire()
     {
-
-
         $gracePeriod = (new GlobalConfig())->gracePeriod();
 
         $subscriptions = Subscription::where('status', '<>', Subscription::STATUS_CLOSED)

@@ -63,7 +63,6 @@ class CandidateJobsController extends BaseController
 
         $jobData = (new UserCachedRepository(BaseDataModel::JOB))->dataWithNotes($candidate_id)->get()->toArray();
 
-        //@TODO add app to users when updates profile
 
         $Matching = new CandidateJobs($candidateData, $jobData, $config->toArray());
 

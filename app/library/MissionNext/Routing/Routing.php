@@ -4,6 +4,7 @@ namespace MissionNext\Routing;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -60,8 +61,11 @@ class Routing
 
     public function __construct(Application $App)
     {
-        $requestUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
-        if(starts_with($requestUri, '/login') or starts_with($requestUri, '/logout') or starts_with($requestUri, '/dashboard')) {
+        /** @var  $request Request */
+        $request = $App->make('request');
+        $requestUri = $request->getRequestUri();
+
+        if(starts_with($requestUri, '/login') || starts_with($requestUri, '/logout') || starts_with($requestUri, '/dashboard')) {
             Config::set('session.driver','file');
         }
 
@@ -79,6 +83,7 @@ class Routing
             Route::controller('{type}/field', FieldController::class, [
                 'getModel' => 'model.fields.get'
             ]);
+
             Route::controller('{type}/matching/config', ConfigController::class, [
 
             ]);
