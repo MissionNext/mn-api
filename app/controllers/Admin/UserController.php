@@ -121,6 +121,22 @@ class UserController extends AdminBaseController {
         return View::make('admin.user.edit', array('user' => $user));
     }
 
+    public function delete($id) {
+        $user = User::find($id);
+
+        if(is_null($user)) {
+            Session::flash('warning', "user with ID $id not found");
+
+            return Redirect::route('users');
+        }
+
+        $name = $user->username;
+        $user->delete($id);
+        Session::flash('info', "User <strong>$name</strong> successfully deleted.");
+
+        return Redirect::route('users');
+    }
+
     public function searching() {
 
         $searchText = trim(strip_tags(addslashes(Input::get('search'))));
