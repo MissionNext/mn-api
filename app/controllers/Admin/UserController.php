@@ -36,6 +36,7 @@ class UserController extends AdminBaseController {
         /** @var  $repo UserCachedRepository */
         $repo = $this->repoContainer[UserCachedRepositoryInterface::KEY];
 
+
         return $this->view->make('admin.user.profile', array(
 
             'user' => $repo->findOrFail($userId)->getData()

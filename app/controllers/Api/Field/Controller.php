@@ -2,6 +2,7 @@
 namespace MissionNext\Controllers\Api\Field;
 
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use MissionNext\Api\Exceptions\ProfileException;
@@ -9,6 +10,8 @@ use MissionNext\Api\Response\RestResponse;
 use Illuminate\Support\Facades\Input;
 use MissionNext\Api\Service\ResponseDataFormat\FieldChoicesFormat;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Models\Field\BaseField;
+use MissionNext\Models\Field\Candidate;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
 
 /**
@@ -87,6 +90,40 @@ class Controller extends BaseController
 
         return new RestResponse(FieldChoicesFormat::format($this->fieldRepo()->modelFieldsExpanded()->get()));
 
+    }
+
+    /**
+     * @param integer $fieldId
+     *
+     * @return RestResponse
+     */
+    public function postChoices($type, $fieldId)
+    {
+        $choices = $this->request->request->get('choices');
+
+        $choicesIds = array_fetch($choices, 'id');
+        /** @var  $field Candidate */
+        $field = $this->fieldRepo()->getModel()->findOrFail($fieldId);
+        /** @var  $choiceModels Collection */
+        $choiceModels = $field->choices()->whereIn('id',$choicesIds)->get();
+        $choiceModels->each(function($model) use ($choices){
+            $modelData = array_first($choices, function($key, $value) use($model)
+                         {
+
+                            return $value['id'] == $model->id;
+                         });
+
+            if (isset($modelData['meta'])){
+
+                $modelData['meta'] = json_encode($modelData['meta']);
+            }
+            $modelData = array_except($modelData, 'id');
+
+            $model->update($modelData);
+        });
+
+
+        return new RestResponse(true);
     }
 
 

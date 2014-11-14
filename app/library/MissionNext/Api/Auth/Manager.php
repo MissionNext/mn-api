@@ -24,7 +24,6 @@ class Manager
     {
         $current_timestamp = time();
         $this->token = $token;
-        //@TODO get app from app key and set to token
         $application = Application::wherePublicKey($token->publicKey)->first();
 
         if (!$application){

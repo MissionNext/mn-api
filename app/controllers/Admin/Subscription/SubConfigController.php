@@ -105,7 +105,7 @@ class SubConfigController extends AdminBaseController
 
             return $this->redirect->route($this->routeName('edit'), [$id])->withInput()->withErrors($validator->validator());
         }
-        $model->save(); // update not work with boolean recurrent
+        $model->save();
         $this->session->flash('info', "Config successfully updated");
 
         return $this->redirect->route($this->routeName('list'));
