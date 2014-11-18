@@ -125,8 +125,8 @@ class UserController extends AdminBaseController {
     public function delete($id) {
         $user = User::find($id);
 
-        if(is_null($user)) {
-            Session::flash('warning', "user with ID $id not found");
+        if (is_null($user)) {
+            Session::flash('warning', "User with ID $id not found");
 
             return Redirect::route('users');
         }

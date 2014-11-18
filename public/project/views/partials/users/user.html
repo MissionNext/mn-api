@@ -87,6 +87,7 @@
 </table>
 <div class="profile-data">
     <a class="btn btn-default"  href="/dashboard/user/profile/<% user.id %>">Full Profile</a>
+    <button class="btn btn-danger" ng-click="modalDelete = !modalDelete;">Delete this user from the system completely</button>
 
     <h3>Subscriptions:</h3>
     <p ng-hide="subscriptions.length">No subscriptions</p>
@@ -187,6 +188,22 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <modal-dialog show='modalDelete'>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" ng-click="closeDelete()" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><strong>Delete user <% user.username %>.</strong></h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure want to delete user?</p>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="deleteRedirect()" type="button" class="btn btn-danger" >Yes</button>
+                <button type="button" ng-click="closeDelete()" class="btn btn-primary">No</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </modal-dialog>
 
     <modal-dialog show='modalShown' configurator="configurator" >
         <div class="modal-content">

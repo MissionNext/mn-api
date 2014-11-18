@@ -200,9 +200,10 @@
 
     }]);
 
-    userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', function($scope, $params, $http){
+    userControllers.controller("UserCtl",['$scope', '$routeParams', '$http', '$location', function($scope, $params, $http, $location){
         $scope.modalShown = false;
         $scope.modalCancelSub = false;
+        $scope.modalDelete = false;
 
         $scope.toggleModal = function(isActive, sub) {
 
@@ -211,11 +212,13 @@
                 sub.app.is_active = !sub.app.is_active;
             };
             $scope.modalShown = !$scope.modalShown;
+            $scope.modalDelete = !$scope.modalDelete;
         };
 
         $scope.toggleModalCancelSub = function(sub){
             $scope.cancelSubModel = sub;
             $scope.modalCancelSub = !$scope.modalCancelSub;
+            $scope.modalDelete = !$scope.modalDelete;
         };
 
         $scope.transactions = [];
@@ -228,6 +231,10 @@
 
             $scope.modalCancelSub = !$scope.modalCancelSub;
         };
+        $scope.closeDelete = function () {
+
+            $scope.modalDelete = !$scope.modalDelete;
+        }
 
         $http.get(Routing.buildUrl('/subscription/manager/transactions/'+$params.user))
             .success(function(data){
@@ -269,6 +276,11 @@
 
         };
 
+        $scope.deleteRedirect = function()
+        {
+            window.location.href = '/dashboard/user/' + $params.user + '/delete';
+            //$location.path($params.user + '/delete');
+        }
 
         $scope.dateOptions = {
             changeYear: true,

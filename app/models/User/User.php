@@ -446,4 +446,24 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         return array_values($transactions->toArray());
     }
 
+    public function delete()
+    {
+        $organization_flag = false;
+        if (count($this->roles)) {
+            foreach ($this->roles as $role) {
+                if (2 == $role->id) {
+                    $organization_flag = true;
+                    break;
+                }
+            }
+        }
+
+        if ($organization_flag && count($this->jobs)) {
+            foreach ($this->jobs as $job) {
+                $job->delete();
+            }
+        }
+
+        return parent::delete();
+    }
 }
