@@ -11,9 +11,12 @@ use Illuminate\Support\Facades\Hash;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\EloquentObservable;
+use MissionNext\Models\Favorite\Favorite;
+use MissionNext\Models\Inquire\Inquire;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\ModelObservable;
+use MissionNext\Models\Notes\Notes;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\ProfileInterface;
 use MissionNext\Models\Role\Role as RoleModel;
@@ -448,6 +451,28 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
     public function delete()
     {
+        $user_id = $this->id;
+        $favorites = Favorite::where('user_id', '=', $user_id)->get();
+        if (count($favorites) > 0) {
+            foreach ($favorites as $item) {
+                $item->delete();
+            }
+        }
+
+        $inquires = Inquire::where('candidate_id', '=', $user_id)->get();
+        if (count($inquires) > 0) {
+            foreach ($inquires as $item) {
+                $item->delete();
+            }
+        }
+
+        $notes = Notes::where('user_id', '=', $user_id)->get();
+        if (count($notes) > 0) {
+            foreach ($notes as $item) {
+                $item->delete();
+            }
+        }
+
         $organization_flag = false;
         if (count($this->roles)) {
             foreach ($this->roles as $role) {
