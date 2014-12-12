@@ -203,4 +203,5 @@ return array(
 
     'files_lifetime' => 24*60,
 
+    'wp_remote_url' => 'http://mn.loc'
 );

@@ -88,7 +88,7 @@ return array(
         'pgsql' => array(
             'driver'   => 'pgsql',
             'host'     => 'localhost',
-            'database' => 'mission_next_local',
+            'database' => 'mission_next_prod',
             'username' => 'postgres',
             'password' => 'bigpups',
             'charset'  => 'utf8',

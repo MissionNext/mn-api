@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Application\Application;
@@ -67,6 +68,11 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         return $this;
     }
 
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
     /**
      * @param $username
      *
@@ -78,6 +84,11 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
         return $this;
 
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
     }
 
     /**
@@ -488,6 +499,10 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
                 $job->delete();
             }
         }
+
+        /*$curl = new \Curl();
+        $curl->get(Config::get('app.wp_remote_url').'/wp-admin/admin-ajax.php?action=user_deleting_function&'
+            .'email='.$this->getEmail().'&username='.$this->getUsername().'&secret='.md5('Secret key for deleting wp user.'));*/
 
         return parent::delete();
     }
