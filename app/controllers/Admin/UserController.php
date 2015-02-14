@@ -1,6 +1,7 @@
 <?php
 namespace MissionNext\Controllers\Admin;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
@@ -156,5 +157,12 @@ class UserController extends AdminBaseController {
         return View::make('admin.user.users', array(
             'users' => $users,
         ));
+    }
+
+    public function updateProfileCache()
+    {
+        Artisan::call('profile:update-cache', array());
+
+        return Response::json(['status' => 'success', 'data' => 'Update Successful']);
     }
 }

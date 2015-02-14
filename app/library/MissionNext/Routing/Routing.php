@@ -199,6 +199,10 @@ class Routing
 
             });
 
+            Route::get('profile/cache/update', array(
+                'as'        => 'profileCacheUpdate',
+                'uses'      => 'MissionNext\Controllers\Admin\UserController@updateProfileCache'
+            ));
 
         });
 
