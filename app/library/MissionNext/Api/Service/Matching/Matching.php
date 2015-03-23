@@ -123,24 +123,24 @@ abstract class Matching
     }
 
     /**
-     * @param array $data
+         * @param array $data
      *
      * @return array
      */
-    protected  function calculateMatchingPercentage(array $data)
+    protected  function calculateMatchingPercentage(array $data, $mustMatchMultiplier)
     {
         $maxMatching = 0;
 
-        array_map(function($c) use (&$maxMatching){
-
-            $maxMatching += $c['weight'];
+        array_map   (function($c) use (&$maxMatching){
+            if ($c['weight'] < 5) {
+                $maxMatching += $c['weight'];
+            }
 
         }, $this->matchConfig);
-
+        
         foreach ($data as &$profileData) {
             $profileData['matching_percentage'] = 0;
             foreach ($profileData['results'] as $key=>&$prof) {
-                //  var_dump($prof);
                 if (isset($prof['matches']) && $prof['matches']) {
                     $profileData['matching_percentage'] += $prof['weight'];
                 } elseif (!isset($prof['matches'])) {
@@ -148,7 +148,7 @@ abstract class Matching
                     $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
                 }
             }
-            $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100);
+            $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100) * $mustMatchMultiplier;
         }
 
         return array_filter(array_values($data), function($d){

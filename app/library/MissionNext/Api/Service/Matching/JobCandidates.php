@@ -34,6 +34,8 @@ class JobCandidates extends Matching
         $matchingKey = $this->matchingModel."_value";
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
+        $mustMatchMultiplier = 1;
+
         foreach ($matchingDataSet as $k => $matchingData) {
             foreach ($configArr as $conf) {
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
@@ -78,11 +80,12 @@ class JobCandidates extends Matching
                     if ($conf["weight"] == 5) {
                         if  (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])){
                             unset($tempMatchingData[$k]);
+                            $mustMatchMultiplier = 0;
                             continue;
                         }
-                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                        /*$matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         $matchingDataSet[$k]['results'][$matchingDataKey] =
-                            [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
+                            [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];*/
                     }else{
                         if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -99,6 +102,7 @@ class JobCandidates extends Matching
                     /** if in profile data no symbol key that is in match config and weight is 5, remove  element from match */
                     if ($conf['weight'] == 5) {
                         unset($tempMatchingData[$k]);
+                        $mustMatchMultiplier = 0;
                         continue;
                     } else {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -111,6 +115,6 @@ class JobCandidates extends Matching
 
         $matchingDataSet = array_intersect_key($matchingDataSet, $tempMatchingData);
 
-        return $this->calculateMatchingPercentage($matchingDataSet);
+        return $this->calculateMatchingPercentage($matchingDataSet, $mustMatchMultiplier);
     }
 } 
