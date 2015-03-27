@@ -148,7 +148,12 @@ abstract class Matching
                     $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
                 }
             }
-            $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100) * $mustMatchMultiplier;
+            if (0 < $maxMatching) {
+                $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100) * $mustMatchMultiplier;
+            } else {
+                $profileData['matching_percentage'] = 0;
+            }
+
         }
 
         return array_filter(array_values($data), function($d){
