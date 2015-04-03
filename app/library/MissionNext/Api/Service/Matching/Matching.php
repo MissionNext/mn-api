@@ -140,14 +140,17 @@ abstract class Matching
         
         foreach ($data as &$profileData) {
             $profileData['matching_percentage'] = 0;
-            foreach ($profileData['results'] as $key=>&$prof) {
-                if (isset($prof['matches']) && $prof['matches']) {
-                    $profileData['matching_percentage'] += $prof['weight'];
-                } elseif (!isset($prof['matches'])) {
+            if ($profileData['results']) {
+                foreach ($profileData['results'] as $key=>&$prof) {
+                    if (isset($prof['matches']) && $prof['matches']) {
+                        $profileData['matching_percentage'] += $prof['weight'];
+                    } elseif (!isset($prof['matches'])) {
 
-                    $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
+                        $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
+                    }
                 }
             }
+
             if (0 < $maxMatching) {
                 $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100) * $mustMatchMultiplier;
             } else {
