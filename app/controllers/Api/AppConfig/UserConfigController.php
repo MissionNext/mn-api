@@ -40,8 +40,9 @@ class UserConfigController extends BaseController
      */
     public function getIndex($userId)
     {
+        $app_id = $this->checkAppId($this->getApp());
 
-        return new RestResponse(UserConfigs::where(['app_id' => $this->getApp()->id(), 'user_id' => $userId])->get());
+        return new RestResponse(UserConfigs::where(['app_id' => $app_id, 'user_id' => $userId])->get());
     }
 
     /**
@@ -51,8 +52,13 @@ class UserConfigController extends BaseController
      */
     public function getCurrent()
     {
+        $app_id = $this->checkAppId($this->getApp());
+        $user_id = null;
+        if ($this->getUser()) {
+            $user_id = $this->getUser()->id;
+        }
 
-        return new RestResponse(UserConfigs::where(['app_id' => $this->getApp()->id(), 'user_id' => $this->getUser()->id])->get());
+        return new RestResponse(UserConfigs::where(['app_id' => $app_id, 'user_id' => $user_id])->get());
     }
 
     /**
@@ -65,16 +71,25 @@ class UserConfigController extends BaseController
      */
     public function getKey($key, $userId)
     {
-
+        $app_id = $this->checkAppId($this->getApp());
 
         return new RestResponse(
             UserConfigs::where(
                 [
                     'key' => $key,
-                    'app_id' => $this->getApp()->id(),
+                    'app_id' => $app_id,
                     'user_id' => $userId,
                 ]
             )->first()
         );
     }
-} 
+
+    private function checkAppId($id)
+    {
+        if ($id) {
+            return $id->id();
+        } else {
+            return null;
+        }
+    }
+}
