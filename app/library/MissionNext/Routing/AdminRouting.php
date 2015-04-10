@@ -188,7 +188,7 @@ class AdminRouting
 
             //------------------- Admin Users --------------------------------
 
-            Route::delete('administrator/{id}', array('as' => 'administrator.delete', 'uses' => 'Administrator@deleteIndex'));
+            Route::delete('administrator/{id}', array('as' => 'administrator.delete', 'uses' => 'MissionNext\Controllers\Admin\Administrator@deleteIndex'));
 
              $this->router->controller('administrator', Administrator::class,
                  [
