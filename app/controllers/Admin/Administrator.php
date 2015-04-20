@@ -98,11 +98,11 @@ class Administrator extends AdminBaseController
 
         $messageBag = $validator->validator()->errors();
 
-        if (!$model->checkPassword($this->request->request->get('old_password'))){
-
-            $messageBag = $validator->validator()->errors()->add('old_password', 'Wrong old password');
-
-        }
+//        if (!$model->checkPassword($this->request->request->get('old_password'))){
+//
+//            $messageBag = $validator->validator()->errors()->add('old_password', 'Wrong old password');
+//
+//        }
 
         if (!$validator->passes() || $messageBag->count() )
         {

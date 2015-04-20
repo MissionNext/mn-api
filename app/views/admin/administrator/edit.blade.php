@@ -42,9 +42,9 @@ Dashboard. Editing coupon
             </div>
         </div>
         <div class="form-group">
-            {{ Form::label('old_password', 'Old Password', ['class' => 'col-sm-2 control-label']) }}
+            {{ Form::label('new_password_confirmation', 'Pepeat Password', ['class' => 'col-sm-2 control-label']) }}
             <div class="col-sm-10">
-                {{ Form::password('old_password', array('class' => 'form-control', 'placeholder' => 'Old Password', 'autofocus' =>
+                {{ Form::password('new_password_confirmation', array('class' => 'form-control', 'placeholder' => 'Pepeat New Password', 'autofocus' =>
                 'true')) }}
             </div>
         </div>
