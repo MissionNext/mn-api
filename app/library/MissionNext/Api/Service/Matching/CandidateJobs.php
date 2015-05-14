@@ -22,6 +22,8 @@ class CandidateJobs extends Matching
     public function matchResults()
     {
         $configArr = $this->matchConfig;
+        $dependentFields = $this->dependentFields;
+        $dependencies = $this->dependencyArray($dependentFields);
 
         $matchingDataSet = $this->matchAgainstData;
         $mainData = $this->matchData;
@@ -36,15 +38,35 @@ class CandidateJobs extends Matching
         $mustMatchMultiplier = 1;
 
         foreach ($matchingDataSet as $k => $matchingData) {
+            $ignoreFields = [];
             foreach ($configArr as $conf) {
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
                 $matchingDataProfile = $matchingData['profileData'];
                 $mainDataProfile = $mainData['profileData'];
+
+                if (in_array($matchingDataKey, $ignoreFields) || in_array($mainDataKey, $ignoreFields)) {
+                    continue;
+                }
+
                 if (isset($matchingDataProfile[$matchingDataKey]) && isset($mainDataProfile[$mainDataKey])) {
 
                     $matchingDataValue = $matchingDataProfile[$matchingDataKey];
                     $mainDataValue = $mainDataProfile[$mainDataKey];
+
+                    if (11 == $conf['field_type'] && !(2 == $mainDataValue && 2 == $matchingDataValue)) {
+                        if (isset($dependencies[$matchingDataKey])) {
+                            foreach ($dependencies[$matchingDataKey] as $item) {
+                                if (isset($matchingDataSet[$k]['results'])) {
+                                    unset($matchingDataSet[$k]['results'][$item]);
+                                }
+
+                                if (!in_array($item, $ignoreFields)) {
+                                    $ignoreFields[] = $item;
+                                }
+                            }
+                        }
+                    }
 
                     if ($mainDataValue === "" || $matchingDataValue === "") {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -59,9 +81,7 @@ class CandidateJobs extends Matching
 
                     $matchingDataValue = array_map('strtolower', $matchingDataValue);
                     $mainDataValue = array_map('strtolower', $mainDataValue);
-//                  if ($matchingData['id'] == 3) {
-//                      var_dump("job_key = $matchingDataKey", "can_key = $candidateKey", "job_value =", $matchingDataValue, "can_value=", $canValue, "weight = {$conf['weight']}");
-//                  }
+
                     /** if value starts with (!) any value  matches */
                     if (
                         ( in_array($matchingDataKey, $selectMatchingDataFields) && $this->isNoPreference($matchingDataValue) )
@@ -82,9 +102,6 @@ class CandidateJobs extends Matching
                             $mustMatchMultiplier = 0;
                             continue;
                         }
-                        /*$matchingDataSet[$k]['profileData'] = $matchingDataProfile;
-                        $matchingDataSet[$k]['results'][$matchingDataKey] =
-                            [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];*/
                     }else{
                         if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -108,6 +125,20 @@ class CandidateJobs extends Matching
                         $matchingDataSet[$k]['results'][$matchingDataKey] =
                             [$matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
                     }
+
+                    if (11 == $conf['field_type']) {
+                        if (isset($dependencies[$matchingDataKey])) {
+                            foreach ($dependencies[$matchingDataKey] as $item) {
+                                if (isset($matchingDataSet[$k]['results'])) {
+                                    unset($matchingDataSet[$k]['results'][$item]);
+                                }
+
+                                if (!in_array($item, $ignoreFields)) {
+                                    $ignoreFields[] = $item;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -115,8 +146,5 @@ class CandidateJobs extends Matching
 
         return $this->calculateMatchingPercentage($matchingDataSet, $mustMatchMultiplier);
     }
-
-
-
 
 } 

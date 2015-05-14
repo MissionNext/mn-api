@@ -30,16 +30,19 @@ abstract class Matching
 
     protected $reverseMatching = false;
 
+    protected $dependentFields;
+
     /**
      * @param $matchData
      * @param $matchAgainstData
      * @param $matchConfig
      */
-    public function __construct($matchData, $matchAgainstData, $matchConfig)
+    public function __construct($matchData, $matchAgainstData, $matchConfig, $dependentFields)
     {
         $this->matchData = $matchData;
         $this->matchAgainstData = $matchAgainstData;
         $this->matchConfig = $matchConfig;
+        $this->dependentFields = $dependentFields;
     }
 
     private $selectFieldTypes = [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO];
@@ -129,18 +132,19 @@ abstract class Matching
      */
     protected  function calculateMatchingPercentage(array $data, $mustMatchMultiplier)
     {
-        $maxMatching = 0;
 
-        array_map   (function($c) use (&$maxMatching){
-            if ($c['weight'] < 5) {
-                $maxMatching += $c['weight'];
-            }
-
-        }, $this->matchConfig);
-        
         foreach ($data as &$profileData) {
             $profileData['matching_percentage'] = 0;
             if ($profileData['results']) {
+                $maxMatching = 0;
+
+                array_map   (function($c) use (&$maxMatching){
+                    if ($c['weight'] < 5) {
+                        $maxMatching += $c['weight'];
+                    }
+
+                }, $profileData['results']);
+
                 foreach ($profileData['results'] as $key=>&$prof) {
                     if (isset($prof['matches']) && $prof['matches']) {
                         $profileData['matching_percentage'] += $prof['weight'];
@@ -171,4 +175,15 @@ abstract class Matching
 
     abstract public function matchResults();
 
+    protected function dependencyArray($dependentFields)
+    {
+        $dependencies = [];
+        foreach ($dependentFields as $item) {
+            foreach ($item['symbol_keys'] as $fieldName) {
+                $dependencies[$item['depends_on']][] = $fieldName;
+            }
+        }
+
+        return $dependencies;
+    }
 } 

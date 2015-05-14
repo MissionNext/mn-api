@@ -11,6 +11,7 @@ use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Api\Service\Matching\Matching as ServiceMatching;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
+use MissionNext\Repos\FormGroup\FormGroupRepository;
 
 abstract class QueueMatching
 {
@@ -61,14 +62,27 @@ abstract class QueueMatching
             $this->job->delete();
             return [];
         }
+
+        $dependentFields = null;
+        try {
+            $formGroupRepo = new FormGroupRepository();
+            $formGroupRepo->setSecurityContext($this->securityContext());
+            $dependentFields = $formGroupRepo->dependentFields()->get();
+        } catch (\Exception $e){
+            $this->job->delete();
+            return [];
+        }
+
+
         $data = [
-            "mainData" => $mainData,
-            "matchingData" => $matchingData,
-            "matchingClass" =>$this->matchingClass,
-            "forUserType" => $this->forUserType,
-            "userType" => $this->userType,
-            "config" => $config->toArray(),
-            "userId" => $userId,
+            "mainData"          => $mainData,
+            "matchingData"      => $matchingData,
+            "matchingClass"     =>$this->matchingClass,
+            "forUserType"       => $this->forUserType,
+            "userType"          => $this->userType,
+            "config"            => $config->toArray(),
+            "userId"            => $userId,
+            "dependentFields"   => $dependentFields
         ];
 
         Queue::push(InsertQueue::class, $data);
@@ -95,6 +109,16 @@ abstract class QueueMatching
         }
         //=========
 
+        $dependentFields = null;
+        try {
+            $formGroupRepo = new FormGroupRepository();
+            $formGroupRepo->setSecurityContext($this->securityContext());
+            $dependentFields = $formGroupRepo->dependentFields()->get();
+        } catch (\Exception $e){
+            $this->job->delete();
+            return [];
+        }
+
         $this->clearCache($userId);
 
         $cacheRep = new UserCachedRepository($this->userType);
@@ -113,13 +137,14 @@ abstract class QueueMatching
 
 
             $data = [
-                "mainData" => $mainData,
-                "matchingData" => $matchingData,
-                "matchingClass" =>$this->matchingClass,
-                "forUserType" => $this->forUserType,
-                "userType" => $this->userType,
-                "config" => $config->toArray(),
-                "userId" => $userId,
+                "mainData"          => $mainData,
+                "matchingData"      => $matchingData,
+                "matchingClass"     =>$this->matchingClass,
+                "forUserType"       => $this->forUserType,
+                "userType"          => $this->userType,
+                "config"            => $config->toArray(),
+                "userId"            => $userId,
+                "dependentFields"   => $dependentFields
             ];
 
             Queue::push(InsertQueue::class, $data);

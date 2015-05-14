@@ -49,7 +49,7 @@ class ConfigRepository extends AbstractConfigRepository
         return $this->getModel()
             ->select($role.'_fields.symbol_key as '.$role.'_key',
                     'candidate_fields.symbol_key as candidate_key',
-                     'weight', 'matching_type')
+                     'weight', 'matching_type', 'candidate_fields.type as field_type')
             ->leftJoin($role.'_fields', $role.'_fields.id', '=' , $role.'_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
             ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
@@ -69,7 +69,7 @@ class ConfigRepository extends AbstractConfigRepository
         return $this->getModel()
             ->select('job_fields.symbol_key as job_key',
                 'candidate_fields.symbol_key as candidate_key',
-                'weight', 'matching_type')
+                'weight', 'matching_type', 'candidate_fields.type as field_type')
             ->leftJoin('job_fields', 'job_fields.id', '=' , 'job_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
             ->leftJoin('job_profile','job_profile.field_id', '=', 'job_field_id')
@@ -90,7 +90,7 @@ class ConfigRepository extends AbstractConfigRepository
         return $this->getModel()
             ->select('job_fields.symbol_key as job_key',
                 'candidate_fields.symbol_key as candidate_key',
-                'weight', 'matching_type')
+                'weight', 'matching_type', 'candidate_fields.type as field_type')
             ->leftJoin('job_fields', 'job_fields.id', '=' , 'job_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
             ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
@@ -110,7 +110,7 @@ class ConfigRepository extends AbstractConfigRepository
         return $this->getModel()
             ->select('organization_fields.symbol_key as organization_key',
                 'candidate_fields.symbol_key as candidate_key',
-                'weight', 'matching_type')
+                'weight', 'matching_type', 'organization_fields.type as field_type')
             ->leftJoin('organization_fields', 'organization_fields.id', '=' , 'organization_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
             ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
@@ -131,7 +131,7 @@ class ConfigRepository extends AbstractConfigRepository
         return $this->getModel()
             ->select('organization_fields.symbol_key as organization_key',
                 'candidate_fields.symbol_key as candidate_key',
-                'weight', 'matching_type')
+                'weight', 'matching_type', 'organization_fields.type as field_type')
             ->leftJoin('organization_fields', 'organization_fields.id', '=' , 'organization_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
             ->leftJoin('organization_profile','organization_profile.field_id', '=', 'organization_field_id')
