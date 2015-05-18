@@ -179,8 +179,10 @@ abstract class Matching
     {
         $dependencies = [];
         foreach ($dependentFields as $item) {
-            foreach ($item['symbol_keys'] as $fieldName) {
-                $dependencies[$item['depends_on']][] = $fieldName;
+            if (isset($item) && !empty($item['symbol_keys'])) {
+                foreach ($item['symbol_keys'] as $fieldName) {
+                    $dependencies[$item['depends_on']][] = $fieldName;
+                }
             }
         }
 
