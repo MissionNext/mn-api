@@ -130,13 +130,14 @@ abstract class Matching
      *
      * @return array
      */
-    protected  function calculateMatchingPercentage(array $data, $mustMatchMultiplier)
+    protected  function calculateMatchingPercentage(array $data)
     {
 
         foreach ($data as &$profileData) {
             $profileData['matching_percentage'] = 0;
-            if ($profileData['results']) {
-                $maxMatching = 0;
+            $maxMatching = 0;
+            $mustMatchMultiplier = $profileData['multiplier'];
+            if (isset($profileData['results'])) {
 
                 array_map   (function($c) use (&$maxMatching){
                     if ($c['weight'] < 5) {

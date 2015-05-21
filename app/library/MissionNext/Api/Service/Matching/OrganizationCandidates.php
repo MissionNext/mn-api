@@ -34,9 +34,9 @@ class OrganizationCandidates extends Matching
         $matchingKey = $this->matchingModel."_value";
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
-        $mustMatchMultiplier = 1;
 
         foreach ($matchingDataSet as $k => $matchingData) {
+            $mustMatchMultiplier = 1;
             $ignoreFields = [];
             foreach ($configArr as $conf) {
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
@@ -140,10 +140,12 @@ class OrganizationCandidates extends Matching
                     }
                 }
             }
+
+            $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }
 
         $matchingDataSet = array_intersect_key($matchingDataSet, $tempMatchingData);
 
-        return $this->calculateMatchingPercentage($matchingDataSet, $mustMatchMultiplier);
+        return $this->calculateMatchingPercentage($matchingDataSet);
     }
 } 

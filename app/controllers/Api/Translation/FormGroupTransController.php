@@ -21,18 +21,20 @@ class FormGroupTransController extends  BaseController
     public function postIndex()
     {
         $data = $this->request->request->all();
-        foreach($data['groups'] as $transGroup)
-        {
-            $dataTrans = new \ArrayObject($transGroup, \ArrayObject::ARRAY_AS_PROPS);
-            $dataTrans->offsetSet('app_id', $this->getApp()->id());
-            /** @var  $formGroupTrans FormGroupTrans */
-            $formGroupTrans =  FormGroupTrans::whereLangId($dataTrans->lang_id)
-                                        ->whereAppId($dataTrans->app_id)
-                                        ->whereGroupId($dataTrans->group_id)
-                                        ->first() ? : new FormGroupTrans();
+        if (isset($data['groups']) && !empty($data['groups'])) {
+            foreach($data['groups'] as $transGroup)
+            {
+                $dataTrans = new \ArrayObject($transGroup, \ArrayObject::ARRAY_AS_PROPS);
+                $dataTrans->offsetSet('app_id', $this->getApp()->id());
+                /** @var  $formGroupTrans FormGroupTrans */
+                $formGroupTrans =  FormGroupTrans::whereLangId($dataTrans->lang_id)
+                    ->whereAppId($dataTrans->app_id)
+                    ->whereGroupId($dataTrans->group_id)
+                    ->first() ? : new FormGroupTrans();
 
-            $formGroupTrans->app_id  ?   $formGroupTrans->updateTransData($dataTrans)
-                                     :   $formGroupTrans->insertTransData($dataTrans);
+                $formGroupTrans->app_id  ?   $formGroupTrans->updateTransData($dataTrans)
+                    :   $formGroupTrans->insertTransData($dataTrans);
+            }
         }
 
         return new RestResponse([$data]);
