@@ -100,6 +100,10 @@ class OrganizationCandidates extends Matching
                             unset($tempMatchingData[$k]);
                             $mustMatchMultiplier = 0;
                             continue;
+                        } else {
+                            $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                            $matchingDataSet[$k]['results'][$matchingDataKey] =
+                                [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
                         }
                     }else{
                         if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {

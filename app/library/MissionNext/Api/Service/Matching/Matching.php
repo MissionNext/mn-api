@@ -147,11 +147,13 @@ abstract class Matching
                 }, $profileData['results']);
 
                 foreach ($profileData['results'] as $key=>&$prof) {
-                    if (isset($prof['matches']) && $prof['matches']) {
-                        $profileData['matching_percentage'] += $prof['weight'];
-                    } elseif (!isset($prof['matches'])) {
+                    if ($prof['weight'] < 5) {
+                        if (isset($prof['matches']) && $prof['matches']) {
+                            $profileData['matching_percentage'] += $prof['weight'];
+                        } elseif (!isset($prof['matches'])) {
 
-                        $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
+                            $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
+                        }
                     }
                 }
             }
