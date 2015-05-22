@@ -109,15 +109,18 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
 
         $this->setUsersBaseData($profile, $this->getModel());
         $profile->profileData = new \stdClass();
+        $fieldsArray = [];
 
-        $fields->each(function ($field) use ($profile) {
+        $fields->each(function ($field) use ($profile, &$fieldsArray) {
             $key = $field->symbol_key;
             if (isset($profile->profileData->$key)) {
-                $profile->profileData->$key = array_replace($profile->profileData->$key, [$field->trans_value]);
+                $fieldsArray[$key][] = $field->trans_value;
+                $profile->profileData->$key = array_replace($profile->profileData->$key, $fieldsArray[$key]);
             } else {
                 $profile->profileData->$key = $field->value;
                 if (FieldType::isMultiple($field->type)){
-                    $profile->profileData->$key = [$field->trans_value];
+                    $fieldsArray[$key][] = $field->trans_value;
+                    $profile->profileData->$key = $fieldsArray[$key];
                 } elseif (FieldType::hasDictionary($field->type)) {
                     $profile->profileData->$key = $field->trans_value;
                 }
