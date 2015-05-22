@@ -67,7 +67,7 @@ abstract class QueueMatching
         try {
             $formGroupRepo = new FormGroupRepository();
             $formGroupRepo->setSecurityContext($this->securityContext());
-            $dependentFields = $formGroupRepo->dependentFields()->get();
+            $dependentFields = $formGroupRepo->allDependentFields()->get();
         } catch (\Exception $e){
             $this->job->delete();
             return [];
@@ -113,7 +113,7 @@ abstract class QueueMatching
         try {
             $formGroupRepo = new FormGroupRepository();
             $formGroupRepo->setSecurityContext($this->securityContext());
-            $dependentFields = $formGroupRepo->dependentFields()->get();
+            $dependentFields = $formGroupRepo->allDependentFields()->get();
         } catch (\Exception $e){
             $this->job->delete();
             return [];
