@@ -45,6 +45,16 @@ class CandidateJobs extends Matching
                 $matchingDataProfile = $matchingData['profileData'];
                 $mainDataProfile = $mainData['profileData'];
 
+                $masterMatchingField = $this->getFieldDependencyMaster($dependencies, $matchingDataKey);
+                $masterMainField = $this->getFieldDependencyMaster($dependencies, $mainDataKey);
+                $resultMasterField = ('marital_status' == $masterMatchingField || 'marital_status' == $masterMainField) ? 'marital_status' : null;
+                if ($resultMasterField) {
+                    if (!(isset($matchingDataProfile[$resultMasterField]) && isset($mainDataProfile[$resultMasterField]) && $matchingDataProfile[$resultMasterField] == $mainDataProfile[$resultMasterField] && 2 == $matchingDataProfile[$resultMasterField])){
+                        $this->removeFromDataSet($dependencies, $resultMasterField, $k, $ignoreFields, $matchingDataSet);
+                        continue;
+                    }
+                }
+                
                 if (in_array($matchingDataKey, $ignoreFields) || in_array($mainDataKey, $ignoreFields)) {
                     continue;
                 }
@@ -56,15 +66,7 @@ class CandidateJobs extends Matching
 
                     if (11 == $conf['field_type'] && !(2 == $mainDataValue && 2 == $matchingDataValue)) {
                         if (isset($dependencies[$matchingDataKey])) {
-                            foreach ($dependencies[$matchingDataKey] as $item) {
-                                if (isset($matchingDataSet[$k]['results'])) {
-                                    unset($matchingDataSet[$k]['results'][$item]);
-                                }
-
-                                if (!in_array($item, $ignoreFields)) {
-                                    $ignoreFields[] = $item;
-                                }
-                            }
+                            $this->removeFromDataSet($dependencies, $matchingDataKey, $k, $ignoreFields, $matchingDataSet);
                         }
                     }
 
@@ -132,15 +134,7 @@ class CandidateJobs extends Matching
 
                     if (11 == $conf['field_type']) {
                         if (isset($dependencies[$matchingDataKey])) {
-                            foreach ($dependencies[$matchingDataKey] as $item) {
-                                if (isset($matchingDataSet[$k]['results'])) {
-                                    unset($matchingDataSet[$k]['results'][$item]);
-                                }
-
-                                if (!in_array($item, $ignoreFields)) {
-                                    $ignoreFields[] = $item;
-                                }
-                            }
+                            $this->removeFromDataSet($dependencies, $matchingDataKey, $k, $ignoreFields, $matchingDataSet);
                         }
                     }
                 }

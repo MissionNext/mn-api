@@ -191,4 +191,28 @@ abstract class Matching
 
         return $dependencies;
     }
+
+    protected function getFieldDependencyMaster($dependencyArray, $fieldName){
+
+        foreach($dependencyArray as $key => $value) {
+            if (in_array($fieldName, $value)) {
+                return $key;
+            }
+        }
+
+        return false;
+    }
+
+    protected function removeFromDataSet($dependencies, $matchingDataKey, $k, &$ignoreFields, &$matchingDataSet)
+    {
+        foreach ($dependencies[$matchingDataKey] as $item) {
+            if (isset($matchingDataSet[$k]['results'])) {
+                unset($matchingDataSet[$k]['results'][$item]);
+            }
+
+            if (!in_array($item, $ignoreFields)) {
+                $ignoreFields[] = $item;
+            }
+        }
+    }
 } 
