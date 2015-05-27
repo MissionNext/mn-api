@@ -49,7 +49,7 @@ class CandidateJobs extends Matching
                 $masterMainField = $this->getFieldDependencyMaster($dependencies, $mainDataKey);
                 $resultMasterField = ('marital_status' == $masterMatchingField || 'marital_status' == $masterMainField) ? 'marital_status' : null;
                 if ($resultMasterField) {
-                    if (!(isset($matchingDataProfile[$resultMasterField]) && isset($mainDataProfile[$resultMasterField]) && $matchingDataProfile[$resultMasterField] == $mainDataProfile[$resultMasterField] && 2 == $matchingDataProfile[$resultMasterField])){
+                    if (!(isset($matchingDataProfile[$resultMasterField]) && isset($mainDataProfile[$resultMasterField]) && $matchingDataProfile[$resultMasterField] == $mainDataProfile[$resultMasterField] && 'Married' == $matchingDataProfile[$resultMasterField])){
                         $this->removeFromDataSet($dependencies, $resultMasterField, $k, $ignoreFields, $matchingDataSet);
                         continue;
                     }
@@ -64,7 +64,7 @@ class CandidateJobs extends Matching
                     $matchingDataValue = $matchingDataProfile[$matchingDataKey];
                     $mainDataValue = $mainDataProfile[$mainDataKey];
 
-                    if (11 == $conf['field_type'] && !(2 == $mainDataValue && 2 == $matchingDataValue)) {
+                    if (11 == $conf['field_type'] && !('Married' == $mainDataValue && 'Married' == $matchingDataValue)) {
                         if (isset($dependencies[$matchingDataKey])) {
                             $this->removeFromDataSet($dependencies, $matchingDataKey, $k, $ignoreFields, $matchingDataSet);
                         }
