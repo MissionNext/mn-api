@@ -136,12 +136,12 @@ class BaseController extends Controller
         try
         {
             if ($job = Queue::getPheanstalk()->peekReady($tube)) {
-                return 1;
+                return new RestResponse([ 'status' => 1, 'data' => '1']);
             }
         }
         catch(\Pheanstalk_Exception_ServerException $e){}
 
-        return 0;
+        return new RestResponse([ 'status' => 1, 'data' => '0']);
     }
 
     /**
