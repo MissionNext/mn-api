@@ -131,6 +131,19 @@ class BaseController extends Controller
         catch(\Pheanstalk_Exception_ServerException $e){}
     }
 
+    public function checkQueue($tube = 'default')
+    {
+        try
+        {
+            if ($job = Queue::getPheanstalk()->peekReady($tube)) {
+                return 1;
+            }
+        }
+        catch(\Pheanstalk_Exception_ServerException $e){}
+
+        return 0;
+    }
+
     /**
      * @return RestResponse
      */
