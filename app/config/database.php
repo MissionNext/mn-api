@@ -68,7 +68,7 @@ return array(
             'host'     => 'localhost',
             'database' => 'mission_next_prod',
             'username' => 'postgres',
-            'password' => 'bigpups',
+            'password' => 'postgres',
             'charset'  => 'utf8',
             'prefix'   => '',
             'schema'   => 'public',
