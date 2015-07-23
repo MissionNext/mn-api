@@ -4,7 +4,7 @@ namespace MissionNext\Api\Service\Matching;
 
 use MissionNext\Models\DataModel\BaseDataModel;
 
-class CandidateOrganizations extends Matching 
+class CandidateOrganizations extends Matching
 {
 
     protected  $matchingModel = BaseDataModel::ORGANIZATION;
@@ -20,6 +20,8 @@ class CandidateOrganizations extends Matching
     {
 
         $configArr = $this->matchConfig;
+        $configArr = $this->addMaritalField($configArr, 'organization_key', 'candidate_key');
+
         $dependentFields = $this->dependentFields;
         $dependencies = $this->dependencyArray($dependentFields);
 
@@ -44,11 +46,10 @@ class CandidateOrganizations extends Matching
                 $matchingDataProfile = $matchingData['profileData'];
                 $mainDataProfile = $mainData['profileData'];
 
-                $masterMatchingField = $this->getFieldDependencyMaster($dependencies, $matchingDataKey);
                 $masterMainField = $this->getFieldDependencyMaster($dependencies, $mainDataKey);
-                $resultMasterField = ('marital_status' == $masterMatchingField || 'marital_status' == $masterMainField) ? 'marital_status' : null;
+                $resultMasterField = ('marital_status' == $masterMainField) ? 'marital_status' : null;
                 if ($resultMasterField) {
-                    if (!(isset($matchingDataProfile[$resultMasterField]) && isset($mainDataProfile[$resultMasterField]) && $matchingDataProfile[$resultMasterField] == $mainDataProfile[$resultMasterField] && 'Married' == $matchingDataProfile[$resultMasterField])){
+                    if (!(isset($mainDataProfile[$resultMasterField]) && 'Married' == $mainDataProfile[$resultMasterField])){
                         $this->removeFromDataSet($dependencies, $resultMasterField, $k, $ignoreFields, $matchingDataSet);
                         continue;
                     }
@@ -63,9 +64,9 @@ class CandidateOrganizations extends Matching
                     $matchingDataValue = $matchingDataProfile[$matchingDataKey];
                     $mainDataValue = $mainDataProfile[$mainDataKey];
 
-                    if (11 == $conf['field_type'] && !('Married' == $mainDataValue && 'Married' == $matchingDataValue)) {
-                        if (isset($dependencies[$matchingDataKey])) {
-                            $this->removeFromDataSet($dependencies, $matchingDataKey, $k, $ignoreFields, $matchingDataSet);
+                    if (11 == $conf['field_type'] && 'Married' != $mainDataValue) {
+                        if (isset($dependencies[$mainDataKey])) {
+                            $this->removeFromDataSet($dependencies, $mainDataKey, $k, $ignoreFields, $matchingDataSet);
                         }
                     }
 
@@ -123,7 +124,6 @@ class CandidateOrganizations extends Matching
                     /** if in profile data no symbol key that is in match config and weight is 5, remove  element from match */
                     if ($conf['weight'] == 5) {
                         unset($tempMatchingData[$k]);
-                        $mustMatchMultiplier = 0;
                         continue;
                     } else {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -132,13 +132,15 @@ class CandidateOrganizations extends Matching
                     }
 
                     if (11 == $conf['field_type']) {
-                        if (isset($dependencies[$matchingDataKey])) {
-                            $this->removeFromDataSet($dependencies, $matchingDataKey, $k, $ignoreFields, $matchingDataSet);
+                        if (isset($dependencies[$mainDataKey])) {
+                            $this->removeFromDataSet($dependencies, $mainDataKey, $k, $ignoreFields, $matchingDataSet);
                         }
                     }
                 }
             }
-
+            if (isset($matchingDataSet[$k]['results']['marital_status'])) {
+                unset($matchingDataSet[$k]['results']['marital_status']);
+            }
             $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }
 

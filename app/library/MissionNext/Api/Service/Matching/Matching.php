@@ -95,8 +95,8 @@ abstract class Matching
     protected function isMatches($mainValues, $matchingValues, $matchingType)
     {
         $matchingData = (new MatchingData())->setMainValues($mainValues)
-                                            ->setMatchingValues($matchingValues)
-                                            ->setReverseMatching($this->reverseMatching);
+            ->setMatchingValues($matchingValues)
+            ->setReverseMatching($this->reverseMatching);
 
         switch($matchingType){
             case Config::MATCHING_EQUAL:
@@ -126,7 +126,7 @@ abstract class Matching
     }
 
     /**
-         * @param array $data
+     * @param array $data
      *
      * @return array
      */
@@ -168,7 +168,7 @@ abstract class Matching
 
         return array_filter(array_values($data), function($d){
 
-          return  $d['matching_percentage'] != 0;
+            return  $d['matching_percentage'] != 0;
         });
     }
 
@@ -214,5 +214,26 @@ abstract class Matching
                 $ignoreFields[] = $item;
             }
         }
+    }
+
+    protected function addMaritalField($confArray, $one_key, $second_key){
+        $exist = false;
+        foreach ($confArray as $item) {
+            if (in_array('marital_status', $item)) {
+                $exist = true;
+            }
+        }
+
+        if (!$exist) {
+            $confArray[] = [
+                $one_key            => 'marital_status',
+                $second_key         => 'marital_status',
+                'weight'            => 0,
+                'matching_type'     => 1,
+                'field_type'        => 11
+            ];
+        }
+
+        return $confArray;
     }
 } 

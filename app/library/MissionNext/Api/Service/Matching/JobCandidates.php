@@ -22,6 +22,8 @@ class JobCandidates extends Matching
     public function matchResults()
     {
         $configArr = $this->matchConfig;
+        $configArr = $this->addMaritalField($configArr, 'candidate_key', 'job_key');
+
         $dependentFields = $this->dependentFields;
         $dependencies = $this->dependencyArray($dependentFields);
 
@@ -46,10 +48,10 @@ class JobCandidates extends Matching
                 $mainDataProfile = $mainData['profileData'];
 
                 $masterMatchingField = $this->getFieldDependencyMaster($dependencies, $matchingDataKey);
-                $masterMainField = $this->getFieldDependencyMaster($dependencies, $mainDataKey);
-                $resultMasterField = ('marital_status' == $masterMatchingField || 'marital_status' == $masterMainField) ? 'marital_status' : null;
+
+                $resultMasterField = ('marital_status' == $masterMatchingField) ? 'marital_status' : null;
                 if ($resultMasterField) {
-                    if (!(isset($matchingDataProfile[$resultMasterField]) && isset($mainDataProfile[$resultMasterField]) && $matchingDataProfile[$resultMasterField] == $mainDataProfile[$resultMasterField] && 'Married' == $matchingDataProfile[$resultMasterField])){
+                    if (!(isset($matchingDataProfile[$resultMasterField]) && 'Married' == $matchingDataProfile[$resultMasterField])){
                         $this->removeFromDataSet($dependencies, $resultMasterField, $k, $ignoreFields, $matchingDataSet);
                         continue;
                     }
@@ -64,7 +66,7 @@ class JobCandidates extends Matching
                     $matchingDataValue = $matchingDataProfile[$matchingDataKey];
                     $mainDataValue = $mainDataProfile[$mainDataKey];
 
-                    if (11 == $conf['field_type'] && !('Married' == $mainDataValue && 'Married' == $matchingDataValue)) {
+                    if (11 == $conf['field_type'] && 'Married' != $matchingDataValue) {
                         if (isset($dependencies[$matchingDataKey])) {
                             $this->removeFromDataSet($dependencies, $matchingDataKey, $k, $ignoreFields, $matchingDataSet);
                         }
@@ -124,7 +126,6 @@ class JobCandidates extends Matching
                     /** if in profile data no symbol key that is in match config and weight is 5, remove  element from match */
                     if ($conf['weight'] == 5) {
                         unset($tempMatchingData[$k]);
-                        $mustMatchMultiplier = 0;
                         continue;
                     } else {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -139,7 +140,9 @@ class JobCandidates extends Matching
                     }
                 }
             }
-
+            if (isset($matchingDataSet[$k]['results']['marital_status'])) {
+                unset($matchingDataSet[$k]['results']['marital_status']);
+            }
             $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }
 
