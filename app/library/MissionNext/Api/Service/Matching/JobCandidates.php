@@ -44,8 +44,8 @@ class JobCandidates extends Matching
                 $mainDataProfile = $mainData['profileData'];
 
                 $marital_value = (isset($matchingDataProfile[$marital_status_key])) ? $matchingDataProfile[$marital_status_key]: null;
-                if ("Married" != $marital_value && preg_match("/Spouse/", $mainDataKey)) {
-                    unset($tempMatchingData[$k]);
+                $spouse_field = strpos($matchingDataKey, 'spouse');
+                if ("Married" != $marital_value && $spouse_field !== false) {
                     continue;
                 }
 
