@@ -67,7 +67,6 @@ abstract class QueueMatching
         try {
             $formGroupRepo = new FormGroupRepository();
             $formGroupRepo->setSecurityContext($this->securityContext());
-            $dependentFields = $formGroupRepo->allDependentFields()->get();
         } catch (\Exception $e){
             $this->job->delete();
             return [];
@@ -81,8 +80,7 @@ abstract class QueueMatching
             "forUserType"       => $this->forUserType,
             "userType"          => $this->userType,
             "config"            => $config->toArray(),
-            "userId"            => $userId,
-            "dependentFields"   => $dependentFields
+            "userId"            => $userId
         ];
 
         Queue::push(InsertQueue::class, $data);
@@ -113,7 +111,7 @@ abstract class QueueMatching
         try {
             $formGroupRepo = new FormGroupRepository();
             $formGroupRepo->setSecurityContext($this->securityContext());
-            $dependentFields = $formGroupRepo->allDependentFields()->get();
+
         } catch (\Exception $e){
             $this->job->delete();
             return [];
@@ -143,8 +141,7 @@ abstract class QueueMatching
                 "forUserType"       => $this->forUserType,
                 "userType"          => $this->userType,
                 "config"            => $config->toArray(),
-                "userId"            => $userId,
-                "dependentFields"   => $dependentFields
+                "userId"            => $userId
             ];
 
             Queue::push(InsertQueue::class, $data);

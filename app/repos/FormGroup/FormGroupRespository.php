@@ -52,20 +52,4 @@ class FormGroupRepository extends AbstractRepository implements FormGroupReposit
             new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','symbol_keys']));
     }
 
-    public function allDependentFields()
-    {
-        $appId = $this->securityContext->getApp()->id();
-
-        $builder =   $this->getModel()
-            ->select('form_groups.depends_on', \DB::raw(Sql::getDbStatement()->groupConcat('group_fields.symbol_key','symbol_keys')) )
-            ->leftJoin('app_forms', 'app_forms.id', '=', 'form_groups.form_id')
-            ->leftJoin('app_data_model', 'app_data_model.id', '=', 'app_forms.data_model_id')
-            ->leftJoin('group_fields', 'group_fields.group_id', '=', 'form_groups.id')
-            ->where('app_data_model.app_id', '=', $appId)
-            ->where('form_groups.depends_on', '<>', '')
-            ->groupBy('form_groups.depends_on');
-
-        return
-            new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','symbol_keys']));
-    }
 } 

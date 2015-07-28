@@ -21,10 +21,9 @@ class InsertQueue
         $userId = $data["userId"];
         $matchingClass = $data["matchingClass"];
         $config = $data["config"];
-        $dependentFields = $data['dependentFields'];
 
         /** @var  $Matching ServiceMatching */
-        $Matching = new $matchingClass($mainData, $matchingData, $config, $dependentFields);
+        $Matching = new $matchingClass($mainData, $matchingData, $config);
 
         $matchingData = $Matching->matchResults();
 

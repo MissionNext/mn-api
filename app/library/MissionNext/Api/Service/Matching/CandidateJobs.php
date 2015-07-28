@@ -21,11 +21,8 @@ class CandidateJobs extends Matching
      */
     public function matchResults()
     {
+        $marital_status_key = 'marital_status';
         $configArr = $this->matchConfig;
-        $configArr = $this->addMaritalField($configArr, 'job_key', 'candidate_key');
-
-        $dependentFields = $this->dependentFields;
-        $dependencies = $this->dependencyArray($dependentFields);
 
         $matchingDataSet = $this->matchAgainstData;
         $mainData = $this->matchData;
@@ -37,26 +34,18 @@ class CandidateJobs extends Matching
         $matchingKey = $this->matchingModel."_value";
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
-
         foreach ($matchingDataSet as $k => $matchingData) {
             $mustMatchMultiplier = 1;
-            $ignoreFields = [];
             foreach ($configArr as $conf) {
+
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
                 $matchingDataProfile = $matchingData['profileData'];
                 $mainDataProfile = $mainData['profileData'];
 
-                $masterMainField = $this->getFieldDependencyMaster($dependencies, $mainDataKey);
-                $resultMasterField = ('marital_status' == $masterMainField) ? 'marital_status' : null;
-                if ($resultMasterField) {
-                    if (!(isset($mainDataProfile[$resultMasterField]) && 'Married' == $mainDataProfile[$resultMasterField])){
-                        $this->removeFromDataSet($dependencies, $resultMasterField, $k, $ignoreFields, $matchingDataSet);
-                        continue;
-                    }
-                }
-
-                if (in_array($matchingDataKey, $ignoreFields) || in_array($mainDataKey, $ignoreFields)) {
+                $marital_value = (isset($mainDataProfile[$marital_status_key])) ? $mainDataProfile[$marital_status_key]: null;
+                if ("Married" != $marital_value && preg_match("/Spouse/", $mainDataKey)) {
+                    unset($tempMatchingData[$k]);
                     continue;
                 }
 
@@ -64,12 +53,6 @@ class CandidateJobs extends Matching
 
                     $matchingDataValue = $matchingDataProfile[$matchingDataKey];
                     $mainDataValue = $mainDataProfile[$mainDataKey];
-
-                    if (11 == $conf['field_type'] && 'Married' != $mainDataValue) {
-                        if (isset($dependencies[$matchingDataKey])) {
-                            $this->removeFromDataSet($dependencies, $matchingDataKey, $k, $ignoreFields, $matchingDataSet);
-                        }
-                    }
 
                     if ($mainDataValue === "" || $matchingDataValue === "") {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -122,28 +105,14 @@ class CandidateJobs extends Matching
                     }
 
                 }elseif( !isset($matchingDataProfile[$matchingDataKey]) ){
-                    /** if in profile data no symbol key that is in match config and weight is 5, remove  element from match */
-                    if ($conf['weight'] == 5) {
-                        unset($tempMatchingData[$k]);
-                        continue;
-                    } else {
-                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
-                        $matchingDataSet[$k]['results'][$matchingDataKey] =
-                            [$matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
-                    }
-
-                    if (11 == $conf['field_type']) {
-                        if (isset($dependencies[$matchingDataKey])) {
-                            $this->removeFromDataSet($dependencies, $matchingDataKey, $k, $ignoreFields, $matchingDataSet);
-                        }
-                    }
+                    $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                    $matchingDataSet[$k]['results'][$matchingDataKey] =
+                        [$matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
                 }
-            }
-            if (isset($matchingDataSet[$k]['results']['marital_status'])) {
-                unset($matchingDataSet[$k]['results']['marital_status']);
             }
             $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }
+
         $matchingDataSet = array_intersect_key($matchingDataSet, $tempMatchingData);
 
         return $this->calculateMatchingPercentage($matchingDataSet);

@@ -30,19 +30,16 @@ abstract class Matching
 
     protected $reverseMatching = false;
 
-    protected $dependentFields;
-
     /**
      * @param $matchData
      * @param $matchAgainstData
      * @param $matchConfig
      */
-    public function __construct($matchData, $matchAgainstData, $matchConfig, $dependentFields)
+    public function __construct($matchData, $matchAgainstData, $matchConfig)
     {
         $this->matchData = $matchData;
         $this->matchAgainstData = $matchAgainstData;
         $this->matchConfig = $matchConfig;
-        $this->dependentFields = $dependentFields;
     }
 
     private $selectFieldTypes = [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO];
@@ -178,62 +175,4 @@ abstract class Matching
 
     abstract public function matchResults();
 
-    protected function dependencyArray($dependentFields)
-    {
-        $dependencies = [];
-        foreach ($dependentFields as $item) {
-            if (isset($item) && !empty($item['symbol_keys'])) {
-                foreach ($item['symbol_keys'] as $fieldName) {
-                    $dependencies[$item['depends_on']][] = $fieldName;
-                }
-            }
-        }
-
-        return $dependencies;
-    }
-
-    protected function getFieldDependencyMaster($dependencyArray, $fieldName){
-
-        foreach($dependencyArray as $key => $value) {
-            if (in_array($fieldName, $value)) {
-                return $key;
-            }
-        }
-
-        return false;
-    }
-
-    protected function removeFromDataSet($dependencies, $matchingDataKey, $k, &$ignoreFields, &$matchingDataSet)
-    {
-        foreach ($dependencies[$matchingDataKey] as $item) {
-            if (isset($matchingDataSet[$k]['results'])) {
-                unset($matchingDataSet[$k]['results'][$item]);
-            }
-
-            if (!in_array($item, $ignoreFields)) {
-                $ignoreFields[] = $item;
-            }
-        }
-    }
-
-    protected function addMaritalField($confArray, $one_key, $second_key){
-        $exist = false;
-        foreach ($confArray as $item) {
-            if (in_array('marital_status', $item)) {
-                $exist = true;
-            }
-        }
-
-        if (!$exist) {
-            $confArray[] = [
-                $one_key            => 'marital_status',
-                $second_key         => 'marital_status',
-                'weight'            => 0,
-                'matching_type'     => 1,
-                'field_type'        => 11
-            ];
-        }
-
-        return $confArray;
-    }
 } 
