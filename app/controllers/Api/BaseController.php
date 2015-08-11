@@ -233,8 +233,9 @@ class BaseController extends Controller
         foreach($dependentFields as $field){
             $ownerField = $field->depends_on;
             if (isset($profileData[$ownerField])){
+                $ownerFieldType = $profileData[$ownerField]['type'];
                 $ownerFieldValue = $profileData[$ownerField]['value'];
-                if (!$ownerFieldValue) {
+                if (!$ownerFieldValue || ("radio_yes_no" == $ownerFieldType && "No" == $ownerFieldValue) || ("custom_marital" == $ownerFieldType && "Married" != $ownerFieldValue)) {
                     $fieldNames = array_diff($fieldNames, $field->symbol_keys);
                 }
             }
