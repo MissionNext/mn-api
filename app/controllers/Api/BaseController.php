@@ -240,6 +240,12 @@ class BaseController extends Controller
                 }
             }
         }
+        $marital_default = false;
+        if (!in_array("marital_status", $fieldNames)) {
+            $fieldNames[] = 'marital_status';
+            $marital_default = true;
+        }
+
         /** @var  $fields Collection */
         $fields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $fieldNames)->get();
 
@@ -253,8 +259,10 @@ class BaseController extends Controller
 
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
-                $validationData[$field->symbol_key] = $profileData[$field->symbol_key]['value'];//@TODO can be array
-                $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
+                if (!($marital_default && 'marital_status' == $field->symbol_key)) {
+                    $validationData[$field->symbol_key] = $profileData[$field->symbol_key]['value'];//@TODO can be array
+                    $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
+                }
             }
         }
        // dd($validationData, $constraints);
