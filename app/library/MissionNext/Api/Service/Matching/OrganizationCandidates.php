@@ -105,7 +105,7 @@ class OrganizationCandidates extends Matching
                 }elseif( !isset($matchingDataProfile[$matchingDataKey]) ){
                     $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                     $matchingDataSet[$k]['results'][$matchingDataKey] =
-                        [$matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
+                        [$matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => true, "weight" => $conf["weight"]];
                 }
             }
             $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
