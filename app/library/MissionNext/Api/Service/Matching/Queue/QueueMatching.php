@@ -63,20 +63,10 @@ abstract class QueueMatching
             return [];
         }
 
-        $dependentFields = null;
-        try {
-            $formGroupRepo = new FormGroupRepository();
-            $formGroupRepo->setSecurityContext($this->securityContext());
-        } catch (\Exception $e){
-            $this->job->delete();
-            return [];
-        }
-
-
         $data = [
             "mainData"          => $mainData,
             "matchingData"      => $matchingData,
-            "matchingClass"     =>$this->matchingClass,
+            "matchingClass"     => $this->matchingClass,
             "forUserType"       => $this->forUserType,
             "userType"          => $this->userType,
             "config"            => $config->toArray(),
