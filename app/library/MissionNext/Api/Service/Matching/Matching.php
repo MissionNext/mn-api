@@ -175,4 +175,26 @@ abstract class Matching
 
     abstract public function matchResults();
 
+    public function getIntersection($mainArray, $matchingArray)
+    {
+        $mainIntersectArray = $matchingIntersectArray = [];
+
+        foreach ($mainArray as $item) {
+            if (in_array($item, $matchingArray) || starts_with($item, static::NO_PREFERENCE_SYMBOL)) {
+                $mainIntersectArray[] = $item;
+                $matchingIntersectArray[] = $item;
+            }
+        }
+
+        foreach ($matchingArray as $item){
+            if (starts_with($item, static::NO_PREFERENCE_SYMBOL) && !in_array($item, $mainIntersectArray)){
+                $matchingIntersectArray[] = $item;
+                $mainIntersectArray[] = $item;
+            }
+        }
+
+        return [
+            $mainIntersectArray, $matchingIntersectArray
+        ];
+    }
 } 

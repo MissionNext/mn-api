@@ -76,8 +76,9 @@ class CandidateJobs extends Matching
                     )
                     {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                        list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                         $matchingDataSet[$k]['results'][$matchingDataKey] =
-                            [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
+                            [$matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         continue;
                     }
 
@@ -89,8 +90,9 @@ class CandidateJobs extends Matching
                             continue;
                         } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                            list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                             $matchingDataSet[$k]['results'][$matchingDataKey] =
-                                [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
+                                [$matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         }
                     }else{
                         if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
@@ -99,8 +101,9 @@ class CandidateJobs extends Matching
                                 [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
                         }else{
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                            list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                             $matchingDataSet[$k]['results'][$matchingDataKey] =
-                                [$matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => true, "weight" => $conf["weight"]];
+                                [$matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         }
                     }
 
