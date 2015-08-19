@@ -4,6 +4,7 @@ namespace MissionNext\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Auth\Token;
@@ -227,6 +228,7 @@ class BaseController extends Controller
      */
     protected function validateProfileData(array $profileData)
     {
+        $role = Input::get('role');
         $fieldNames = array_keys($profileData);
         $dependentFields = $this->formGroupRepo()->dependentFields()->get();
         //dd($dependentFields->toArray());
@@ -240,8 +242,9 @@ class BaseController extends Controller
                 }
             }
         }
+
         $marital_default = false;
-        if (!in_array("marital_status", $fieldNames)) {
+        if (!in_array("marital_status", $fieldNames) && 'candidate' == $role) {
             $fieldNames[] = 'marital_status';
             $marital_default = true;
         }
