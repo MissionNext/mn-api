@@ -228,10 +228,8 @@ class BaseController extends Controller
      */
     protected function validateProfileData(array $profileData)
     {
-        $role = Input::get('role');
         $fieldNames = array_keys($profileData);
         $dependentFields = $this->formGroupRepo()->dependentFields()->get();
-        //dd($dependentFields->toArray());
         foreach($dependentFields as $field){
             $ownerField = $field->depends_on;
             if (isset($profileData[$ownerField])){
@@ -241,12 +239,6 @@ class BaseController extends Controller
                     $fieldNames = array_diff($fieldNames, $field->symbol_keys);
                 }
             }
-        }
-
-        $marital_default = false;
-        if (!in_array("marital_status", $fieldNames) && 'candidate' == $role) {
-            $fieldNames[] = 'marital_status';
-            $marital_default = true;
         }
 
         /** @var  $fields Collection */
@@ -262,10 +254,8 @@ class BaseController extends Controller
 
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
-                if (!($marital_default && 'marital_status' == $field->symbol_key)) {
-                    $validationData[$field->symbol_key] = $profileData[$field->symbol_key]['value'];//@TODO can be array
-                    $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
-                }
+                $validationData[$field->symbol_key] = $profileData[$field->symbol_key]['value'];//@TODO can be array
+                $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
             }
         }
        // dd($validationData, $constraints);
