@@ -15,7 +15,7 @@ class DateValidator extends Validator
     {
         $params = $this->params($parameters);
 
-        return new \DateTime > (new \DateTime($value))->modify("+ {$params->years} years {$params->months} months {$params->days} days");
+        return new \DateTime($value) > (new \DateTime)->modify("+ {$params->years} years {$params->months} months {$params->days} days");
     }
 
     /**
@@ -29,7 +29,20 @@ class DateValidator extends Validator
     {
         $params = $this->params($parameters);
 
-        return str_replace([':required_years', ':required_months', ':required_days'], [$params->years, $params->months, $params->days], $message);
+        $yearStr = $monthStr = $dayStr = null;
+        if ($params->years > 0) {
+            $yearStr = ($params->years > 1) ? $params->years." years " : $params->years." year ";
+        }
+
+        if ($params->months > 0) {
+            $monthStr = ($params->months > 1) ? $params->months." months " : $params->months." month ";
+        }
+
+        if ($params->days > 0) {
+            $dayStr = ($params->days > 1) ? $params->days." days " : $params->days." day ";
+        }
+
+        return str_replace([':required_years', ':required_months', ':required_days'], [$yearStr, $monthStr, $dayStr], $message);
     }
 
     /**
@@ -42,7 +55,7 @@ class DateValidator extends Validator
     {
         $params = $this->params($parameters);
 
-        return new \DateTime < (new \DateTime($value))->modify("+ {$params->years} years {$params->months} months {$params->days} days");
+        return new \DateTime($value) < (new \DateTime)->modify("+ {$params->years} years {$params->months} months {$params->days} days");
     }
 
     /**
@@ -56,7 +69,20 @@ class DateValidator extends Validator
     {
         $params = $this->params($parameters);
 
-        return str_replace([':required_years', ':required_months', ':required_days'], [$params->years, $params->months, $params->days], $message);
+        $yearStr = $monthStr = $dayStr = null;
+        if ($params->years > 0) {
+            $yearStr = ($params->years > 1) ? $params->years." years " : $params->years." year ";
+        }
+
+        if ($params->months > 0) {
+            $monthStr = ($params->months > 1) ? $params->months." months " : $params->months." month ";
+        }
+
+        if ($params->days > 0) {
+            $dayStr = ($params->days > 1) ? $params->days." days " : $params->days." day ";
+        }
+
+        return str_replace([':required_years', ':required_months', ':required_days'], [$yearStr, $monthStr, $dayStr], $message);
     }
 
     /**

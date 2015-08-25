@@ -69,8 +69,8 @@ return array(
 	),
 	"unique"               => "Le :attribute lu pon de so mi.",
 	"url"                  => "The :attribute format is invalid.",
-    "ymd_more_than"        => ":attribute less than :required_years years :required_months months :required_days days from now",
-    "ymd_less_than"        => ":attribute more than :required_years years :required_months months :required_days days from now",
+    "ymd_more_than"        => ":attribute less than :required_years :required_months :required_days from now",
+    "ymd_less_than"        => ":attribute more than :required_years :required_months :required_days from now",
 
 	/*
 	|--------------------------------------------------------------------------
