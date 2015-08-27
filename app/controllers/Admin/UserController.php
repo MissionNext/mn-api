@@ -36,11 +36,28 @@ class UserController extends AdminBaseController {
     public function profile($userId) {
         /** @var  $repo UserCachedRepository */
         $repo = $this->repoContainer[UserCachedRepositoryInterface::KEY];
+        $user = $repo->findOrFail($userId)->getData();
 
+        $field_keys = array_keys($user['profileData']);
+
+        $field_keys = array_map(function($item){
+            return "'{$item}'";
+        }, $field_keys);
+
+        $fields_str = implode(',', $field_keys);
+        $whereIn = "WHERE symbol_key IN ({$fields_str})";
+
+        $query = "SELECT symbol_key FROM group_fields {$whereIn} ORDER BY group_fields.group_id, group_fields.order ASC";
+        $ordererFields = DB::select($query);
+        $sortedKeys = array_map(function($item){
+            return $item->symbol_key;
+        }, $ordererFields);
+        $sortedKeys = array_unique($sortedKeys);
 
         return $this->view->make('admin.user.profile', array(
 
-            'user' => $repo->findOrFail($userId)->getData()
+            'user'          => $repo->findOrFail($userId)->getData(),
+            'sortedKeys'    => $sortedKeys
         ));
     }
 

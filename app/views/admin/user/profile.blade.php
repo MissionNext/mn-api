@@ -19,18 +19,18 @@ Dashboard. User Profile
                  <td>{{ $user['created_at']  }}</td>
              </tr>
          </thead>
-         @foreach($user['profileData'] as $field => $value)
-             @if ((is_string($value) && !empty($value)) || (is_array($value) && count($value) > 1))
+         @foreach($sortedKeys as $item)
+             @if ((is_string($user['profileData'][$item]) && !empty($user['profileData'][$item])) || (is_array($user['profileData'][$item]) && count($user['profileData'][$item]) > 1))
                  <tr>
-                    <th>{{ ucfirst(str_replace("_", " ", $field)) }} </th>
-                    <td>@if (is_string($value))
-                            {{ $value  }}
-                        @elseif (count($value) > 1)
-                            @foreach ($value as $val)
+                    <th>{{ ucfirst(str_replace("_", " ", $item)) }} </th>
+                    <td>@if (is_string($user['profileData'][$item]))
+                            {{ $user['profileData'][$item] }}
+                        @elseif (count($user['profileData'][$item]) > 1)
+                            @foreach ($user['profileData'][$item] as $val)
                                 <li>{{ $val }}</li>
                             @endforeach
                         @else
-                          {{ current($value) }}
+                          {{ current($user['profileData'][$item]) }}
                         @endif
                     </td>
                  </tr>
