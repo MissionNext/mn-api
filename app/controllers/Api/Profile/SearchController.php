@@ -14,6 +14,7 @@ use MissionNext\Api\Service\Matching\TransData;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Api\Exceptions\SearchProfileException;
 use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\DataModel\AppDataModel;
 use MissionNext\Models\Favorite\Favorite;
 use MissionNext\Models\Field\Candidate;
 use MissionNext\Models\Field\FieldType;
@@ -55,23 +56,32 @@ class SearchController extends BaseController
                   LEFT JOIN {$folderNotesTable} n ON cp.id = n.user_id
                               AND n.for_user_id = ? AND n.user_type = ?
                   LEFT JOIN {$folderAppsTable} fA ON cp.id = fA.user_id
-                           AND fA.for_user_id = ? AND fA.user_type = ? AND fA.app_id = ?
-                  LEFT JOIN {$favoriteTable} f ON cp.id = f.target_id
-                           AND f.user_id = ? AND f.target_type = ? AND f.app_id = ?
                    ";
-        // ,
-//
-      //
-      // fN.notes, AND fN.for_user_id = ? AND fN.user_type = ?
+
+        if ($searchType == AppDataModel::CANDIDATE){
+            $query .= "AND fA.for_user_id = ? AND fA.user_type = ?
+                  LEFT JOIN {$favoriteTable} f ON cp.id = f.target_id
+                           AND f.user_id = ? AND f.target_type = ?";
+        } else {
+            $query .= "AND fA.for_user_id = ? AND fA.user_type = ? AND fA.app_id = ?
+                  LEFT JOIN {$favoriteTable} f ON cp.id = f.target_id
+                           AND f.user_id = ? AND f.target_type = ? AND f.app_id = ?";
+        }
 
         $bindings[] = $userId;
         $bindings[] = $searchType;
         $bindings[] = $userId;
         $bindings[] = $searchType;
-        $bindings[] = $this->securityContext()->getApp()->id();
-        $bindings[] = $userId;
-        $bindings[] = $searchType;
-        $bindings[] = $this->securityContext()->getApp()->id();
+
+        if ($searchType == AppDataModel::CANDIDATE) {
+            $bindings[] = $userId;
+            $bindings[] = $searchType;
+        } else {
+            $bindings[] = $this->securityContext()->getApp()->id();
+            $bindings[] = $userId;
+            $bindings[] = $searchType;
+            $bindings[] = $this->securityContext()->getApp()->id();
+        }
 
         $where = " WHERE ( ";
 
@@ -141,13 +151,15 @@ class SearchController extends BaseController
             }
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
-            //$query .= "  ) ";
-             $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids')  ) LIMIT 500";
-             $bindings[] = $this->securityContext()->getApp()->id();
+            if ($searchType != AppDataModel::CANDIDATE) {
+                $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids') ";
+                $bindings[] = $this->securityContext()->getApp()->id();
+            }
         }else{
 
             throw new SearchProfileException("No search params specified");
         }
+        $query .= " ) LIMIT 500";
 
       $result =  array_map(function ($d) {
             $data = json_decode($d->data);
