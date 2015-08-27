@@ -19,23 +19,23 @@ Dashboard. User Profile
                  <td>{{ $user['created_at']  }}</td>
              </tr>
          </thead>
-         @forelse($user['profileData'] as $field => $value)
-         <tr>
-            <th>{{ ucfirst(str_replace("_", " ", $field)) }} </th>
-            <td>@if (is_string($value))
-                    {{ $value  }}
-                @elseif (count($value) > 1)
-                    @foreach ($value as $val)
-                        <li>{{ $val }}</li>
-                    @endforeach
-                @else
-                  {{ current($value) }}
-                @endif
-            </td>
-         @empty
-             <p>No profile data</p>
-         @endforelse
-         </tr>
+         @foreach($user['profileData'] as $field => $value)
+             @if ((is_string($value) && !empty($value)) || (is_array($value) && count($value) > 1))
+                 <tr>
+                    <th>{{ ucfirst(str_replace("_", " ", $field)) }} </th>
+                    <td>@if (is_string($value))
+                            {{ $value  }}
+                        @elseif (count($value) > 1)
+                            @foreach ($value as $val)
+                                <li>{{ $val }}</li>
+                            @endforeach
+                        @else
+                          {{ current($value) }}
+                        @endif
+                    </td>
+                 </tr>
+             @endif
+         @endforeach
 
          </tbody>
      </table>
