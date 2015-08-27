@@ -11,21 +11,17 @@ Dashboard. User Profile
          <tbody>
           <thead>
               <tr>
-                 <th>username</th>
+                 <th>Username</th>
                  <td>{{ $user['username']  }}</td>
              </tr>
-             {{--<tr>--}}
-                 {{--<th>Email</th>--}}
-                 {{--<td>{{ $user['email']  }}</td>--}}
-             {{--</tr>--}}
              <tr>
-                 <th>registered</th>
+                 <th>Registered</th>
                  <td>{{ $user['created_at']  }}</td>
              </tr>
          </thead>
          @forelse($user['profileData'] as $field => $value)
          <tr>
-            <th>{{ $field }} </th>
+            <th>{{ ucfirst(str_replace("_", " ", $field)) }} </th>
             <td>@if (is_string($value))
                     {{ $value  }}
                 @elseif (count($value) > 1)
