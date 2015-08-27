@@ -7,7 +7,7 @@ Dashboard. User Profile
 @section('content')
        <button onclick="window.history.back();" type="button" class="btn btn-primary btn-sm">Back</button>
      <h3>Profile Data:</h3>
-     <table class="table table-hover" >
+     <table class="table table-hover profile-table" >
          <tbody>
           <thead>
               <tr>

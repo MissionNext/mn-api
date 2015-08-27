@@ -37,3 +37,13 @@ span.pull-right {
 .user-search-form input[type=text]{
     width: 80%;
 }
+
+.profile-table{
+    font-size: 12px;
+}
+.profile-table thead tr th,
+.profile-table thead tr td,
+.profile-table tbody tr th,
+.profile-table tbody tr td{
+    padding: 4px 8px;
+}
