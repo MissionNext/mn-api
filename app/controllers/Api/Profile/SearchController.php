@@ -52,7 +52,7 @@ class SearchController extends BaseController
         $folderAppsTable = (new FolderApps)->getTable();
         $favoriteTable = (new Favorite)->getTable();
 
-        $query = "SELECT n.notes, cp.data, fA.folder as folderName, f.id as favorite   FROM {$tableName} as cp
+        $query = "SELECT n.notes, cp.data, fA.folder as folderName, f.id as favorite, ocp.data->'profileData'->>'organization_name' as org_name FROM {$tableName} as cp
                   LEFT JOIN {$folderNotesTable} n ON cp.id = n.user_id
                               AND n.for_user_id = ? AND n.user_type = ?
                   LEFT JOIN {$folderAppsTable} fA ON cp.id = fA.user_id
@@ -67,6 +67,10 @@ class SearchController extends BaseController
                   LEFT JOIN {$favoriteTable} f ON cp.id = f.target_id
                            AND f.user_id = ? AND f.target_type = ? AND f.app_id = ?";
         }
+
+        $query .= "
+            LEFT JOIN organization_cached_profile ocp ON ocp.data->>'id'=cp.data->>'organization_id'
+            ";
 
         $bindings[] = $userId;
         $bindings[] = $searchType;
@@ -114,7 +118,7 @@ class SearchController extends BaseController
                             $prepend = " ( ";
                         }
                         foreach ($value as $val) {
-                            $query .= $where . $prepend . " ? = data->'profileData'->>'{$fieldName}' ";
+                            $query .= $where . $prepend . " ? = cp.data->'profileData'->>'{$fieldName}' ";
                             $bindings[] = $val;
                             $where = " OR ";
                             $prepend = "";
@@ -124,17 +128,17 @@ class SearchController extends BaseController
                         }
 
                     } else {
-                        $query .= $where . " ? && json_array_text(data->'profileData'->'{$fieldName}') ";
+                        $query .= $where . " ? && json_array_text(cp.data->'profileData'->'{$fieldName}') ";
                         $value = array_map('strtolower', $value);
                         $bindings[] = addslashes(str_replace(["[", "]"], ["{", "}"], json_encode($value)));
                     }
 
                 } else {
                     if (in_array($fieldName,$inputFields)){
-                        $query .= $where . " data->'profileData'->>'{$fieldName}' ILIKE ?  ";
+                        $query .= $where . " cp.data->'profileData'->>'{$fieldName}' ILIKE ?  ";
                         $bindings[] = '%'.$value.'%';
                     }else {
-                        $query .= $where . " LOWER(?) = LOWER(data->'profileData'->>'{$fieldName}') ";
+                        $query .= $where . " LOWER(?) = LOWER(cp.data->'profileData'->>'{$fieldName}') ";
                         $bindings[] = $value;
                     }
                 }
@@ -146,13 +150,13 @@ class SearchController extends BaseController
         if (!empty($userSearch)) {
 
             foreach ($userSearch as $fN => $val) {
-                $query .= $where . "  data->>'{$fN}'  ILIKE ? ";
+                $query .= $where . "  cp.data->>'{$fN}'  ILIKE ? ";
                 $bindings[] = '%'.$val.'%';
             }
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
             if ($searchType != AppDataModel::CANDIDATE) {
-                $query .= " AND ARRAY[?] <@ json_array_text(data->'app_ids') ";
+                $query .= " AND ARRAY[?] <@ json_array_text(cp.data->'app_ids') ";
                 $bindings[] = $this->securityContext()->getApp()->id();
             }
         }else{
@@ -162,10 +166,11 @@ class SearchController extends BaseController
         $query .= " ) LIMIT 500";
 
       $result =  array_map(function ($d) {
-            $data = json_decode($d->data);
-            $data->notes = $d->notes;
-            $data->folder = $d->foldername;
+            $data           = json_decode($d->data);
+            $data->notes    = $d->notes;
+            $data->folder   = $d->foldername;
             $data->favorite = $d->favorite;
+            $data->org_name = $d->org_name;
             return  new \ArrayObject($data);
         }, DB::select($query, $bindings));
 

@@ -3,7 +3,6 @@
 namespace MissionNext\Controllers\Api;
 
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Controllers\Api\BaseController;
 use Illuminate\Support\Facades\Input;
@@ -70,10 +69,7 @@ class JobController extends BaseController
         /** @var  $organization User */
         $organization = $this->userRepo()->getModel()->findOrFail(Input::get('organization_id'));
 
-        $tableName = 'organization_cached_profile';
-        $query = "SELECT data->'profileData'->>'organization_name' as org_name FROM $tableName WHERE id=".Input::get('organization_id');
-        $org = DB::select($query);
-        $organization->org_name = (isset($org[0]->org_name) && !empty($org[0]->org_name)) ? $org[0]->org_name : '';
+
 
         $jobRepo = $this->jobRepo();
         $job = $jobRepo->getModel();
