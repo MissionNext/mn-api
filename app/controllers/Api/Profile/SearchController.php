@@ -69,7 +69,7 @@ class SearchController extends BaseController
         }
 
         $query .= "
-            LEFT JOIN organization_cached_profile ocp ON ocp.data->>'id'=cp.data->>'organization_id'
+            LEFT JOIN organization_cached_profile ocp ON ocp.id=(cp.data->>'organization_id')::int
             ";
 
         $bindings[] = $userId;

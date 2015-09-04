@@ -51,10 +51,13 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
      */
     public function matchingResults($forUserType, $userType, $forUserId)
     {
-
+        $org_select = '';
+        if ($userType === BaseDataModel::JOB) {
+            $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
+        }
         $builder =
             $this->getModel()
-                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id") )
+                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
                  ->leftJoin("folder_apps", function($join) use ($forUserId, $forUserType, $userType){
                     $join->on("folder_apps.user_id", "=", "matching_results.user_id")
                          ->where("matching_results.for_user_type", "=", $forUserType)
@@ -73,6 +76,10 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                  ->where("matching_results.user_type", "=", $userType)
                  ->where("matching_results.for_user_id", "=",  $forUserId)
                  ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+
+            if ($userType === BaseDataModel::JOB ) {
+                $builder->leftJoin("organization_cached_profile", "organization_cached_profile.id", "=", DB::raw("(matching_results.data->'organization'->>'id')::int"));
+            }
 
             $builder = $userType === BaseDataModel::JOB ? $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"))
                                                      : $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->>'id')::int"));
