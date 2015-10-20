@@ -94,10 +94,13 @@ class FolderController extends BaseController
      *
      * @return RestResponse
      */
-    public function role($role)
+    public function role($role, $user_id = null)
     {
-        $folders = Folder::where("role","=",$role)
-            ->where("app_id", "=", $this->securityContext()->getApp()->id())
+        $folders = Folder::where("role","=",$role);
+        if (!empty($user_id)) {
+            $folders->where("user_id","=",$user_id);
+        }
+        $folders->where("app_id", "=", $this->securityContext()->getApp()->id())
             ->get();
 
         $foldersIds = $folders->lists('id') ? : [0];
