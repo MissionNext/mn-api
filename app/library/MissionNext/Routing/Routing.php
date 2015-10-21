@@ -150,7 +150,7 @@ class Routing
             Route::pattern('role', '('.BaseDataModel::AGENCY.'|'.BaseDataModel::CANDIDATE.'|'.BaseDataModel::ORGANIZATION.'|'.BaseDataModel::JOB.')');
 
             Route::group(array('prefix' => static::RESOURCE_FOLDER), function () {
-                Route::get('by/{role}', FolderResource::class.'@role');
+                Route::get('by/{role}/{user_id}', FolderResource::class.'@role');
             });
             //END
 

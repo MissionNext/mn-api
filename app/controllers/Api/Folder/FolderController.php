@@ -96,25 +96,31 @@ class FolderController extends BaseController
      */
     public function role($role, $user_id = null)
     {
-        $folders = Folder::where("role","=",$role);
         if (!empty($user_id)) {
-            $folders->where("user_id","=",$user_id);
+            $folders = Folder::where("role","=",$role)
+                ->where("app_id", "=", $this->securityContext()->getApp()->id())
+                ->where("user_id","=",$user_id)
+                ->get();
+        } else {
+            $folders = Folder::where("role","=",$role)
+                    ->where("app_id", "=", $this->securityContext()->getApp()->id())
+                    ->get();
         }
-        $folders->where("app_id", "=", $this->securityContext()->getApp()->id())
-            ->get();
 
         $foldersIds = $folders->lists('id') ? : [0];
 
         $foldersTrans = (new FolderTrans())->queryFolderTrans($this->securityContext())->whereIn('folder_id', $foldersIds)->get();
 
-        $folders->each(function($f) use ($foldersTrans) {
-            $f->value = null;
-            foreach($foldersTrans as $ft){
-               if ($f->id == $ft->folder_id){
-                   $f->value = $ft->value;
-               }
-            }
-        });
+        if ($foldersIds[0] != 0) {
+            $folders->each(function($f) use ($foldersTrans) {
+                $f->value = null;
+                foreach($foldersTrans as $ft){
+                    if ($f->id == $ft->folder_id){
+                        $f->value = $ft->value;
+                    }
+                }
+            });
+        }
 
         return new RestResponse($folders);
     }
