@@ -12,9 +12,9 @@ class AlterFolderAddUserid extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('folder', function(Blueprint $table)
+		Schema::table('folders', function(Blueprint $table)
 		{
-			$table->unsignedInteger('user_id')->default(null);
+			$table->bigInteger('user_id')->nullable();
 		});
 	}
 
@@ -25,7 +25,7 @@ class AlterFolderAddUserid extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('folder', function(Blueprint $table)
+		Schema::table('folders', function(Blueprint $table)
 		{
 			$table->dropColumn('user_id');
 		});
