@@ -104,8 +104,9 @@ class AdminRouting
 
 
             // ================ SUBSCRIPTIONS ===========================
-            Route::group(array('prefix' => 'subscription'), function () {
+            Route::delete('subscription/coupon/{id}', array('as' => 'sub.coupon.delete', 'uses' => 'MissionNext\Controllers\Admin\Subscription\CouponController@deleteIndex'));
 
+            Route::group(array('prefix' => 'subscription'), function () {
 
                 $this->router->controller('config', SubConfigController::class,
                     [
@@ -126,7 +127,7 @@ class AdminRouting
                         'postIndex' => 'sub.coupon.new',
                         'getEdit' => 'sub.coupon.edit',
                         'postEdit' => 'sub.coupon.update',
-                        'deleteIndex' => 'sub.coupon.delete',
+                        //'deleteIndex' => 'sub.coupon.delete',
 
                     ]);
             });

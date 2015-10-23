@@ -69,6 +69,8 @@ class JobController extends BaseController
         /** @var  $organization User */
         $organization = $this->userRepo()->getModel()->findOrFail(Input::get('organization_id'));
 
+
+
         $jobRepo = $this->jobRepo();
         $job = $jobRepo->getModel();
         $job->setObserver(new UserObserver());

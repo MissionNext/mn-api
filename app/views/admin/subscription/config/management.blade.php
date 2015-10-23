@@ -59,7 +59,7 @@ Dashboard. Subscription. Config
             <input ng-change="subCtl.updateGlobalConfig('gracePeriod')" type="number"  min="0" ng-model="subCtl.gracePeriod" id="grace-period" />
         </p>
     </div>
-    <table class="table table-hover" >
+    <table class="table table-hover col-sm-10" >
         <thead>
         <tr>
             <th>User Role</th>
