@@ -94,33 +94,52 @@ class FolderController extends BaseController
      *
      * @return RestResponse
      */
-    public function role($role, $user_id = null)
+    public function role($role)
     {
-        if (!empty($user_id)) {
-            $folders = Folder::where("role","=",$role)
+        $folders = Folder::where("role","=",$role)
                 ->where("app_id", "=", $this->securityContext()->getApp()->id())
-                ->where("user_id","=",$user_id)
+                ->where("user_id", "=", null)
                 ->get();
-        } else {
-            $folders = Folder::where("role","=",$role)
-                    ->where("app_id", "=", $this->securityContext()->getApp()->id())
-                    ->get();
-        }
 
         $foldersIds = $folders->lists('id') ? : [0];
 
         $foldersTrans = (new FolderTrans())->queryFolderTrans($this->securityContext())->whereIn('folder_id', $foldersIds)->get();
 
-        if ($foldersIds[0] != 0) {
-            $folders->each(function($f) use ($foldersTrans) {
-                $f->value = null;
-                foreach($foldersTrans as $ft){
-                    if ($f->id == $ft->folder_id){
-                        $f->value = $ft->value;
-                    }
+        $folders->each(function($f) use ($foldersTrans) {
+            $f->value = null;
+            foreach($foldersTrans as $ft){
+                if ($f->id == $ft->folder_id){
+                    $f->value = $ft->value;
                 }
-            });
-        }
+            }
+        });
+
+        return new RestResponse($folders);
+    }
+
+    public function roleWithUser($role, $userId)
+    {
+        $folders = Folder::where("role","=",$role)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
+            ->where(function($query) use ($userId) {
+                $query->where("user_id", "=", $userId)
+                    ->orWhere("user_id", "=", null);
+            })
+            ->orderBy("user_id", "desc")
+            ->get();
+
+        $foldersIds = $folders->lists('id') ? : [0];
+
+        $foldersTrans = (new FolderTrans())->queryFolderTrans($this->securityContext())->whereIn('folder_id', $foldersIds)->get();
+
+        $folders->each(function($f) use ($foldersTrans) {
+            $f->value = null;
+            foreach($foldersTrans as $ft){
+                if ($f->id == $ft->folder_id){
+                    $f->value = $ft->value;
+                }
+            }
+        });
 
         return new RestResponse($folders);
     }
