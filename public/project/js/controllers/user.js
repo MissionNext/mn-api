@@ -218,7 +218,6 @@
         $scope.toggleModalCancelSub = function(sub){
             $scope.cancelSubModel = sub;
             $scope.modalCancelSub = !$scope.modalCancelSub;
-            $scope.modalDelete = !$scope.modalDelete;
         };
 
         $scope.transactions = [];
