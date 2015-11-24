@@ -44,6 +44,26 @@ class SubscriptionController extends BaseController
                           );
     }
 
+    /**
+     * @return RestResponse
+     */
+    public function postAdd()
+    {
+        $service = $this->paymentGateway;
+        $readyData = $service->processRequest($this->request->request->all());
+        $subscriptions = $readyData['subscriptions'];
+        $transactionData = $readyData['transaction'] ?: [];
+        /** @var  $repo SubscriptionRepository */
+        $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
+
+        /** @var  $transactionRepo TransactionRepository */
+        $transactionRepo = $this->repoContainer[TransactionRepositoryInterface::KEY];
+
+        return new RestResponse($transactionRepo
+            ->syncWithSubscriptions($repo->addSubscription($subscriptions), $transactionData)
+        );
+    }
+
 
     public function getFor($userId)
     {

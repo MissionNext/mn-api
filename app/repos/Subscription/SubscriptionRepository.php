@@ -131,6 +131,46 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
     }
 
     /**
+     * @param array $data
+     *
+     * @return Collection
+     */
+    public function addSubscription(array $data)
+    {
+        $return = [];
+        $type = static::RENEW_TYPE_FROM_TODAY;
+        $startDate = Carbon::now()->toDateTimeString();
+        $endDate = Carbon::now()->addYear()->toDateTimeString();
+
+        if (count($data)) {
+            $type = $data[0]['renew_type'];
+        }
+
+        $partnership = $data[0]['partnership'];
+        $isRecurrent = (bool)$data[0]['is_recurrent'];
+        if ($type !== static::RENEW_TYPE_MONTHLY && $partnership === Partnership::LIMITED) {
+            $endDate = Carbon::now()->addMonths(static::LIMITED_YEAR)->toDateTimeString();
+        }
+
+        $this->forFill['app_id'] = $data[0]['app_id']; //@TODO check right user, status, partnership
+        $this->forFill['authorize_id'] = $data[0]['authorize_id'];
+        $this->forFill['start_date'] = $startDate;
+        $this->forFill['end_date'] = $endDate;
+        $this->forFill['status'] = Subscription::STATUS_ACTIVE;
+        $this->forFill['partnership'] = $partnership;
+        $this->forFill['is_recurrent'] = $isRecurrent;
+        $this->forFill['user_id'] = $data[0]['user_id'];
+        $this->forFill['price'] = $data[0]['price'];
+        $this->forFill['paid'] = $data[0]['paid'];
+
+        $return[] = $this->getModel()->create($this->forFill);
+
+        $return = new Collection($return);
+
+        return $return;
+    }
+
+    /**
      * @param array $subscriptions
      *
      * @return \Generator;
