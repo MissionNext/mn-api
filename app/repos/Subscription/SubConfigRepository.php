@@ -45,7 +45,8 @@ class SubConfigRepository extends AbstractRepository implements SubConfigReposit
     {
 
         return  Application::with(['configs' => function($query){
-                 $query->whereKey('agency_trigger');
+                 $query->where('key','agency_trigger')
+                        ->orWhere('key','block_website');
                 }, 'subConfigs'])
             ->get();
     }
