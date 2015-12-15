@@ -44,20 +44,25 @@ class UserController extends AdminBaseController {
             return "'{$item}'";
         }, $field_keys);
 
+        $selected_models_id = DB::select("SELECT id FROM app_data_model WHERE type='".$user["role"]."'");
+
         $fields_str = implode(',', $field_keys);
         $whereIn = "WHERE symbol_key IN ({$fields_str})";
 
-        $query = "SELECT symbol_key FROM group_fields {$whereIn} ORDER BY group_fields.group_id, group_fields.order ASC";
+        $query = "SELECT symbol_key, name FROM form_models {$whereIn} and data_model_id = ".$selected_models_id[0]->id." ORDER BY display_order ASC";
         $ordererFields = DB::select($query);
-        $sortedKeys = array_map(function($item){
-            return $item->symbol_key;
-        }, $ordererFields);
+        $sortedKeys = $fieldLabels = [];
+        foreach ($ordererFields as $ordererField) {
+            $sortedKeys[] = $ordererField->symbol_key;
+            $fieldLabels[$ordererField->symbol_key] = $ordererField->name;
+        }
         $sortedKeys = array_unique($sortedKeys);
 
         return $this->view->make('admin.user.profile', array(
 
             'user'          => $repo->findOrFail($userId)->getData(),
-            'sortedKeys'    => $sortedKeys
+            'sortedKeys'    => $sortedKeys,
+            'fieldLabels'   => $fieldLabels
         ));
     }
 

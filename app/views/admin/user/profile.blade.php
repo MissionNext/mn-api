@@ -22,7 +22,7 @@ Dashboard. User Profile
          @foreach($sortedKeys as $item)
              @if ((is_string($user['profileData'][$item]) && !empty($user['profileData'][$item])) || (is_array($user['profileData'][$item]) && count($user['profileData'][$item]) > 1))
                  <tr>
-                    <th>{{ ucfirst(str_replace("_", " ", $item)) }} </th>
+                    <th>{{ $fieldLabels[$item] }} </th>
                     <td>@if (is_string($user['profileData'][$item]))
                             {{ $user['profileData'][$item] }}
                         @elseif (count($user['profileData'][$item]) > 1)
