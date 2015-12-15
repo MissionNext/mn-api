@@ -44,19 +44,32 @@ class UserController extends AdminBaseController {
             return "'{$item}'";
         }, $field_keys);
 
-        $selected_models_id = DB::select("SELECT id FROM app_data_model WHERE type='".$user["role"]."'");
-
-        $fields_str = implode(',', $field_keys);
-        $whereIn = "WHERE symbol_key IN ({$fields_str})";
-
-        $query = "SELECT symbol_key, name FROM form_models {$whereIn} and data_model_id = ".$selected_models_id[0]->id." ORDER BY display_order ASC";
-        $ordererFields = DB::select($query);
-        $sortedKeys = $fieldLabels = [];
-        foreach ($ordererFields as $ordererField) {
-            $sortedKeys[] = $ordererField->symbol_key;
-            $fieldLabels[$ordererField->symbol_key] = $ordererField->name;
+        $model_id = null;
+        switch($user['role']) {
+            case 'candidate':
+                $model_id = 9;
+                break;
+            case 'organization':
+            case 'agency':
+                $model_id = 10;
+                break;
         }
-        $sortedKeys = array_unique($sortedKeys);
+
+        $sortedKeys = $fieldLabels = [];
+        $fields_str = implode(',', $field_keys);
+        if (!empty($fields_str)) {
+            $whereIn = "WHERE fm.symbol_key IN ({$fields_str})";
+
+            $query = "SELECT fm.symbol_key, fm.name FROM form_models fm, app_forms af {$whereIn} and fm.data_model_id = ".$model_id." and fm.form_id=af.id and af.name='profile' ORDER BY fm.display_order ASC";
+            $ordererFields = DB::select($query);
+            $sortedKeys = $fieldLabels = [];
+            foreach ($ordererFields as $ordererField) {
+                $sortedKeys[] = $ordererField->symbol_key;
+                $fieldLabels[$ordererField->symbol_key] = $ordererField->name;
+            }
+            $sortedKeys = array_unique($sortedKeys);
+        }
+
 
         return $this->view->make('admin.user.profile', array(
 
