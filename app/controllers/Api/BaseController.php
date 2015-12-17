@@ -347,4 +347,11 @@ class BaseController extends Controller
         }
     }
 
+    protected function deleteProfileFile(ProfileInterface $user, $fieldName)
+    {
+        $deletefield = $this->fieldRepo()->modelFields()->where('symbol_key', $fieldName)->get();
+        //$profile = $this->fieldRepo()->profileFields($user)->detach();
+
+        return false;
+    }
 } 

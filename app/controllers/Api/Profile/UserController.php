@@ -75,6 +75,19 @@ class UserController extends BaseController
         return new RestResponse( $cacheData->transData($this->getToken()->language()));
     }
 
+    public function deleteFile(){
+        $request = Request::instance();
+        $data = $request->query->all();
+
+        $user = $this->userRepo()->findOrFail($data['user_id']);
+        $user->setObserver(new UserObserver());
+        $user->addApp($this->getApp());
+
+        $result = $this->deleteProfileFile($user, $data['field_name']);
+
+        return false;
+    }
+
     /**
      * Remove the specified resource from storage.
      *
