@@ -132,8 +132,6 @@ class Routing
             Route::resource(static::RESOURCE_PROFILE, UserProfileController::class,
                 [  'except' => ['index','create',  'edit'] ]
             );
-            Route::delete('profile/delete/file', UserProfileController::class.'@deleteFile');
-
 
 //            Route::post('search/{searchType}', SearchController::class.'@search');
             Route::delete('search/{searchId}/{forUserId}', SearchController::class.'@delete');

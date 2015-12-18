@@ -20,6 +20,7 @@ use MissionNext\Repos\Field\FieldRepository;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class UserController
@@ -76,16 +77,7 @@ class UserController extends BaseController
     }
 
     public function deleteFile(){
-        $request = Request::instance();
-        $data = $request->query->all();
 
-        $user = $this->userRepo()->findOrFail($data['user_id']);
-        $user->setObserver(new UserObserver());
-        $user->addApp($this->getApp());
-
-        $result = $this->deleteProfileFile($user, $data['field_name']);
-
-        return false;
     }
 
     /**
@@ -97,7 +89,16 @@ class UserController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $request = Request::instance();
+        $data = $request->query->all();
+
+        $user = $this->userRepo()->findOrFail($id);
+        $user->setObserver(new UserObserver());
+        $user->addApp($this->getApp());
+
+        $result = $this->deleteProfileFile($user, $data['field_name']);
+
+        return new JsonResponse($result);
     }
 
 }
