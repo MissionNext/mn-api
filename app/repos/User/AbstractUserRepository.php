@@ -115,7 +115,11 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
             $key = $field->symbol_key;
             if (isset($profile->profileData->$key)) {
                 $fieldsArray[$key][] = $field->trans_value;
-                $profile->profileData->$key = array_replace($profile->profileData->$key, $fieldsArray[$key]);
+                if (is_array($profile->profileData->$key)){
+                    $profile->profileData->$key = array_replace($profile->profileData->$key, $fieldsArray[$key]);
+                } elseif(isset($field->trans_value) && !empty($field->trans_value)) {
+                    $profile->profileData->$key = $field->trans_value;
+                }
             } else {
                 $profile->profileData->$key = $field->value;
                 if (FieldType::isMultiple($field->type)){
@@ -143,10 +147,11 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
               function(Profile $profile, $field){
                   $key = $field->symbol_key;
                   if (isset($profile->profileData->$key)) {
-                      $profile->profileData->$key = array_replace($profile->profileData->$key, [$field->value => $field->value]);
-//                      if ($field->value == 1){
-//                          dd($profile->profileData->choose);
-//                      }
+                      if (is_array($profile->profileData->$key)){
+                          $profile->profileData->$key = array_replace($profile->profileData->$key, [$field->value => $field->value]);
+                      } elseif(isset($field->value) && !empty($field->value)) {
+                          $profile->profileData->$key = $field->value;
+                      }
                   } else {
                       $profile->profileData->$key = $field->value;
                       if (FieldType::hasDictionary($field->type)) {
@@ -158,7 +163,7 @@ abstract class AbstractUserRepository extends AbstractRepository implements ISec
             :
             function(Profile $profile, $field){
                 $key = $field->symbol_key;
-                if (isset($profile->profileData->$key)) {
+                if (isset($profile->profileData->$key) && is_array($profile->profileData->$key)) {
                     $profile->profileData->$key = array_replace($profile->profileData->$key, [$field->value => $field->trans_value]);
                 } else {
                     $profile->profileData->$key = $field->value;
