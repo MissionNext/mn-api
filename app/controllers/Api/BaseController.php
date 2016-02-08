@@ -4,7 +4,6 @@ namespace MissionNext\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
@@ -348,47 +347,4 @@ class BaseController extends Controller
         }
     }
 
-    protected function deleteProfileFile(ProfileInterface $user, $fieldName)
-    {
-        $profile = $this->fieldRepo()->profileFields($user)->get();
-        $field_id = null;
-        foreach($profile as $field){
-            if ($fieldName == $field->symbol_key){
-                $fileName = $field->pivot->value;
-                $field_id = $field->id;
-            }
-        }
-
-        if(File::exists(public_path()."/uploads/".$fileName)) {
-            $result = File::delete(public_path()."/uploads/".$fileName);
-            if ($result){
-                $detachResult = $this->fieldRepo()->profileFields($user)->detach($field_id, true);
-                if ($detachResult) {
-                    $user->touch();
-
-                    $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
-                    $userRepo->addUserCachedData($user);
-                    $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
-                    ProfileUpdateMatching::run($queueData);
-
-                    return [
-                        'status'    => 'success',
-                        'message'   => 'File successfully deleted'
-                    ];
-                } else {
-                    return [
-                        'status'    => 'error',
-                        'message'   => 'Error occured while field detach from profile'
-                    ];
-                }
-            } else {
-                return [
-                    'status'    => 'error',
-                    'message'   => 'Error occured while file deleting'
-                ];
-            }
-        }
-
-        return false;
-    }
 } 
