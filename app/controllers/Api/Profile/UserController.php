@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Queue;
 use MissionNext\Api\Exceptions\ProfileException;
 use MissionNext\Api\Response\RestResponse;
-use MissionNext\Api\Service\Matching\Queue\Master\ProfileUpdateMatching;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\CacheData\UserCachedDataTrans;
@@ -19,7 +18,6 @@ use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\Field\FieldRepository;
 use MissionNext\Repos\Field\FieldRepositoryInterface;
-use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
 
@@ -86,19 +84,16 @@ class UserController extends BaseController
      */
     public function destroy($id)
     {
+        $request = Request::instance();
+        $data = $request->query->all();
+
         $user = $this->userRepo()->findOrFail($id);
         $user->setObserver(new UserObserver());
         $user->addApp($this->getApp());
 
-        $request = Request::instance();
-        $hash = $request->query->all();
+        $result = $this->deleteProfileFile($user, $data['field_name']);
 
-        $fields = $this->fieldRepo()->modelFields()->where('symbol_key', $hash['field_name'])->get();
-        $this->fieldRepo()->profileFields($user)->detach($fields[0]->id, true);
-
-        $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
-        $userRepo->addUserCachedData($user);
-
-        return new RestResponse(["status" => "success", "message" => "File deleted successfully."]);
+        return new JsonResponse($result);
     }
+
 }
