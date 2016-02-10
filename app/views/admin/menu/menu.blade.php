@@ -22,11 +22,11 @@
 
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-asterisk"> </span> Subscriptions <b class="caret"></b></a>
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-asterisk"> </span> Subscriptions <b class="caret"></b></a>
                     <ul class="dropdown-menu">
 
                         <li class="dropdown-submenu">
-                            <a tabindex="-1" href="#">Config</a>
+                            <a tabindex="-1" href="javascript:void(0);">Config</a>
                             <ul class="dropdown-menu">
                                 @foreach ($applications as $id => $app)
                                 <li>
@@ -44,7 +44,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="{{ URL::route('users')}}"> <span class="glyphicon glyphicon-user"> </span> Users </a>
+                    <a href="{{ URL::route('users')}}#/"> <span class="glyphicon glyphicon-user"> </span> Users </a>
                 </li>
                 <li>
                     <a href="{{ URL::route('administrator.list')}}"> <span class="glyphicon glyphicon-user"> </span> Administrators </a>
