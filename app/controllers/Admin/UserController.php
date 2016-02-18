@@ -34,11 +34,14 @@ class UserController extends AdminBaseController {
      * @return \Illuminate\View\View
      */
     public function profile($userId) {
+
         /** @var  $repo UserCachedRepository */
         $repo = $this->repoContainer[UserCachedRepositoryInterface::KEY];
         $user = $repo->findOrFail($userId)->getData();
 
         $field_keys = array_keys($user['profileData']);
+
+        $filename_prefix = $user['role'].$userId.'_';
 
         $field_keys = array_map(function($item){
             return "'{$item}'";
@@ -73,9 +76,10 @@ class UserController extends AdminBaseController {
 
         return $this->view->make('admin.user.profile', array(
 
-            'user'          => $repo->findOrFail($userId)->getData(),
-            'sortedKeys'    => $sortedKeys,
-            'fieldLabels'   => $fieldLabels
+            'user'              => $repo->findOrFail($userId)->getData(),
+            'sortedKeys'        => $sortedKeys,
+            'fieldLabels'       => $fieldLabels,
+            'uploadFieldPrefix' => $filename_prefix
         ));
     }
 

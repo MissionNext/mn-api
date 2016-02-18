@@ -24,7 +24,13 @@ Dashboard. User Profile
                  <tr>
                     <th>{{ $fieldLabels[$item] }} </th>
                     <td>@if (is_string($user['profileData'][$item]))
-                            {{ $user['profileData'][$item] }}
+                            @if (0 === strpos($user['profileData'][$item], $uploadFieldPrefix))
+                                <a href="/uploads/{{ $user['profileData'][$item] }}" target="_blank">
+                                    {{ $user['profileData'][$item] }}
+                                </a>
+                            @else
+                                {{ $user['profileData'][$item] }}
+                            @endif
                         @elseif (count($user['profileData'][$item]) > 1)
                             @foreach ($user['profileData'][$item] as $val)
                                 <li>{{ $val }}</li>
