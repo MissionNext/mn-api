@@ -73,10 +73,9 @@ class UserController extends AdminBaseController {
             $sortedKeys = array_unique($sortedKeys);
         }
 
-
         return $this->view->make('admin.user.profile', array(
 
-            'user'              => $repo->findOrFail($userId)->getData(),
+            'user'              => $user,
             'sortedKeys'        => $sortedKeys,
             'fieldLabels'       => $fieldLabels,
             'uploadFieldPrefix' => $filename_prefix

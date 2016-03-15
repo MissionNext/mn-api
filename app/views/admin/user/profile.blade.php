@@ -19,8 +19,9 @@ Dashboard. User Profile
                  <td>{{ $user['created_at']  }}</td>
              </tr>
          </thead>
+
          @foreach($sortedKeys as $item)
-             @if ((is_string($user['profileData'][$item]) && !empty($user['profileData'][$item])) || (is_array($user['profileData'][$item]) && count($user['profileData'][$item]) > 1))
+             @if ((is_string($user['profileData'][$item]) && !empty($user['profileData'][$item])) || (is_array($user['profileData'][$item]) && count($user['profileData'][$item]) > 0))
                  <tr>
                     <th>{{ $fieldLabels[$item] }} </th>
                     <td>@if (is_string($user['profileData'][$item]))
