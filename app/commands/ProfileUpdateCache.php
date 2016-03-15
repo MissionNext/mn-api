@@ -40,6 +40,8 @@ class ProfileUpdateCache extends Command
      */
     public function fire()
     {
+        ini_set('memory_limit', '512M');
+
         /** @var  $repoContainer \MissionNext\Repos\RepositoryContainer */
         $repoContainer = $this->getLaravel()->make(RepositoryContainerInterface::class);
 
