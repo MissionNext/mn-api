@@ -278,7 +278,7 @@ class BaseController extends Controller
      *
      * @return ProfileInterface
      */
-    protected function updateUserProfile(ProfileInterface $user, array $profileData = null)
+    protected function updateUserProfile(ProfileInterface $user, array $profileData = null, $changedFields)
     {
 //        $this->userRepo()->updateUserCachedData($user);
 //        return true;
@@ -320,6 +320,8 @@ class BaseController extends Controller
                 $this->fieldRepo()->profileFields($user)->attach($key, $map);
             }
         }
+
+
         if (!empty($mapping)) {
              //$user->touch();
             /** @var  $userRepo UserRepository|JobRepository */
