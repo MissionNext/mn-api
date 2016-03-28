@@ -1,6 +1,7 @@
 <?php
 namespace MissionNext\Controllers\Api;
 
+use ClassPreloader\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
@@ -278,7 +279,7 @@ class BaseController extends Controller
      *
      * @return ProfileInterface
      */
-    protected function updateUserProfile(ProfileInterface $user, array $profileData = null, $changedFields)
+    protected function updateUserProfile(ProfileInterface $user, array $profileData = null, $changedFields = null)
     {
 //        $this->userRepo()->updateUserCachedData($user);
 //        return true;
@@ -328,7 +329,9 @@ class BaseController extends Controller
             $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
             $userRepo->addUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
-            ProfileUpdateMatching::run($queueData);
+            if (isset($changedFields) && $this->checkMatchingFields($queueData, $changedFields)) {
+                ProfileUpdateMatching::run($queueData);
+            }
         }
 
         return $user;
@@ -349,4 +352,62 @@ class BaseController extends Controller
         }
     }
 
+    protected function checkMatchingFields($queueData, $changedFields)
+    {
+        $matchedFlag = false;
+
+        switch ($queueData['role']) {
+            case 'candidate':
+
+                $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
+                $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
+                $candidateOrg = $configRepo->configByCandidateOrganizations(BaseDataModel::ORGANIZATION, $queueData['userId'])->get();
+
+                $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
+                $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
+                $canJob = $configRepo->configByCandidateJobs(BaseDataModel::JOB, $queueData['userId'])->get();
+
+                foreach ($candidateOrg as $item) {
+                    if (in_array($item['candidate_key'], $changedFields)) {
+                        $matchedFlag = true;
+                        continue;
+                    }
+                }
+                foreach ($canJob as $item) {
+                    if (in_array($item['candidate_key'], $changedFields)) {
+                        $matchedFlag = true;
+                        continue;
+                    }
+                }
+                break;
+            case 'organization':
+            case 'agency':
+                $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
+                $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
+                $orgCandidate = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $queueData['userId'])->get();
+
+                foreach ($orgCandidate as $item) {
+                    if (in_array($item['organization_key'], $changedFields)) {
+                        $matchedFlag = true;
+                        continue;
+                    }
+                }
+                break;
+            case 'job':
+                $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
+                $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
+                $jobCandidate = $configRepo->configByJobCandidates(BaseDataModel::JOB, $queueData['userId'])->get();
+
+                foreach ($jobCandidate as $item) {
+                    if (in_array($item['job_key'], $changedFields)) {
+                        $matchedFlag = true;
+                        continue;
+                    }
+                }
+                break;
+                break;
+        }
+
+        return $matchedFlag;
+    }
 } 
