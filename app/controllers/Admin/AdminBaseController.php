@@ -1,12 +1,14 @@
 <?php
 namespace MissionNext\Controllers\Admin;
 
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Session\SessionManager;
 use Illuminate\Session\Store;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
@@ -24,12 +26,21 @@ use Cartalyst\Sentry\Throttling\UserBannedException as UserBanned;
 use Cartalyst\Sentry\Users\UserExistsException as UserExist;
 use Cartalyst\Sentry\Users\UserAlreadyActivatedException as UserAlreadyActivated;
 use Illuminate\View\Factory;
-use MissionNext\Api\Auth\SecurityContext;
 use MissionNext\Api\Service\Payment\PaymentGatewayInterface;
 use MissionNext\Filter\RouteSecurityFilter;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Controllers\traits\Controller as SecurityTraits;
 use Cartalyst\Sentry\Sentry as MainSentry;
+
+use MissionNext\Models\Matching\Results;
+use MissionNext\Models\DataModel\BaseDataModel;
+use MissionNext\Facade\SecurityContext;
+use MissionNext\Api\Auth\SecurityContext as SC;
+use MissionNext\Models\Subscription\Partnership;
+use MissionNext\Models\Subscription\Subscription;
+use MissionNext\Api\Service\DataTransformers\UserCachedDataStrategy;
+use MissionNext\Api\Service\DataTransformers\UserCachedTransformer;
+use MissionNext\Api\Service\Matching\TransData;
 
 class AdminBaseController extends Controller
 {
@@ -120,6 +131,13 @@ class AdminBaseController extends Controller
      */
     protected function viewTemplate($name)
     {
+//        $test = $this->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, 192);
+//        $test = $this->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, 300);
+
+
+//        echo "<pre>";
+//        print_r($test);
+//        echo "</pre>";
 
         return static::VIEW_PREFIX . ".{$name}";
     }
@@ -134,5 +152,94 @@ class AdminBaseController extends Controller
 
         return static::ROUTE_PREFIX . ".{$name}";
     }
+
+
+
+
+
+
+//    const PAGINATION = 100;
+//
+//    /**
+//     * @return SC
+//     */
+//    public function securityContext()
+//    {
+//
+//        return SecurityContext::getInstance();
+//    }
+//
+//
+//    /**
+//     * @param $forUserType
+//     * @param $userType
+//     * @param $forUserId
+//     *
+//     * @return array
+//     */
+//    public function matchingResults($forUserType, $userType, $forUserId)
+//    {
+//        $org_select = '';
+//        if ($userType === BaseDataModel::JOB) {
+//            $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
+//        }
+//
+//        $builder =
+//            Results::select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
+//                ->leftJoin("folder_apps", function($join) use ($forUserId, $forUserType, $userType){
+//                    $join->on("folder_apps.user_id", "=", "matching_results.user_id")
+//                        ->where("matching_results.for_user_type", "=", $forUserType)
+//                        ->where("folder_apps.for_user_id", "=", $forUserId)
+//                        ->where("folder_apps.user_type", "=", $userType)
+//                        ->where("folder_apps.app_id", "=", 3);
+//                })
+//                ->leftJoin("notes", function($join) use ($forUserId, $forUserType, $userType){
+//                    $join->on("notes.user_id", "=", "matching_results.user_id")
+//                        ->where("notes.for_user_id", "=", $forUserId)
+//                        ->where("notes.user_type", "=", $userType);
+//                })
+//                ->where("matching_results.for_user_type","=", $forUserType)
+//                ->where("matching_results.user_type", "=", $userType)
+//                ->where("matching_results.for_user_id", "=",  $forUserId)
+//                ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [3]);
+//
+//
+//        if ($userType === BaseDataModel::JOB ) {
+//            $builder->leftJoin("organization_cached_profile", "organization_cached_profile.id", "=", DB::raw("(matching_results.data->'organization'->>'id')::int"));
+//        }
+//
+//        $builder->leftJoin("users", "users.id", "=", 'matching_results.user_id')
+//                ->where('users.created_at', '<', '2001-01-01');
+//
+//
+//        $builder = $userType === BaseDataModel::JOB ? $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"))
+//            : $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->>'id')::int"));
+//
+//        $builder->where('subscriptions.app_id', '=', 3 )
+//            ->where('subscriptions.status', '<>', Subscription::STATUS_CLOSED)
+//            ->where(function($query){
+//                $query->where('subscriptions.partnership', "<>", Partnership::LIMITED)
+//                    ->orWhereNull('subscriptions.partnership');
+//            })
+////            ->where('subscriptions.partnership', "<>", Partnership::LIMITED)
+//            ->whereNotNull('subscriptions.id')
+//            ->where(function($query){
+//                $query->where('subscriptions.status', '<>', Subscription::STATUS_EXPIRED)
+//                    ->orWhere('subscriptions.price', "=", 0);
+//            });
+//
+//        $builder->orderBy('matching_results.matching_percentage');
+//
+////        $builder->whereRaw("to_date(matching_results.data->>'created_at', 'YYYY-MM-DD') >= ?", [$updates . '-01-01']);
+//
+////            ->where("ARRAY[?] <@ json_array_text(matching_results.data->'created_at')", [2013]);
+//
+//        $result =
+//            (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
+//
+//        return $result;
+////        return (new TransData($this->securityContext()->getToken()->language(), $userType, $result->toArray()))->get();
+//
+//    }
 
 }

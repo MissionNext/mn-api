@@ -25,13 +25,15 @@ class OrganizationCandidatesController extends BaseController
      */
     public function getIndex($organizationId)
     {
+        $rate = $this->request->get('rate');
+        $updates = $this->request->get('updates');
+
         $orgAppIds = $this->securityContext()->getToken()->currentUser()->appIds();
         if (in_array($this->securityContext()->getApp()->id, $orgAppIds)) {
             return
                 new RestResponse($this->matchingResultsRepo()
-                    ->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId));
+                    ->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId, compact('rate', 'updates')));
         }
-
         return new RestResponse([]);
     }
 
@@ -42,6 +44,7 @@ class OrganizationCandidatesController extends BaseController
      */
     public function getLive($organizationId)
     {
+
         $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
 
         $configRepo = $this->matchingConfigRepo()->setSecurityContext($this->securityContext());

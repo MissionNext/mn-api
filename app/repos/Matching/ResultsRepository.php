@@ -46,18 +46,22 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
      * @param $forUserType
      * @param $userType
      * @param $forUserId
+     * @param $options
      *
      * @return array
      */
-    public function matchingResults($forUserType, $userType, $forUserId)
+    public function matchingResults($forUserType, $userType, $forUserId, $options = null)
     {
+        if(isset($options))
+            extract($options);
+
         $org_select = '';
         if ($userType === BaseDataModel::JOB) {
             $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
         }
         $builder =
             $this->getModel()
-                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
+                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
                  ->leftJoin("folder_apps", function($join) use ($forUserId, $forUserType, $userType){
                     $join->on("folder_apps.user_id", "=", "matching_results.user_id")
                          ->where("matching_results.for_user_type", "=", $forUserType)
@@ -77,6 +81,12 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                  ->where("matching_results.for_user_id", "=",  $forUserId)
                  ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
+            if(isset($updates)) {
+                $updates .= '-01-01';
+                $builder->leftJoin("users", "users.id", "=", 'matching_results.user_id')
+                    ->where('users.created_at', '>=', $updates);
+            }
+
             if ($userType === BaseDataModel::JOB ) {
                 $builder->leftJoin("organization_cached_profile", "organization_cached_profile.id", "=", DB::raw("(matching_results.data->'organization'->>'id')::int"));
             }
@@ -86,7 +96,11 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
             $builder->where('subscriptions.app_id', '=', $this->securityContext()->getApp()->id() )
                 ->where('subscriptions.status', '<>', Subscription::STATUS_CLOSED)
-                ->where('subscriptions.partnership', "<>", Partnership::LIMITED)
+                ->where(function($query){
+                    $query->where('subscriptions.partnership', "<>", Partnership::LIMITED)
+                        ->orWhereNull('subscriptions.partnership');
+
+                })
                 ->whereNotNull('subscriptions.id')
                 ->where(function($query){
                     $query->where('subscriptions.status', '<>', Subscription::STATUS_EXPIRED)
@@ -94,12 +108,14 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
                 });
 
+            if(isset($rate))
+                $builder->where('matching_results.matching_percentage', '>=', $rate);
 
-            $result =
-               (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
+            $builder->orderBy('matching_results.matching_percentage', 'desc');
+
+            $result = (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
 
       //  dd(DB::getQueryLog());
-
 
 
          return (new TransData($this->securityContext()->getToken()->language(), $userType, $result->toArray()))->get();
