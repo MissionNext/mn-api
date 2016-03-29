@@ -27,12 +27,15 @@ class CandidateJobsController extends BaseController
      */
     public function getIndex($candidate_id)
     {
+        $rate = $this->request->get('rate');
+        $updates = $this->request->get('updates');
+
         $candidateAppsIds = $this->securityContext()->getToken()->currentUser()->appIds();
         if (in_array($this->securityContext()->getApp()->id, $candidateAppsIds)){
 
             return
                 new RestResponse($this->matchingResultsRepo()
-                    ->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::JOB, $candidate_id));
+                    ->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::JOB, $candidate_id, compact('rate', 'updates')));
         }
 
         return
@@ -46,7 +49,6 @@ class CandidateJobsController extends BaseController
      */
     public function getLive($candidate_id)
     {
-
         $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
 
         $configRepo = $this->matchingConfigRepo()->setSecurityContext($this->securityContext());

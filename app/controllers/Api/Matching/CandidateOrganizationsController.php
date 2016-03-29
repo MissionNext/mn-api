@@ -24,11 +24,13 @@ class CandidateOrganizationsController extends BaseController
      */
     public function getIndex($candidate_id)
     {
+        $rate = $this->request->get('rate');
+
         $candidateAppsIds = $this->securityContext()->getToken()->currentUser()->appIds();
         if (in_array($this->securityContext()->getApp()->id, $candidateAppsIds)) {
             return
                 new RestResponse($this->matchingResultsRepo()
-                    ->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, $candidate_id));
+                    ->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, $candidate_id, compact('rate')));
         }
 
         return new RestResponse([]);
