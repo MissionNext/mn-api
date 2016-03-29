@@ -329,7 +329,7 @@ class BaseController extends Controller
             $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
             $userRepo->addUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
-            if (isset($changedFields) && $this->checkMatchingFields($queueData, $changedFields)) {
+            if (!isset($changedFields) || 'checked' == $changedFields['status'] && $this->checkMatchingFields($queueData, $changedFields)) {
                 ProfileUpdateMatching::run($queueData);
             }
         }
@@ -356,6 +356,10 @@ class BaseController extends Controller
     {
         $matchedFlag = false;
 
+        if (!isset($changedFields['changedFields'])) {
+            return $matchedFlag;
+        }
+
         switch ($queueData['role']) {
             case 'candidate':
 
@@ -368,28 +372,27 @@ class BaseController extends Controller
                 $canJob = $configRepo->configByCandidateJobs(BaseDataModel::JOB, $queueData['userId'])->get();
 
                 foreach ($candidateOrg as $item) {
-                    if (in_array($item['candidate_key'], $changedFields)) {
+                    if (in_array($item['candidate_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue;
+                        continue 2;
                     }
                 }
                 foreach ($canJob as $item) {
-                    if (in_array($item['candidate_key'], $changedFields)) {
+                    if (in_array($item['candidate_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue;
+                        continue 2;
                     }
                 }
                 break;
             case 'organization':
-            case 'agency':
                 $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
                 $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
                 $orgCandidate = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $queueData['userId'])->get();
 
                 foreach ($orgCandidate as $item) {
-                    if (in_array($item['organization_key'], $changedFields)) {
+                    if (in_array($item['organization_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue;
+                        continue 2;
                     }
                 }
                 break;
@@ -399,12 +402,11 @@ class BaseController extends Controller
                 $jobCandidate = $configRepo->configByJobCandidates(BaseDataModel::JOB, $queueData['userId'])->get();
 
                 foreach ($jobCandidate as $item) {
-                    if (in_array($item['job_key'], $changedFields)) {
+                    if (in_array($item['job_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue;
+                        continue 2;
                     }
                 }
-                break;
                 break;
         }
 
