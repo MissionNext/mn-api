@@ -63,7 +63,7 @@ class UserController extends BaseController
         $hash = $request->request->get('profileData');
         $changedFields = $request->request->get('changedData');
 
-        if ($files = Input::file()){
+        if ($files = Input::file('profileData')){
             $this->checkFile($files, $hash);
         }
         if (empty($hash)) {
