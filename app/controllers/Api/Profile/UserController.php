@@ -60,17 +60,17 @@ class UserController extends BaseController
 
         /** @var  $request Req */
         $request = Request::instance();
-        $hash = $request->request->get('profileData');
-        $changedFields = $request->request->get('changedData');
+        $hash = $request->request->all();
+        //$changedFields = $request->request->get('changedData');
 
-        if ($files = Input::file('profileData')){
+        if ($files = Input::file()){
             $this->checkFile($files, $hash);
         }
         if (empty($hash)) {
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
-        $this->updateUserProfile($user, $hash, $changedFields);
+        $this->updateUserProfile($user, $hash);
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
