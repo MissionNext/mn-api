@@ -52,6 +52,8 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
      */
     public function matchingResults($forUserType, $userType, $forUserId, $options = null)
     {
+//        $start = microtime(true);
+
         if(isset($options))
             extract($options);
 
@@ -59,6 +61,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
         if ($userType === BaseDataModel::JOB) {
             $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
         }
+
         $builder =
             $this->getModel()
                  ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
@@ -84,7 +87,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             if(isset($updates)) {
                 $updates .= '-01-01';
                 $builder->leftJoin("users", "users.id", "=", 'matching_results.user_id')
-                    ->where('users.created_at', '>=', $updates);
+                    ->where('users.updated_at', '>=', $updates);
             }
 
             if ($userType === BaseDataModel::JOB ) {
@@ -114,6 +117,13 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             $builder->orderBy('matching_results.matching_percentage', 'desc');
 
             $result = (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
+
+//        $end = microtime(true);
+
+//        $result[] = $start;
+//        $result[] = $end;
+
+//        return $result;
 
       //  dd(DB::getQueryLog());
 

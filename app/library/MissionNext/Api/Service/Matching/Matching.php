@@ -157,7 +157,7 @@ abstract class Matching
                     }
                 }
 
-                if (0 < $maxMatching) {
+                if ($maxMatching > 0) {
                     $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100) * $mustMatchMultiplier;
                 } else {
                     $profileData['matching_percentage'] = 0;

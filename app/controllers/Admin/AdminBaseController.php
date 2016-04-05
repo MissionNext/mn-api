@@ -135,6 +135,8 @@ class AdminBaseController extends Controller
 //        $test = $this->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, 300);
 
 
+//        echo mb_strlen($test, '8bit');
+
 //        echo "<pre>";
 //        print_r($test);
 //        echo "</pre>";
@@ -179,6 +181,8 @@ class AdminBaseController extends Controller
 //     */
 //    public function matchingResults($forUserType, $userType, $forUserId)
 //    {
+//        $start = microtime(true);
+//
 //        $org_select = '';
 //        if ($userType === BaseDataModel::JOB) {
 //            $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
@@ -209,11 +213,11 @@ class AdminBaseController extends Controller
 //        }
 //
 //        $builder->leftJoin("users", "users.id", "=", 'matching_results.user_id')
-//                ->where('users.created_at', '<', '2001-01-01');
+//                ->where('users.updated_at', '>=', '2001-01-01');
 //
 //
 //        $builder = $userType === BaseDataModel::JOB ? $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"))
-//            : $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->>'id')::int"));
+//            : $builder->leftJoin("subscriptions", "subscriptions.user_id", "=", "matching_results.user_id");
 //
 //        $builder->where('subscriptions.app_id', '=', 3 )
 //            ->where('subscriptions.status', '<>', Subscription::STATUS_CLOSED)
@@ -234,8 +238,17 @@ class AdminBaseController extends Controller
 //
 ////            ->where("ARRAY[?] <@ json_array_text(matching_results.data->'created_at')", [2013]);
 //
+////        echo "<pre>";
+////        print_r($builder);
+////        echo "</pre>";
+//
 //        $result =
 //            (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
+//
+//        $end = microtime(true);
+//
+//        echo $start . '<br>';
+//        echo $end;
 //
 //        return $result;
 ////        return (new TransData($this->securityContext()->getToken()->language(), $userType, $result->toArray()))->get();
