@@ -25,13 +25,15 @@ class JobCandidatesController extends BaseController
      */
     public function getIndex($jobId)
     {
+        $rate = $this->request->get('rate');
+
         $userAppsIds = $this->securityContext()->getToken()->currentUser()->appIds();
 
         if (in_array($this->securityContext()->getApp()->id, $userAppsIds)) {
 
             return
                 new RestResponse($this->matchingResultsRepo()
-                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId));
+                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId, compact('rate')));
         }
 
         return new RestResponse([]);
