@@ -129,14 +129,17 @@ abstract class Matching
      */
     protected  function calculateMatchingPercentage(array $data)
     {
-
         foreach ($data as &$profileData) {
+
             $profileData['matching_percentage'] = 0;
             $maxMatching = 0;
             $mustMatchMultiplier = $profileData['multiplier'];
 
             if ($mustMatchMultiplier != 0) {
                 if (isset($profileData['results'])) {
+
+                    if($profileData['id'] == 300)
+                        print_r($profileData);
 
                     array_map   (function($c) use (&$maxMatching){
                         if ($c['weight'] < 5) {
@@ -149,8 +152,7 @@ abstract class Matching
                         if ($prof['weight'] < 5) {
                             if (isset($prof['matches']) && $prof['matches']) {
                                 $profileData['matching_percentage'] += $prof['weight'];
-                            } elseif (!isset($prof['matches'])) {
-
+                            } elseif (!isset($prof['matches']) || !$prof['matches']) {
                                 $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
                             }
                         }
@@ -167,10 +169,11 @@ abstract class Matching
             }
         }
 
-        return array_filter(array_values($data), function($d){
-
+        $result = array_filter(array_values($data), function($d){
             return  $d['matching_percentage'] != 0;
         });
+
+        return $result;
     }
 
 

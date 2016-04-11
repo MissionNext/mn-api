@@ -31,7 +31,6 @@ class CandidateOrganizations extends Matching
         $matchingKey = $this->matchingModel."_value";
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
-
         foreach ($matchingDataSet as $k => $matchingData) {
             $mustMatchMultiplier = 1;
             foreach ($configArr as $conf) {
@@ -73,6 +72,8 @@ class CandidateOrganizations extends Matching
                         ( in_array($mainDataKey, $selectMainDataFields) &&  $this->isNoPreference($mainDataValue) )
                     )
                     {
+
+
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                         $matchingDataSet[$k]['results'][] =
@@ -105,10 +106,10 @@ class CandidateOrganizations extends Matching
                         }
                     }
 
-                }elseif( !isset($matchingDataProfile[$matchingDataKey])){
+                }elseif( !isset($matchingDataProfile[$matchingDataKey]) || empty($matchingDataProfile[$matchingDataKey])){
                     $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                     $matchingDataSet[$k]['results'][] =
-                        ['matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => true, "weight" => $conf["weight"]];
+                        ['matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
                }
             }
             $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;

@@ -107,10 +107,10 @@ class CandidateJobs extends Matching
                         }
                     }
 
-                }elseif( !isset($matchingDataProfile[$matchingDataKey]) ){
+                }elseif( !isset($matchingDataProfile[$matchingDataKey]) || empty($matchingDataProfile[$matchingDataKey])){
                     $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                     $matchingDataSet[$k]['results'][] =
-                        ['matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => true, "weight" => $conf["weight"]];
+                        ['matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
                 }
             }
             $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
