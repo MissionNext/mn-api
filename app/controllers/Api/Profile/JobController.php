@@ -56,17 +56,18 @@ class JobController extends BaseController
         $job->addApp($this->getApp());
         /** @var  $request Req */
         $request = Request::instance();
-        $hash = $request->request->all();
+        $hash = $request->request->get('profile');
+        $changedFields = $request->request->get('changedData');
 
-        if ($files = Input::file()){
-            $this->checkFile($files['profile'], $hash);
+        if ($files = Input::file('profile')){
+            $this->checkFile($files, $hash);
         }
 
         if (empty($hash)) {
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
-        $this->updateUserProfile($job, $hash);
+        $this->updateUserProfile($job, $hash, $changedFields);
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];

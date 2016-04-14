@@ -279,7 +279,7 @@ class BaseController extends Controller
      *
      * @return ProfileInterface
      */
-    protected function updateUserProfile(ProfileInterface $user, array $profileData = null)
+    protected function updateUserProfile(ProfileInterface $user, array $profileData = null, $changedFields = null)
     {
 //        $this->userRepo()->updateUserCachedData($user);
 //        return true;
@@ -329,11 +329,10 @@ class BaseController extends Controller
             $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
             $userRepo->addUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
-            ProfileUpdateMatching::run($queueData);
 
-            /*if (!isset($changedFields) || 'checked' == $changedFields['status'] && $this->checkMatchingFields($queueData, $changedFields)) {
+            if (!isset($changedFields) || 'checked' == $changedFields['status'] && $this->checkMatchingFields($queueData, $changedFields)) {
                 ProfileUpdateMatching::run($queueData);
-            }*/
+            }
         }
 
         return $user;
@@ -354,7 +353,7 @@ class BaseController extends Controller
         }
     }
 
-    /*protected function checkMatchingFields($queueData, $changedFields)
+    protected function checkMatchingFields($queueData, $changedFields)
     {
         $matchedFlag = false;
 
@@ -413,5 +412,5 @@ class BaseController extends Controller
         }
 
         return $matchedFlag;
-    }*/
+    }
 } 
