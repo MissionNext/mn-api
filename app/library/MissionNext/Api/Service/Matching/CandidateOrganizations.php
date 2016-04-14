@@ -72,8 +72,6 @@ class CandidateOrganizations extends Matching
                         ( in_array($mainDataKey, $selectMainDataFields) &&  $this->isNoPreference($mainDataValue) )
                     )
                     {
-
-
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                         $matchingDataSet[$k]['results'][] =

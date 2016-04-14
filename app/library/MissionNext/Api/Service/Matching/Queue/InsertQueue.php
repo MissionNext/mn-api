@@ -22,7 +22,6 @@ class InsertQueue
         $matchingClass = $data["matchingClass"];
         $config = $data["config"];
 
-//        echo ' # ' . $matchingClass . ' # ';
 
         /** @var  $Matching ServiceMatching */
         $Matching = new $matchingClass($mainData, $matchingData, $config);
@@ -32,19 +31,35 @@ class InsertQueue
         $dateTime = (new \DateTime())->format("Y-m-d H:i:s");
 
         if (!empty($matchingData)) {
-            echo "YES";
-//            if($matchingData[0]['matching_percentage'])
-//                echo ' YES ';
-////                print_r($matchingData);
-//            foreach($matchingData as $dt){
-//                if($dt['matching_percentage'] == 100)
-//                    print_r($dt);
+
+            print_r($matchingData);
+
+//            $insertData = [];
+//            $i = 0;
+//            foreach($matchingData as $match){
+//                $otherMatch = Results::where('user_id', $userId)->where('for_user_id', $match['id'])->first();
 //
-////                echo ' ' . $d['matching_percentage'] . ' - ' . $d['id'] . ' # ' ;
+//                if(!is_null($otherMatch)) {
+//
+//                    $results = json_decode($otherMatch->data, true);
+//                    $results['results'] = $match['results'];
+//                    $results['matching_percentage'] = $match['matching_percentage'];
+//
+//                    $insertData[$i]['user_type'] = $otherMatch['user_type'];
+//                    $insertData[$i]['user_id'] = $otherMatch['user_id'];
+//                    $insertData[$i]['for_user_id'] = $otherMatch['for_user_id'];
+//                    $insertData[$i]['for_user_type'] = $otherMatch['for_user_type'];
+//                    $insertData[$i]['matching_percentage'] = $match['matching_percentage'];
+//                    $insertData[$i]['data'] = json_encode($results);
+//                    $insertData[$i]['created_at'] = $dateTime;
+//                    $insertData[$i]['updated_at'] = $dateTime;
+//
+//                    Results::where('user_id', $userId)->where('for_user_id', $match['id'])->delete();
+//                    $i++;
+//                }
 //            }
-
-
-//            echo ' ' . $matchingData[0]['matching_percentage'] . ' - ';
+//
+//            Results::insert($insertData);
 
             $insertData = array_map(function ($d) use ($dateTime, $userId, $userType, $forUserType) {
                 return
@@ -61,13 +76,11 @@ class InsertQueue
 
             }, $matchingData);
 
-
            Results::insert($insertData);
         }
 
-
         $job->delete();
-
     }
 
-} 
+}
+

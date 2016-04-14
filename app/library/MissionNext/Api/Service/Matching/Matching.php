@@ -138,9 +138,6 @@ abstract class Matching
             if ($mustMatchMultiplier != 0) {
                 if (isset($profileData['results'])) {
 
-                    if($profileData['id'] == 300)
-                        print_r($profileData);
-
                     array_map   (function($c) use (&$maxMatching){
                         if ($c['weight'] < 5) {
                             $maxMatching += $c['weight'];

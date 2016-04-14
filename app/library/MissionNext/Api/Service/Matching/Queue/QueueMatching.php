@@ -75,8 +75,6 @@ abstract class QueueMatching
 
         Queue::push(InsertQueue::class, $data);
 
-
-
         $this->job->delete();
     }
 
@@ -102,7 +100,6 @@ abstract class QueueMatching
         $cacheRep = new UserCachedRepository($this->userType);
 
         $limit = static::QUERY_LIMIT;
-
         $queries = ceil($cacheRep->count() / $limit);
 
         for($i=1; $i <= $queries; ++$i) {
@@ -112,7 +109,6 @@ abstract class QueueMatching
                 ->takeAndSkip($limit, $offset)
                 ->get()
                 ->toArray();
-
 
             $data = [
                 "mainData"          => $mainData,
@@ -125,7 +121,6 @@ abstract class QueueMatching
             ];
 
             Queue::push(InsertQueue::class, $data);
-
         }
 
         $this->job->delete();
