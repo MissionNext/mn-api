@@ -32,34 +32,32 @@ class InsertQueue
 
         if (!empty($matchingData)) {
 
-            print_r($matchingData);
+            $insertData = [];
+            $i = 0;
+            foreach($matchingData as $match){
+                $otherMatch = Results::where('user_id', $userId)->where('for_user_id', $match['id'])->first();
 
-//            $insertData = [];
-//            $i = 0;
-//            foreach($matchingData as $match){
-//                $otherMatch = Results::where('user_id', $userId)->where('for_user_id', $match['id'])->first();
-//
-//                if(!is_null($otherMatch)) {
-//
-//                    $results = json_decode($otherMatch->data, true);
-//                    $results['results'] = $match['results'];
-//                    $results['matching_percentage'] = $match['matching_percentage'];
-//
-//                    $insertData[$i]['user_type'] = $otherMatch['user_type'];
-//                    $insertData[$i]['user_id'] = $otherMatch['user_id'];
-//                    $insertData[$i]['for_user_id'] = $otherMatch['for_user_id'];
-//                    $insertData[$i]['for_user_type'] = $otherMatch['for_user_type'];
-//                    $insertData[$i]['matching_percentage'] = $match['matching_percentage'];
-//                    $insertData[$i]['data'] = json_encode($results);
-//                    $insertData[$i]['created_at'] = $dateTime;
-//                    $insertData[$i]['updated_at'] = $dateTime;
-//
-//                    Results::where('user_id', $userId)->where('for_user_id', $match['id'])->delete();
-//                    $i++;
-//                }
-//            }
-//
-//            Results::insert($insertData);
+                if(!is_null($otherMatch)) {
+
+                    $results = json_decode($otherMatch->data, true);
+                    $results['results'] = $match['results'];
+                    $results['matching_percentage'] = $match['matching_percentage'];
+
+                    $insertData[$i]['user_type'] = $otherMatch['user_type'];
+                    $insertData[$i]['user_id'] = $otherMatch['user_id'];
+                    $insertData[$i]['for_user_id'] = $otherMatch['for_user_id'];
+                    $insertData[$i]['for_user_type'] = $otherMatch['for_user_type'];
+                    $insertData[$i]['matching_percentage'] = $match['matching_percentage'];
+                    $insertData[$i]['data'] = json_encode($results);
+                    $insertData[$i]['created_at'] = $dateTime;
+                    $insertData[$i]['updated_at'] = $dateTime;
+
+                    Results::where('user_id', $userId)->where('for_user_id', $match['id'])->delete();
+                    $i++;
+                }
+            }
+
+            Results::insert($insertData);
 
             $insertData = array_map(function ($d) use ($dateTime, $userId, $userType, $forUserType) {
                 return

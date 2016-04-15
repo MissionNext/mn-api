@@ -24,13 +24,13 @@ class ProfileUpdateMatching extends MasterMatching
                 return
                     function($data)
                     {
-//                        Queue::push(CanJobsQueue::class, $data);
+                        Queue::push(CanJobsQueue::class, $data);
                         Queue::push(CanOrgsQueue::class, $data);
-                        $d = $data;
-                        $d["matchingId"] = $data["userId"];
-
-                        $this->oneToOneMatch($d,BaseDataModel::ORGANIZATION, OrgCandidatesQueue::class);
-                        $this->oneToOneMatch($d,BaseDataModel::JOB, JobCandidatesQueue::class);
+//                        $d = $data;
+//                        $d["matchingId"] = $data["userId"];
+//
+//                        $this->oneToOneMatch($d,BaseDataModel::ORGANIZATION, OrgCandidatesQueue::class);
+//                        $this->oneToOneMatch($d,BaseDataModel::JOB, JobCandidatesQueue::class);
                     };
                 break;
             case BaseDataModel::ORGANIZATION:
