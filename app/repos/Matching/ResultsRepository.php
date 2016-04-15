@@ -87,7 +87,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             if(isset($updates)) {
                 $updates .= '-01-01';
                 $builder->leftJoin("users", "users.id", "=", 'matching_results.user_id')
-                    ->where('users.updated_at', '>=', $updates);
+                    ->where('users.last_login', '>=', $updates);
             }
 
             if ($userType === BaseDataModel::JOB ) {

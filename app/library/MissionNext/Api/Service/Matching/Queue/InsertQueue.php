@@ -57,7 +57,8 @@ class InsertQueue
                 }
             }
 
-            Results::insert($insertData);
+            if($i)
+                Results::insert($insertData);
 
             $insertData = array_map(function ($d) use ($dateTime, $userId, $userType, $forUserType) {
                 return
