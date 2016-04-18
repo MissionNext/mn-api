@@ -85,8 +85,8 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
 
         $queryBuilder =
             $this->getModel()
-                ->select("data");
-        //  ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+                ->select("data")
+                ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
         return
             new UserCachedTransformer($queryBuilder, new UserCachedDataStrategy());
