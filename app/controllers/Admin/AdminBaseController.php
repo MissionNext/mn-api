@@ -32,6 +32,7 @@ use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Controllers\traits\Controller as SecurityTraits;
 use Cartalyst\Sentry\Sentry as MainSentry;
 
+use Illuminate\Support\Facades\Queue;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Facade\SecurityContext;
@@ -131,6 +132,23 @@ class AdminBaseController extends Controller
      */
     protected function viewTemplate($name)
     {
+
+//        try
+//        {
+//            if ($job = Queue::getPheanstalk()->peekReady('default')) {
+//
+//
+//
+////                echo "<pre>";
+////                print_r(json_decode($job->getData()));
+////                echo "</pre>";
+//
+//                echo json_decode($job->getData())->data->userId;
+//
+//            }
+//        }
+//        catch(\Pheanstalk_Exception_ServerException $e){}
+
 //        $test = $this->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, 192);
 //        $test = $this->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, 300);
 
