@@ -30,14 +30,15 @@ abstract class MasterMatching
 
         if (!empty(static::$pheanstalk->listTubes()) && $tube = static::$pheanstalk->listTubes()[0] ){
 
-            try{
-                $job = static::$pheanstalk->peekReady($tube);
-                return false;
-                // dd($job->getData());
-            }catch (\Pheanstalk_Exception_ServerException $e){
-                Queue::push(static::class, $queueData);
-            }
+//            try{
+//                $job = static::$pheanstalk->peekReady($tube);
+//                return false;
+//                // dd($job->getData());
+//            }catch (\Pheanstalk_Exception_ServerException $e){
+//                Queue::push(static::class, $queueData);
+//            }
 
+            Queue::push(static::class, $queueData);
         }
     }
 

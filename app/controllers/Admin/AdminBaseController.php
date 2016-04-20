@@ -42,6 +42,8 @@ use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Api\Service\DataTransformers\UserCachedDataStrategy;
 use MissionNext\Api\Service\DataTransformers\UserCachedTransformer;
 use MissionNext\Api\Service\Matching\TransData;
+use MissionNext\Api\Service\Matching\Queue\Master\ProfileUpdateMatching;
+
 
 class AdminBaseController extends Controller
 {
@@ -132,6 +134,11 @@ class AdminBaseController extends Controller
      */
     protected function viewTemplate($name)
     {
+
+//        print_r($this->securityContext()->role());
+
+//        $queueData = ["userId"=> 300, "appId"=>3, "role" => BaseDataModel::CANDIDATE];
+//        ProfileUpdateMatching::run($queueData);
 
 //        try
 //        {
