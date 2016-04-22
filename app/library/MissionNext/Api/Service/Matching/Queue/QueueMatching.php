@@ -51,7 +51,7 @@ abstract class QueueMatching
         }
         //=========
 
-        $this->clearCache($userId, $matchingId);
+//        $this->clearCache($userId, $matchingId);
 
         try{
             $matchingData = [(new UserCachedRepository($this->userType))->mainData($matchingId)->getData()];
@@ -63,6 +63,8 @@ abstract class QueueMatching
             return [];
         }
 
+        $app_id = $this->securityContext()->getApp()->id;
+
         $data = [
             "mainData"          => $mainData,
             "matchingData"      => $matchingData,
@@ -70,7 +72,8 @@ abstract class QueueMatching
             "forUserType"       => $this->forUserType,
             "userType"          => $this->userType,
             "config"            => $config->toArray(),
-            "userId"            => $userId
+            "userId"            => $userId,
+            "app_id"            => $app_id
         ];
 
         Queue::push(InsertQueue::class, $data);
@@ -85,6 +88,7 @@ abstract class QueueMatching
      */
     protected function matchResults($userId, $config)
     {
+
         try{
             $mainData = (new UserCachedRepository($this->forUserType))->mainData($userId)->getData();
 
@@ -95,12 +99,13 @@ abstract class QueueMatching
         }
         //=========
 
-        $this->clearCache($userId);
+//        $this->clearCache($userId);
 
         $cacheRep = new UserCachedRepository($this->userType);
 
         $limit = static::QUERY_LIMIT;
         $queries = ceil($cacheRep->count() / $limit);
+        $app_id = $this->securityContext()->getApp()->id;
 
         for($i=1; $i <= $queries; ++$i) {
 
@@ -117,7 +122,8 @@ abstract class QueueMatching
                 "forUserType"       => $this->forUserType,
                 "userType"          => $this->userType,
                 "config"            => $config->toArray(),
-                "userId"            => $userId
+                "userId"            => $userId,
+                "app_id"            => $app_id
             ];
 
             Queue::push(InsertQueue::class, $data);

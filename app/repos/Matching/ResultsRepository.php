@@ -82,7 +82,8 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                  ->where("matching_results.for_user_type","=", $forUserType)
                  ->where("matching_results.user_type", "=", $userType)
                  ->where("matching_results.for_user_id", "=",  $forUserId)
-                 ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+                 ->where("matching_results.app_id", "=",  SecurityContext::getInstance()->getApp()->id);
+//                 ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
             if(isset($updates)) {
                 $updates .= '-01-01';
@@ -117,16 +118,6 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             $builder->orderBy('matching_results.matching_percentage', 'desc');
 
             $result = (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
-
-//        $end = microtime(true);
-
-//        $result[] = $start;
-//        $result[] = $end;
-
-//        return $result;
-
-      //  dd(DB::getQueryLog());
-
 
          return (new TransData($this->securityContext()->getToken()->language(), $userType, $result->toArray()))->get();
 
