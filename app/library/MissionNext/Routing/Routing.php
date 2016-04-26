@@ -119,6 +119,7 @@ class Routing
 
             Route::group(array('prefix' => static::RESOURCE_JOB), function () {
                 Route::post('find', JobController::class.'@find');
+                Route::post('find/{organization_id}', JobController::class.'@findByOrgId');
                 Route::delete('{id}/{organization_id}', JobController::class.'@delete');
             });
 

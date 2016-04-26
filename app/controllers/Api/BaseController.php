@@ -188,7 +188,6 @@ class BaseController extends Controller
      */
     protected function jobRepo()
     {
-
         return  $this->jobRepo;
     }
 
