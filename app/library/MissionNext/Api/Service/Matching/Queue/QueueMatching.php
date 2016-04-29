@@ -83,10 +83,10 @@ abstract class QueueMatching
 
     /**
      * @param $userId
-     *
      * @param $config
+     * @param $last_login
      */
-    protected function matchResults($userId, $config)
+    protected function matchResults($userId, $config, $last_login = null)
     {
 
         try{
@@ -104,13 +104,14 @@ abstract class QueueMatching
         $cacheRep = new UserCachedRepository($this->userType);
 
         $limit = static::QUERY_LIMIT;
-        $queries = ceil($cacheRep->count() / $limit);
+        $queries = ceil($cacheRep->count($last_login) / $limit);
+
         $app_id = $this->securityContext()->getApp()->id;
 
         for($i=1; $i <= $queries; ++$i) {
 
             $offset = ($i - 1) * $limit;
-            $matchingData = $cacheRep->data()
+            $matchingData = $cacheRep->data($last_login)
                 ->takeAndSkip($limit, $offset)
                 ->get()
                 ->toArray();

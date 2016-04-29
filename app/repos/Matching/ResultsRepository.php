@@ -86,7 +86,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 //                 ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
             if(isset($updates)) {
-                $updates .= '-01-01';
+                $updates .= '-01-01 00:00:00';
                 $builder->leftJoin("users", "users.id", "=", 'matching_results.user_id')
                     ->where('users.last_login', '>=', $updates);
             }

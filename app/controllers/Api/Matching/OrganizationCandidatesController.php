@@ -4,13 +4,16 @@
 namespace MissionNext\Controllers\Api\Matching;
 
 
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Database\Eloquent\Builder;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Api\Service\Matching\OrganizationCandidates;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Models\Configs\UserConfigs;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
+use MissionNext\Api\Service\Matching\Queue\OrganizationCandidates as OrgCandidatesQueue;
 
 /**
  * Class OrganizationCandidatesController
@@ -25,14 +28,55 @@ class OrganizationCandidatesController extends BaseController
      */
     public function getIndex($organizationId)
     {
+
+        $old_updates = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $organizationId, 'key' => 'last_login'])->first();
+        $old_updates = $old_updates['value'];
+
+        $old_rate = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $organizationId, 'key' => 'can_rate'])->first();
+        $old_rate = $old_rate['value'];
+
         $rate = $this->request->get('rate');
         $updates = $this->request->get('updates');
 
+        if($rate && $old_rate != $rate){
+            $attributes = ['app_id' => $this->securityContext()->getApp()->id, 'key' => 'can_rate', 'user_id' => $organizationId];
+            UserConfigs::updateOrCreate( $attributes, ['value' => $rate] );
+        }
+        else
+            $rate = $old_rate;
+
+        if($updates && $old_updates != $updates){
+            $attributes = ['app_id' => $this->securityContext()->getApp()->id, 'key' => 'last_login', 'user_id' => $organizationId];
+            UserConfigs::updateOrCreate( $attributes, ['value' => $updates] );
+        }
+        else
+            $updates = $old_updates;
+
         $orgAppIds = $this->securityContext()->getToken()->currentUser()->appIds();
         if (in_array($this->securityContext()->getApp()->id, $orgAppIds)) {
-            return
-                new RestResponse($this->matchingResultsRepo()
-                    ->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId, compact('rate', 'updates')));
+            $results = $this->matchingResultsRepo()->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId);
+
+            if($updates < $old_updates) {
+
+                $matched = false;
+                if(!empty($results)){
+                    foreach ($results as $result) {
+                        $year = date('Y', strtotime($result['last_login']));
+                        if ((int)$year <= $updates) {
+                            $matched = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!$matched) {
+                    $data = ['userId' => $organizationId, 'appId' => $this->securityContext()->getApp()->id, 'last_login' => $updates];
+                    Queue::push(OrgCandidatesQueue::class, $data);
+                    return new RestResponse("rematch");
+                }
+            }
+
+            return new RestResponse($this->matchingResultsRepo()->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId, compact('rate', 'updates')));
         }
         return new RestResponse([]);
     }
