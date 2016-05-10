@@ -12,6 +12,10 @@ class Results extends Model implements ModelInterface
 {
     protected $table = "matching_results";
 
+    protected $primaryKey = null;
+
+    public $incrementing = false;
+
     protected $fillable = ["user_type", "user_id", "for_user_id", "data", "for_user_type"];
 
     /**

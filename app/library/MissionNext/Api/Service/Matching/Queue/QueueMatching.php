@@ -51,7 +51,7 @@ abstract class QueueMatching
         }
         //=========
 
-        $this->clearCache($userId, $matchingId);
+//        $this->clearCache($userId, $matchingId);
 
         try{
             $matchingData = [(new UserCachedRepository($this->userType))->mainData($matchingId)->getData()];
@@ -63,6 +63,8 @@ abstract class QueueMatching
             return [];
         }
 
+        $app_id = $this->securityContext()->getApp()->id;
+
         $data = [
             "mainData"          => $mainData,
             "matchingData"      => $matchingData,
@@ -70,23 +72,23 @@ abstract class QueueMatching
             "forUserType"       => $this->forUserType,
             "userType"          => $this->userType,
             "config"            => $config->toArray(),
-            "userId"            => $userId
+            "userId"            => $userId,
+            "app_id"            => $app_id
         ];
 
         Queue::push(InsertQueue::class, $data);
-
-
 
         $this->job->delete();
     }
 
     /**
      * @param $userId
-     *
      * @param $config
+     * @param $last_login
      */
-    protected function matchResults($userId, $config)
+    protected function matchResults($userId, $config, $last_login = null)
     {
+
         try{
             $mainData = (new UserCachedRepository($this->forUserType))->mainData($userId)->getData();
 
@@ -97,22 +99,22 @@ abstract class QueueMatching
         }
         //=========
 
-        $this->clearCache($userId);
+//        $this->clearCache($userId);
 
         $cacheRep = new UserCachedRepository($this->userType);
 
         $limit = static::QUERY_LIMIT;
+        $queries = ceil($cacheRep->count($last_login) / $limit);
 
-        $queries = ceil($cacheRep->count() / $limit);
+        $app_id = $this->securityContext()->getApp()->id;
 
         for($i=1; $i <= $queries; ++$i) {
 
             $offset = ($i - 1) * $limit;
-            $matchingData = $cacheRep->data()
+            $matchingData = $cacheRep->data($last_login)
                 ->takeAndSkip($limit, $offset)
                 ->get()
                 ->toArray();
-
 
             $data = [
                 "mainData"          => $mainData,
@@ -121,11 +123,11 @@ abstract class QueueMatching
                 "forUserType"       => $this->forUserType,
                 "userType"          => $this->userType,
                 "config"            => $config->toArray(),
-                "userId"            => $userId
+                "userId"            => $userId,
+                "app_id"            => $app_id
             ];
 
             Queue::push(InsertQueue::class, $data);
-
         }
 
         $this->job->delete();

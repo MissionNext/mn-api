@@ -26,31 +26,31 @@ class ProfileUpdateMatching extends MasterMatching
                     {
                         Queue::push(CanJobsQueue::class, $data);
                         Queue::push(CanOrgsQueue::class, $data);
-                        $d = $data;
-                        $d["matchingId"] = $data["userId"];
-
-                        $this->oneToOneMatch($d,BaseDataModel::ORGANIZATION, OrgCandidatesQueue::class);
-                        $this->oneToOneMatch($d,BaseDataModel::JOB, JobCandidatesQueue::class);
+//                        $d = $data;
+//                        $d["matchingId"] = $data["userId"];
+//
+//                        $this->oneToOneMatch($d,BaseDataModel::ORGANIZATION, OrgCandidatesQueue::class);
+//                        $this->oneToOneMatch($d,BaseDataModel::JOB, JobCandidatesQueue::class);
                     };
                 break;
             case BaseDataModel::ORGANIZATION:
                 return
                     function($data){
                         Queue::push(OrgCandidatesQueue::class, $data);
-                        $d = $data;
-                        $d["matchingId"] = $data["userId"];
-
-                        $this->oneToOneMatch($d, BaseDataModel::CANDIDATE, CanOrgsQueue::class);
+//                        $d = $data;
+//                        $d["matchingId"] = $data["userId"];
+//
+//                        $this->oneToOneMatch($d, BaseDataModel::CANDIDATE, CanOrgsQueue::class);
                     };
                 break;
             case BaseDataModel::JOB:
                 return
                     function($data){
                         Queue::push(JobCandidatesQueue::class, $data);
-                        $d = $data;
-                        $d["matchingId"] = $data["userId"];
-
-                        $this->oneToOneMatch($d, BaseDataModel::CANDIDATE, CanJobsQueue::class);
+//                        $d = $data;
+//                        $d["matchingId"] = $data["userId"];
+//
+//                        $this->oneToOneMatch($d, BaseDataModel::CANDIDATE, CanJobsQueue::class);
                     };
                 break;
             default:
@@ -58,11 +58,7 @@ class ProfileUpdateMatching extends MasterMatching
                     function($data){
 
                     };
-
         }
-
-
-
     }
 
     public static function run($queueData)

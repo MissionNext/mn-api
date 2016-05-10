@@ -16,7 +16,7 @@ class EqualMatching extends Matching
         $matchingValues = $this->getMatchingValues();
 
         foreach($mainValues  as $mainValue){
-            if (in_array($mainValue, $matchingValues)){
+            if (!empty($matchingValues) && in_array($mainValue, $matchingValues)){
                 return true;
             }
         }

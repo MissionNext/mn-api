@@ -69,24 +69,40 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
     }
 
     /**
+     * @param int $last_login
+     *
      * @return int
      */
-    public function count()
+    public function count($last_login = null)
     {
+        if($last_login) {
+            $last_login .= '-01-01 00:00:00';
+
+            return $this->getModel()->leftJoin("users", "users.id", "=", $this->currentType . '_cached_profile.id')
+                ->where('users.last_login', '>=', $last_login)->count();
+        }
 
         return $this->getModel()->count();
     }
 
     /**
+     * @param int $last_login
+     *
      * @return UserCachedTransformer
      */
-    public function data()
+    public function data($last_login = null)
     {
 
         $queryBuilder =
             $this->getModel()
-                ->select("data");
-        //  ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+                ->select("data")
+                ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+
+        if($last_login) {
+            $last_login .= '-01-01 00:00:00';
+            $queryBuilder->leftJoin("users", "users.id", "=", $this->currentType . '_cached_profile.id')
+                ->where('users.last_login', '>=', $last_login);
+        }
 
         return
             new UserCachedTransformer($queryBuilder, new UserCachedDataStrategy());
@@ -179,17 +195,13 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
 
     /**
      * @param $userId
+     * @param $last_login
      *
      * @return UserCachedData
      */
     public function mainData($userId)
     {
-
-        return $this->getModel()
-            ->select('data')
-            ->where("id", "=", $userId)
-          //  ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id()])
-            ->firstOrFail();
+        return $this->getModel()->select('data')->where("id", "=", $userId)->firstOrFail();
     }
 
 }

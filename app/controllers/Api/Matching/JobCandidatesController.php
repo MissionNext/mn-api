@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Api\Service\Matching\JobCandidates;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Models\Configs\UserConfigs;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
@@ -25,7 +26,19 @@ class JobCandidatesController extends BaseController
      */
     public function getIndex($jobId)
     {
+        $user_id = $this->request->get('user_id');
+
+        $old_rate = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $user_id, 'key' => 'can_job_rate'])->first();
+        $old_rate = $old_rate['value'];
+
         $rate = $this->request->get('rate');
+
+        if($rate && $old_rate != $rate){
+            $attributes = ['app_id' => $this->securityContext()->getApp()->id, 'key' => 'can_job_rate', 'user_id' => $user_id];
+            UserConfigs::updateOrCreate( $attributes, ['value' => $rate] );
+        }
+        else
+            $rate = $old_rate;
 
         $userAppsIds = $this->securityContext()->getToken()->currentUser()->appIds();
 

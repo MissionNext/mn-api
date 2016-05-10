@@ -73,7 +73,7 @@ class Routing
 
             Route::get('/test', BaseController::class.'@testApi');
 
-            Route::get('/check/queue', BaseController::class.'@checkQueue');
+            Route::get('/check/queue/{user_id}', BaseController::class.'@checkQueue');
 
             Route::controller('administrator', AdminController::class);
 
@@ -119,6 +119,7 @@ class Routing
 
             Route::group(array('prefix' => static::RESOURCE_JOB), function () {
                 Route::post('find', JobController::class.'@find');
+                Route::post('find/{organization_id}', JobController::class.'@findByOrgId');
                 Route::delete('{id}/{organization_id}', JobController::class.'@delete');
             });
 

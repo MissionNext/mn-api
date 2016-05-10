@@ -137,7 +137,6 @@ class JobController extends BaseController
     {
         $user = $this->jobRepo()->find($id);
         if ($user->organization->id != $organizationId){
-
             throw new UserException("Can't delete job, owner invalid");
         }
         $user->delete();
@@ -167,4 +166,19 @@ class JobController extends BaseController
         return new RestResponse($this->jobRepo()->getModel()->whereRaw($str, $arrV)->get());
     }
 
+    /**
+     * @param $organizationId
+     * @return RestResponse
+     */
+    public function findByOrgId($organizationId){
+        $jobs = $this->jobRepo()->getModel()->where('organization_id', $organizationId)->get();
+
+        $output = [];
+        foreach($jobs as $job){
+            $jobCache = (new UserCachedRepository(BaseDataModel::JOB))->where('id', $job['id'])->get();
+            $output[] = json_decode($jobCache[0]['data']);
+        }
+
+        return new RestResponse($output);
+    }
 } 

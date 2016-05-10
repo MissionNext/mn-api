@@ -58,14 +58,12 @@ class ConfigUpdateMatching extends MasterMatching
 
     public function fire($job, $data)
     {
-        Results::truncate();
-
         $appId = $data["appId"];
 
         foreach($this->matchingRoles as $role){
 
             $cache = UserCachedData::table($role);
-            $ids = $cache->all()->lists("id");
+            $ids = $cache->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [$appId])->lists("id");
             $d = ["appId" => $appId, "role" => $role, "userId" => null];
             foreach($ids as $id){
                 $d["userId"] = $id;

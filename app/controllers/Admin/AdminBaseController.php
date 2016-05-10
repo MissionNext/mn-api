@@ -32,6 +32,7 @@ use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Controllers\traits\Controller as SecurityTraits;
 use Cartalyst\Sentry\Sentry as MainSentry;
 
+use Illuminate\Support\Facades\Queue;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Facade\SecurityContext;
@@ -41,6 +42,8 @@ use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Api\Service\DataTransformers\UserCachedDataStrategy;
 use MissionNext\Api\Service\DataTransformers\UserCachedTransformer;
 use MissionNext\Api\Service\Matching\TransData;
+use MissionNext\Api\Service\Matching\Queue\Master\ProfileUpdateMatching;
+
 
 class AdminBaseController extends Controller
 {
@@ -131,9 +134,33 @@ class AdminBaseController extends Controller
      */
     protected function viewTemplate($name)
     {
+
+//        print_r($this->securityContext()->role());
+
+//        $queueData = ["userId"=> 300, "appId"=>3, "role" => BaseDataModel::CANDIDATE];
+//        ProfileUpdateMatching::run($queueData);
+
+//        try
+//        {
+//            if ($job = Queue::getPheanstalk()->peekReady('default')) {
+//
+//
+//
+////                echo "<pre>";
+////                print_r(json_decode($job->getData()));
+////                echo "</pre>";
+//
+//                echo json_decode($job->getData())->data->userId;
+//
+//            }
+//        }
+//        catch(\Pheanstalk_Exception_ServerException $e){}
+
 //        $test = $this->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, 192);
 //        $test = $this->matchingResults(BaseDataModel::CANDIDATE, BaseDataModel::ORGANIZATION, 300);
 
+
+//        echo mb_strlen($test, '8bit');
 
 //        echo "<pre>";
 //        print_r($test);
@@ -179,6 +206,8 @@ class AdminBaseController extends Controller
 //     */
 //    public function matchingResults($forUserType, $userType, $forUserId)
 //    {
+//        $start = microtime(true);
+//
 //        $org_select = '';
 //        if ($userType === BaseDataModel::JOB) {
 //            $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
@@ -208,12 +237,13 @@ class AdminBaseController extends Controller
 //            $builder->leftJoin("organization_cached_profile", "organization_cached_profile.id", "=", DB::raw("(matching_results.data->'organization'->>'id')::int"));
 //        }
 //
+//        $updates = '2015-01-01 00:00:00';
 //        $builder->leftJoin("users", "users.id", "=", 'matching_results.user_id')
-//                ->where('users.created_at', '<', '2001-01-01');
+//                ->where('users.updated_at', '>=', $updates);
 //
 //
 //        $builder = $userType === BaseDataModel::JOB ? $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"))
-//            : $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->>'id')::int"));
+//            : $builder->leftJoin("subscriptions", "subscriptions.user_id", "=", "matching_results.user_id");
 //
 //        $builder->where('subscriptions.app_id', '=', 3 )
 //            ->where('subscriptions.status', '<>', Subscription::STATUS_CLOSED)
@@ -234,8 +264,19 @@ class AdminBaseController extends Controller
 //
 ////            ->where("ARRAY[?] <@ json_array_text(matching_results.data->'created_at')", [2013]);
 //
+////        echo "<pre>";
+////        print_r($builder);
+////        echo "</pre>";
+//
 //        $result =
 //            (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
+//
+//        echo '<br>' . count($result) . '<br>';
+//
+//        $end = microtime(true);
+//
+//        echo $start . '<br>';
+//        echo $end;
 //
 //        return $result;
 ////        return (new TransData($this->securityContext()->getToken()->language(), $userType, $result->toArray()))->get();

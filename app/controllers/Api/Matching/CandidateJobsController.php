@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
+use MissionNext\Models\Configs\UserConfigs;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
@@ -27,7 +28,17 @@ class CandidateJobsController extends BaseController
      */
     public function getIndex($candidate_id)
     {
+        $old_rate = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $candidate_id, 'key' => 'job_can_rate'])->first();
+        $old_rate = $old_rate['value'];
+
         $rate = $this->request->get('rate');
+
+        if($rate && $old_rate != $rate){
+            $attributes = ['app_id' => $this->securityContext()->getApp()->id, 'key' => 'job_can_rate', 'user_id' => $candidate_id];
+            UserConfigs::updateOrCreate( $attributes, ['value' => $rate] );
+        }
+        else
+            $rate = $old_rate;
 
         $candidateAppsIds = $this->securityContext()->getToken()->currentUser()->appIds();
         if (in_array($this->securityContext()->getApp()->id, $candidateAppsIds)){

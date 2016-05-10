@@ -52,6 +52,8 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
      */
     public function matchingResults($forUserType, $userType, $forUserId, $options = null)
     {
+//        $start = microtime(true);
+
         if(isset($options))
             extract($options);
 
@@ -59,6 +61,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
         if ($userType === BaseDataModel::JOB) {
             $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
         }
+
         $builder =
             $this->getModel()
                  ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
@@ -79,12 +82,13 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                  ->where("matching_results.for_user_type","=", $forUserType)
                  ->where("matching_results.user_type", "=", $userType)
                  ->where("matching_results.for_user_id", "=",  $forUserId)
-                 ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
+                 ->where("matching_results.app_id", "=",  SecurityContext::getInstance()->getApp()->id);
+//                 ->whereRaw("ARRAY[?] <@ json_array_text(matching_results.data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
             if(isset($updates)) {
-                $updates .= '-01-01';
+                $updates .= '-01-01 00:00:00';
                 $builder->leftJoin("users", "users.id", "=", 'matching_results.user_id')
-                    ->where('users.created_at', '>=', $updates);
+                    ->where('users.last_login', '>=', $updates);
             }
 
             if ($userType === BaseDataModel::JOB ) {
@@ -114,9 +118,6 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             $builder->orderBy('matching_results.matching_percentage', 'desc');
 
             $result = (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
-
-      //  dd(DB::getQueryLog());
-
 
          return (new TransData($this->securityContext()->getToken()->language(), $userType, $result->toArray()))->get();
 

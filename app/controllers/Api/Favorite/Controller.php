@@ -59,7 +59,6 @@ class Controller extends BaseController {
         }
 
         return new RestResponse($data);
-
     }
 
     /**
