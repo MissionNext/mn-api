@@ -129,13 +129,17 @@ abstract class Matching
      */
     protected  function calculateMatchingPercentage(array $data)
     {
+
         foreach ($data as &$profileData) {
 
             $profileData['matching_percentage'] = 0;
             $maxMatching = 0;
-            $mustMatchMultiplier = $profileData['multiplier'];
+//            $mustMatchMultiplier = $profileData['multiplier'];
+//
+//            echo " @ " . $profileData['id'] . ' ## ' .  $mustMatchMultiplier . " ################ ";
 
-            if ($mustMatchMultiplier != 0) {
+
+//            if ($mustMatchMultiplier != 0) {
                 if (isset($profileData['results'])) {
 
                     array_map   (function($c) use (&$maxMatching){
@@ -157,18 +161,23 @@ abstract class Matching
                 }
 
                 if ($maxMatching > 0) {
-                    $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100) * $mustMatchMultiplier;
+                    $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100);
                 } else {
                     $profileData['matching_percentage'] = 0;
                 }
-            } else {
-                $profileData['matching_percentage'] = 0;
-            }
+//            } else {
+//
+//                print_r($data);
+//
+//                $profileData['matching_percentage'] = 0;
+//            }
         }
 
         $result = array_filter(array_values($data), function($d){
             return  $d['matching_percentage'] != 0;
         });
+
+
 
         return $result;
     }

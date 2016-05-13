@@ -51,7 +51,7 @@ abstract class QueueMatching
         }
         //=========
 
-//        $this->clearCache($userId, $matchingId);
+        $this->clearCache($userId, $matchingId);
 
         try{
             $matchingData = [(new UserCachedRepository($this->userType))->mainData($matchingId)->getData()];
@@ -99,7 +99,7 @@ abstract class QueueMatching
         }
         //=========
 
-//        $this->clearCache($userId);
+        $this->clearCache($userId);
 
         $cacheRep = new UserCachedRepository($this->userType);
 
