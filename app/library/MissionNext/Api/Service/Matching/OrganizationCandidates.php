@@ -35,7 +35,7 @@ class OrganizationCandidates extends Matching
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
         foreach ($matchingDataSet as $k => $matchingData) {
-            $mustMatchMultiplier = 1;
+//            $mustMatchMultiplier = 1;
 
             $counter = 0;
             foreach ($configArr as $conf) {
@@ -90,7 +90,7 @@ class OrganizationCandidates extends Matching
                     if ($conf["weight"] == 5) {
                         if  (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])){
                             unset($tempMatchingData[$k]);
-                            $mustMatchMultiplier = 0;
+//                            $mustMatchMultiplier = 0;
                             continue;
                         } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -119,7 +119,7 @@ class OrganizationCandidates extends Matching
 
                 $counter++;
             }
-            $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
+//            $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }
 
         $matchingDataSet = array_intersect_key($matchingDataSet, $tempMatchingData);

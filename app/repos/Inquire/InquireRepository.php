@@ -199,7 +199,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
             ->whereIn("inquires.job_id", $jobIds)
             ->where("inquires.app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
             ->where("inquires.status", "=", Inquire::STATUS_INQUIRED)
-            ->select(DB::raw("candidate_cached_profile.id, candidate_cached_profile.data as candidate, job_cached_profile.data as job, inquires.id as id") );
+            ->select(DB::raw("candidate_cached_profile.id, candidate_cached_profile.data as candidate, job_cached_profile.data as job, inquires.id as id, inquires.updated_at as updated_at") );
 //distinct on (candidate_cached_profile.id)
         return
             (new UserCachedTransformer($builder, new UserCachedDataStrategy( [ 'candidate', ['job'=>false] ] )))->get();

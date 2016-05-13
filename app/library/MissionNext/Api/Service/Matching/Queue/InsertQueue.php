@@ -76,7 +76,7 @@ class InsertQueue
                 $k++;
             }
 
-            Results::where('app_id', $app_id)->where('for_user_id', $userId)->whereIn('user_id', $deleteIds)->delete();
+//            Results::where('app_id', $app_id)->where('for_user_id', $userId)->whereIn('user_id', $deleteIds)->delete();
             Results::insert($insertData);
 
             if($i) {
