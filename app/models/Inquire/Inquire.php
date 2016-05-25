@@ -14,6 +14,7 @@ use MissionNext\Facade\SecurityContext as Fsc;
 class Inquire extends Eloquent implements ModelInterface
 {
     const STATUS_INQUIRED = 'inquired';
+    const STATUS_DELETED = 'deleted';
 
 
     protected $table = "inquires";

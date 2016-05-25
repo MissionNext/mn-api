@@ -109,12 +109,17 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
 
         $jobIds = $this->jobsByOrganization($orgIds)->lists('id');
 
-        return  in_array($inquire->job_id, $jobIds)
-                ? $this->getModel()
-                 ->where("id", $inquire->id)
-                 ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
-                 ->delete()
-                : false;
+        if (in_array($inquire->job_id, $jobIds)) {
+            $inquireEntity = $this->getModel()
+                ->where("id", $inquire->id)
+                ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )->first();
+            $inquireEntity->status = Inquire::STATUS_DELETED;
+            $inquireEntity->save();
+
+            return $inquireEntity;
+        }
+
+        return false;
     }
 
     /**
@@ -127,12 +132,17 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
     {
         $jobIds = $this->jobsByOrganization([$org->id])->lists('id');
 
-        return  in_array($inquire->job_id, $jobIds)
-                ? $this->getModel()
-                    ->where("id", $inquire->id)
-                    ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
-                    ->delete()
-                : false;
+        if (in_array($inquire->job_id, $jobIds)) {
+            $inquireEntity = $this->getModel()
+                ->where("id", $inquire->id)
+                ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )->first();
+            $inquireEntity->status = Inquire::STATUS_DELETED;
+            $inquireEntity->save();
+
+            return $inquireEntity;
+        }
+
+        return false;
     }
     /**
      * @param array $orgIds
@@ -188,7 +198,8 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
             ->leftJoin("job_cached_profile", "job_cached_profile.id", "=", "inquires.job_id")
             ->whereIn("inquires.job_id", $jobIds)
             ->where("inquires.app_id", "=", $this->repoContainer->securityContext()->getApp()->id() )
-            ->select(DB::raw("candidate_cached_profile.id, candidate_cached_profile.data as candidate, job_cached_profile.data as job, inquires.id as id") );
+            ->where("inquires.status", "=", Inquire::STATUS_INQUIRED)
+            ->select(DB::raw("candidate_cached_profile.id, candidate_cached_profile.data as candidate, job_cached_profile.data as job, inquires.id as id, inquires.updated_at as updated_at") );
 //distinct on (candidate_cached_profile.id)
         return
             (new UserCachedTransformer($builder, new UserCachedDataStrategy( [ 'candidate', ['job'=>false] ] )))->get();
