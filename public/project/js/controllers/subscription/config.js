@@ -56,12 +56,8 @@
             $scope.$watch(function(){
                 return p['price_'+period];
             }, function(newVal, oldVal){
-                if (!newVal){
-                    p['price_'+period] = role !== 'candidate' ? oldVal : 0;
-                }
                 var editing = 'editing'+ period.ucfirst();
                 self[editing] = null;
-//                console.log(oldVal, newVal);
             });
         };
 
