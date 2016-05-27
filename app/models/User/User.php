@@ -115,6 +115,11 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         return $this;
     }
 
+    public function IsActive()
+    {
+        return $this->is_active;
+    }
+
     /**
      * @param $statusCode
      *

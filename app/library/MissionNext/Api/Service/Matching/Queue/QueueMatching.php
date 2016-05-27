@@ -10,6 +10,7 @@ use MissionNext\Api\Service\Matching\CandidateOrganizations as MatchCanOrgs;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Api\Service\Matching\Matching as ServiceMatching;
 use MissionNext\Models\Matching\Results;
+use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\FormGroup\FormGroupRepository;
 
@@ -115,6 +116,28 @@ abstract class QueueMatching
                 ->takeAndSkip($limit, $offset)
                 ->get()
                 ->toArray();
+
+
+            $tempMatchData = [];
+            foreach ($matchingData as $data) {
+                if (BaseDataModel::JOB == $data['role']) {
+                    $organization_id = $data['organization']['id'];
+                } else {
+                    $organization_id = $data['id'];
+                }
+
+                if (in_array($data['role'], [ BaseDataModel::ORGANIZATION, BaseDataModel::JOB ])) {
+                    $user = User::find($organization_id);
+
+                    if ($user->isActive() && $user->isActiveInApp($this->securityContext()->getApp())) {
+                        $tempMatchData[] = $data;
+                    }
+                } else {
+                    $tempMatchData[] = $data;
+                }
+            }
+
+            $matchingData = $tempMatchData;
 
             $data = [
                 "mainData"          => $mainData,
