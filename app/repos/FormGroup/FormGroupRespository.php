@@ -46,7 +46,7 @@ class FormGroupRepository extends AbstractRepository implements FormGroupReposit
             ->leftJoin('group_fields', 'group_fields.group_id', '=', 'form_groups.id')
             ->where('app_forms.data_model_id', '=', $dm->id)
             ->where('form_groups.depends_on', '<>', '')
-            ->groupBy('form_groups.depends_on');
+            ->groupBy('form_groups.depends_on', 'form_groups.depends_on_option');
 
         return
             new FieldDataTransformer($builder, new FieldToArrayTransformStrategy(['choices','symbol_keys']));
