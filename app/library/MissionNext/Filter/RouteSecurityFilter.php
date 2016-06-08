@@ -43,7 +43,11 @@ class RouteSecurityFilter
         $role = Route::input('type');
         $job_id = Route::input('job');
 
-        $role = $user_id ? UserModel::findOrFail($user_id)->role() : $role;
+        $user = $user_id ? UserModel::findOrFail($user_id) : null;
+        if ($user) {
+            $role = $user->role();
+        }
+
         $role = $route->getName() === Routing::ROUTE_CREATE_USER ? $request->request->get("role") : $role;
         $role = $route->getName() === Routing::ROUTE_CREATE_JOB ? BaseDataModel::JOB : $role;
         $role = $job_id ? BaseDataModel::JOB : $role;
