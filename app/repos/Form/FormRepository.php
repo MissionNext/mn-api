@@ -40,6 +40,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
             $structuredData[$groupId]['id'] = $groupId;
             $structuredData[$groupId]['name'] = $groupField->name;
             $structuredData[$groupId]['depends_on'] = $groupField->depends_on;
+            $structuredData[$groupId]['depends_on_option'] = $groupField->depends_on_option;
             $structuredData[$groupId]['is_outer_dependent'] = $groupField->is_outer_dependent;
             $structuredData[$groupId]['order'] = $groupField->order;
             $structuredData[$groupId]['meta'] = $groupField->group_meta ? json_decode($groupField->group_meta, true) : [];
@@ -151,6 +152,7 @@ class FormRepository extends AbstractRepository implements FormRepositoryInterfa
                 'form_groups.name',
                 DB::raw('(form_groups.meta)::text as group_meta'),
                 'form_groups.depends_on',
+                'form_groups.depends_on_option',
                 'form_groups.is_outer_dependent',
                 'form_groups.order'
             );

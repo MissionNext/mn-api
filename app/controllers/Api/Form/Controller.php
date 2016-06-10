@@ -107,15 +107,16 @@ class Controller extends BaseController
 
         $groupsInsert = array_map(function ($group) use ($form, $timestamp) {
             return [
-                "symbol_key" => $group["symbol_key"],
-                "name" => $group["name"],
-                "meta" => isset($group["meta"]) && !is_string($group['meta']) ? json_encode($group['meta']) : json_encode([]),
-                "order" => $group["order"],
-                "form_id" => $form->id,
-                "depends_on" => $group["depends_on"],
-                "is_outer_dependent" => $group["is_outer_dependent"],
-                "created_at" => $timestamp,
-                "updated_at" => $timestamp,
+                "symbol_key"            => $group["symbol_key"],
+                "name"                  => $group["name"],
+                "meta"                  => isset($group["meta"]) && !is_string($group['meta']) ? json_encode($group['meta']) : json_encode([]),
+                "order"                 => $group["order"],
+                "form_id"               => $form->id,
+                "depends_on"            => $group["depends_on"],
+                "depends_on_option"     => $group["depends_on_option"],
+                "is_outer_dependent"    => $group["is_outer_dependent"],
+                "created_at"            => $timestamp,
+                "updated_at"            => $timestamp,
             ];
 
         }, $reqGroups);
