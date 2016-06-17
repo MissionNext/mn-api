@@ -311,6 +311,18 @@ class BaseController extends Controller
                 $sKeys[$field->id] = $field->symbol_key;
             }
         }
+
+        $profileDataKeys = array_keys($profileData);
+        $unsavedFieldKeys = array_diff($profileDataKeys, $sKeys);
+        $unsavedFields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $unsavedFieldKeys)->get();
+
+        foreach ($unsavedFields as $field) {
+            if (isset($profileData[$field->symbol_key])) {
+                $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]['value'], "dictionary_id" => $profileData[$field->symbol_key]['dictionary_id'] ? : null  ];
+                $sKeys[$field->id] = $field->symbol_key;
+            }
+        }
+
         foreach ($mapping as $key => $map) {
             $this->fieldRepo()->profileFields($user)->detach($key, true);
             if (is_array($map['value'])) {
