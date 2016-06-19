@@ -314,12 +314,16 @@ class BaseController extends Controller
 
         $profileDataKeys = array_keys($profileData);
         $unsavedFieldKeys = array_diff($profileDataKeys, $sKeys);
-        $unsavedFields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $unsavedFieldKeys)->get();
+        if (count($unsavedFieldKeys) > 0) {
+            $unsavedFields = $this->fieldRepo()->modelFields()->whereIn('symbol_key', $unsavedFieldKeys)->get();
 
-        foreach ($unsavedFields as $field) {
-            if (isset($profileData[$field->symbol_key])) {
-                $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]['value'], "dictionary_id" => $profileData[$field->symbol_key]['dictionary_id'] ? : null  ];
-                $sKeys[$field->id] = $field->symbol_key;
+            if ($unsavedFields) {
+                foreach ($unsavedFields as $field) {
+                    if (isset($profileData[$field->symbol_key])) {
+                        $mapping[$field->id] = ["value" => $profileData[$field->symbol_key]['value'], "dictionary_id" => $profileData[$field->symbol_key]['dictionary_id'] ? : null  ];
+                        $sKeys[$field->id] = $field->symbol_key;
+                    }
+                }
             }
         }
 
