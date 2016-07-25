@@ -8,10 +8,8 @@
 @endsection
 
 @section('content')
-
     <div class="row">
         <div class="col-md-offset-4 col-md-4 custom-form login-form">
-
             <h3 class="text-center"> Please sign in </h3>
             @if (!$errors->isEmpty())
             <div class="alert alert-danger">

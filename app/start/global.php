@@ -76,3 +76,30 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+
+//App::error(function(Exception $exception, $code)
+//{
+//    $pathInfo = Request::getPathInfo();
+//    $message = $exception->getMessage() ?: 'Exception';
+////    Log::error("$code - $message @ $pathInfo\r\n$exception");
+//
+////    if (Config::get('app.debug')) {
+////        return;
+////    }
+//
+//    switch ($code)
+//    {
+//        case 404:
+//            return Response::view( 'errors/404', compact('message'), 404);
+//
+//        case 403:
+//            return Response::view( 'errors/403', compact('message'), 403);
+//
+//        case 500:
+//            return Response::view('errors/500', compact('message'), 500);
+//
+//        default:
+//            return Response::view('errors/other', compact('message'), $code);
+//    }
+//});

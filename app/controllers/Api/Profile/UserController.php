@@ -58,14 +58,24 @@ class UserController extends BaseController
         $user->setObserver(new UserObserver());
         $user->addApp($this->getApp());
 
+//        $field = $this->fieldRepo()->modelFields()->where('symbol_key', 'agree_with_terms')->get();
+//        echo "<pre>";
+//        print_r($field);
+//        echo "</pre>";
+//        die;
+
+
         /** @var  $request Req */
         $request = Request::instance();
+
         $hash = $request->request->get('profile');
+
         $changedFields = $request->request->get('changedData');
 
         if ($files = Input::file('profile')){
             $this->checkFile($files, $hash);
         }
+
         if (empty($hash)) {
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
