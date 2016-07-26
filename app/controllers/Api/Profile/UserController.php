@@ -53,24 +53,18 @@ class UserController extends BaseController
      */
     public function update($id)
     {
+        /** @var  $request Req */
+        $request = Request::instance();
+        $hash = $request->request->get('profile');
+        $changedFields = $request->request->get('changedData');
+        $saveLater = $request->request->get('saveLater');
+
         /** @var  $user UserModel */
         $user = $this->userRepo()->findOrFail($id);
         $user->setObserver(new UserObserver());
-        $user->addApp($this->getApp());
-
-//        $field = $this->fieldRepo()->modelFields()->where('symbol_key', 'agree_with_terms')->get();
-//        echo "<pre>";
-//        print_r($field);
-//        echo "</pre>";
-//        die;
-
-
-        /** @var  $request Req */
-        $request = Request::instance();
-
-        $hash = $request->request->get('profile');
-
-        $changedFields = $request->request->get('changedData');
+        if (empty($saveLater)) {
+            $user->addApp($this->getApp());
+        }
 
         if ($files = Input::file('profile')){
             $this->checkFile($files, $hash);
@@ -80,7 +74,7 @@ class UserController extends BaseController
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
-        $this->updateUserProfile($user, $hash, $changedFields);
+        $this->updateUserProfile($user, $hash, $changedFields, $saveLater);
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];

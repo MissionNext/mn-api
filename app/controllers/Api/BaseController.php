@@ -228,7 +228,7 @@ class BaseController extends Controller
      * @throws \MissionNext\Api\Exceptions\ValidationException
      * @throws \MissionNext\Api\Exceptions\ProfileException
      */
-    protected function validateProfileData(array $profileData)
+    protected function validateProfileData(array $profileData, $saveLater = null)
     {
         $fieldNames = array_keys($profileData);
         $dependentFields = $this->formGroupRepo()->dependentFields()->get();
@@ -262,7 +262,26 @@ class BaseController extends Controller
         foreach ($fields as $field) {
             if (isset($profileData[$field->symbol_key])) {
                 $validationData[$field->symbol_key] = $profileData[$field->symbol_key]['value'];//@TODO can be array
-                $constraints[$field->symbol_key] = $field->pivot->constraints ? : "";
+                if ($field->pivot->constraints) {
+                    $requiredRule = strpos($field->pivot->constraints, 'required');
+                    if ($requiredRule === false) {
+                        $constraints[$field->symbol_key] = $field->pivot->constraints;
+                    } elseif ($saveLater) {
+                        $rulesArray = explode("|", $field->pivot->constraints);
+                        $newRules = [];
+                        foreach ($rulesArray as $rule) {
+                            if ('required' != $rule) {
+                                $newRules[] = $rule;
+                            }
+                        }
+                        $rules = implode("|", $newRules);
+                        $constraints[$field->symbol_key] = $rules;
+                    } else {
+                        $constraints[$field->symbol_key] = $field->pivot->constraints;
+                    }
+                } else {
+                    $constraints[$field->symbol_key] = '';
+                }
             }
         }
        // dd($validationData, $constraints);
@@ -285,7 +304,7 @@ class BaseController extends Controller
      *
      * @return ProfileInterface
      */
-    protected function updateUserProfile(ProfileInterface $user, array $profileData = null, $changedFields = null)
+    protected function updateUserProfile(ProfileInterface $user, array $profileData = null, $changedFields = null, $saveLater = null)
     {
 //        $this->userRepo()->updateUserCachedData($user);
 //        return true;
@@ -298,7 +317,7 @@ class BaseController extends Controller
             return $user;
         }
 
-        $fields = $this->validateProfileData($profileData);
+        $fields = $this->validateProfileData($profileData, $saveLater);
 
         $user->touch();
 
