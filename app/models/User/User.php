@@ -193,6 +193,11 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         return $this;
     }
 
+    public function removeApp(Application $app)
+    {
+        $this->apps()->detach($app->id);
+    }
+
     public function setUserPassword($value)
     {
 

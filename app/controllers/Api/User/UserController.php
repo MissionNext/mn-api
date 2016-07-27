@@ -26,6 +26,7 @@ use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\Matching\ConfigRepository;
+use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Validators\User as UserValidator;
 
@@ -244,6 +245,23 @@ class UserController extends BaseController
         }
 
         return new RestResponse($user);
+    }
+
+    public function deactivateUser($id)
+    {
+        $user = $this->userRepo()->find($id);
+        $user->removeApp($this->getApp());
+        $user->save();
+
+        $role = $user->role();
+        $this->securityContext()->getToken()->setRoles([$role]);
+        $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
+        $userRepo->addUserCachedData($user);
+
+        return new RestResponse([
+            'status'    => 'success',
+            'message'   => 'User deactivated on current application',
+        ]);
     }
 
 }

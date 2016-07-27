@@ -109,6 +109,8 @@ class Routing
             Route::get('affiliate/{affiliate_id}/as/{affiliate_type}', AffiliateController::class.'@getAffiliates');
             Route::get('affiliate/{affiliate_id}/jobs', AffiliateController::class.'@getAgencyJobs');
 
+            Route::post('user/deactivate/{id}', UserController::class.'@deactivateUser');
+
             Route::resource(static::RESOURCE_USER, UserController::class, [
                 'names' => ['store' => static::ROUTE_CREATE_USER]
             ]);
