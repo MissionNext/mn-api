@@ -7,6 +7,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use MissionNext\Api\Service\Matching\Matching as ServiceMatching;
 use MissionNext\Models\Matching\Results;
+use MissionNext\Repos\CachedData\UserCachedRepository;
 
 
 class InsertQueue
@@ -37,7 +38,6 @@ class InsertQueue
             $insertData = [];
             $deleteIds = [];
             $insertOppositeData = [];
-            $i = 0;
             $k = 0;
             foreach($matchingData as $match){
 
@@ -53,36 +53,26 @@ class InsertQueue
 
                 $deleteIds[] = $match['id'];
 
-                $otherMatch = Results::where('user_id', $userId)->where('for_user_id', $match['id'])->where('app_id', $app_id)->first();
+                $mainData['results'] = $match['results'];
+                $mainData['matching_percentage'] = $match['matching_percentage'];
 
-                if(!is_null($otherMatch)) {
+                $insertOppositeData[$k]['user_type'] = $forUserType;
+                $insertOppositeData[$k]['user_id'] = $userId;
+                $insertOppositeData[$k]['for_user_id'] = $match['id'];
+                $insertOppositeData[$k]['for_user_type'] = $userType;
+                $insertOppositeData[$k]['matching_percentage'] = $match['matching_percentage'];
+                $insertOppositeData[$k]['app_id'] = $app_id;
+                $insertOppositeData[$k]['data'] = json_encode($mainData);
+                $insertOppositeData[$k]['created_at'] = $dateTime;
+                $insertOppositeData[$k]['updated_at'] = $dateTime;
 
-                    $results = json_decode($otherMatch->data, true);
-                    $results['results'] = $match['results'];
-                    $results['matching_percentage'] = $match['matching_percentage'];
-
-                    $insertOppositeData[$i]['user_type'] = $otherMatch['user_type'];
-                    $insertOppositeData[$i]['user_id'] = $otherMatch['user_id'];
-                    $insertOppositeData[$i]['for_user_id'] = $otherMatch['for_user_id'];
-                    $insertOppositeData[$i]['for_user_type'] = $otherMatch['for_user_type'];
-                    $insertOppositeData[$i]['matching_percentage'] = $match['matching_percentage'];
-                    $insertOppositeData[$i]['app_id'] = $app_id;
-                    $insertOppositeData[$i]['data'] = json_encode($results);
-                    $insertOppositeData[$i]['created_at'] = $dateTime;
-                    $insertOppositeData[$i]['updated_at'] = $dateTime;
-
-                    $i++;
-                }
                 $k++;
             }
 
-//            Results::where('app_id', $app_id)->where('for_user_id', $userId)->whereIn('user_id', $deleteIds)->delete();
             Results::insert($insertData);
 
-            if($i) {
-                Results::where('app_id', $app_id)->where('user_id', $userId)->whereIn('for_user_id', $deleteIds)->delete();
-                Results::insert($insertOppositeData);
-            }
+            Results::where('app_id', $app_id)->where('user_id', $userId)->whereIn('for_user_id', $deleteIds)->delete();
+            Results::insert($insertOppositeData);
         }
 
         $job->delete();

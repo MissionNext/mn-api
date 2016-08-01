@@ -24,11 +24,14 @@ class ProfileUpdateMatching extends MasterMatching
                 return
                     function($data)
                     {
-                        Queue::push(CanJobsQueue::class, $data);
                         Queue::push(CanOrgsQueue::class, $data);
+                        Queue::push(CanJobsQueue::class, $data);
+
 //                        $d = $data;
 //                        $d["matchingId"] = $data["userId"];
 //
+//                        Queue::push(CanJobsQueue::class, $data);
+
 //                        $this->oneToOneMatch($d,BaseDataModel::ORGANIZATION, OrgCandidatesQueue::class);
 //                        $this->oneToOneMatch($d,BaseDataModel::JOB, JobCandidatesQueue::class);
                     };
@@ -47,9 +50,11 @@ class ProfileUpdateMatching extends MasterMatching
                 return
                     function($data){
                         Queue::push(JobCandidatesQueue::class, $data);
+
 //                        $d = $data;
 //                        $d["matchingId"] = $data["userId"];
-//
+//                        Queue::push(CanJobsQueue::class, $data);
+
 //                        $this->oneToOneMatch($d, BaseDataModel::CANDIDATE, CanJobsQueue::class);
                     };
                 break;

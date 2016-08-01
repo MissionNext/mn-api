@@ -177,16 +177,12 @@ abstract class Matching
             return  $d['matching_percentage'] != 0;
         });
 
-
-
         return $result;
     }
 
 
-
-
-
     abstract public function matchResults();
+
 
     public function getIntersection($mainArray, $matchingArray)
     {

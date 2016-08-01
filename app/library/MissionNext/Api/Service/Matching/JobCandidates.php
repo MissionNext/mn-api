@@ -26,6 +26,7 @@ class JobCandidates extends Matching
 
         $matchingDataSet = $this->matchAgainstData;
         $mainData = $this->matchData;
+        $job_slug = strtolower(str_replace(' ', '_', $mainData['name']));
 
         $selectMainDataFields = $this->selectFieldsOfType($this->mainMatchingModel);
         $selectMatchingDataFields = $this->selectFieldsOfType($this->matchingModel);
@@ -36,7 +37,6 @@ class JobCandidates extends Matching
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
         foreach ($matchingDataSet as $k => $matchingData) {
-//            $mustMatchMultiplier = 1;
             foreach ($configArr as $conf) {
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
@@ -45,7 +45,8 @@ class JobCandidates extends Matching
 
                 $marital_value = (isset($matchingDataProfile[$marital_status_key])) ? $matchingDataProfile[$marital_status_key]: null;
                 $spouse_field = strpos($matchingDataKey, 'spouse');
-                if ("Married" != $marital_value && $spouse_field !== false) {
+                if (("Married" != $marital_value && $spouse_field !== false) ||
+                    ('subset_' . $job_slug != $mainDataKey && stripos($mainDataKey, 'subset_') !== false)) {
                     continue;
                 }
 
@@ -76,47 +77,42 @@ class JobCandidates extends Matching
                     )
                     {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
-                        list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
+                        list($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                         $matchingDataSet[$k]['results'][] =
                             ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         continue;
                     }
 
-
                     /** if weight 5 (must match) and value doesn't matches remove add to banned ids */
                     if ($conf["weight"] == 5) {
-                        if  (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])){
+                        if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
                             unset($tempMatchingData[$k]);
-//                            $mustMatchMultiplier = 0;
                             continue;
                         } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
-                            list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
+                            list($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                             $matchingDataSet[$k]['results'][] =
                                 ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         }
-                    }else{
+                    } else {
                         if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             $matchingDataSet[$k]['results'][] =
                                 ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
-                        }else{
+                        } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
-                            list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
+                            list($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                             $matchingDataSet[$k]['results'][] =
                                 ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         }
                     }
-
                 }elseif( !isset($matchingDataProfile[$matchingDataKey]) || empty($matchingDataProfile[$matchingDataKey])){
                     $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                     $matchingDataSet[$k]['results'][] =
                         ['matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
                 }
             }
-//            $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }
-
         $matchingDataSet = array_intersect_key($matchingDataSet, $tempMatchingData);
 
         return $this->calculateMatchingPercentage($matchingDataSet);

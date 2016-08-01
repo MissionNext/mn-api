@@ -117,7 +117,6 @@ abstract class QueueMatching
                 ->get()
                 ->toArray();
 
-
             $tempMatchData = [];
             foreach ($matchingData as $data) {
                 if (BaseDataModel::JOB == $data['role']) {

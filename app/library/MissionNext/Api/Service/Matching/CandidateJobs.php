@@ -35,7 +35,9 @@ class CandidateJobs extends Matching
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
         foreach ($matchingDataSet as $k => $matchingData) {
-//            $mustMatchMultiplier = 1;
+
+            $job_slug = strtolower(str_replace(' ', '_', $matchingData['name']));
+
             foreach ($configArr as $conf) {
 
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
@@ -45,7 +47,10 @@ class CandidateJobs extends Matching
 
                 $marital_value = (isset($mainDataProfile[$marital_status_key])) ? $mainDataProfile[$marital_status_key]: null;
                 $spouse_field = strpos($mainDataKey, 'spouse');
-                if ("Married" != $marital_value && $spouse_field !== false) {
+
+                if (("Married" != $marital_value && $spouse_field !== false) ||
+                    ('subset_' . $job_slug != $matchingDataKey && stripos($matchingDataKey, 'subset_') !== false)) {
+
                     continue;
                 }
 
@@ -84,12 +89,8 @@ class CandidateJobs extends Matching
 
                     /** if weight 5 (must match) and value doesn't matches remove add to banned ids */
                     if ($conf["weight"] == 5) {
-
-                        if  (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])){
+                        if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
                             unset($tempMatchingData[$k]);
-
-//                            echo " AAAAAAAAAAAAAAAAAA " . $k . " AAAAA";
-//                            $mustMatchMultiplier = 0;
                             continue;
                         } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
@@ -97,12 +98,12 @@ class CandidateJobs extends Matching
                             $matchingDataSet[$k]['results'][] =
                                 ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         }
-                    }else{
+                    }else {
                         if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             $matchingDataSet[$k]['results'][] =
                                 ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
-                        }else{
+                        } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                             $matchingDataSet[$k]['results'][] =
@@ -116,7 +117,6 @@ class CandidateJobs extends Matching
                         ['matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
                 }
             }
-//            $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }
 
         $matchingDataSet = array_intersect_key($matchingDataSet, $tempMatchingData);
