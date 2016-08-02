@@ -62,7 +62,7 @@ class CandidateJobs extends Matching
                     if ($mainDataValue === "" || $matchingDataValue === "") {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         $matchingDataSet[$k]['results'][] =
-                            ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
+                            ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
                         continue;
                     }
 
@@ -83,7 +83,7 @@ class CandidateJobs extends Matching
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                         $matchingDataSet[$k]['results'][] =
-                            ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
+                            ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         continue;
                     }
 
@@ -96,25 +96,25 @@ class CandidateJobs extends Matching
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                             $matchingDataSet[$k]['results'][] =
-                                ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
+                                ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         }
                     }else {
                         if (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])) {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             $matchingDataSet[$k]['results'][] =
-                                ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
+                                ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => $matchingDataValue, $mainMatchingKey => $mainDataValue, "matches" => false, "weight" => $conf["weight"]];
                         } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
                             $matchingDataSet[$k]['results'][] =
-                                ['matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
+                                ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         }
                     }
 
                 }elseif( !isset($matchingDataProfile[$matchingDataKey]) || empty($matchingDataProfile[$matchingDataKey])){
                     $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                     $matchingDataSet[$k]['results'][] =
-                        ['matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
+                        ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
                 }
             }
         }
