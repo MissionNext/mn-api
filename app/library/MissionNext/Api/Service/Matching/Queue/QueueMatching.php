@@ -110,7 +110,6 @@ abstract class QueueMatching
         $app_id = $this->securityContext()->getApp()->id;
 
         for($i=1; $i <= $queries; ++$i) {
-
             $offset = ($i - 1) * $limit;
             $matchingData = $cacheRep->data($last_login)
                 ->takeAndSkip($limit, $offset)
@@ -119,19 +118,7 @@ abstract class QueueMatching
 
             $tempMatchData = [];
             foreach ($matchingData as $data) {
-                if (BaseDataModel::JOB == $data['role']) {
-                    $organization_id = $data['organization']['id'];
-                } else {
-                    $organization_id = $data['id'];
-                }
-
-                if (in_array($data['role'], [ BaseDataModel::ORGANIZATION, BaseDataModel::JOB ])) {
-                    $user = User::find($organization_id);
-
-                    if ($user->isActive() && $user->isActiveInApp($this->securityContext()->getApp())) {
-                        $tempMatchData[] = $data;
-                    }
-                } else {
+                if (in_array($app_id, $data['app_ids'])) {
                     $tempMatchData[] = $data;
                 }
             }
