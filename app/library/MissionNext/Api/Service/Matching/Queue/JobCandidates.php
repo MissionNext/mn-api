@@ -8,6 +8,7 @@ use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Api\Service\Matching\JobCandidates as MatchJobCandidates;
 use MissionNext\Repos\Matching\ConfigRepository;
+use MissionNext\Api\Service\Matching\Queue\JobCandidates as JobCandidatesQueue;
 
 class JobCandidates extends QueueMatching
 {
@@ -17,11 +18,14 @@ class JobCandidates extends QueueMatching
 
     protected $matchingClass = MatchJobCandidates::class;
 
+    protected $queueClass = JobCandidatesQueue::class;
+
     public function fire($job, $data)
     {
         $userId = $data["userId"];
         $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
         $appId = $data["appId"];
+        $offset = isset($data["offset"]) ? $data["offset"] : 0;
         $this->job = $job;
 
         $this->securityContext()->getToken()->setApp(Application::find($appId));
@@ -38,6 +42,6 @@ class JobCandidates extends QueueMatching
         }
 
         $matchingId ? $this->matchResult($userId, $matchingId, $config)
-            : $this->matchResults($userId,  $config);
+            : $this->matchResults($userId,  $config, $offset);
     }
 } 

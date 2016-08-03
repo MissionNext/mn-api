@@ -31,13 +31,13 @@ class JobCandidates extends Matching
         $selectMainDataFields = $this->selectFieldsOfType($this->mainMatchingModel);
         $selectMatchingDataFields = $this->selectFieldsOfType($this->matchingModel);
 
-
         $tempMatchingData = $matchingDataSet;
         $matchingKey = $this->matchingModel."_value";
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
         foreach ($matchingDataSet as $k => $matchingData) {
             foreach ($configArr as $conf) {
+
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
                 $matchingDataProfile = $matchingData['profileData'];

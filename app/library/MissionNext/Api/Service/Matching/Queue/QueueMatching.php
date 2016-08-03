@@ -20,6 +20,7 @@ abstract class QueueMatching
     protected $userType,
               $forUserType,
               $matchingClass,
+              $queueClass,
               $job;
 
 
@@ -44,8 +45,8 @@ abstract class QueueMatching
     {
         try{
             $mainData = (new UserCachedRepository($this->forUserType))->mainData($userId)->getData();
-
-        }catch (ModelNotFoundException $e){
+        }
+        catch (ModelNotFoundException $e){
 
             $this->job->delete();
             return [];
@@ -56,10 +57,8 @@ abstract class QueueMatching
 
         try{
             $matchingData = [(new UserCachedRepository($this->userType))->mainData($matchingId)->getData()];
-
-
-        }catch (ModelNotFoundException $e){
-
+        }
+        catch (ModelNotFoundException $e){
             $this->job->delete();
             return [];
         }
@@ -85,40 +84,50 @@ abstract class QueueMatching
     /**
      * @param $userId
      * @param $config
+     * @param $offset
      * @param $last_login
      */
-    protected function matchResults($userId, $config, $last_login = null)
+    protected function matchResults($userId, $config, $offset, $last_login = null)
     {
 
         try{
             $mainData = (new UserCachedRepository($this->forUserType))->mainData($userId)->getData();
-
-        }catch (ModelNotFoundException $e){
-
+        }
+        catch (ModelNotFoundException $e){
             $this->job->delete();
             return [];
         }
-        //=========
-
-        $this->clearCache($userId);
 
         $cacheRep = new UserCachedRepository($this->userType);
 
         $limit = static::QUERY_LIMIT;
-        $queries = ceil($cacheRep->count($last_login) / $limit);
 
         $app_id = $this->securityContext()->getApp()->id;
 
-        for($i=1; $i <= $queries; ++$i) {
-            $offset = ($i - 1) * $limit;
-            $matchingData = $cacheRep->data($last_login)
-                ->takeAndSkip($limit, $offset)
-                ->get()
-                ->toArray();
+        $matchingData = $cacheRep->data($last_login)
+            ->takeAndSkip($limit, $offset)
+            ->get()
+            ->toArray();
+
+        if(!empty($matchingData)) {
+
+            $offset += $limit;
 
             $tempMatchData = [];
             foreach ($matchingData as $data) {
-                if (in_array($app_id, $data['app_ids'])) {
+                if (BaseDataModel::JOB == $data['role']) {
+                    $organization_id = $data['organization']['id'];
+                } else {
+                    $organization_id = $data['id'];
+                }
+
+                if (in_array($data['role'], [BaseDataModel::ORGANIZATION, BaseDataModel::JOB])) {
+                    $user = User::find($organization_id);
+
+                    if ($user->isActive() && $user->isActiveInApp($this->securityContext()->getApp())) {
+                        $tempMatchData[] = $data;
+                    }
+                } else {
                     $tempMatchData[] = $data;
                 }
             }
@@ -126,17 +135,26 @@ abstract class QueueMatching
             $matchingData = $tempMatchData;
 
             $data = [
-                "mainData"          => $mainData,
-                "matchingData"      => $matchingData,
-                "matchingClass"     => $this->matchingClass,
-                "forUserType"       => $this->forUserType,
-                "userType"          => $this->userType,
-                "config"            => $config->toArray(),
-                "userId"            => $userId,
-                "app_id"            => $app_id
+                "mainData" => $mainData,
+                "matchingData" => $matchingData,
+                "matchingClass" => $this->matchingClass,
+                "forUserType" => $this->forUserType,
+                "userType" => $this->userType,
+                "config" => $config->toArray(),
+                "userId" => $userId,
+                "app_id" => $app_id
             ];
 
             Queue::push(InsertQueue::class, $data);
+
+            $startData = [
+                "userId" => $userId,
+                "appId" => $app_id,
+                "role" => $this->forUserType,
+                "offset" => $offset
+            ];
+
+            Queue::push($this->queueClass, $startData);
         }
 
         $this->job->delete();

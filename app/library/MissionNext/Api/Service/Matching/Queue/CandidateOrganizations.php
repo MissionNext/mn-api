@@ -11,6 +11,7 @@ use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Api\Service\Matching\CandidateOrganizations as MatchCanOrgs;
 use MissionNext\Repos\Matching\ConfigRepository;
+use MissionNext\Api\Service\Matching\Queue\CandidateOrganizations as CanOrgsQueue;
 
 class CandidateOrganizations extends QueueMatching
 {
@@ -20,11 +21,14 @@ class CandidateOrganizations extends QueueMatching
 
     protected $matchingClass = MatchCanOrgs::class;
 
+    protected $queueClass = CanOrgsQueue::class;
+
     public function fire($job, $data)
     {
         $userId = $data["userId"];
         $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
         $appId = $data["appId"];
+        $offset = isset($data["offset"]) ? $data["offset"] : 0;
         $this->job = $job;
 
         $this->securityContext()->getToken()->setApp(Application::find($appId));
@@ -42,7 +46,7 @@ class CandidateOrganizations extends QueueMatching
         }
 
         $matchingId ? $this->matchResult($userId, $matchingId, $config)
-                    : $this->matchResults($userId,  $config);
+                    : $this->matchResults($userId,  $config, $offset);
 
     }
 } 

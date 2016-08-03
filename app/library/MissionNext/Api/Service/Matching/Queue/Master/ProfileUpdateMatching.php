@@ -24,38 +24,24 @@ class ProfileUpdateMatching extends MasterMatching
                 return
                     function($data)
                     {
+                        $this->clearCache($data['userId'], 'candidate', 'organization');
+                        $this->clearCache($data['userId'], 'candidate', 'job');
                         Queue::push(CanOrgsQueue::class, $data);
                         Queue::push(CanJobsQueue::class, $data);
-
-//                        $d = $data;
-//                        $d["matchingId"] = $data["userId"];
-//
-//                        Queue::push(CanJobsQueue::class, $data);
-
-//                        $this->oneToOneMatch($d,BaseDataModel::ORGANIZATION, OrgCandidatesQueue::class);
-//                        $this->oneToOneMatch($d,BaseDataModel::JOB, JobCandidatesQueue::class);
                     };
                 break;
             case BaseDataModel::ORGANIZATION:
                 return
                     function($data){
+                        $this->clearCache($data['userId'], 'organization', 'candidate');
                         Queue::push(OrgCandidatesQueue::class, $data);
-//                        $d = $data;
-//                        $d["matchingId"] = $data["userId"];
-//
-//                        $this->oneToOneMatch($d, BaseDataModel::CANDIDATE, CanOrgsQueue::class);
                     };
                 break;
             case BaseDataModel::JOB:
                 return
                     function($data){
+                        $this->clearCache($data['userId'], 'job', 'candidate');
                         Queue::push(JobCandidatesQueue::class, $data);
-
-//                        $d = $data;
-//                        $d["matchingId"] = $data["userId"];
-//                        Queue::push(CanJobsQueue::class, $data);
-
-//                        $this->oneToOneMatch($d, BaseDataModel::CANDIDATE, CanJobsQueue::class);
                     };
                 break;
             default:
@@ -79,5 +65,19 @@ class ProfileUpdateMatching extends MasterMatching
         $m = $this->match($role);
         $m($data);
         $job->delete();
+    }
+
+    /**
+     * @param $userId
+     * @param $forUserType
+     * @param $userType
+     */
+    protected function clearCache($userId, $forUserType, $userType)
+    {
+       $builder =  Results::where("for_user_id","=", $userId)
+            ->where("for_user_type","=", $forUserType)
+            ->where("user_type","=", $userType);
+
+       $builder->delete();
     }
 } 

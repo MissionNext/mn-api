@@ -9,6 +9,7 @@ use MissionNext\Models\Matching\Results;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Api\Service\Matching\OrganizationCandidates as MatchOrgCandidates;
 use MissionNext\Repos\Matching\ConfigRepository;
+use MissionNext\Api\Service\Matching\Queue\OrganizationCandidates as OrgCandidatesQueue;
 
 class OrganizationCandidates extends QueueMatching
 {
@@ -18,6 +19,7 @@ class OrganizationCandidates extends QueueMatching
 
     protected $matchingClass = MatchOrgCandidates::class;
 
+    protected $queueClass = OrgCandidatesQueue::class;
 
     public function fire($job, $data)
     {
@@ -25,6 +27,7 @@ class OrganizationCandidates extends QueueMatching
         $userId = $data["userId"];
         $this->job = $job;
         $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
+        $offset = isset($data["offset"]) ? $data["offset"] : 0;
 
         $last_login = null;
         if(isset($data["last_login"]))
@@ -45,7 +48,7 @@ class OrganizationCandidates extends QueueMatching
             return [];
         }
         $matchingId ? $this->matchResult($userId, $matchingId, $config)
-            : $this->matchResults($userId,  $config, $last_login);
+            : $this->matchResults($userId,  $config, $offset, $last_login);
 
     }
 } 
