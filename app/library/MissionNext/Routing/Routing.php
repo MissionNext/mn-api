@@ -71,6 +71,8 @@ class Routing
 
         Route::group(array('prefix' => static::API_PREFIX), function () {
 
+            Route::get('match/getOneResult/{forUserId}/{userId}', BaseController::class.'@getOneMatch');
+
             Route::get('/test', BaseController::class.'@testApi');
 
             Route::get('/check/queue/{user_id}', BaseController::class.'@checkQueue');

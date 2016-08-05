@@ -33,6 +33,8 @@ class CandidateJobsController extends BaseController
 
         $rate = $this->request->get('rate');
 
+//        return RestResponse($rate);
+
         if($rate && $old_rate != $rate){
             $attributes = ['app_id' => $this->securityContext()->getApp()->id, 'key' => 'job_can_rate', 'user_id' => $candidate_id];
             UserConfigs::updateOrCreate( $attributes, ['value' => $rate] );

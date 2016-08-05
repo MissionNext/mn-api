@@ -454,4 +454,24 @@ class BaseController extends Controller
 
         return $matchedFlag;
     }
+
+    /**
+     * @param $forUserId
+     * @param $userId
+     *
+     * @return RestResponse
+     */
+    protected function getOneMatch($forUserId, $userId)
+    {
+        $role = $this->request->get('role');
+
+        $orgAppIds = $this->securityContext()->getToken()->currentUser()->appIds();
+        if (in_array($this->securityContext()->getApp()->id, $orgAppIds)) {
+
+            $result = $this->matchingResultsRepo()->oneMatchingResult($forUserId, $userId, $role);
+
+            return new RestResponse($result);
+        }
+        return new RestResponse([]);
+    }
 } 
