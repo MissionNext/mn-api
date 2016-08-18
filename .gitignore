@@ -10,3 +10,4 @@ Thumbs.db
 .idea
 /app/storage/
 /app/config
+/app/controllers/Admin/Server.php

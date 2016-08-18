@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Admin\Administrator;
 use MissionNext\Controllers\Admin\Filter\FilterController;
+use MissionNext\Controllers\Admin\Server;
 use MissionNext\Controllers\Admin\Subscription\Ajax\SubscriptionController as SubscriptionControllerAjax;
 use MissionNext\Controllers\Admin\Subscription\CouponController;
 use MissionNext\Controllers\Admin\Subscription\SubConfigController;
@@ -24,6 +25,11 @@ class AdminRouting
     public function __construct(Application $App)
     {
         $this->router = $App->make('router');
+
+        Route::get('deploy/{server}', array(
+            'as'        => 'deployAction',
+            'uses'      => Server::class.'@deploy'
+        ));
 
         Route::get('/', array(
             'as' => 'homepage',
