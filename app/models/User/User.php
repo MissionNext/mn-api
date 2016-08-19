@@ -511,7 +511,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         }
 
         $ch = curl_init(Config::get('app.wp_remote_url').'/wp-admin/admin-ajax.php?action=user_deleting_function&'
-            .'email='.$this->getEmail().'&username='.$this->getUsername().'&secret='.md5('Secret key for deleting wp user.'));
+            .'&username='.$this->getUsername().'&secret='.md5('Secret key for deleting wp user.'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $data = $this->curl_exec_follow($ch);
         curl_close($ch);
