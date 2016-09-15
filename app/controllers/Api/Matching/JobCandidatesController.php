@@ -27,6 +27,7 @@ class JobCandidatesController extends BaseController
     public function getIndex($jobId)
     {
         $user_id = $this->request->get('user_id');
+        $job_owner = $this->request->get('job_owner');
 
         $old_rate = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $user_id, 'key' => 'can_job_rate'])->first();
         $old_rate = $old_rate['value'];
@@ -46,7 +47,7 @@ class JobCandidatesController extends BaseController
 
             return
                 new RestResponse($this->matchingResultsRepo()
-                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId, compact('rate')));
+                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId, compact('rate', 'job_owner')));
         }
 
         return new RestResponse([]);

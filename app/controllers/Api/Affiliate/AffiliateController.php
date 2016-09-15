@@ -35,7 +35,7 @@ class AffiliateController extends BaseController
     {
         $baseQuery =
             Affiliate::select("status", "affiliate_approver_type", "organization_cached_profile.data as organization_profile",
-            "agency_cached_profile.data as agency_profile", "affiliate_approver", "affiliate_requester")
+            "agency_cached_profile.data as agency_profile", "affiliate_approver", "affiliate_requester", "featured")
             ->leftJoin("organization_cached_profile", function ($join) {
                 $join->on("organization_cached_profile.id", "=", "affiliate_approver")
                     ->orOn("organization_cached_profile.id", "=", "affiliate_requester");
@@ -308,5 +308,38 @@ class AffiliateController extends BaseController
     {
 
         return $this->userRepo()->find($affiliateId)->roles()->first();
+    }
+
+    public function postFeature($requesterId, $approverId){
+        $affiliates = Affiliate::where("affiliate_approver", '=', $approverId)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
+            ->get();
+
+        foreach ($affiliates as $aff) {
+            $aff->featured = 0;
+            $aff->save();
+        }
+
+        $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
+            ->where("affiliate_requester", '=', $requesterId)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
+            ->first();
+
+        $affiliate->featured = 1;
+        $affiliate->save();
+
+        return new RestResponse($affiliate);
+    }
+
+    public function postUnfeature($requesterId, $approverId){
+        $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
+            ->where("affiliate_requester", '=', $requesterId)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
+            ->first();
+
+        $affiliate->featured = 0;
+        $affiliate->save();
+
+        return new RestResponse($affiliate);
     }
 } 

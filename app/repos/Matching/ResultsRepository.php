@@ -60,21 +60,32 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
         }
 
+        $left_join_id = $this->securityContext()->getToken()->currentUser()->id;
+        if (isset($job_owner)) {
+            $left_join_id = $job_owner;
+        }
+
         $builder =
             $this->getModel()
-                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage) matching_results.data, folder_apps.folder, notes.notes, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
-                 ->leftJoin("folder_apps", function($join) use ($forUserId, $forUserType, $userType){
+                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage) matching_results.data, folder_apps.folder, notes.notes, favorite.id as favorite, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
+                 ->leftJoin("folder_apps", function($join) use ($forUserId, $forUserType, $userType, $left_join_id){
                     $join->on("folder_apps.user_id", "=", "matching_results.user_id")
                          ->where("matching_results.for_user_type", "=", $forUserType)
-                         ->where("folder_apps.for_user_id", "=", $this->securityContext()->getToken()->currentUser()->id)
+                         ->where("folder_apps.for_user_id", "=", $left_join_id)
                          ->where("folder_apps.user_type", "=", $userType)
                          ->where("folder_apps.app_id", "=", $this->securityContext()->getApp()->id());
                  })
-                 ->leftJoin("notes", function($join) use ($forUserId, $forUserType, $userType){
+                 ->leftJoin("notes", function($join) use ($forUserId, $forUserType, $userType, $left_join_id){
                      $join->on("notes.user_id", "=", "matching_results.user_id")
-                        ->where("notes.for_user_id", "=", $this->securityContext()->getToken()->currentUser()->id)
+                        ->where("notes.for_user_id", "=", $left_join_id)
                         ->where("notes.user_type", "=", $userType);
                  })
+                ->leftJoin("favorite", function($join) use ($forUserId, $forUserType, $userType, $left_join_id){
+                    $join->on("favorite.target_id", "=", "matching_results.user_id")
+                        ->where("favorite.user_id", "=", $left_join_id)
+                        ->where("favorite.target_type", "=", $userType)
+                        ->where("favorite.app_id", "=", $this->securityContext()->getApp()->id());
+                })
                  ->where("matching_results.for_user_type","=", $forUserType)
                  ->where("matching_results.user_type", "=", $userType)
                  ->where("matching_results.for_user_id", "=",  $forUserId)
