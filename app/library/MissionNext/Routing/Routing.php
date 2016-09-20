@@ -14,6 +14,7 @@ use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Controllers\Api\Folder\FolderAppsController;
 use MissionNext\Controllers\Api\GlobalConfig\GlobalConfigController;
 use MissionNext\Controllers\Api\Inquire\InquireController;
+use MissionNext\Controllers\Api\Meta\MetaController;
 use MissionNext\Controllers\Api\Subscription\SubConfigController;
 use MissionNext\Controllers\Api\Subscription\SubscriptionController;
 use MissionNext\Controllers\Api\Translation\CustomTransController;
@@ -147,6 +148,7 @@ class Routing
             Route::controller('meta/notes', NotesController::class, []);
             Route::controller('meta/folder', FolderAppsController::class, []);
 
+            Route::get('meta/for/{user_id}/{role}', MetaController::class.'@getMetaForAgeny');
             Route::resource(static::RESOURCE_FOLDER, FolderResource::class,
                 [   ]
             );
