@@ -309,37 +309,4 @@ class AffiliateController extends BaseController
 
         return $this->userRepo()->find($affiliateId)->roles()->first();
     }
-
-    public function postFeature($requesterId, $approverId){
-        $affiliates = Affiliate::where("affiliate_approver", '=', $approverId)
-            ->where("app_id", "=", $this->securityContext()->getApp()->id())
-            ->get();
-
-        foreach ($affiliates as $aff) {
-            $aff->featured = 0;
-            $aff->save();
-        }
-
-        $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
-            ->where("affiliate_requester", '=', $requesterId)
-            ->where("app_id", "=", $this->securityContext()->getApp()->id())
-            ->first();
-
-        $affiliate->featured = 1;
-        $affiliate->save();
-
-        return new RestResponse($affiliate);
-    }
-
-    public function postUnfeature($requesterId, $approverId){
-        $affiliate = Affiliate::where("affiliate_approver", '=', $approverId)
-            ->where("affiliate_requester", '=', $requesterId)
-            ->where("app_id", "=", $this->securityContext()->getApp()->id())
-            ->first();
-
-        $affiliate->featured = 0;
-        $affiliate->save();
-
-        return new RestResponse($affiliate);
-    }
-} 
+}
