@@ -42,10 +42,19 @@ class MetaController extends BaseController {
             ->where("app_id", $this->securityContext()->getApp()->id())
             ->get()->toArray();
 
+        $affiliatesOrg = [];
+        foreach ($affiliates as $item) {
+            $affiliatesOrg[$item["organization_profile"]->id] = [
+                'id'    => $item["organization_profile"]->id,
+                'name'  => $item["organization_profile"]->profileData->organization_name
+            ];
+        }
+
         return new RestResponse([
-            'notes'     => $notes,
-            'favorites' => $favorites,
-            'folders'   => $folders
+            'notes'         => $notes,
+            'favorites'     => $favorites,
+            'folders'       => $folders,
+            'affiliates'    => $affiliatesOrg
         ]);
 	}
 

@@ -35,7 +35,7 @@ class AffiliateController extends BaseController
     {
         $baseQuery =
             Affiliate::select("status", "affiliate_approver_type", "organization_cached_profile.data as organization_profile",
-            "agency_cached_profile.data as agency_profile", "affiliate_approver", "affiliate_requester", "featured")
+            "agency_cached_profile.data as agency_profile", "affiliate_approver", "affiliate_requester")
             ->leftJoin("organization_cached_profile", function ($join) {
                 $join->on("organization_cached_profile.id", "=", "affiliate_approver")
                     ->orOn("organization_cached_profile.id", "=", "affiliate_requester");
