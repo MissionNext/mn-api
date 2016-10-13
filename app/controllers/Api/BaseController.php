@@ -480,20 +480,22 @@ class BaseController extends Controller
             }
         }
 
-        $this->validateProfileData($profileToValidate);
+        if (count($profileToValidate) > 0) {
+            $this->validateProfileData($profileToValidate);
 
-        foreach ($profileToValidate as $profileKey => $profileValue) {
-            $fileField = $this->fieldRepo()->modelFields()->where('symbol_key', $profileKey)->first();
-            $this->fieldRepo()->profileFields($user)->detach($fileField->id, true);
-            $file = $profileValue['value'];
-            $fileName = $this->securityContext()->role().$user->id."_".$profileKey.".".$file->getClientOriginalExtension();
-            $file->move(public_path()."/uploads", $fileName );
-            $this->fieldRepo()->profileFields($user)->attach($fileField->id, ["value" => $fileName]);
-            $fileFields[] = $profileKey;
-        }
+            foreach ($profileToValidate as $profileKey => $profileValue) {
+                $fileField = $this->fieldRepo()->modelFields()->where('symbol_key', $profileKey)->first();
+                $this->fieldRepo()->profileFields($user)->detach($fileField->id, true);
+                $file = $profileValue['value'];
+                $fileName = $this->securityContext()->role().$user->id."_".$profileKey.".".$file->getClientOriginalExtension();
+                $file->move(public_path()."/uploads", $fileName );
+                $this->fieldRepo()->profileFields($user)->attach($fileField->id, ["value" => $fileName]);
+                $fileFields[] = $profileKey;
+            }
 
-        foreach ($fileFields as $unsetField) {
-            unset($profileData[$unsetField]);
+            foreach ($fileFields as $unsetField) {
+                unset($profileData[$unsetField]);
+            }
         }
 
         return $profileData;
