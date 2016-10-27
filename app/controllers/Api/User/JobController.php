@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Request;
 use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Job\Job;
+use MissionNext\Models\Matching\Results;
 use MissionNext\Models\Observers\UserObserver;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
@@ -140,6 +141,7 @@ class JobController extends BaseController
             throw new UserException("Can't delete job, owner invalid");
         }
         $user->delete();
+        Results::where('user_id', $user->id)->orWhere('for_user_id', $user->id)->delete();
 
         return new RestResponse($user);
     }
