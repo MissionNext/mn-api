@@ -15,6 +15,7 @@ use MissionNext\Models\EloquentObservable;
 use MissionNext\Models\Favorite\Favorite;
 use MissionNext\Models\Inquire\Inquire;
 use MissionNext\Models\Job\Job;
+use MissionNext\Models\Matching\Results;
 use MissionNext\Models\ModelInterface;
 use MissionNext\Models\ModelObservable;
 use MissionNext\Models\Notes\Notes;
@@ -506,9 +507,12 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
         if ($organization_flag && count($this->jobs)) {
             foreach ($this->jobs as $job) {
+                Results::where('user_id', $job->id)->orWhere('for_user_id', $job->id)->delete();
                 $job->delete();
             }
         }
+
+        Results::where('user_id', $user_id)->orWhere('for_user_id', $user_id)->delete();
 
         $ch = curl_init(Config::get('app.wp_remote_url').'/wp-admin/admin-ajax.php?action=user_deleting_function&'
             .'&username='.$this->getUsername().'&secret='.md5('Secret key for deleting wp user.'));
