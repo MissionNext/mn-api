@@ -317,6 +317,8 @@ class BaseController extends Controller
             return $user;
         }
 
+        $profileData = $this->uploadFiles($user, $profileData);
+
         $fields = $this->validateProfileData($profileData, $saveLater);
 
         $user->touch();
@@ -352,12 +354,6 @@ class BaseController extends Controller
                 foreach ($map['value'] as $k => $val) {
                     $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $val, "dictionary_id" => $map['dictionary_id'][$k] ? : null]);
                 }
-            } elseif( $map['value'] instanceof UploadedFile) {
-                /** @var  $file UploadedFile  */
-                $file = $map['value'];
-                $fileName = $this->securityContext()->role().$user->id."_".$sKeys[$key].".".$file->getClientOriginalExtension();
-                $file->move(public_path()."/uploads", $fileName );
-                $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $fileName]);
             } else{
                 $this->fieldRepo()->profileFields($user)->attach($key, $map);
             }
@@ -473,5 +469,35 @@ class BaseController extends Controller
             return new RestResponse($result);
         }
         return new RestResponse([]);
+    }
+
+    private function uploadFiles($user, $profileData) {
+        $fileFields = [];
+        $profileToValidate = [];
+        foreach ($profileData as $profileKey => $profileValue) {
+            if ($profileValue['value'] instanceof UploadedFile) {
+                $profileToValidate[$profileKey] = $profileValue;
+            }
+        }
+
+        if (count($profileToValidate) > 0) {
+            $this->validateProfileData($profileToValidate);
+
+            foreach ($profileToValidate as $profileKey => $profileValue) {
+                $fileField = $this->fieldRepo()->modelFields()->where('symbol_key', $profileKey)->first();
+                $this->fieldRepo()->profileFields($user)->detach($fileField->id, true);
+                $file = $profileValue['value'];
+                $fileName = $this->securityContext()->role().$user->id."_".$profileKey.".".$file->getClientOriginalExtension();
+                $file->move(public_path()."/uploads", $fileName );
+                $this->fieldRepo()->profileFields($user)->attach($fileField->id, ["value" => $fileName]);
+                $fileFields[] = $profileKey;
+            }
+
+            foreach ($fileFields as $unsetField) {
+                unset($profileData[$unsetField]);
+            }
+        }
+
+        return $profileData;
     }
 } 
