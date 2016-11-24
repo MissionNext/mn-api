@@ -14,6 +14,7 @@ use MissionNext\Helpers\Language;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\Language\LanguageModel;
+use MissionNext\Models\Matching\Results;
 use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Models\User\ExtendedUser;
 use MissionNext\Models\User\User;
@@ -191,8 +192,24 @@ class UserController extends AdminBaseController
     {
         $isActive = $isActive  === 'enable' ? true : false;
 
-        User::find($userId)->appsStatuses()->updateExistingPivot($appId, ['is_active' => $isActive]);
+        if (!$isActive) {
+            $user = User::find($userId);
+            $jobs = $user->jobs()->where('app_id', $appId)->get();
+            foreach ($jobs as $jobItem) {
+                Results::where('user_type', 'job')
+                    ->where('user_id', $jobItem->id)
+                    ->orWhere('for_user_type', 'job')
+                    ->where('for_user_id', $jobItem->id)->delete();
+            }
+            Results::where('app_id', $appId)
+                ->where('user_type', $user->role())
+                ->where('user_id', $user->id)
+                ->orWhere('for_user_type', $user->role())
+                ->where('for_user_id', $user->id)
+                ->where('app_id', $appId)->delete();
+        }
 
+        User::find($userId)->appsStatuses()->updateExistingPivot($appId, ['is_active' => $isActive]);
 
         return Response::json(["is_active" =>  User::find($userId)->isActiveInApp(Application::find($appId)) ]);
     }
