@@ -10,6 +10,7 @@ use MissionNext\Api\Service\Matching\CandidateOrganizations as MatchCanOrgs;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Api\Service\Matching\Matching as ServiceMatching;
 use MissionNext\Models\Matching\Results;
+use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\FormGroup\FormGroupRepository;
@@ -123,8 +124,8 @@ abstract class QueueMatching
 
                 if (in_array($data['role'], [BaseDataModel::ORGANIZATION, BaseDataModel::JOB])) {
                     $user = User::find($organization_id);
-
-                    if ($user->isActive() && $user->isActiveInApp($this->securityContext()->getApp())) {
+                    $subscription = $user->subscriptions()->where('app_id', $app_id)->first();
+                    if ($user->isActive() && $user->isActiveInApp($this->securityContext()->getApp()) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED) {
                         $tempMatchData[] = $data;
                     }
                 } else {

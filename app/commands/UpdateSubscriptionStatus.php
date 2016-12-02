@@ -69,6 +69,21 @@ class UpdateSubscriptionStatus extends Command
                    } elseif ($absDaysLeft > $gracePeriod) {
                        $subscription->status = Subscription::STATUS_EXPIRED;
 
+                       /* Delete matching results for subscription's owner */
+                       $user = $subscription->user()->first();
+                       $app = $subscription->app()->first();
+                       $jobs = $user->jobs()->where('app_id', $app->id)->get();
+                       foreach ($jobs as $jobItem) {
+                           \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
+                               ->where('user_id', $jobItem->id)
+                               ->orWhere('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
+                               ->where('for_user_id', $jobItem->id)->delete();
+                       }
+                       \MissionNext\Models\Matching\Results::where('app_id', $app->id)
+                           ->where(function($query) use ($user) {
+                               $query->where('user_id', $user->id)
+                                   ->orWhere('for_user_id', $user->id);
+                           })->delete();
                    }
                    $subscription->save();
                }
