@@ -16,3 +16,4 @@ Artisan::add(new ProfileUpdateCache);
 Artisan::add(new SetUserAppStatuses);
 Artisan::add(new UpdateSubscriptionStatus());
 Artisan::add(new RemovedMatchingResults);
+Artisan::add(new RemoveMatchingResultsForInactiveOrganization());

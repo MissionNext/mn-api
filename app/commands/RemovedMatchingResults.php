@@ -38,12 +38,15 @@ class RemovedMatchingResults extends Command {
 	public function fire()
 	{
         // Delete matching results for unexisting jobs
-		\MissionNext\Models\Matching\Results::where('user_type', 'job')->whereRaw('user_id NOT IN (SELECT id FROM jobs)')->delete();
-        \MissionNext\Models\Matching\Results::where('for_user_type', 'job')->whereRaw('for_user_id NOT IN (SELECT id FROM jobs)')->delete();
+		\MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)->whereRaw('user_id NOT IN (SELECT id FROM jobs)')->delete();
+        \MissionNext\Models\Matching\Results::where('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)->whereRaw('for_user_id NOT IN (SELECT id FROM jobs)')->delete();
+        $this->info("Mathing results of jobs for nonexistent users deleted successfully.");
 
         // Delete matching results for users
         \MissionNext\Models\Matching\Results::whereRaw('user_id NOT IN (SELECT id FROM users)')->delete();
         \MissionNext\Models\Matching\Results::whereRaw('for_user_id NOT IN (SELECT id FROM users)')->delete();
+        $this->info("Mathing results of nonexistent users deleted successfully.");
+
 	}
 
 	/**
