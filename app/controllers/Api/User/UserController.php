@@ -247,6 +247,29 @@ class UserController extends BaseController
         return new RestResponse($user);
     }
 
+    /**
+     * @return RestResponse
+     */
+    public function passwordReset()
+    {
+        $status = 'error';
+        $message = 'Error occured on password reset.';
+        $password = Request::input('password');
+        $username = Request::input('username');
+        $user = $this->userRepo()->getModel()->with('roles')->whereUsername($username)->first();
+        if($user){
+            $user->setPassword($password);
+            $user->save();
+            $status = 'success';
+            $message = 'Password reseted successfully.';
+        }
+
+        return new RestResponse([
+            'status'    => $status,
+            'message'   => $message
+        ]);
+    }
+
     public function deactivateUser($id)
     {
         $user = $this->userRepo()->find($id);

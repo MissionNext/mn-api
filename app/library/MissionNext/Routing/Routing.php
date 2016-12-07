@@ -131,6 +131,7 @@ class Routing
             Route::group(array('prefix' => static::RESOURCE_USER), function () {
                 Route::post('find', UserController::class.'@find');
                 Route::post('check', UserController::class.'@check');
+                Route::post('password/reset', UserController::class.'@passwordReset');
             });
 
 
