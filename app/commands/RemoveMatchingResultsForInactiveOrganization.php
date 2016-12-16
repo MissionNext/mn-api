@@ -37,6 +37,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
 	 */
 	public function fire()
 	{
+	    $this->info('Delete matching results for organization.');
         $matchesForUser = \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::ORGANIZATION)->get();
         foreach ($matchesForUser as $result) {
             $user = \MissionNext\Models\User\User::find($result->user_id);
@@ -64,6 +65,28 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                         ->orWhere('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
                         ->where('for_user_id', $jobItem->id)->delete();
                 }
+                $result->delete();
+                $this->info('Matching results successfully deleted for user '.$user->id);
+            }
+        }
+
+        $this->info('Delete matching results for other user roles.');
+        $matchesForUser = \MissionNext\Models\Matching\Results::where('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::CANDIDATE)
+                                                            ->orWhere('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::AGENCY)->get();
+        foreach ($matchesForUser as $result) {
+            $user = \MissionNext\Models\User\User::find($result->for_user_id);
+            if (!$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
+                $result->delete();
+                $this->info('Matching results successfully deleted for user '.$user->id);
+            }
+        }
+
+        $this->info('Delete matching results for other user roles.');
+        $matchesForUser = \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::CANDIDATE)
+                                                        ->orWhere('user_type', \MissionNext\Models\DataModel\BaseDataModel::AGENCY)->get();
+        foreach ($matchesForUser as $result) {
+            $user = \MissionNext\Models\User\User::find($result->user_id);
+            if (!$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
                 $result->delete();
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
