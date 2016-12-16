@@ -41,15 +41,20 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
         $matchesForUser = \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::ORGANIZATION)->get();
         foreach ($matchesForUser as $result) {
             $user = \MissionNext\Models\User\User::find($result->user_id);
-            if (!$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
+
+            if ($user && !$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
                 $jobs = $user->jobs()->where('app_id', $result->app_id)->get();
-                foreach ($jobs as $jobItem) {
-                    \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
-                        ->where('user_id', $jobItem->id)
-                        ->orWhere('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
-                        ->where('for_user_id', $jobItem->id)->delete();
+                if ($jobs->count() > 0) {
+                    foreach ($jobs as $jobItem) {
+                        \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
+                            ->where('user_id', $jobItem->id)
+                            ->orWhere('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
+                            ->where('for_user_id', $jobItem->id)->delete();
+                    }
                 }
-                $result->delete();
+                \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
+                                                    where('user_id', $result->user_id)->
+                                                    where('for_user_id', $result->for_user_id)->delete();
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -57,7 +62,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
         $matchesForUser = \MissionNext\Models\Matching\Results::where('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::ORGANIZATION)->get();
         foreach ($matchesForUser as $result) {
             $user = \MissionNext\Models\User\User::find($result->for_user_id);
-            if (!$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
+            if ($user && !$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
                 $jobs = $user->jobs()->where('app_id', $result->app_id)->get();
                 foreach ($jobs as $jobItem) {
                     \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
@@ -65,7 +70,9 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                         ->orWhere('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::JOB)
                         ->where('for_user_id', $jobItem->id)->delete();
                 }
-                $result->delete();
+                \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
+                                                where('user_id', $result->user_id)->
+                                                where('for_user_id', $result->for_user_id)->delete();
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -75,8 +82,10 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                                                             ->orWhere('for_user_type', \MissionNext\Models\DataModel\BaseDataModel::AGENCY)->get();
         foreach ($matchesForUser as $result) {
             $user = \MissionNext\Models\User\User::find($result->for_user_id);
-            if (!$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
-                $result->delete();
+            if ($user && !$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
+                \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
+                                                where('user_id', $result->user_id)->
+                                                where('for_user_id', $result->for_user_id)->delete();
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -86,8 +95,10 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                                                         ->orWhere('user_type', \MissionNext\Models\DataModel\BaseDataModel::AGENCY)->get();
         foreach ($matchesForUser as $result) {
             $user = \MissionNext\Models\User\User::find($result->user_id);
-            if (!$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
-                $result->delete();
+            if ($user && !$user->isActiveInApp(\MissionNext\Models\Application\Application::find($result->app_id))) {
+                \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
+                                                where('user_id', $result->user_id)->
+                                                where('for_user_id', $result->for_user_id)->delete();
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
