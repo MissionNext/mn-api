@@ -212,7 +212,6 @@
                 sub.app.is_active = !sub.app.is_active;
             };
             $scope.modalShown = !$scope.modalShown;
-            $scope.modalDelete = !$scope.modalDelete;
         };
 
         $scope.toggleModalCancelSub = function(sub){
