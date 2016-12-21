@@ -37,7 +37,6 @@ class InsertQueue
 
             $insertData = [];
             $deleteIds = [];
-            $deleteOppositeIds = [];
             $insertOppositeData = [];
             $k = 0;
             foreach($matchingData as $match){
@@ -67,11 +66,10 @@ class InsertQueue
                 $insertOppositeData[$k]['created_at'] = $dateTime;
                 $insertOppositeData[$k]['updated_at'] = $dateTime;
 
-                $deleteOppositeIds[] = $userId;
                 $k++;
             }
 
-            Results::where('app_id', $app_id)->where('user_id', $match['id'])->whereIn('for_user_id', $deleteOppositeIds)->delete();
+            Results::where('app_id', $app_id)->where('for_user_id', $userId)->whereIn('user_id', $deleteIds)->delete();
             Results::where('app_id', $app_id)->where('user_id', $userId)->whereIn('for_user_id', $deleteIds)->delete();
 
             Results::insert($insertData);
