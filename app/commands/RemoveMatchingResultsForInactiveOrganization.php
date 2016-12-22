@@ -37,6 +37,8 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
 	 */
 	public function fire()
 	{
+        ini_set('memory_limit', '1024M');
+
 	    $this->info('Delete matching results for organization.');
         $matchesForUser = \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::ORGANIZATION)->get();
         foreach ($matchesForUser as $result) {
