@@ -19,7 +19,7 @@ Dashboard. User Profile
                  <td>{{ $user['created_at']  }}</td>
              </tr>
          </thead>
-
+		<!-- str_replace commands added by Nelson Dec-16-2016 -->
          @foreach($sortedKeys as $item)
              @if ((is_string($user['profileData'][$item]) && !empty($user['profileData'][$item])) || (is_array($user['profileData'][$item]) && count($user['profileData'][$item]) > 0))
                  <tr>
@@ -30,14 +30,14 @@ Dashboard. User Profile
                                     {{ $user['profileData'][$item] }}
                                 </a>
                             @else
-                                {{ $user['profileData'][$item] }}
+                                {{ $item_val = str_replace("(!)","",$user['profileData'][$item]); $item_val }} 
                             @endif
                         @elseif (count($user['profileData'][$item]) > 1)
                             @foreach ($user['profileData'][$item] as $val)
-                                <li>{{ $val }}</li>
+                                <li>{{ $val = str_replace("(!)","",$val); $val }}</li>
                             @endforeach
                         @else
-                          {{ current($user['profileData'][$item]) }}
+                          {{ $item_val = str_replace("(!)","",current($user['profileData'][$item])); $item_val }} 
                         @endif
                     </td>
                  </tr>
