@@ -10,6 +10,7 @@ use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Favorite\Favorite;
 use MissionNext\Models\Notes\Notes;
+use MissionNext\Models\User\User;
 
 /**
  * Class Favourite Controller
@@ -50,12 +51,17 @@ class Controller extends BaseController {
             ->get();
 
         foreach($data as $key => $row){
-            $data[$key]['data'] = json_decode($row['data']);
-
             if ($role === BaseDataModel::JOB) {
+                $data[$key]['data'] = json_decode($row['data']);
+
                 $data[$key]['data']->organization = json_decode($row['organization']);
                 unset($data[$key]['organization']);
+            } elseif (User::find($row['target_id'])->isActiveInApp($this->securityContext()->getApp())) {
+                $data[$key]['data'] = json_decode($row['data']);
+            } else {
+                unset($data[$key]);
             }
+
         }
 
         return new RestResponse($data);

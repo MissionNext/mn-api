@@ -15,6 +15,7 @@ use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Api\Exceptions\SearchProfileException;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\AppDataModel;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Favorite\Favorite;
 use MissionNext\Models\Field\Candidate;
 use MissionNext\Models\Field\FieldType;
@@ -107,8 +108,7 @@ class SearchController extends BaseController
             if (count($expandedFields)) {
                 $expandedFields = array_fetch($expandedFields, 'symbol_key');
             }
-            //  dd($expandedFields);
-            //  dd($profileSearch);
+
             foreach ($profileSearch as $fieldName => $value) {
 
                 if (is_array($value)) {
@@ -167,11 +167,13 @@ class SearchController extends BaseController
 
         $result =  array_map(function ($d) {
             $data           = json_decode($d->data);
-            $data->notes    = $d->notes;
-            $data->folder   = $d->foldername;
-            $data->favorite = $d->favorite;
-            $data->org_name = $d->org_name;
-            return  new \ArrayObject($data);
+            if (BaseDataModel::JOB == $data->role || BaseDataModel::JOB != $data->role && User::find($data->id)->isActiveInApp($this->securityContext()->getApp())) {
+                $data->notes    = $d->notes;
+                $data->folder   = $d->foldername;
+                $data->favorite = $d->favorite;
+                $data->org_name = $d->org_name;
+                return  new \ArrayObject($data);
+            }
         }, DB::select($query, $bindings));
 
         return new RestResponse( (new TransData($this->getToken()->language(), $searchType, $result))->get() );
