@@ -165,16 +165,19 @@ class SearchController extends BaseController
         }
         $query .= " ) LIMIT 500";
 
-        $result =  array_map(function ($d) {
-            $data           = json_decode($d->data);
-            if (BaseDataModel::JOB == $data->role || BaseDataModel::JOB != $data->role && User::find($data->id)->isActiveInApp($this->securityContext()->getApp())) {
-                $data->notes    = $d->notes;
-                $data->folder   = $d->foldername;
-                $data->favorite = $d->favorite;
-                $data->org_name = $d->org_name;
-                return  new \ArrayObject($data);
+        $resultList = DB::select($query, $bindings);
+        $result = [];
+        foreach ($resultList as $resultItem) {
+            $data           = json_decode($resultItem->data);
+            $target_id = (BaseDataModel::JOB == $data->role) ? $data->organization_id : $data->id;
+            if (User::find($target_id)->isActiveInApp($this->securityContext()->getApp())) {
+                $data->notes    = $resultItem->notes;
+                $data->folder   = $resultItem->foldername;
+                $data->favorite = $resultItem->favorite;
+                $data->org_name = $resultItem->org_name;
+                $result[] = new \ArrayObject($data);
             }
-        }, DB::select($query, $bindings));
+        }
 
         return new RestResponse( (new TransData($this->getToken()->language(), $searchType, $result))->get() );
 

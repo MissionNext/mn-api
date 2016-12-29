@@ -51,12 +51,15 @@ class Controller extends BaseController {
             ->get();
 
         foreach($data as $key => $row){
-            if ($role === BaseDataModel::JOB) {
-                $data[$key]['data'] = json_decode($row['data']);
+            $dataObject = json_decode($row['data']);
+            $targetUserId = ($role == BaseDataModel::JOB) ? $dataObject->organization->id : $row['target_id'];
+
+            if ($role == BaseDataModel::JOB && User::find($targetUserId)->isActiveInApp($this->securityContext()->getApp())) {
+                $data[$key]['data'] = $dataObject;
 
                 $data[$key]['data']->organization = json_decode($row['organization']);
                 unset($data[$key]['organization']);
-            } elseif (User::find($row['target_id'])->isActiveInApp($this->securityContext()->getApp())) {
+            } elseif ($role != BaseDataModel::JOB && User::find($targetUserId)->isActiveInApp($this->securityContext()->getApp())) {
                 $data[$key]['data'] = json_decode($row['data']);
             } else {
                 unset($data[$key]);
