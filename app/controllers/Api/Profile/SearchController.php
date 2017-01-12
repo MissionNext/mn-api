@@ -15,6 +15,7 @@ use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Api\Exceptions\SearchProfileException;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\DataModel\AppDataModel;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Favorite\Favorite;
 use MissionNext\Models\Field\Candidate;
 use MissionNext\Models\Field\FieldType;
@@ -164,6 +165,20 @@ class SearchController extends BaseController
             throw new SearchProfileException("No search params specified");
         }
         $query .= " ) LIMIT 500";
+
+        /*$results = DB::select($query, $bindings);
+        $searchArray = [];
+        foreach ($results as $resultItem) {
+            $data = json_decode($resultItem->data);
+            if (in_array($data['role'], [BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, BaseDataModel::AGENCY])) {
+                $user = User::find($data['id']);
+                if ($user && $user->isActiveInApp($this->securityContext()->getApp())) {
+                    $searchArray[] = $resultItem;
+                }
+            } else {
+                $searchArray[] = $resultItem;
+            }
+        }*/
 
         $result =  array_map(function ($d) {
             $data           = json_decode($d->data);
