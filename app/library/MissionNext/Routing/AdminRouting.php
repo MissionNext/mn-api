@@ -26,6 +26,11 @@ class AdminRouting
     {
         $this->router = $App->make('router');
 
+        Route::get('rematch/user', array(
+            'as'    => 'rematchSingleUser',
+            'uses'  => Server::class.'@rematch'
+        ));
+
         Route::get('deploy/{server}', array(
             'as'        => 'deployAction',
             'uses'      => Server::class.'@deploy'
