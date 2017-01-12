@@ -122,6 +122,8 @@ abstract class QueueMatching
                     $organization_id = $data['id'];
                 }
 
+                $this->clearCache($userId, $organization_id);
+
                 if (in_array($data['role'], [BaseDataModel::ORGANIZATION, BaseDataModel::JOB])) {
                     $user = User::find($organization_id);
                     $subscription = $user->subscriptions()->where('app_id', $app_id)->first();
