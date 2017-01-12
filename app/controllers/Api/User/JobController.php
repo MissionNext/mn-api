@@ -178,7 +178,9 @@ class JobController extends BaseController
         $output = [];
         foreach($jobs as $job){
             $jobCache = (new UserCachedRepository(BaseDataModel::JOB))->where('id', $job['id'])->get();
-            $output[] = json_decode($jobCache[0]['data']);
+            if (isset($jobCache[0])) {
+                $output[] = json_decode($jobCache[0]['data']);
+            }
         }
 
         return new RestResponse($output);
