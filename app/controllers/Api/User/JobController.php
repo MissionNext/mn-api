@@ -173,7 +173,7 @@ class JobController extends BaseController
      * @return RestResponse
      */
     public function findByOrgId($organizationId){
-        $jobs = $this->jobRepo()->getModel()->where('organization_id', $organizationId)->get();
+        $jobs = $this->jobRepo()->getModel()->where('organization_id', $organizationId)->where('app_id', $this->securityContext()->getApp()->id())->get();
 
         $output = [];
         foreach($jobs as $job){
