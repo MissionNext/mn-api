@@ -62,7 +62,7 @@
                     <tr class="sub-<% user.general_status %>" current-page="pagination.current" total-items="totalUsers" dir-paginate="user in users
                         | itemsPerPage: itemsPerPage">
                         <td><% ($index + 1) + (itemsPerPage * (pagination.current - 1))%></td>
-                        <td><a href="user#/<% user.id %>"><% user.username %></a></td>
+                        <td><a href="user#/<% user.id %>" title="<% user.id %>"><% user.username %></a></td>
                         <td><% user.email %></td>
                         <td>
                             <span class="glyphicon <% user.status == 1 && 'glyphicon-warning-sign'%>
