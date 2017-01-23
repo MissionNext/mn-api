@@ -53,7 +53,7 @@ class InsertQueue
 
                 $deleteIds[] = $match['id'];
 
-                $mainData['results'] = $match['results'];
+                $mainData['results'] = $match['opposite_results'];
                 $mainData['matching_percentage'] = $match['matching_percentage'];
 
                 $insertOppositeData[$k]['user_type'] = $forUserType;
