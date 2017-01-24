@@ -522,9 +522,12 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
         Results::where('user_id', $user_id)->orWhere('for_user_id', $user_id)->delete();
 
+        $certificate = app_path().'/config/COMODORSACertificationAuthority.crt';
         $ch = curl_init(Config::get('app.wp_remote_url').'/wp-admin/admin-ajax.php?action=user_deleting_function&'
             .'&username='.$this->getUsername().'&secret='.md5('Secret key for deleting wp user.'));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_CAINFO, $certificate);
         $data = $this->curl_exec_follow($ch);
         curl_close($ch);
 
