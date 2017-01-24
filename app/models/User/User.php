@@ -8,9 +8,13 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Application\Application;
+use MissionNext\Models\CacheData\UserCachedData;
+use MissionNext\Models\CacheData\UserCachedDataTrans;
+use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\EloquentObservable;
 use MissionNext\Models\Favorite\Favorite;
 use MissionNext\Models\Inquire\Inquire;
@@ -511,6 +515,10 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
                 $job->delete();
             }
         }
+
+        UserCachedData::table($this->role())->where('id', $this->id)->delete();
+        UserCachedDataTrans::table($this->role())->where('id', $this->id)->delete();
+        DB::table($this->role().'_profile')->where('user_id', $this->id)->delete();
 
         Results::where('user_id', $user_id)->orWhere('for_user_id', $user_id)->delete();
 
