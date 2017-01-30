@@ -16,6 +16,7 @@ use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\User\JobRepository;
 use MissionNext\Repos\User\JobRepositoryInterface;
+use MissionNext\Repos\User\ProfileRepositoryFactory;
 
 /**
  * Class JobController
@@ -85,7 +86,23 @@ class JobController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $job = $this->jobRepo()->findOrFail($id);
+        $job->setObserver(new UserObserver());
+        $job->addApp($this->getApp());
+
+        $request = Request::instance();
+        $hash = $request->query->all();
+
+        $fields = $this->fieldRepo()->modelFields()->where('symbol_key', $hash['field_name'])->get();
+        $this->fieldRepo()->profileFields($job)->detach($fields[0]->id, true);
+
+        $filename = public_path().'/uploads/job'.$id.'_'.$hash['field_name'].'.pdf';
+        unlink($filename);
+
+        $jobRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
+        $jobRepo->addUserCachedData($job);
+
+        return new RestResponse(["status" => "success", "message" => "File deleted successfully."]);
     }
 
 }
