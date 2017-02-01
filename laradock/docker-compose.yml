@@ -16,15 +16,15 @@ services:
         build:
             context: ./workspace
             args:
-                - INSTALL_XDEBUG=false
+                - INSTALL_XDEBUG=true
                 - INSTALL_MONGO=false
                 - INSTALL_NODE=false
                 - INSTALL_YARN=false
                 - INSTALL_DRUSH=false
-                - INSTALL_AEROSPIKE_EXTENSION=false
+                - INSTALL_AEROSPIKE_EXTENSION=true
                 - INSTALL_V8JS_EXTENSION=false
                 - COMPOSER_GLOBAL_INSTALL=false
-                - INSTALL_WORKSPACE_SSH=false
+                - INSTALL_WORKSPACE_SSH=true
                 - INSTALL_LARAVEL_ENVOY=false
                 - INSTALL_LINUXBREW=false
                 - PUID=1000
@@ -47,7 +47,7 @@ services:
         build:
             context: ./php-fpm
             args:
-                - INSTALL_XDEBUG=false
+                - INSTALL_XDEBUG=true
                 - INSTALL_SOAP=false
                 - INSTALL_MONGO=false
                 - INSTALL_ZIP_ARCHIVE=false
@@ -56,7 +56,7 @@ services:
                 - INSTALL_MEMCACHED=false
                 - INSTALL_OPCACHE=false
                 - INSTALL_EXIF=false
-                - INSTALL_AEROSPIKE_EXTENSION=false
+                - INSTALL_AEROSPIKE_EXTENSION=true
                 - CODEIGNITER=false
             dockerfile: Dockerfile-56
         volumes_from:
