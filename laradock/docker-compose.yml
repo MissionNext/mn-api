@@ -7,8 +7,8 @@ services:
     applications:
         image: tianon/true
         volumes:
-            - ../:/var/www
-#            - ../sample/:/var/www/sample
+            - ../:/var/www/
+#            - ../../missionnextwp:/var/www/wordpress
 
 ### Workspace Utilities Container ###########################
 
@@ -124,7 +124,7 @@ services:
         build:
             context: ./mysql
             args:
-                - MYSQL_DATABASE=homestead
+                - MYSQL_DATABASE=missionnext
                 - MYSQL_USER=homestead
                 - MYSQL_PASSWORD=secret
                 - MYSQL_ROOT_PASSWORD=root
