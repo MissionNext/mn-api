@@ -1,0 +1,12 @@
+2017/02/03 08:27:42 [error] 8#8: *45 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Class 'mysqli' not found in /var/www/wordpress/info.php on line 7
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/info.php:0" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /info.php HTTP/1.1", upstream: "fastcgi://172.20.0.6:9000", host: "missionwp.dev"
+2017/02/03 08:28:02 [error] 7#7: *47 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Class 'mysqli' not found in /var/www/wordpress/info.php on line 7
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/info.php:0" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /info.php HTTP/1.1", upstream: "fastcgi://172.20.0.6:9000", host: "missionwp.dev"
+2017/02/03 08:28:15 [error] 7#7: *47 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Class 'mysqli' not found in /var/www/wordpress/info.php on line 7
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/info.php:0" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /info.php HTTP/1.1", upstream: "fastcgi://172.20.0.6:9000", host: "missionwp.dev"
+2017/02/03 08:28:46 [error] 8#8: *50 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Class 'mysqli' not found in /var/www/wordpress/info.php on line 7
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/info.php:0" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /info.php HTTP/1.1", upstream: "fastcgi://172.20.0.6:9000", host: "missionwp.dev"

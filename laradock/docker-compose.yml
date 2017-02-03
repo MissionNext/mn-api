@@ -7,8 +7,8 @@ services:
     applications:
         image: tianon/true
         volumes:
-            - ../:/var/www/
-#            - ../../missionnextwp:/var/www/wordpress
+            - ../:/var/www/api/
+            - ../../missionnextwp:/var/www/wordpress
 
 ### Workspace Utilities Container ###########################
 
