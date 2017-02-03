@@ -107,17 +107,6 @@ services:
         links:
             - php-fpm
 
-### HHVM Container ##########################################
-
-    hhvm:
-        build: ./hhvm
-        volumes_from:
-            - applications
-        expose:
-            - "9000"
-        links:
-            - workspace
-
 ### MySQL Container #########################################
 
     mysql:
@@ -132,20 +121,6 @@ services:
             - mysql:/var/lib/mysql
         ports:
             - "3306:3306"
-
-### MariaDB Container #######################################
-
-    mariadb:
-        build: ./mariadb
-        volumes:
-            - mariadb:/var/lib/mysql
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_DATABASE: homestead
-            MYSQL_USER: homestead
-            MYSQL_PASSWORD: secret
-            MYSQL_ROOT_PASSWORD: root
 
 ### PostgreSQL Container ####################################
 
@@ -173,45 +148,6 @@ services:
             POSTGRES_USER: homestead
             POSTGRES_PASSWORD: secret
 
-### Neo4j Container #########################################
-
-    neo4j:
-        build: ./neo4j
-        ports:
-            - "7474:7474"
-            - "1337:1337"
-        environment:
-            - NEO4J_AUTH=homestead:secret
-        volumes:
-            - neo4j:/var/lib/neo4j/data
-
-### MongoDB Container #######################################
-
-    mongo:
-        build: ./mongo
-        ports:
-            - "27017:27017"
-        volumes:
-            - mongo:/data/db
-
-### RethinkDB Container #######################################
-
-    rethinkdb:
-        build: ./rethinkdb
-        ports:
-            - "8090:8080"
-        volumes:
-            - rethinkdb:/data/rethinkdb_data
-
-### Redis Container #########################################
-
-    redis:
-        build: ./redis
-        volumes:
-            - redis:/data
-        ports:
-            - "6379:6379"
-
 ### Aerospike c Container ###################################
 
     aerospike:
@@ -226,18 +162,6 @@ services:
             - "3002:3002"
             - "3003:3003"
 
-
-### Memcached Container #####################################
-
-    memcached:
-        build: ./memcached
-        volumes:
-            - memcached:/var/lib/memcached
-        ports:
-            - "11211:11211"
-        links:
-            - php-fpm
-
 ### Beanstalkd Container ####################################
 
     beanstalkd:
@@ -245,21 +169,6 @@ services:
         ports:
             - "11300:11300"
         privileged: true
-        links:
-            - php-fpm
-
-### RabbitMQ Container ######################################
-
-    rabbitmq:
-        build: ./rabbitmq
-        ports:
-            - "5672:5672"
-            - "15671:15671"
-            - "8080:15672"
-        privileged: true
-        environment:
-            RABBITMQ_DEFAULT_USER: guest
-            RABBITMQ_DEFAULT_PASS: guest
         links:
             - php-fpm
 
@@ -271,22 +180,6 @@ services:
             - "2080:2080"
         links:
             - beanstalkd
-
-### Caddy Server Container ##################################
-
-    caddy:
-        build: ./caddy
-        ports:
-            - "80:80"
-            - "443:443"
-            - "2015:2015"
-        volumes_from:
-            - applications
-        volumes:
-            - ./caddy/Caddyfile:/etc/Caddyfile
-            - ./logs/caddy:/var/log/caddy
-        links:
-            - php-fpm
 
 ### phpMyAdmin Container ####################################
 
@@ -314,19 +207,6 @@ services:
         links:
             - postgres
 
-### ElasticSearch Container #################################
-
-    elasticsearch:
-        build: ./elasticsearch
-        volumes:
-            - elasticsearch-data:/usr/share/elasticsearch/data
-            - elasticsearch-plugins:/usr/share/elasticsearch/data
-        ports:
-            - "9200:9200"
-            - "9300:9300"
-        links:
-            - php-fpm
-
 ### Selenium Container #########################################
 
     selenium:
@@ -341,27 +221,9 @@ volumes:
         driver: "local"
     postgres:
         driver: "local"
-    memcached:
-        driver: "local"
-    redis:
-        driver: "local"
-    neo4j:
-        driver: "local"
-    mariadb:
-        driver: "local"
-    mongo:
-        driver: "local"
-    rethinkdb:
-        driver: "local"
     phpmyadmin:
         driver: "local"
     aerospike:
-        driver: "local"
-    caddy:
-        driver: "local"
-    elasticsearch-data:
-        driver: "local"
-    elasticsearch-plugins:
         driver: "local"
     sessions:    ## nothing is connected to this (- ./data/sessions:/sessions)
         driver: "local"
