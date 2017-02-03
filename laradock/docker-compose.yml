@@ -90,23 +90,6 @@ services:
         links:
             - php-fpm
 
-### Apache Server Container #################################
-
-    apache2:
-        build:
-            context: ./apache2
-            args:
-                - PHP_SOCKET=php-fpm:9000
-        volumes_from:
-            - applications
-        volumes:
-            - ./logs/apache2:/var/log/apache2
-        ports:
-            - "80:80"
-            - "443:443"
-        links:
-            - php-fpm
-
 ### MySQL Container #########################################
 
     mysql:
@@ -126,19 +109,6 @@ services:
 
     postgres:
         build: ./postgres
-        volumes:
-            - postgres:/var/lib/postgresql/data
-        ports:
-            - "5432:5432"
-        environment:
-            POSTGRES_DB: homestead
-            POSTGRES_USER: homestead
-            POSTGRES_PASSWORD: secret
-
-### PostgreSQL PostGis Container ############################
-
-    postgres-postgis:
-        build: ./postgres-postgis
         volumes:
             - postgres:/var/lib/postgresql/data
         ports:
@@ -181,23 +151,6 @@ services:
         links:
             - beanstalkd
 
-### phpMyAdmin Container ####################################
-
-    phpmyadmin:
-        build: ./phpmyadmin
-        environment:
-            PMA_ARBITRARY: 1
-            MYSQL_USER: homestead
-            MYSQL_PASSWORD: secret
-            MYSQL_ROOT_PASSWORD: root
-        ports:
-            - "8080:80"
-        links:
-            # for mysql container
-            - "mysql:db"
-            # for mariadb container
-            # - "mariadb:db"
-
 ### pgAdmin Container #######################################
 
     pgadmin:
@@ -220,8 +173,6 @@ volumes:
     mysql:
         driver: "local"
     postgres:
-        driver: "local"
-    phpmyadmin:
         driver: "local"
     aerospike:
         driver: "local"
