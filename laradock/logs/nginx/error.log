@@ -65,3 +65,122 @@ PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
 PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
 PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
 PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 19:58:06 [error] 8#8: *3 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 20:12:28 [error] 7#7: *1 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:12:30 [error] 7#7: *1 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:12:48 [error] 10#10: *4 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:34:31 [error] 10#10: *21 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysqli_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:45:51 [notice] 27#27: signal process started
+2017/02/06 20:46:11 [error] 30#30: *23 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysqli_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:46:31 [error] 30#30: *25 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:46:31 [error] 30#30: *28 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:47:52 [error] 8#8: *1 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 20:47:54 [error] 8#8: *3 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 20:47:58 [error] 8#8: *3 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 20:59:26 [error] 9#9: *14 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function pg_connect() in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
