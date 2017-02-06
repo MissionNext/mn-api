@@ -148,7 +148,13 @@ ARG CODEIGNITER=false
 RUN if [ ${CODEIGNITER} = true ]; then \
     # Install Codeigniter PHP extentions requirements
      docker-php-ext-install mysqli && \
+     docker-php-ext-install pgsql && \
      docker-php-ext-install tokenizer \
+;fi
+
+ARG CURL_EXTENSION=false
+RUN if [ ${CURL_EXTENSION} = true ]; then \
+    docker-php-ext-install curl \
 ;fi
 
 #

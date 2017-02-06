@@ -184,3 +184,123 @@ PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
 PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
 PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
 PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:05:20 [error] 10#10: *16 FastCGI sent in stderr: "PHP message: PHP Notice:  Theme without header.php is <strong>deprecated</strong> since version 3.0.0 with no alternative available. Please include a header.php template in your theme. in /var/www/wordpress/wp-includes/functions.php on line 3959
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. MissionNext\lib\core\Routing->check() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. MissionNext\lib\core\Routing->execute() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:67
+PHP message: PHP  10. MissionNext\lib\core\Routing->renderTemplate() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:103
+PHP message: PHP  11. include() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:137
+PHP message: PHP  12. get_header() /var/www/wordpress/wp-content/plugins/MissionNext/frontend/templates/layout.php:7
+PHP message: PHP  13. locate_template() /var/www/wordpress/wp-includes/general-template.php:45
+PHP message: PHP  14. load_template() /var/www/wordpress/wp-includes/template.php:643
+PHP message: PHP  15. require_once() /var/www/wordpress/wp-includes/template.php:684
+PHP message: PHP  16. _deprecated_file() /var/www/wordpress/wp-includes/theme-compat/header.php:16
+PHP message: PHP  17. trigger_error() /var/www/wordpress/wp-includes/functions.php:3959
+PHP
+2017/02/06 21:05:20 [error] 10#10: *16 upstream sent too big header while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /login?redirect_to=http%3A%2F%2Fmissionwp.dev%2Fwp-admin%2F HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:06:42 [error] 9#9: *22 FastCGI sent in stderr: "PHP message: PHP Notice:  Theme without header.php is <strong>deprecated</strong> since version 3.0.0 with no alternative available. Please include a header.php template in your theme. in /var/www/wordpress/wp-includes/functions.php on line 3959
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. MissionNext\lib\core\Routing->check() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. MissionNext\lib\core\Routing->execute() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:67
+PHP message: PHP  10. MissionNext\lib\core\Routing->renderTemplate() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:103
+PHP message: PHP  11. include() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:137
+PHP message: PHP  12. get_header() /var/www/wordpress/wp-content/plugins/MissionNext/frontend/templates/layout.php:7
+PHP message: PHP  13. locate_template() /var/www/wordpress/wp-includes/general-template.php:45
+PHP message: PHP  14. load_template() /var/www/wordpress/wp-includes/template.php:643
+PHP message: PHP  15. require_once() /var/www/wordpress/wp-includes/template.php:684
+PHP message: PHP  16. _deprecated_file() /var/www/wordpress/wp-includes/theme-compat/header.php:16
+PHP message: PHP  17. trigger_error() /var/www/wordpress/wp-includes/functions.php:3959
+PHP m
+2017/02/06 21:06:42 [error] 9#9: *22 upstream sent too big header while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /login?redirect_to=http%3A%2F%2Fmissionwp.dev%2Fwp-admin%2F HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:08:09 [error] 8#8: *26 FastCGI sent in stderr: "PHP message: PHP Notice:  Theme without header.php is <strong>deprecated</strong> since version 3.0.0 with no alternative available. Please include a header.php template in your theme. in /var/www/wordpress/wp-includes/functions.php on line 3959
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. MissionNext\lib\core\Routing->check() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. MissionNext\lib\core\Routing->execute() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:67
+PHP message: PHP  10. MissionNext\lib\core\Routing->renderTemplate() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:103
+PHP message: PHP  11. include() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:137
+PHP message: PHP  12. get_header() /var/www/wordpress/wp-content/plugins/MissionNext/frontend/templates/layout.php:7
+PHP message: PHP  13. locate_template() /var/www/wordpress/wp-includes/general-template.php:45
+PHP message: PHP  14. load_template() /var/www/wordpress/wp-includes/template.php:643
+PHP message: PHP  15. require_once() /var/www/wordpress/wp-includes/template.php:684
+PHP message: PHP  16. _deprecated_file() /var/www/wordpress/wp-includes/theme-compat/header.php:16
+PHP message: PHP  17. trigger_error() /var/www/wordpress/wp-includes/functions.php:3959
+PHP m
+2017/02/06 21:08:09 [error] 8#8: *26 upstream sent too big header while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /login?redirect_to=http%3A%2F%2Fmissionwp.dev%2Fwp-admin%2F HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:08:56 [error] 8#8: *29 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function pg_connect() in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:19:19 [error] 8#8: *3 FastCGI sent in stderr: "PHP message: PHP Warning:  pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;homestead&quot; in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425
+PHP message: PHP   7. pg_connect() /var/www/wordpress/wp-content/themes/Divi/functions.php:8772" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:19:28 [error] 9#9: *5 FastCGI sent in stderr: "PHP message: PHP Warning:  pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;homestead&quot; in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425
+PHP message: PHP   7. pg_connect() /var/www/wordpress/wp-content/themes/Divi/functions.php:8772" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /?wordfence_logHuman=1&hid=7AF7D024CA6F44E82D8E75AE633228B6&r=0.3708406264357407 HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev", referrer: "http://missionwp.dev/"
+2017/02/06 21:19:39 [error] 9#9: *5 FastCGI sent in stderr: "PHP message: PHP Warning:  pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;homestead&quot; in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin-ajax.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin-ajax.php:22
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include() /var/www/wordpress/wp-settings.php:425
+PHP message: PHP   6. pg_connect() /var/www/wordpress/wp-content/themes/Divi/functions.php:8772" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "POST /wp-admin/admin-ajax.php HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev", referrer: "http://missionwp.dev/"
+2017/02/06 21:25:31 [error] 9#9: *121 FastCGI sent in stderr: "PHP message: PHP Notice:  Trying to get property of non-object in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. redirect_canonical() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. apply_filters() /var/www/wordpress/wp-includes/canonical.php:506
+PHP message: PHP  10. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/plugin.php:203
+PHP message: PHP  11. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP  12. et_modify_canonical_redirect() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP Notice:  Trying to get property of non-object in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP 

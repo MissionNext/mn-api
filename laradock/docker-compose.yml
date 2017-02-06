@@ -58,6 +58,7 @@ services:
                 - INSTALL_EXIF=false
                 - INSTALL_AEROSPIKE_EXTENSION=true
                 - CODEIGNITER=true
+                - CURL_EXTENSION=true
             dockerfile: Dockerfile-56
         volumes_from:
             - applications
