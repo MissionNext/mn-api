@@ -152,10 +152,10 @@ RUN if [ ${CODEIGNITER} = true ]; then \
      docker-php-ext-install tokenizer \
 ;fi
 
-ARG CURL_EXTENSION=false
-RUN if [ ${CURL_EXTENSION} = true ]; then \
-    docker-php-ext-install curl \
-;fi
+#ARG CURL_EXTENSION=false
+#RUN if [ ${CURL_EXTENSION} = true ]; then \
+#    docker-php-ext-install curl \
+#;fi
 
 #
 #--------------------------------------------------------------------------
