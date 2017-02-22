@@ -1,0 +1,554 @@
+2017/02/03 08:27:42 [error] 8#8: *45 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Class 'mysqli' not found in /var/www/wordpress/info.php on line 7
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/info.php:0" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /info.php HTTP/1.1", upstream: "fastcgi://172.20.0.6:9000", host: "missionwp.dev"
+2017/02/03 08:28:02 [error] 7#7: *47 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Class 'mysqli' not found in /var/www/wordpress/info.php on line 7
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/info.php:0" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /info.php HTTP/1.1", upstream: "fastcgi://172.20.0.6:9000", host: "missionwp.dev"
+2017/02/03 08:28:15 [error] 7#7: *47 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Class 'mysqli' not found in /var/www/wordpress/info.php on line 7
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/info.php:0" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /info.php HTTP/1.1", upstream: "fastcgi://172.20.0.6:9000", host: "missionwp.dev"
+2017/02/03 08:28:46 [error] 8#8: *50 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Class 'mysqli' not found in /var/www/wordpress/info.php on line 7
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/info.php:0" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /info.php HTTP/1.1", upstream: "fastcgi://172.20.0.6:9000", host: "missionwp.dev"
+2017/02/03 14:47:42 [error] 10#10: *36 upstream timed out (110: Operation timed out) while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/03 14:54:22 [error] 9#9: *47 upstream timed out (110: Operation timed out) while reading response header from upstream, client: 172.20.0.1, server: api.dev, request: "GET /dashboard/user HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "api.dev", referrer: "http://api.dev/dashboard/administrator"
+2017/02/03 15:20:52 [error] 9#9: *21 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/03 15:26:18 [error] 9#9: *23 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP messa" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/03 15:26:18 [error] 9#9: *23 FastCGI sent in stderr: "ge: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/03 15:44:41 [error] 10#10: *15 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once(" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/03 15:44:41 [error] 10#10: *15 FastCGI sent in stderr: ") /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/03 15:44:43 [error] 10#10: *15 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once(" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/03 15:44:43 [error] 10#10: *15 FastCGI sent in stderr: ") /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/03 16:00:22 [error] 9#9: *19 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 19:58:06 [error] 8#8: *3 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 20:12:28 [error] 7#7: *1 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:12:30 [error] 7#7: *1 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:12:48 [error] 10#10: *4 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:34:31 [error] 10#10: *21 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysqli_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:45:51 [notice] 27#27: signal process started
+2017/02/06 20:46:11 [error] 30#30: *23 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysqli_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:46:31 [error] 30#30: *25 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:46:31 [error] 30#30: *28 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.3:9000", host: "missionwp.dev"
+2017/02/06 20:47:52 [error] 8#8: *1 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 20:47:54 [error] 8#8: *3 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 20:47:58 [error] 8#8: *3 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function mysql_connect() in /var/www/wordpress/wp-includes/wp-db.php on line 1568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. require_wp_db() /var/www/wordpress/wp-settings.php:107
+PHP message: PHP   7. wpdb->__construct() /var/www/wordpress/wp-includes/load.php:404
+PHP message: PHP   8. wpdb->db_connect() /var/www/wordpress/wp-includes/wp-db.php:658" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 20:59:26 [error] 9#9: *14 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function pg_connect() in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:05:20 [error] 10#10: *16 FastCGI sent in stderr: "PHP message: PHP Notice:  Theme without header.php is <strong>deprecated</strong> since version 3.0.0 with no alternative available. Please include a header.php template in your theme. in /var/www/wordpress/wp-includes/functions.php on line 3959
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. MissionNext\lib\core\Routing->check() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. MissionNext\lib\core\Routing->execute() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:67
+PHP message: PHP  10. MissionNext\lib\core\Routing->renderTemplate() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:103
+PHP message: PHP  11. include() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:137
+PHP message: PHP  12. get_header() /var/www/wordpress/wp-content/plugins/MissionNext/frontend/templates/layout.php:7
+PHP message: PHP  13. locate_template() /var/www/wordpress/wp-includes/general-template.php:45
+PHP message: PHP  14. load_template() /var/www/wordpress/wp-includes/template.php:643
+PHP message: PHP  15. require_once() /var/www/wordpress/wp-includes/template.php:684
+PHP message: PHP  16. _deprecated_file() /var/www/wordpress/wp-includes/theme-compat/header.php:16
+PHP message: PHP  17. trigger_error() /var/www/wordpress/wp-includes/functions.php:3959
+PHP
+2017/02/06 21:05:20 [error] 10#10: *16 upstream sent too big header while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /login?redirect_to=http%3A%2F%2Fmissionwp.dev%2Fwp-admin%2F HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:06:42 [error] 9#9: *22 FastCGI sent in stderr: "PHP message: PHP Notice:  Theme without header.php is <strong>deprecated</strong> since version 3.0.0 with no alternative available. Please include a header.php template in your theme. in /var/www/wordpress/wp-includes/functions.php on line 3959
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. MissionNext\lib\core\Routing->check() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. MissionNext\lib\core\Routing->execute() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:67
+PHP message: PHP  10. MissionNext\lib\core\Routing->renderTemplate() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:103
+PHP message: PHP  11. include() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:137
+PHP message: PHP  12. get_header() /var/www/wordpress/wp-content/plugins/MissionNext/frontend/templates/layout.php:7
+PHP message: PHP  13. locate_template() /var/www/wordpress/wp-includes/general-template.php:45
+PHP message: PHP  14. load_template() /var/www/wordpress/wp-includes/template.php:643
+PHP message: PHP  15. require_once() /var/www/wordpress/wp-includes/template.php:684
+PHP message: PHP  16. _deprecated_file() /var/www/wordpress/wp-includes/theme-compat/header.php:16
+PHP message: PHP  17. trigger_error() /var/www/wordpress/wp-includes/functions.php:3959
+PHP m
+2017/02/06 21:06:42 [error] 9#9: *22 upstream sent too big header while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /login?redirect_to=http%3A%2F%2Fmissionwp.dev%2Fwp-admin%2F HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:08:09 [error] 8#8: *26 FastCGI sent in stderr: "PHP message: PHP Notice:  Theme without header.php is <strong>deprecated</strong> since version 3.0.0 with no alternative available. Please include a header.php template in your theme. in /var/www/wordpress/wp-includes/functions.php on line 3959
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. MissionNext\lib\core\Routing->check() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. MissionNext\lib\core\Routing->execute() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:67
+PHP message: PHP  10. MissionNext\lib\core\Routing->renderTemplate() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:103
+PHP message: PHP  11. include() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Routing.php:137
+PHP message: PHP  12. get_header() /var/www/wordpress/wp-content/plugins/MissionNext/frontend/templates/layout.php:7
+PHP message: PHP  13. locate_template() /var/www/wordpress/wp-includes/general-template.php:45
+PHP message: PHP  14. load_template() /var/www/wordpress/wp-includes/template.php:643
+PHP message: PHP  15. require_once() /var/www/wordpress/wp-includes/template.php:684
+PHP message: PHP  16. _deprecated_file() /var/www/wordpress/wp-includes/theme-compat/header.php:16
+PHP message: PHP  17. trigger_error() /var/www/wordpress/wp-includes/functions.php:3959
+PHP m
+2017/02/06 21:08:09 [error] 8#8: *26 upstream sent too big header while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /login?redirect_to=http%3A%2F%2Fmissionwp.dev%2Fwp-admin%2F HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:08:56 [error] 8#8: *29 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Call to undefined function pg_connect() in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:19:19 [error] 8#8: *3 FastCGI sent in stderr: "PHP message: PHP Warning:  pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;homestead&quot; in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425
+PHP message: PHP   7. pg_connect() /var/www/wordpress/wp-content/themes/Divi/functions.php:8772" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev"
+2017/02/06 21:19:28 [error] 9#9: *5 FastCGI sent in stderr: "PHP message: PHP Warning:  pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;homestead&quot; in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:13
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   5. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   6. include() /var/www/wordpress/wp-settings.php:425
+PHP message: PHP   7. pg_connect() /var/www/wordpress/wp-content/themes/Divi/functions.php:8772" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /?wordfence_logHuman=1&hid=7AF7D024CA6F44E82D8E75AE633228B6&r=0.3708406264357407 HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev", referrer: "http://missionwp.dev/"
+2017/02/06 21:19:39 [error] 9#9: *5 FastCGI sent in stderr: "PHP message: PHP Warning:  pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;homestead&quot; in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8772
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin-ajax.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin-ajax.php:22
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include() /var/www/wordpress/wp-settings.php:425
+PHP message: PHP   6. pg_connect() /var/www/wordpress/wp-content/themes/Divi/functions.php:8772" while reading response header from upstream, client: 172.20.0.1, server: missionwp.dev, request: "POST /wp-admin/admin-ajax.php HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev", referrer: "http://missionwp.dev/"
+2017/02/06 21:25:31 [error] 9#9: *121 FastCGI sent in stderr: "PHP message: PHP Notice:  Trying to get property of non-object in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. redirect_canonical() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. apply_filters() /var/www/wordpress/wp-includes/canonical.php:506
+PHP message: PHP  10. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/plugin.php:203
+PHP message: PHP  11. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP  12. et_modify_canonical_redirect() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP Notice:  Trying to get property of non-object in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP 
+2017/02/07 21:55:21 [error] 10#10: *3 connect() failed (111: Connection refused) while connecting to upstream, client: 172.20.0.1, server: missionwp.dev, request: "POST /wp-admin/admin-ajax.php HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev", referrer: "http://missionwp.dev/wp-admin/admin.php?page=mission_next"
+2017/02/07 22:09:14 [error] 10#10: *27 upstream timed out (110: Operation timed out) while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "POST /wp-admin/admin-ajax.php HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev", referrer: "http://missionwp.dev/wp-admin/admin.php?page=mission_next"
+2017/02/07 22:13:16 [error] 8#8: *75 FastCGI sent in stderr: "PHP message: PHP Notice:  Trying to get property of non-object in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   7. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   8. redirect_canonical() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   9. apply_filters() /var/www/wordpress/wp-includes/canonical.php:506
+PHP message: PHP  10. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/plugin.php:203
+PHP message: PHP  11. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP  12. et_modify_canonical_redirect() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP Notice:  Trying to get property of non-object in /var/www/wordpress/wp-content/themes/Divi/functions.php on line 8568
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/index.php:0
+PHP message: PHP   2. require() /var/www/wordpress/index.php:17
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-blog-header.php:19
+PHP message: PHP   4. do_action() /var/www/wordpress/wp-includes/template-loader.php:12
+PHP message: PHP   5. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   6. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP m
+2017/02/07 22:14:42 [error] 10#10: *109 FastCGI sent in stderr: "PHP message: PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/wordpress/wp-content/plugins/MissionNext/backend/pages/tabs/config/ApiConnectionsConfigTab.php:28) in /var/www/wordpress/wp-includes/pluggable.php on line 1179
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. do_action() /var/www/wordpress/wp-admin/admin.php:154
+PHP message: PHP   3. WP_Hook->do_action() /var/www/wordpress/wp-includes/plugin.php:453
+PHP message: PHP   4. WP_Hook->apply_filters() /var/www/wordpress/wp-includes/class-wp-hook.php:323
+PHP message: PHP   5. call_user_func_array:{/var/www/wordpress/wp-includes/class-wp-hook.php:298}() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   6. MissionNext\backend\pages\AbstractTabSettingsPage->pageInit() /var/www/wordpress/wp-includes/class-wp-hook.php:298
+PHP message: PHP   7. MissionNext\backend\pages\tabs\config\ApiConnectionsConfigTab->initTab() /var/www/wordpress/wp-content/plugins/MissionNext/backend/pages/AbstractTabSettingsPage.php:32
+PHP message: PHP   8. MissionNext\backend\pages\tabs\config\ApiConnectionsConfigTab->save() /var/www/wordpress/wp-content/plugins/MissionNext/backend/pages/tabs/config/ApiConnectionsConfigTab.php:37
+PHP message: PHP   9. wp_redirect() /var/www/wordpress/wp-content/plugins/MissionNext/backend/pages/tabs/config/ApiConnectionsConfigTab.php:62
+PHP message: PHP  10. header() /var/www/wordpress/wp-includes/pluggable.php:1179" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "POST /wp-admin/admin.php?page=mission_next HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev", referrer: "http://missionwp.dev/wp-admin/admin.php?page=mission_next"
+2017/02/07 22:40:13 [error] 9#9: *41 FastCGI sent in stderr: "PHP message: PHP Warning:  require_once(/var/www/wordpress/wp-content/plugins/MissionNext/../MissionNext/Exception.php): failed to open stream: No such file or directory in /var/www/wordpress/wp-content/plugins/MissionNext/autoload.php on line 11
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin-ajax.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin-ajax.php:22
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection($force = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection($force = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get($method = *uninitialized*, $data = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest($url = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:
+2017/02/07 22:40:13 [error] 9#9: *41 FastCGI sent in stderr: "b\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection($force = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection($force = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get($method = *uninitialized*, $data = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest($url = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest($url = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getResponse($url = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:484
+PHP message: PHP  17. MissionNext\CurlClient->exec() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:527
+PHP message: PHP  18. spl_autoload_call(*uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:77
+PHP message: PHP  19. MNAutoload($class = *uninitialized*) /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:77" w
+2017/02/07 22:40:27 [error] 9#9: *41 FastCGI sent in stderr: "PHP message: PHP Warning:  require_once(/var/www/wordpress/wp-content/plugins/MissionNext/../MissionNext/Exception.php): failed to open stream: No such file or directory in /var/www/wordpress/wp-content/plugins/MissionNext/autoload.php on line 11
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+2017/02/07 22:40:27 [error] 9#9: *41 FastCGI sent in stderr: "PHP message: PHP Fatal error:  require_once(): Failed opening required '/var/www/wordpress/wp-content/plugins/MissionNext/../MissionNext/Exception.php' (include_path='/var/www/wordpress/wp-content/plugins/MissionNext/lib/api/vendor/phpunit/php-text-template:/var/www/wordpress/wp-content/plugins/MissionNext/lib/api/vendor/phpunit/phpunit-mock-objects:/var/www/wordpress/wp-content/plugins/MissionNext/lib/api/vendor/phpunit/php-timer:/var/www/wordpress/wp-content/plugins/MissionNext/lib/api/vendor/phpunit/php-token-stream:/var/www/wordpress/wp-content/plugins/MissionNext/lib/api/vendor/phpunit/php-file-iterator:/var/www/wordpress/wp-content/plugins/MissionNext/lib/api/vendor/phpunit/php-code-coverage:/var/www/wordpress/wp-content/plugins/MissionNext/lib/api/vendor/phpunit/phpunit:/var/www/wordpress/wp-content/plugins/MissionNext/lib/api/vendor/symfony/yaml:.:/usr/local/lib/php') in /var/www/wordpress/wp-content/plugins/MissionNext/autoload.php on line 11
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var
+2017/02/07 22:40:27 [error] 9#9: *41 FastCGI sent in stderr: "Manager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getResponse() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:484
+PHP message: PHP  17. MissionNext\CurlClient->exec() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:527
+PHP message: PHP  18. spl_autoload_call() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:77
+PHP message: PHP  19. MNAutoload() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:77" while reading upstream, client: 172.20.0.1, server: missionwp.dev, request: "GET /wp-admin/admin.php?page=mission_next HTTP/1.1", upstream: "fastcgi://172.20.0.8:9000", host: "missionwp.dev", referrer: "http://missionwp.dev/wp-admin/admin.php?page=mission_next"
+2017/02/07 22:42:07 [error] 10#10: *44 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Curl failed with error #7: Failed to connect to api.dev port 80: Connection refused in /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/CurlClient.php on line 82
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api-
+2017/02/07 22:50:47 [error] 9#9: *24 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Curl failed with error #28: Connection timed out after 10001 milliseconds in /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/CurlClient.php on line 82
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getResponse
+2017/02/07 22:53:41 [error] 12#12: *14 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Curl failed with error #28: Connection timed out after 10000 milliseconds in /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/CurlClient.php on line 82
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getRespon
+2017/02/07 22:55:16 [error] 12#12: *16 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Curl failed with error #28: Connection timed out after 10001 milliseconds in /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/CurlClient.php on line 82
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getRespon
+2017/02/07 22:56:00 [error] 11#11: *19 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Curl failed with error #28: Connection timed out after 10001 milliseconds in /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/CurlClient.php on line 82
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getRespon
+2017/02/07 22:56:28 [error] 9#9: *21 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Curl failed with error #28: Connection timed out after 10001 milliseconds in /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/CurlClient.php on line 82
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getResponse
+2017/02/07 22:57:16 [error] 9#9: *23 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Curl failed with error #28: Connection timed out after 10000 milliseconds in /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/CurlClient.php on line 82
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getResponse
+2017/02/07 23:00:38 [error] 11#11: *25 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Curl failed with error #28: Connection timed out after 10000 milliseconds in /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/CurlClient.php on line 83
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /var/www/wordpress/wp-admin/admin.php:0
+PHP message: PHP   2. require_once() /var/www/wordpress/wp-admin/admin.php:31
+PHP message: PHP   3. require_once() /var/www/wordpress/wp-load.php:37
+PHP message: PHP   4. require_once() /var/www/wordpress/wp-config.php:110
+PHP message: PHP   5. include_once() /var/www/wordpress/wp-settings.php:269
+PHP message: PHP   6. MissionNext\lib\core\Context::create() /var/www/wordpress/wp-content/plugins/MissionNext/MissionNext.php:17
+PHP message: PHP   7. MissionNext\lib\core\Context->init() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:123
+PHP message: PHP   8. MissionNext\lib\core\Context->populateContext() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:128
+PHP message: PHP   9. MissionNext\lib\ApiManager->__construct() /var/www/wordpress/wp-content/plugins/MissionNext/lib/core/Context.php:163
+PHP message: PHP  10. MissionNext\lib\ApiManager->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:36
+PHP message: PHP  11. MissionNext\lib\ApiManager->tryConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:50
+PHP message: PHP  12. MissionNext\Api->testConnection() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiManager.php:58
+PHP message: PHP  13. MissionNext\Api->get() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:102
+PHP message: PHP  14. MissionNext\lib\ApiLogger->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/api/src/Api.php:448
+PHP message: PHP  15. MissionNext\Api->performRequest() /var/www/wordpress/wp-content/plugins/MissionNext/lib/ApiLogger.php:24
+PHP message: PHP  16. MissionNext\Api->getRespon
