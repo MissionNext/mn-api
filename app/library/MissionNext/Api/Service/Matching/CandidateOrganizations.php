@@ -101,11 +101,43 @@ class CandidateOrganizations extends Matching
                         }
                     }
 
-                }elseif( !isset($matchingDataProfile[$matchingDataKey]) || empty($matchingDataProfile[$matchingDataKey])){
-                    $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
-                    $matchingDataSet[$k]['results'][] =
-                        ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => null, $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null, "matches" => false, "weight" => $conf["weight"]];
-               }
+                } else {
+                    $matchingDataValue = isset($matchingDataProfile[$matchingDataKey]) ? $matchingDataProfile[$matchingDataKey] : '';
+                    $mainDataValue = isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : '';
+
+                    /** convert  all values to array to compare */
+                    $matchingDataValue = (array)$matchingDataValue;
+                    $mainDataValue =  (array)$mainDataValue;
+
+                    $matchingDataValue = array_map('strtolower', $matchingDataValue);
+                    $mainDataValue = array_map('strtolower', $mainDataValue);
+
+                    /** if value starts with (!) any value  matches */
+                    if (
+                        ( in_array($matchingDataKey, $selectMatchingDataFields) && $this->isNoPreference($matchingDataValue) )
+                        ||
+                        ( in_array($mainDataKey, $selectMainDataFields) &&  $this->isNoPreference($mainDataValue) )
+                    )
+                    {
+                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                        list($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
+                        $matchingDataSet[$k]['results'][] =
+                            ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
+                        $matchingDataSet[$k]['opposite_results'][] =
+                            ['mainDataKey' => $matchingDataKey, 'matchingDataKey' => $mainDataKey, $matchingKey => $mainIntersectValue, $mainMatchingKey => $matchIntersectValue, "matches" => true, "weight" => $conf["weight"]];
+                        continue;
+                    } else {
+                        $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                        $matchingDataSet[$k]['results'][] = [
+                            'mainDataKey' => $mainDataKey,
+                            'matchingDataKey' => $matchingDataKey,
+                            $matchingKey => isset($matchingDataProfile[$matchingDataKey]) ? $matchingDataProfile[$matchingDataKey] : null,
+                            $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null,
+                            "matches" => false,
+                            "weight" => $conf["weight"]
+                        ];
+                    }
+                }
             }
         }
 
