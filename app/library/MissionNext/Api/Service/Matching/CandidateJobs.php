@@ -122,11 +122,11 @@ class CandidateJobs extends Matching
                     $mainDataValue = array_map('strtolower', $mainDataValue);
 
                     /** if value starts with (!) any value  matches */
-                    if (
+                    if ($conf["weight"] != 5 && (
                         ( in_array($matchingDataKey, $selectMatchingDataFields) && $this->isNoPreference($matchingDataValue) )
                         ||
                         ( in_array($mainDataKey, $selectMainDataFields) &&  $this->isNoPreference($mainDataValue) )
-                    )
+                    ))
                     {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         list($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
