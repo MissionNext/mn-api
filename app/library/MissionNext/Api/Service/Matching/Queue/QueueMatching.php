@@ -26,7 +26,7 @@ abstract class QueueMatching
 
 
 
-    const QUERY_LIMIT = 10;
+    const QUERY_LIMIT = 5;
     /**
      * @return \MissionNext\Api\Auth\SecurityContext
      */
