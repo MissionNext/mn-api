@@ -78,8 +78,15 @@ class CandidateOrganizations extends Matching
                     if ($conf["weight"] == 5) {
                         if  (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])){
                             $mustMatchMultiplier = 0;
-                            unset($tempMatchingData[$k]);
-                            continue;
+                            $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
+                            $matchingDataSet[$k]['results'][] = [
+                                'mainDataKey' => $mainDataKey,
+                                'matchingDataKey' => $matchingDataKey,
+                                $matchingKey => isset($matchingDataProfile[$matchingDataKey]) ? $matchingDataProfile[$matchingDataKey] : null,
+                                $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null,
+                                "matches" => false,
+                                "weight" => $conf["weight"]
+                            ];
                         } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
@@ -127,7 +134,6 @@ class CandidateOrganizations extends Matching
                             ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         $matchingDataSet[$k]['opposite_results'][] =
                             ['mainDataKey' => $matchingDataKey, 'matchingDataKey' => $mainDataKey, $matchingKey => $mainIntersectValue, $mainMatchingKey => $matchIntersectValue, "matches" => true, "weight" => $conf["weight"]];
-                        continue;
                     } else {
                         if ($conf['weight'] == 5) {
                             $mustMatchMultiplier = 0;
