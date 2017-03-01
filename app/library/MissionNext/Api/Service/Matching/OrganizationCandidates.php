@@ -36,7 +36,6 @@ class OrganizationCandidates extends Matching
 
         foreach ($matchingDataSet as $k => $matchingData) {
             $counter = 0;
-            $mustMatchMultiplier = 1;
             foreach ($configArr as $conf) {
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
@@ -82,16 +81,8 @@ class OrganizationCandidates extends Matching
                     /** if weight 5 (must match) and value doesn't matches remove add to banned ids */
                     if ($conf["weight"] == 5) {
                         if  (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])){
-                            $mustMatchMultiplier = 0;
-                            $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
-                            $matchingDataSet[$k]['results'][] = [
-                                'mainDataKey' => $mainDataKey,
-                                'matchingDataKey' => $matchingDataKey,
-                                $matchingKey => isset($matchingDataProfile[$matchingDataKey]) ? $matchingDataProfile[$matchingDataKey] : null,
-                                $mainMatchingKey => isset($mainDataProfile[$mainDataKey]) ? $mainDataProfile[$mainDataKey] : null,
-                                "matches" => false,
-                                "weight" => $conf["weight"]
-                            ];
+                            unset($tempMatchingData[$k]);
+                            continue;
                         } else {
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             list ($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
@@ -131,7 +122,7 @@ class OrganizationCandidates extends Matching
                         ( in_array($matchingDataKey, $selectMatchingDataFields) && $this->isNoPreference($matchingDataValue) )
                         ||
                         ( in_array($mainDataKey, $selectMainDataFields) &&  $this->isNoPreference($mainDataValue) )
-                        )
+                    )
                     {
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         list($mainIntersectValue, $matchIntersectValue) = $this->getIntersection($mainDataValue, $matchingDataValue);
@@ -139,10 +130,8 @@ class OrganizationCandidates extends Matching
                             ['mainDataKey' => $mainDataKey, 'matchingDataKey' => $matchingDataKey, $matchingKey => $matchIntersectValue, $mainMatchingKey => $mainIntersectValue, "matches" => true, "weight" => $conf["weight"]];
                         $matchingDataSet[$k]['opposite_results'][] =
                             ['mainDataKey' => $matchingDataKey, 'matchingDataKey' => $mainDataKey, $matchingKey => $mainIntersectValue, $mainMatchingKey => $matchIntersectValue, "matches" => true, "weight" => $conf["weight"]];
+                        continue;
                     } else {
-                        if ($conf['weight'] == 5) {
-                            $mustMatchMultiplier = 0;
-                        }
                         $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                         $matchingDataSet[$k]['results'][] = [
                             'mainDataKey' => $mainDataKey,
@@ -154,9 +143,9 @@ class OrganizationCandidates extends Matching
                         ];
                     }
                 }
+
                 $counter++;
             }
-            $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }
 
         $matchingDataSet = array_intersect_key($matchingDataSet, $tempMatchingData);
