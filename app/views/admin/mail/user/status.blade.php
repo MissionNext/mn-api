@@ -17,9 +17,13 @@ We are pleased to inform you that your MissionNext Rep Registration has been a
 Please watch for an email from MissionNext with a coupon code that will allow you to activate your account without payment.  
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
+IF ACCESS DENIED:  
+
+This could be because you signed up for the wrong website or wrong user type or have a duplicate record or you or your organization do not qualify for some reason.
+
 TO ALL:
     
-If you have any additional questions at this time, please contact us at headquarters@missionnext.org   
+If you have any questions, please contact us at headquarters@missionnext.org   
    
 We look forward to partnering with you!   
    
