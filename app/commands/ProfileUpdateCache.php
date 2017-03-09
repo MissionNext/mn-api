@@ -58,11 +58,9 @@ class ProfileUpdateCache extends Command
         $this->output->setDecorated(true);
         $this->info("Profile update ...");
         $users = \MissionNext\Models\User\User::all();
-        $jobs = \MissionNext\Models\Job\Job::all();
-        $progCount = $users->count() + $jobs->count();
+        $progCount = $users->count();
 
         $progress->start($this->output, $progCount);
-        //$progress->setRedrawFrequency(100);
 
         foreach ($users as $user) {
             $securityContext->getToken()->setRoles([$user->role()]);
@@ -73,33 +71,11 @@ class ProfileUpdateCache extends Command
             $progress->advance();
         }
 
-
-        foreach ($jobs as $job) {
-            $securityContext->getToken()->setRoles([$job->role()]);
-            $repoContainer->setSecurityContext($securityContext);
-            $profileRepo->setRepoContainer($repoContainer);
-            $profileRepo->profileRepository()->addUserCachedData($job);
-
-            $progress->advance();
-        }
-
         $progress->finish();
 
         $this->comment("Update Successful");
 
     }
-
-//	/**
-//	 * Get the console command arguments.
-//	 *
-//	 * @return array
-//	 */
-//	protected function getArguments()
-//	{
-//		return array(
-//			array('example', InputArgument::REQUIRED, 'An example argument.'),
-//		);
-//	}
 
     /**
      * Get the console command options.
@@ -109,7 +85,8 @@ class ProfileUpdateCache extends Command
     protected function getOptions()
     {
         return array(
-            array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+            array('app', null, InputOption::VALUE_OPTIONAL, 'Application id.', null),
+            array('role', null, InputOption::VALUE_OPTIONAL, 'User role for cache update.', null),
         );
     }
 
