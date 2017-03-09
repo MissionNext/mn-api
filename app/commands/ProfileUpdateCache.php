@@ -40,6 +40,13 @@ class ProfileUpdateCache extends Command
      */
     public function fire()
     {
+        $role = $this->option('role');
+        $roles = [
+            'candidate' => 1,
+            'organization' => 2,
+            'agency'   => 3
+        ];
+
         ini_set('memory_limit', '1024M');
 
         /** @var  $repoContainer \MissionNext\Repos\RepositoryContainer */
@@ -57,9 +64,14 @@ class ProfileUpdateCache extends Command
         $progress->setFormat(ProgressHelper::FORMAT_NORMAL);
         $this->output->setDecorated(true);
         $this->info("Profile update ...");
-        $users = \MissionNext\Models\User\User::all();
-        $progCount = $users->count();
+        if (!empty($role) && key_exists($role, $roles)) {
+            $users = \MissionNext\Models\User\User::join('user_roles', 'users.id', '=','user_roles.user_id')
+                ->where('user_roles.role_id', $roles[$role])->get();
+        } else {
+            $users = \MissionNext\Models\User\User::all();
+        }
 
+        $progCount = $users->count();
         $progress->start($this->output, $progCount);
 
         foreach ($users as $user) {
@@ -85,7 +97,6 @@ class ProfileUpdateCache extends Command
     protected function getOptions()
     {
         return array(
-            array('app', null, InputOption::VALUE_OPTIONAL, 'Application id.', null),
             array('role', null, InputOption::VALUE_OPTIONAL, 'User role for cache update.', null),
         );
     }
