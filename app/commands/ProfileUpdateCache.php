@@ -66,21 +66,24 @@ class ProfileUpdateCache extends Command
         $this->info("Profile update ...");
         if (!empty($role) && key_exists($role, $roles)) {
             $users = \MissionNext\Models\User\User::join('user_roles', 'users.id', '=','user_roles.user_id')
-                ->where('user_roles.role_id', $roles[$role])->get();
+                ->where('user_roles.role_id', $roles[$role])->lists('id');
         } else {
-            $users = \MissionNext\Models\User\User::all();
+            $users = \MissionNext\Models\User\User::lists('id');
         }
 
-        $progCount = $users->count();
+        $progCount = count($users);
         $progress->start($this->output, $progCount);
 
-        foreach ($users as $user) {
-            $securityContext->getToken()->setRoles([$user->role()]);
-            $repoContainer->setSecurityContext($securityContext);
-            $profileRepo->setRepoContainer($repoContainer);
-            $profileRepo->profileRepository()->addUserCachedData($user);
+        foreach ($users as $userId) {
+            $user = \MissionNext\Models\User\User::find($userId);
+            if ($user) {
+                $securityContext->getToken()->setRoles([$user->role()]);
+                $repoContainer->setSecurityContext($securityContext);
+                $profileRepo->setRepoContainer($repoContainer);
+                $profileRepo->profileRepository()->addUserCachedData($user);
 
-            $progress->advance();
+                $progress->advance();
+            }
         }
 
         $progress->finish();

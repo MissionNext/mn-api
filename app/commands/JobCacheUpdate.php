@@ -57,16 +57,16 @@ class JobCacheUpdate extends Command {
         $this->info("Jobs update ...");
 
         if (!empty($app_id)) {
-            $jobs = \MissionNext\Models\Job\Job::where('app_id', $app_id)->get();
+            $jobs = \MissionNext\Models\Job\Job::where('app_id', $app_id)->lists('id');
         } else {
-            $jobs = \MissionNext\Models\Job\Job::all();
+            $jobs = \MissionNext\Models\Job\Job::lists('id');
         }
 
-        $progCount = $jobs->count();
+        $progCount = count($jobs);
         $progress->start($this->output, $progCount);
-        $this->info("Jobs count: ".$progCount);
 
-        foreach ($jobs as $job) {
+        foreach ($jobs as $jobId) {
+            $job = \MissionNext\Models\Job\Job::find($jobId);
             if ($job) {
                 $securityContext->getToken()->setRoles([$job->role()]);
                 $repoContainer->setSecurityContext($securityContext);
