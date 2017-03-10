@@ -34,7 +34,7 @@ class JobCandidates extends QueueMatching
 
         $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
 
-        $config = $configRepo->configByJobCandidates(BaseDataModel::JOB, $userId)->get();
+        $config = $configRepo->configByJobCandidates()->get();
         if (!$config->count()) {
 
             $job->delete();

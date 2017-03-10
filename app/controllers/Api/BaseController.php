@@ -403,11 +403,11 @@ class BaseController extends Controller
 
                 $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
                 $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
-                $candidateOrg = $configRepo->configByCandidateOrganizations(BaseDataModel::ORGANIZATION, $queueData['userId'])->get();
+                $candidateOrg = $configRepo->configByCandidateOrganizations()->get();
 
                 $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
                 $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
-                $canJob = $configRepo->configByCandidateJobs(BaseDataModel::JOB, $queueData['userId'])->get();
+                $canJob = $configRepo->configByCandidateJobs()->get();
 
                 foreach ($candidateOrg as $item) {
                     if (in_array($item['candidate_key'], $changedFields['changedFields'])) {
@@ -425,7 +425,7 @@ class BaseController extends Controller
             case 'organization':
                 $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
                 $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
-                $orgCandidate = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $queueData['userId'])->get();
+                $orgCandidate = $configRepo->configByOrganizationCandidates()->get();
 
                 foreach ($orgCandidate as $item) {
                     if (in_array($item['organization_key'], $changedFields['changedFields'])) {
@@ -437,7 +437,7 @@ class BaseController extends Controller
             case 'job':
                 $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
                 $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
-                $jobCandidate = $configRepo->configByJobCandidates(BaseDataModel::JOB, $queueData['userId'])->get();
+                $jobCandidate = $configRepo->configByJobCandidates()->get();
 
                 foreach ($jobCandidate as $item) {
                     if (in_array($item['job_key'], $changedFields['changedFields'])) {

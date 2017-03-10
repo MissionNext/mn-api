@@ -35,7 +35,7 @@ class CandidateJobs extends QueueMatching
 
         $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
 
-        $config = $configRepo->configByCandidateJobs(BaseDataModel::JOB, $userId)->get();
+        $config = $configRepo->configByCandidateJobs()->get();
 
         if (!$config->count()) {
 

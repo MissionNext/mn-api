@@ -44,7 +44,7 @@ class ConfigRepository extends AbstractConfigRepository
      *
      * @return Builder
      */
-    public function configByCandidate($role, $id)
+    public function configByCandidate($role)
     {
         return $this->getModel()
             ->select($role.'_fields.symbol_key as '.$role.'_key',
@@ -52,9 +52,7 @@ class ConfigRepository extends AbstractConfigRepository
                      'weight', 'matching_type', 'candidate_fields.type as field_type')
             ->leftJoin($role.'_fields', $role.'_fields.id', '=' , $role.'_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
-            ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
             ->where('app_id','=', $this->sec_context->getApp()->id)
-            ->where('candidate_profile.user_id','=', $id)
             ->distinct();
 
     }
@@ -64,7 +62,7 @@ class ConfigRepository extends AbstractConfigRepository
      *
      * @return Builder
      */
-    public function configByJobCandidates($role, $id)
+    public function configByJobCandidates()
     {
         return $this->getModel()
             ->select('job_fields.symbol_key as job_key',
@@ -72,9 +70,7 @@ class ConfigRepository extends AbstractConfigRepository
                 'weight', 'matching_type', 'candidate_fields.type as field_type')
             ->leftJoin('job_fields', 'job_fields.id', '=' , 'job_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
-            ->leftJoin('job_profile','job_profile.field_id', '=', 'job_field_id')
             ->where('app_id','=', $this->sec_context->getApp()->id)
-            ->where('job_profile.job_id','=', $id)
             ->distinct();
     }
 
@@ -84,7 +80,7 @@ class ConfigRepository extends AbstractConfigRepository
      *
      * @return Builder
      */
-    public function configByCandidateJobs($role, $id)
+    public function configByCandidateJobs()
     {
 
         return $this->getModel()
@@ -93,9 +89,7 @@ class ConfigRepository extends AbstractConfigRepository
                 'weight', 'matching_type', 'candidate_fields.type as field_type')
             ->leftJoin('job_fields', 'job_fields.id', '=' , 'job_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
-            ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
             ->where('app_id','=', $this->sec_context->getApp()->id)
-            ->where('candidate_profile.user_id','=', $id)
             ->distinct();
     }
     /**
@@ -104,7 +98,7 @@ class ConfigRepository extends AbstractConfigRepository
      *
      * @return Builder
      */
-    public function configByCandidateOrganizations($role, $id)
+    public function configByCandidateOrganizations()
     {
 
         return $this->getModel()
@@ -113,9 +107,7 @@ class ConfigRepository extends AbstractConfigRepository
                 'weight', 'matching_type', 'organization_fields.type as field_type')
             ->leftJoin('organization_fields', 'organization_fields.id', '=' , 'organization_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
-            ->leftJoin('candidate_profile','candidate_profile.field_id', '=', 'main_field_id')
             ->where('app_id','=', $this->sec_context->getApp()->id)
-            ->where('candidate_profile.user_id','=', $id)
             ->distinct();
     }
 
@@ -125,7 +117,7 @@ class ConfigRepository extends AbstractConfigRepository
      *
      * @return Builder
      */
-    public function configByOrganizationCandidates($role, $id)
+    public function configByOrganizationCandidates()
     {
 
         return $this->getModel()
@@ -134,9 +126,7 @@ class ConfigRepository extends AbstractConfigRepository
                 'weight', 'matching_type', 'organization_fields.type as field_type')
             ->leftJoin('organization_fields', 'organization_fields.id', '=' , 'organization_field_id' )
             ->leftJoin('candidate_fields', 'candidate_fields.id', '=', 'main_field_id')
-            ->leftJoin('organization_profile','organization_profile.field_id', '=', 'organization_field_id')
             ->where('app_id','=', $this->sec_context->getApp()->id)
-            ->where('organization_profile.user_id','=', $id)
             ->distinct();
     }
 

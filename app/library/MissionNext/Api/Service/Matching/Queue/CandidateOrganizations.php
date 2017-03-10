@@ -37,7 +37,7 @@ class CandidateOrganizations extends QueueMatching
 
         $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
 
-        $config = $configRepo->configByCandidateOrganizations(BaseDataModel::ORGANIZATION, $userId)->get();
+        $config = $configRepo->configByCandidateOrganizations()->get();
 
         if (!$config->count()) {
 
