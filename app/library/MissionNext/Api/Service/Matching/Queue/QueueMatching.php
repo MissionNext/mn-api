@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Queue;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Api\Service\Matching\CandidateOrganizations as MatchCanOrgs;
+use MissionNext\Models\Application\Application;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Api\Service\Matching\Matching as ServiceMatching;
 use MissionNext\Models\Matching\Results;
@@ -53,8 +54,6 @@ abstract class QueueMatching
             return [];
         }
         //=========
-
-        $this->clearCache($userId, $matchingId);
 
         try{
             $matchingData = [(new UserCachedRepository($this->userType))->mainData($matchingId)->getData()];
@@ -116,22 +115,35 @@ abstract class QueueMatching
 
             $tempMatchData = [];
             foreach ($matchingData as $data) {
-                if (BaseDataModel::JOB == $data['role']) {
-                    $organization_id = $data['organization']['id'];
-                } else {
-                    $organization_id = $data['id'];
-                }
-
-                $this->clearCache($userId, $organization_id);
-
-                if (in_array($data['role'], [BaseDataModel::ORGANIZATION, BaseDataModel::JOB])) {
-                    $user = User::find($organization_id);
-                    $subscription = $user->subscriptions()->where('app_id', $app_id)->first();
-                    if ($user->isActive() && $user->isActiveInApp($this->securityContext()->getApp()) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED) {
-                        $tempMatchData[] = $data;
-                    }
-                } else {
-                    $tempMatchData[] = $data;
+                switch ($data['role']) {
+                    case BaseDataModel::CANDIDATE:
+                        $candidate_id = $data['id'];
+                        $user = User::find($candidate_id);
+                        if ($user && $user->isActiveInApp(Application::find($app_id))) {
+                            $tempMatchData[] = $data;
+                        }
+                        break;
+                    case BaseDataModel::ORGANIZATION:
+                    case BaseDataModel::AGENCY:
+                        $organization_id = $data['id'];
+                        $user = User::find($organization_id);
+                        if ($user) {
+                            $subscription = $user->subscriptions()->where('app_id', $app_id)->first();
+                            if ($user->isActive() && $user->isActiveInApp(Application::find($app_id)) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED) {
+                                $tempMatchData[] = $data;
+                            }
+                        }
+                        break;
+                    case BaseDataModel::JOB:
+                        $organization_id = $data['organization']['id'];
+                        $organization = User::find($organization_id);
+                        if ($organization) {
+                            $subscription = $organization->subscriptions()->where('app_id', $app_id)->first();
+                            if ($organization->isActive() && $organization->isActiveInApp(Application::find($app_id)) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED) {
+                                $tempMatchData[] = $data;
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -162,19 +174,4 @@ abstract class QueueMatching
 
         $this->job->delete();
     }
-
-    /**
-     * @param $userId
-     * @param null $matchingId
-     */
-    protected function clearCache($userId, $matchingId = null)
-    {
-       $builder =  Results::where("for_user_id","=", $userId)
-            ->where("for_user_type","=", $this->forUserType)
-            ->where("user_type","=", $this->userType);
-
-       $builder = $matchingId ? $builder->where("user_id", "=", $matchingId) : $builder;
-
-       $builder->delete();
-    }
-} 
+}

@@ -66,18 +66,4 @@ class ProfileUpdateMatching extends MasterMatching
         $m($data);
         $job->delete();
     }
-
-    /**
-     * @param $userId
-     * @param $forUserType
-     * @param $userType
-     */
-    protected function clearCache($userId, $forUserType, $userType)
-    {
-       $builder =  Results::where("for_user_id","=", $userId)
-            ->where("for_user_type","=", $forUserType)
-            ->where("user_type","=", $userType);
-
-       $builder->delete();
-    }
-} 
+}

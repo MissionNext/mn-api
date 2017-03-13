@@ -25,6 +25,8 @@ class ConfigUpdateMatching extends MasterMatching
             case BaseDataModel::CANDIDATE:
                 return
                     function($data){
+                        $this->clearCache($data['userId'], 'candidate', 'organization');
+                        $this->clearCache($data['userId'], 'candidate', 'job');
                         Queue::push(CanJobsQueue::class, $data);
                         Queue::push(CanOrgsQueue::class, $data);
                     };
@@ -32,12 +34,14 @@ class ConfigUpdateMatching extends MasterMatching
             case BaseDataModel::ORGANIZATION:
                 return
                     function($data){
+                        $this->clearCache($data['userId'], 'organization', 'candidate');
                         Queue::push(OrgCandidatesQueue::class, $data);
                     };
                 break;
             case BaseDataModel::JOB:
                 return
                     function($data){
+                        $this->clearCache($data['userId'], 'job', 'candidate');
                         Queue::push(JobCandidatesQueue::class, $data);
                     };
                 break;
@@ -75,5 +79,4 @@ class ConfigUpdateMatching extends MasterMatching
         $job->delete();
 
     }
-
-} 
+}
