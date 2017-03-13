@@ -147,20 +147,21 @@ abstract class QueueMatching
                 }
             }
 
-            $matchingData = $tempMatchData;
+            if (count($tempMatchData) > 0) {
+                $matchingData = $tempMatchData;
+                $data = [
+                    "mainData" => $mainData,
+                    "matchingData" => $matchingData,
+                    "matchingClass" => $this->matchingClass,
+                    "forUserType" => $this->forUserType,
+                    "userType" => $this->userType,
+                    "config" => $config->toArray(),
+                    "userId" => $userId,
+                    "app_id" => $app_id
+                ];
 
-            $data = [
-                "mainData" => $mainData,
-                "matchingData" => $matchingData,
-                "matchingClass" => $this->matchingClass,
-                "forUserType" => $this->forUserType,
-                "userType" => $this->userType,
-                "config" => $config->toArray(),
-                "userId" => $userId,
-                "app_id" => $app_id
-            ];
-
-            Queue::push(InsertQueue::class, $data);
+                Queue::push(InsertQueue::class, $data);
+            }
 
             $startData = [
                 "userId" => $userId,
