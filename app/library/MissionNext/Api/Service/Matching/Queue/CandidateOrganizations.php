@@ -27,9 +27,7 @@ class CandidateOrganizations extends QueueMatching
     public function fire($job, $data)
     {
         $userId = $data["userId"];
-        $user = User::find($userId);
         $application = Application::find($data["appId"]);
-        if ($user && $user->isActiveInApp($application)) {
             $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
             $offset = isset($data["offset"]) ? $data["offset"] : 0;
             $this->job = $job;
@@ -50,8 +48,5 @@ class CandidateOrganizations extends QueueMatching
 
             $matchingId ? $this->matchResult($userId, $matchingId, $config)
                 : $this->matchResults($userId,  $config, $offset);
-        } else {
-            $job->delete();
-        }
     }
 } 
