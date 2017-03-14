@@ -57,6 +57,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                 \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
                                                     where('user_id', $result->user_id)->
                                                     where('for_user_id', $result->for_user_id)->delete();
+                $this->info("Application id: ".$result->app_id);
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -75,6 +76,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                 \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
                                                 where('user_id', $result->user_id)->
                                                 where('for_user_id', $result->for_user_id)->delete();
+                $this->info("Application id: ".$result->app_id);
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -88,6 +90,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                 \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
                                                 where('user_id', $result->user_id)->
                                                 where('for_user_id', $result->for_user_id)->delete();
+                $this->info("Application id: ".$result->app_id);
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -101,6 +104,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                 \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
                                                 where('user_id', $result->user_id)->
                                                 where('for_user_id', $result->for_user_id)->delete();
+                $this->info("Application id: ".$result->app_id);
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
