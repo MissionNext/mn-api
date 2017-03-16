@@ -49,8 +49,7 @@ class OrganizationCandidates extends Matching
                     continue;
                 }
 
-                if (isset($matchingDataProfile[$matchingDataKey]) && !empty($matchingDataProfile[$matchingDataKey]) &&
-                    isset($mainDataProfile[$mainDataKey]) && !empty($mainDataProfile[$mainDataKey])) {
+                if (isset($matchingDataProfile[$matchingDataKey]) && isset($mainDataProfile[$mainDataKey])) {
 
                     $matchingDataValue = $matchingDataProfile[$matchingDataKey];
                     $mainDataValue = $mainDataProfile[$mainDataKey];
