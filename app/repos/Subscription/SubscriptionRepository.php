@@ -97,11 +97,6 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
             $partnership = $subscription['partnership'];
             $isRecurrent = (bool)$subscription['is_recurrent'];
             $endDate = $oldEndDate;
-            if ($type !== static::RENEW_TYPE_MONTHLY && $partnership === Partnership::LIMITED) {
-
-                    $endDate = Carbon::now()->addMonths(static::LIMITED_YEAR)->toDateTimeString();
-            }
-
 
             $this->forFill['app_id'] = $subscription['app_id']; //@TODO check right user, status, partnership
             $this->forFill['authorize_id'] = $subscription['authorize_id'];
