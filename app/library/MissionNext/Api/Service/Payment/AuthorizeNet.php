@@ -234,10 +234,6 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
     private function buildSiteDescription($name, $role, $partnership, $period, $price){
 
-        if($partnership == Partnership::LIMITED && $period == Partnership::PERIOD_YEAR){
-            $period = '90 days';
-        }
-
         return sprintf("%s: %s%s - %s/$%s", $name, $role, $partnership?'/' . $partnership:'', $period, $price);
     }
 
@@ -471,7 +467,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
             $default['left_amount'] = round($default['paid'] * (  $default['days_left'] / ( (strtotime($default['end_date']) - strtotime($default['start_date'])) / (24*60*60) ) ));
             $defaults[$default['app_id']] = $default;
 
-            if($default['partnership'] != Partnership::LIMITED && $default['days_left'] > $days_left){
+            if($default['days_left'] > $days_left){
                 $days_left = $default['days_left'];
                 if(!$default['is_recurrent']){
                     $total_days = round( (strtotime($default['end_date']) - strtotime($default['start_date'])) / (24*60*60));

@@ -106,11 +106,6 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
             $builder->where('subscriptions.app_id', '=', $this->securityContext()->getApp()->id() )
                 ->where('subscriptions.status', '<>', Subscription::STATUS_CLOSED)
-                ->where(function($query){
-                    $query->where('subscriptions.partnership', "<>", Partnership::LIMITED)
-                        ->orWhereNull('subscriptions.partnership');
-
-                })
                 ->whereNotNull('subscriptions.id')
                 ->where(function($query){
                     $query->where('subscriptions.status', '<>', Subscription::STATUS_EXPIRED)
