@@ -25,32 +25,27 @@ class CandidateJobs extends QueueMatching
     public function fire($job, $data)
     {
         $userId = $data["userId"];
-        $user = User::find($userId);
         $application = Application::find($data["appId"]);
-        if ($user && $user->isActiveInApp($application)) {
-            $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
-            $offset = isset($data["offset"]) ? $data["offset"] : 0;
-            $this->job = $job;
+        $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
+        $offset = isset($data["offset"]) ? $data["offset"] : 0;
+        $this->job = $job;
 
-            $this->securityContext()->getToken()->setApp($application);
+        $this->securityContext()->getToken()->setApp($application);
 
-            $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
+        $this->securityContext()->getToken()->setRoles([BaseDataModel::JOB]);
 
-            $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
+        $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
 
-            $config = $configRepo->configByCandidateJobs()->get();
+        $config = $configRepo->configByCandidateJobs()->get();
 
-            if (!$config->count()) {
+        if (!$config->count()) {
 
-                $job->delete();
-                return [];
-            }
-
-            $matchingId ? $this->matchResult($userId, $matchingId, $config)
-                : $this->matchResults($userId,  $config, $offset);
-        } else {
             $job->delete();
+            return [];
         }
+
+        $matchingId ? $this->matchResult($userId, $matchingId, $config)
+            : $this->matchResults($userId,  $config, $offset);
     }
 
 } 

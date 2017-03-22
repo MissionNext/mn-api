@@ -117,11 +117,7 @@ abstract class QueueMatching
             foreach ($matchingData as $data) {
                 switch ($data['role']) {
                     case BaseDataModel::CANDIDATE:
-                        $candidate_id = $data['id'];
-                        $user = User::find($candidate_id);
-                        if ($user && $user->isActiveInApp(Application::find($app_id))) {
-                            $tempMatchData[] = $data;
-                        }
+                        $tempMatchData[] = $data;
                         break;
                     case BaseDataModel::ORGANIZATION:
                     case BaseDataModel::AGENCY:
