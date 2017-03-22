@@ -58,6 +58,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
         $org_select = '';
         if ($userType === BaseDataModel::JOB) {
             $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
+            $org_select .= ", job_cached_profile.updated_at as job_updated";
         }
 
         $left_join_id = $this->securityContext()->getToken()->currentUser()->id;
@@ -99,6 +100,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
             if ($userType === BaseDataModel::JOB ) {
                 $builder->leftJoin("organization_cached_profile", "organization_cached_profile.id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"));
+                $builder->leftJoin("job_cached_profile", "job_cached_profile.id", "=",  DB::raw("(matching_results.data->>'id')::int"));
             }
 
             $builder = $userType === BaseDataModel::JOB ? $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"))
