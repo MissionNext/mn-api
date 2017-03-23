@@ -100,11 +100,17 @@ abstract class QueueMatching
 
         $cacheRep = new UserCachedRepository($this->userType);
 
+        $timelimit = null;
+        if (BaseDataModel::JOB == $this->userType) {
+            $date_limit = new \DateTime('now');
+            $date_limit->modify("-6 months");
+            $timelimit = $date_limit->getTimestamp();
+        }
         $limit = static::QUERY_LIMIT;
 
         $app_id = $this->securityContext()->getApp()->id;
 
-        $matchingData = $cacheRep->data($last_login)
+        $matchingData = $cacheRep->data($last_login, $timelimit)
             ->takeAndSkip($limit, $offset)
             ->get()
             ->toArray();
@@ -112,10 +118,6 @@ abstract class QueueMatching
         if(!empty($matchingData)) {
 
             $offset += $limit;
-
-            /*$date_limit = new \DateTime('now');
-            $date_limit->modify("-6 months");
-            $timelimit = $date_limit->getTimestamp();*/
 
             $tempMatchData = [];
             foreach ($matchingData as $data) {

@@ -90,7 +90,7 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
      *
      * @return UserCachedTransformer
      */
-    public function data($last_login = null)
+    public function data($last_login = null, $timelimit = null)
     {
 
         $queryBuilder =
@@ -98,11 +98,17 @@ class UserCachedRepository extends AbstractRepository implements UserCachedRepos
                 ->select("data")
                 ->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [SecurityContext::getInstance()->getApp()->id]);
 
+        if ($timelimit) {
+            $queryBuilder->where('updated_at', '>=', date('Y-m-d', $timelimit));
+        }
+
         if($last_login) {
             $last_login .= '-01-01 00:00:00';
             $queryBuilder->leftJoin("users", "users.id", "=", $this->currentType . '_cached_profile.id')
                 ->where('users.last_login', '>=', $last_login);
         }
+
+        $queryBuilder->orderBy($this->currentType . '_cached_profile.id', 'ASC');
 
         return
             new UserCachedTransformer($queryBuilder, new UserCachedDataStrategy());
