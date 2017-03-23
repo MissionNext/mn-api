@@ -23,6 +23,7 @@ class CandidateOrganizations extends Matching
 
         $matchingDataSet = $this->matchAgainstData;
         $mainData = $this->matchData;
+        $mainDataProfile = $mainData['profileData'];
 
         $selectMainDataFields = $this->selectFieldsOfType($this->mainMatchingModel);
         $selectMatchingDataFields = $this->selectFieldsOfType($this->matchingModel);
@@ -32,13 +33,11 @@ class CandidateOrganizations extends Matching
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
         foreach ($matchingDataSet as $k => $matchingData) {
+            $matchingDataProfile = $matchingData['profileData'];
             $mustMatchMultiplier = 1;
             foreach ($configArr as $conf) {
-
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
-                $matchingDataProfile = $matchingData['profileData'];
-                $mainDataProfile = $mainData['profileData'];
 
                 $marital_value = (isset($mainDataProfile[$marital_status_key])) ? $mainDataProfile[$marital_status_key]: null;
                 $spouse_field = strpos($mainDataKey, 'spouse');

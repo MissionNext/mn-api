@@ -42,7 +42,7 @@ abstract class Matching
         $this->matchConfig = $matchConfig;
     }
 
-    private $selectFieldTypes = [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO];
+    private $selectFieldTypes = [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO, FieldType::RADIO_YES_NO, FieldType::MARITAL_STATUS];
 
     protected $matchData, $matchAgainstData, $matchConfig;
 

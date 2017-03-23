@@ -26,6 +26,7 @@ class OrganizationCandidates extends Matching
         $matchingDataSet = $this->matchAgainstData;
 
         $mainData = $this->matchData;
+        $mainDataProfile = $mainData['profileData'];
 
         $selectMainDataFields = $this->selectFieldsOfType($this->mainMatchingModel);
         $selectMatchingDataFields = $this->selectFieldsOfType($this->matchingModel);
@@ -35,13 +36,12 @@ class OrganizationCandidates extends Matching
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
         foreach ($matchingDataSet as $k => $matchingData) {
-            $counter = 0;
+            $matchingDataProfile = $matchingData['profileData'];
+
             $mustMatchMultiplier = 1;
             foreach ($configArr as $conf) {
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
-                $matchingDataProfile = $matchingData['profileData'];
-                $mainDataProfile = $mainData['profileData'];
 
                 $marital_value = (isset($matchingDataProfile[$marital_status_key])) ? $matchingDataProfile[$marital_status_key]: null;
                 $spouse_field = strpos($matchingDataKey, 'spouse');
@@ -77,11 +77,11 @@ class OrganizationCandidates extends Matching
                         continue;
                     }
 
-
                     /** if weight 5 (must match) and value doesn't matches remove add to banned ids */
                     if ($conf["weight"] == 5) {
                         if  (!$this->isMatches($mainDataValue, $matchingDataValue, $conf['matching_type'])){
                             $mustMatchMultiplier = 0;
+
                             $matchingDataSet[$k]['profileData'] = $matchingDataProfile;
                             $matchingDataSet[$k]['results'][] = [
                                 'mainDataKey' => $mainDataKey,
@@ -153,7 +153,6 @@ class OrganizationCandidates extends Matching
                         ];
                     }
                 }
-                $counter++;
             }
             $matchingDataSet[$k]['multiplier'] = $mustMatchMultiplier;
         }

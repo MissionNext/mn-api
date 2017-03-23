@@ -26,6 +26,7 @@ class JobCandidates extends Matching
 
         $matchingDataSet = $this->matchAgainstData;
         $mainData = $this->matchData;
+        $mainDataProfile = $mainData['profileData'];
         $job_slug = strtolower(str_replace(' ', '_', $mainData['name']));
 
         $selectMainDataFields = $this->selectFieldsOfType($this->mainMatchingModel);
@@ -36,13 +37,12 @@ class JobCandidates extends Matching
         $mainMatchingKey = $this->mainMatchingModel."_value";
 
         foreach ($matchingDataSet as $k => $matchingData) {
+            $matchingDataProfile = $matchingData['profileData'];
             $mustMatchMultiplier = 1;
-            foreach ($configArr as $conf) {
 
+            foreach ($configArr as $conf) {
                 $matchingDataKey = $conf[$this->matchingModel.'_key'];
                 $mainDataKey = $conf[$this->mainMatchingModel.'_key'];
-                $matchingDataProfile = $matchingData['profileData'];
-                $mainDataProfile = $mainData['profileData'];
 
                 $marital_value = (isset($matchingDataProfile[$marital_status_key])) ? $matchingDataProfile[$marital_status_key]: null;
                 $spouse_field = strpos($matchingDataKey, 'spouse');

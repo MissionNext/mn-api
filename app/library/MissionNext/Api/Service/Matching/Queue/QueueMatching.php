@@ -113,6 +113,10 @@ abstract class QueueMatching
 
             $offset += $limit;
 
+            /*$date_limit = new \DateTime('now');
+            $date_limit->modify("-6 months");
+            $timelimit = $date_limit->getTimestamp();*/
+
             $tempMatchData = [];
             foreach ($matchingData as $data) {
                 switch ($data['role']) {
