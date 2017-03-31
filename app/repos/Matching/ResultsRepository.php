@@ -66,9 +66,27 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             $left_join_id = $job_owner;
         }
 
+        $distinct = '';
+        if (isset($sort_by) && isset($order_by)) {
+            switch ($sort_by) {
+                case 'name':
+                    $distinct = ','.DB::raw("(matching_results.data->'profileData'->>'first_name')::text");
+                    break;
+                case 'last_login':
+                    $distinct = ','.DB::raw("(matching_results.data::json->>'last_login')::text");
+                    break;
+                case 'country':
+                    $distinct = ','.DB::raw("(matching_results.data::json->'profileData'->>'country')::text").','.DB::raw("(matching_results.data::json->'profileData'->>'state')::text");
+                    break;
+                case 'birth_date':
+                    $distinct = ','.DB::raw("(matching_results.data::json->'profileData'->>'birth_date')::text");
+                    break;
+            }
+        }
+
         $builder =
             $this->getModel()
-                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage) matching_results.data, folder_apps.folder, notes.notes, favorite.id as favorite, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
+                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage$distinct) matching_results.data, folder_apps.folder, notes.notes, favorite.id as favorite, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
                  ->leftJoin("folder_apps", function($join) use ($forUserId, $forUserType, $userType, $left_join_id){
                     $join->on("folder_apps.user_id", "=", "matching_results.user_id")
                          ->where("matching_results.for_user_type", "=", $forUserType)
@@ -118,7 +136,31 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             if(isset($rate))
                 $builder->where('matching_results.matching_percentage', '>=', $rate);
 
-            $builder->orderBy('matching_results.matching_percentage', 'desc');
+            if (isset($sort_by) && isset($order_by)) {
+                switch ($sort_by) {
+                    case 'matching_percentage':
+                        $builder->orderBy('matching_results.matching_percentage', $order_by);
+                        break;
+                    case 'name':
+                        $builder->orderBy(DB::raw("(matching_results.data->'profileData'->>'first_name')::text"), $order_by);
+                        break;
+                    case 'last_login':
+                        $builder->orderBy(DB::raw("(matching_results.data::json->>'last_login')::text"), $order_by);
+                        break;
+                    case 'country':
+                        $builder->orderBy(DB::raw("(matching_results.data::json->'profileData'->>'country')::text, (matching_results.data::json->'profileData'->>'state')::text"), $order_by);
+                        break;
+                    case 'birth_date':
+                        $builder->orderBy(DB::raw("(matching_results.data::json->'profileData'->>'birth_date')::text"), $order_by);
+                        break;
+                    default:
+                        $builder->orderBy('matching_results.matching_percentage', 'desc');
+                        break;
+                }
+            } else {
+                $builder->orderBy('matching_results.matching_percentage', 'desc');
+            }
+
 
             $result = (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
 
