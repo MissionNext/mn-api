@@ -73,13 +73,10 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                     $distinct = ','.DB::raw("(matching_results.data->'profileData'->>'first_name')::text");
                     break;
                 case 'last_login':
-                    $distinct = ','.DB::raw("(matching_results.data::json->>'last_login')::text");
-                    break;
-                case 'country':
-                    $distinct = ','.DB::raw("(matching_results.data::json->'profileData'->>'country')::text").','.DB::raw("(matching_results.data::json->'profileData'->>'state')::text");
+                    $distinct = ','.DB::raw("(matching_results.data->>'last_login')::text");
                     break;
                 case 'birth_date':
-                    $distinct = ','.DB::raw("(matching_results.data::json->'profileData'->>'birth_date')::text");
+                    $distinct = ','.DB::raw("(matching_results.data->'profileData'->>'birth_year')::int");
                     break;
             }
         }
@@ -145,13 +142,10 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                         $builder->orderBy(DB::raw("(matching_results.data->'profileData'->>'first_name')::text"), $order_by);
                         break;
                     case 'last_login':
-                        $builder->orderBy(DB::raw("(matching_results.data::json->>'last_login')::text"), $order_by);
-                        break;
-                    case 'country':
-                        $builder->orderBy(DB::raw("(matching_results.data::json->'profileData'->>'country')::text, (matching_results.data::json->'profileData'->>'state')::text"), $order_by);
+                        $builder->orderBy(DB::raw("(matching_results.data->>'last_login')::text"), $order_by);
                         break;
                     case 'birth_date':
-                        $builder->orderBy(DB::raw("(matching_results.data::json->'profileData'->>'birth_date')::text"), $order_by);
+                        $builder->orderBy(DB::raw("(matching_results.data->'profileData'->>'birth_year')::int"), $order_by);
                         break;
                     default:
                         $builder->orderBy('matching_results.matching_percentage', 'desc');
