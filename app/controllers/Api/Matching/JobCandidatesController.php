@@ -28,6 +28,8 @@ class JobCandidatesController extends BaseController
     {
         $user_id = $this->request->get('user_id');
         $job_owner = $this->request->get('job_owner');
+        $sort_by = $this->request->get('sort_by');
+        $order_by = $this->request->get('order_by');
 
         $old_rate = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $user_id, 'key' => 'can_job_rate'])->first();
         $old_rate = $old_rate['value'];
@@ -47,7 +49,7 @@ class JobCandidatesController extends BaseController
 
             return
                 new RestResponse($this->matchingResultsRepo()
-                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId, compact('rate', 'job_owner')));
+                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId, compact('rate', 'job_owner', 'sort_by', 'order_by')));
         }
 
         return new RestResponse([]);
