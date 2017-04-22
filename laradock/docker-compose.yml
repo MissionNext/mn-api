@@ -21,7 +21,7 @@ services:
                 - INSTALL_NODE=false
                 - INSTALL_YARN=false
                 - INSTALL_DRUSH=false
-                - INSTALL_AEROSPIKE_EXTENSION=true
+                - INSTALL_AEROSPIKE_EXTENSION=false
                 - INSTALL_V8JS_EXTENSION=false
                 - COMPOSER_GLOBAL_INSTALL=false
                 - INSTALL_WORKSPACE_SSH=true
@@ -121,20 +121,6 @@ services:
             POSTGRES_USER: homestead
             POSTGRES_PASSWORD: secret
 
-### Aerospike c Container ###################################
-
-    aerospike:
-        build: ./aerospike
-        volumes_from:
-            - workspace
-        volumes:
-            - aerospike:/opt/aerospike/data
-        ports:
-            - "3000:3000"
-            - "3001:3001"
-            - "3002:3002"
-            - "3003:3003"
-
 ### Beanstalkd Container ####################################
 
     beanstalkd:
@@ -163,21 +149,12 @@ services:
         links:
             - postgres
 
-### Selenium Container #########################################
-
-    selenium:
-        build: ./selenium
-        ports:
-            - "4444:4444"
-
 ### Volumes Setup ###########################################
 
 volumes:
     mysql:
         driver: "local"
     postgres:
-        driver: "local"
-    aerospike:
         driver: "local"
     sessions:    ## nothing is connected to this (- ./data/sessions:/sessions)
         driver: "local"
