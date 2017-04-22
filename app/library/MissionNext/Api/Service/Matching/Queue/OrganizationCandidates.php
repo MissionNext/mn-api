@@ -6,6 +6,8 @@ use MissionNext\Models\Application\Application;
 use MissionNext\Models\Configs\UserConfigs;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Matching\Results;
+use MissionNext\Models\Subscription\Subscription;
+use MissionNext\Models\User\User;
 use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Api\Service\Matching\OrganizationCandidates as MatchOrgCandidates;
 use MissionNext\Repos\Matching\ConfigRepository;
@@ -25,30 +27,41 @@ class OrganizationCandidates extends QueueMatching
     {
         $appId = $data["appId"];
         $userId = $data["userId"];
-        $this->job = $job;
-        $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
-        $offset = isset($data["offset"]) ? $data["offset"] : 0;
+        $user = User::find($userId);
+        $application = Application::find($appId);
+        if ($user) {
+            $subscription = $user->subscriptions()->where('app_id', $appId)->first();
+            if ($user->isActive() && $user->isActiveInApp($application) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED) {
+                $this->job = $job;
+                $matchingId = isset($data["matchingId"]) ? $data["matchingId"] : null;
+                $offset = isset($data["offset"]) ? $data["offset"] : 0;
 
-        $last_login = null;
-        if(isset($data["last_login"]))
-            $last_login = $data["last_login"];
-        elseif($apdates = UserConfigs::where(['app_id' => $appId, 'user_id' => $userId, 'key' => 'last_login'])->first())
-            $last_login = $apdates['value'];
+                $last_login = null;
+                if(isset($data["last_login"]))
+                    $last_login = $data["last_login"];
+                elseif($apdates = UserConfigs::where(['app_id' => $appId, 'user_id' => $userId, 'key' => 'last_login'])->first())
+                    $last_login = $apdates['value'];
 
-        $this->securityContext()->getToken()->setApp(Application::find($appId));
+                $this->securityContext()->getToken()->setApp($application);
 
-        $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
+                $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
 
-        $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
+                $configRepo = (new ConfigRepository())->setSecurityContext($this->securityContext());
 
-        $config = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $userId)->get();
+                $config = $configRepo->configByOrganizationCandidates()->get();
 
-        if (!$config->count()) {
+                if (!$config->count()) {
+                    $job->delete();
+                    return [];
+                }
+                $matchingId ? $this->matchResult($userId, $matchingId, $config)
+                    : $this->matchResults($userId,  $config, $offset, $last_login);
+
+            } else {
+                $job->delete();
+            }
+        } else {
             $job->delete();
-            return [];
         }
-        $matchingId ? $this->matchResult($userId, $matchingId, $config)
-            : $this->matchResults($userId,  $config, $offset, $last_login);
-
     }
 } 

@@ -17,8 +17,6 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
 
     const RECURRENT_DAY = 15;
 
-    const LIMITED_YEAR = 3;
-
     const RENEW_TYPE_MONTHLY = 'm';
     const RENEW_TYPE_KEEP_END_DATE = 'k';
     const RENEW_TYPE_FROM_TODAY = 't';
@@ -97,11 +95,6 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
             $partnership = $subscription['partnership'];
             $isRecurrent = (bool)$subscription['is_recurrent'];
             $endDate = $oldEndDate;
-            if ($type !== static::RENEW_TYPE_MONTHLY && $partnership === Partnership::LIMITED) {
-
-                    $endDate = Carbon::now()->addMonths(static::LIMITED_YEAR)->toDateTimeString();
-            }
-
 
             $this->forFill['app_id'] = $subscription['app_id']; //@TODO check right user, status, partnership
             $this->forFill['authorize_id'] = $subscription['authorize_id'];
@@ -148,9 +141,6 @@ class SubscriptionRepository extends AbstractRepository implements SubscriptionR
 
         $partnership = $data[0]['partnership'];
         $isRecurrent = (bool)$data[0]['is_recurrent'];
-        if ($type !== static::RENEW_TYPE_MONTHLY && $partnership === Partnership::LIMITED) {
-            $endDate = Carbon::now()->addMonths(static::LIMITED_YEAR)->toDateTimeString();
-        }
 
         $this->forFill['app_id'] = $data[0]['app_id']; //@TODO check right user, status, partnership
         $this->forFill['authorize_id'] = $data[0]['authorize_id'];

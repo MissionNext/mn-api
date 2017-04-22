@@ -40,6 +40,13 @@ class ProfileUpdateCache extends Command
      */
     public function fire()
     {
+        $role = $this->option('role');
+        $roles = [
+            'candidate' => 1,
+            'organization' => 2,
+            'agency'   => 3
+        ];
+
         ini_set('memory_limit', '1024M');
 
         /** @var  $repoContainer \MissionNext\Repos\RepositoryContainer */
@@ -57,30 +64,26 @@ class ProfileUpdateCache extends Command
         $progress->setFormat(ProgressHelper::FORMAT_NORMAL);
         $this->output->setDecorated(true);
         $this->info("Profile update ...");
-        $users = \MissionNext\Models\User\User::all();
-        $jobs = \MissionNext\Models\Job\Job::all();
-        $progCount = $users->count() + $jobs->count();
-
-        $progress->start($this->output, $progCount);
-        //$progress->setRedrawFrequency(100);
-
-        foreach ($users as $user) {
-            $securityContext->getToken()->setRoles([$user->role()]);
-            $repoContainer->setSecurityContext($securityContext);
-            $profileRepo->setRepoContainer($repoContainer);
-            $profileRepo->profileRepository()->addUserCachedData($user);
-
-            $progress->advance();
+        if (!empty($role) && key_exists($role, $roles)) {
+            $users = \MissionNext\Models\User\User::join('user_roles', 'users.id', '=','user_roles.user_id')
+                ->where('user_roles.role_id', $roles[$role])->lists('id');
+        } else {
+            $users = \MissionNext\Models\User\User::lists('id');
         }
 
+        $progCount = count($users);
+        $progress->start($this->output, $progCount);
 
-        foreach ($jobs as $job) {
-            $securityContext->getToken()->setRoles([$job->role()]);
-            $repoContainer->setSecurityContext($securityContext);
-            $profileRepo->setRepoContainer($repoContainer);
-            $profileRepo->profileRepository()->addUserCachedData($job);
+        foreach ($users as $userId) {
+            $user = \MissionNext\Models\User\User::find($userId);
+            if ($user) {
+                $securityContext->getToken()->setRoles([$user->role()]);
+                $repoContainer->setSecurityContext($securityContext);
+                $profileRepo->setRepoContainer($repoContainer);
+                $profileRepo->profileRepository()->addUserCachedData($user);
 
-            $progress->advance();
+                $progress->advance();
+            }
         }
 
         $progress->finish();
@@ -88,18 +91,6 @@ class ProfileUpdateCache extends Command
         $this->comment("Update Successful");
 
     }
-
-//	/**
-//	 * Get the console command arguments.
-//	 *
-//	 * @return array
-//	 */
-//	protected function getArguments()
-//	{
-//		return array(
-//			array('example', InputArgument::REQUIRED, 'An example argument.'),
-//		);
-//	}
 
     /**
      * Get the console command options.
@@ -109,7 +100,7 @@ class ProfileUpdateCache extends Command
     protected function getOptions()
     {
         return array(
-            array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+            array('role', null, InputOption::VALUE_OPTIONAL, 'User role for cache update.', null),
         );
     }
 

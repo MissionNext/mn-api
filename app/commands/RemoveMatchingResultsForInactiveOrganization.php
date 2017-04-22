@@ -37,7 +37,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
 	 */
 	public function fire()
 	{
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
 
 	    $this->info('Delete matching results for organization.');
         $matchesForUser = \MissionNext\Models\Matching\Results::where('user_type', \MissionNext\Models\DataModel\BaseDataModel::ORGANIZATION)->get();
@@ -57,6 +57,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                 \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
                                                     where('user_id', $result->user_id)->
                                                     where('for_user_id', $result->for_user_id)->delete();
+                $this->info("Application id: ".$result->app_id);
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -75,6 +76,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                 \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
                                                 where('user_id', $result->user_id)->
                                                 where('for_user_id', $result->for_user_id)->delete();
+                $this->info("Application id: ".$result->app_id);
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -88,6 +90,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                 \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
                                                 where('user_id', $result->user_id)->
                                                 where('for_user_id', $result->for_user_id)->delete();
+                $this->info("Application id: ".$result->app_id);
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }
@@ -101,6 +104,7 @@ class RemoveMatchingResultsForInactiveOrganization extends Command {
                 \MissionNext\Models\Matching\Results::where('app_id', $result->app_id)->
                                                 where('user_id', $result->user_id)->
                                                 where('for_user_id', $result->for_user_id)->delete();
+                $this->info("Application id: ".$result->app_id);
                 $this->info('Matching results successfully deleted for user '.$user->id);
             }
         }

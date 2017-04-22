@@ -15,7 +15,9 @@ class FieldType extends Eloquent implements ModelInterface
           RADIO = 6,
           BOOLEAN = 7,
           CHECKBOX = 8,
-          FILE = 9;
+          FILE = 9,
+          RADIO_YES_NO = 10,
+          MARITAL_STATUS= 11;
 
     private static $multipleTypes = [FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX ];
 

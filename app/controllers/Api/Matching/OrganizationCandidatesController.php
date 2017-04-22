@@ -38,6 +38,9 @@ class OrganizationCandidatesController extends BaseController
         $rate = $this->request->get('rate');
         $updates = $this->request->get('updates');
 
+        $sort_by = $this->request->get('sort_by');
+        $order_by = $this->request->get('order_by');
+
         if($rate && $old_rate != $rate){
             $attributes = ['app_id' => $this->securityContext()->getApp()->id, 'key' => 'can_rate', 'user_id' => $organizationId];
             UserConfigs::updateOrCreate( $attributes, ['value' => $rate] );
@@ -54,7 +57,7 @@ class OrganizationCandidatesController extends BaseController
 
         $orgAppIds = $this->securityContext()->getToken()->currentUser()->appIds();
         if (in_array($this->securityContext()->getApp()->id, $orgAppIds)) {
-            $results = $this->matchingResultsRepo()->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId);
+            $results = $this->matchingResultsRepo()->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId, compact('sort_by', 'order_by'));
 
             if($updates < $old_updates) {
 
@@ -76,7 +79,7 @@ class OrganizationCandidatesController extends BaseController
                 }
             }
 
-            return new RestResponse($this->matchingResultsRepo()->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId, compact('rate', 'updates')));
+            return new RestResponse($this->matchingResultsRepo()->matchingResults(BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE, $organizationId, compact('rate', 'updates', 'sort_by', 'order_by')));
         }
         return new RestResponse([]);
     }
@@ -92,7 +95,7 @@ class OrganizationCandidatesController extends BaseController
         $this->securityContext()->getToken()->setRoles([BaseDataModel::ORGANIZATION]);
 
         $configRepo = $this->matchingConfigRepo()->setSecurityContext($this->securityContext());
-        $config = $configRepo->configByOrganizationCandidates(BaseDataModel::CANDIDATE, $organizationId)->get();
+        $config = $configRepo->configByOrganizationCandidates()->get();
 
 
         if (!$config->count()) {

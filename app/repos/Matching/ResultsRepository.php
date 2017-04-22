@@ -58,6 +58,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
         $org_select = '';
         if ($userType === BaseDataModel::JOB) {
             $org_select = ", organization_cached_profile.data->'profileData'->>'organization_name' as org_name";
+            $org_select .= ", job_cached_profile.updated_at as job_updated";
         }
 
         $left_join_id = $this->securityContext()->getToken()->currentUser()->id;
@@ -65,9 +66,24 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             $left_join_id = $job_owner;
         }
 
+        $distinct = '';
+        if (isset($sort_by) && isset($order_by)) {
+            switch ($sort_by) {
+                case 'name':
+                    $distinct = ','.DB::raw("(matching_results.data->'profileData'->>'first_name')::text");
+                    break;
+                case 'last_login':
+                    $distinct = ','.DB::raw("(matching_results.data->>'last_login')::text");
+                    break;
+                case 'birth_date':
+                    $distinct = ','.DB::raw("(matching_results.data->'profileData'->>'birth_year')::int");
+                    break;
+            }
+        }
+
         $builder =
             $this->getModel()
-                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage) matching_results.data, folder_apps.folder, notes.notes, favorite.id as favorite, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
+                 ->select(DB::raw("distinct on (matching_results.user_type, matching_results.user_id, matching_results.for_user_id, matching_results.for_user_type, matching_results.matching_percentage$distinct) matching_results.data, folder_apps.folder, notes.notes, favorite.id as favorite, subscriptions.partnership, subscriptions.id as sub_id $org_select") )
                  ->leftJoin("folder_apps", function($join) use ($forUserId, $forUserType, $userType, $left_join_id){
                     $join->on("folder_apps.user_id", "=", "matching_results.user_id")
                          ->where("matching_results.for_user_type", "=", $forUserType)
@@ -99,6 +115,7 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
             if ($userType === BaseDataModel::JOB ) {
                 $builder->leftJoin("organization_cached_profile", "organization_cached_profile.id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"));
+                $builder->leftJoin("job_cached_profile", "job_cached_profile.id", "=",  DB::raw("(matching_results.data->>'id')::int"));
             }
 
             $builder = $userType === BaseDataModel::JOB ? $builder->leftJoin("subscriptions", "subscriptions.user_id", "=",  DB::raw("(matching_results.data->'organization'->>'id')::int"))
@@ -106,11 +123,6 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
 
             $builder->where('subscriptions.app_id', '=', $this->securityContext()->getApp()->id() )
                 ->where('subscriptions.status', '<>', Subscription::STATUS_CLOSED)
-                ->where(function($query){
-                    $query->where('subscriptions.partnership', "<>", Partnership::LIMITED)
-                        ->orWhereNull('subscriptions.partnership');
-
-                })
                 ->whereNotNull('subscriptions.id')
                 ->where(function($query){
                     $query->where('subscriptions.status', '<>', Subscription::STATUS_EXPIRED)
@@ -121,7 +133,28 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             if(isset($rate))
                 $builder->where('matching_results.matching_percentage', '>=', $rate);
 
-            $builder->orderBy('matching_results.matching_percentage', 'desc');
+            if (isset($sort_by) && isset($order_by)) {
+                switch ($sort_by) {
+                    case 'matching_percentage':
+                        $builder->orderBy('matching_results.matching_percentage', $order_by);
+                        break;
+                    case 'name':
+                        $builder->orderBy(DB::raw("(matching_results.data->'profileData'->>'first_name')::text"), $order_by);
+                        break;
+                    case 'last_login':
+                        $builder->orderBy(DB::raw("(matching_results.data->>'last_login')::text"), $order_by);
+                        break;
+                    case 'birth_date':
+                        $builder->orderBy(DB::raw("(matching_results.data->'profileData'->>'birth_year')::int"), $order_by);
+                        break;
+                    default:
+                        $builder->orderBy('matching_results.matching_percentage', 'desc');
+                        break;
+                }
+            } else {
+                $builder->orderBy('matching_results.matching_percentage', 'desc');
+            }
+
 
             $result = (new UserCachedTransformer($builder, new UserCachedDataStrategy()))->paginate(static::PAGINATION);
 

@@ -22,31 +22,20 @@ class ConfigUpdateMatching extends MasterMatching
     {
 
         switch($role){
-            case BaseDataModel::CANDIDATE:
-                return
-                    function($data){
-                        Queue::push(CanJobsQueue::class, $data);
-                        Queue::push(CanOrgsQueue::class, $data);
-                    };
-                break;
             case BaseDataModel::ORGANIZATION:
                 return
                     function($data){
+                        $this->clearCache($data['userId'], 'organization', 'candidate');
                         Queue::push(OrgCandidatesQueue::class, $data);
                     };
                 break;
             case BaseDataModel::JOB:
                 return
                     function($data){
+                        $this->clearCache($data['userId'], 'job', 'candidate');
                         Queue::push(JobCandidatesQueue::class, $data);
                     };
                 break;
-            default:
-                return
-                    function($data){
-
-                    };
-
         }
 
     }
@@ -60,20 +49,16 @@ class ConfigUpdateMatching extends MasterMatching
     {
         $appId = $data["appId"];
 
-        foreach($this->matchingRoles as $role){
-
-            $cache = UserCachedData::table($role);
-            $ids = $cache->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [$appId])->lists("id");
-            $d = ["appId" => $appId, "role" => $role, "userId" => null];
-            foreach($ids as $id){
-                $d["userId"] = $id;
-                $m = $this->match($role);
-                $m($d);
-            }
+        $cache = UserCachedData::table($data['role']);
+        $ids = $cache->whereRaw("ARRAY[?] <@ json_array_text(data->'app_ids')", [$appId])->orderBy('id', 'asc')->lists("id");
+        $d = ["appId" => $appId, "role" => $data['role'], "userId" => null];
+        foreach($ids as $id){
+            $d["userId"] = $id;
+            $m = $this->match($data['role']);
+            $m($d);
         }
 
         $job->delete();
 
     }
-
-} 
+}

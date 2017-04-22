@@ -19,7 +19,6 @@ use MissionNext\Repos\CachedData\UserCachedRepository;
 
 abstract class MasterMatching
 {
-    protected  $matchingRoles = [ BaseDataModel::JOB, BaseDataModel::ORGANIZATION, BaseDataModel::CANDIDATE ];
     /** @var  \Pheanstalk_Pheanstalk */
     public static $pheanstalk;
 
@@ -63,6 +62,26 @@ abstract class MasterMatching
         }
 
         return true;
+    }
+
+    /**
+     * @param $userId
+     * @param $forUserType
+     * @param $userType
+     */
+    protected function clearCache($userId, $forUserType, $userType)
+    {
+        $builder =  Results::where("for_user_id","=", $userId)
+            ->where("for_user_type","=", $forUserType)
+            ->where("user_type","=", $userType);
+
+        $builder->delete();
+
+        $oppositeBuilder = Results::where("user_id", $userId)
+            ->where("for_user_type", $userType)
+            ->where("user_type", $forUserType);
+
+        $oppositeBuilder->delete();
     }
 
 } 

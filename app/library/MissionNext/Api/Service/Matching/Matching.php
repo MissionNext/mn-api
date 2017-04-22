@@ -42,7 +42,7 @@ abstract class Matching
         $this->matchConfig = $matchConfig;
     }
 
-    private $selectFieldTypes = [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO];
+    private $selectFieldTypes = [FieldType::SELECT, FieldType::SELECT_MULTIPLE, FieldType::CHECKBOX, FieldType::RADIO, FieldType::RADIO_YES_NO, FieldType::MARITAL_STATUS];
 
     protected $matchData, $matchAgainstData, $matchConfig;
 
@@ -134,30 +134,35 @@ abstract class Matching
 
             $profileData['matching_percentage'] = 0;
             $maxMatching = 0;
+            $mustMatchMultiplier = $profileData['multiplier'];
 
-            if (isset($profileData['results'])) {
+            if ($mustMatchMultiplier != 0) {
+                if (isset($profileData['results'])) {
 
-                array_map   (function($c) use (&$maxMatching){
+                    array_map   (function($c) use (&$maxMatching){
 
-                    if ($c['weight'] < 5)
-                        $maxMatching += $c['weight'];
+                        if ($c['weight'] < 5)
+                            $maxMatching += $c['weight'];
 
-                }, $profileData['results']);
+                    }, $profileData['results']);
 
-                foreach ($profileData['results'] as $key=>&$prof) {
-                    if ($prof['weight'] < 5) {
-                        if (isset($prof['matches']) && $prof['matches'])
-                            $profileData['matching_percentage'] += $prof['weight'];
-                        elseif (!isset($prof['matches']) || !$prof['matches'])
-                            $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
+                    foreach ($profileData['results'] as $key=>&$prof) {
+                        if ($prof['weight'] < 5) {
+                            if (isset($prof['matches']) && $prof['matches'])
+                                $profileData['matching_percentage'] += $prof['weight'];
+                            elseif (!isset($prof['matches']) || !$prof['matches'])
+                                $prof = [$this->matchingModel."_value" => $prof, $this->mainMatchingModel."_value" => null];
+                        }
                     }
                 }
-            }
 
-            if ($maxMatching > 0)
-                $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100);
-            else
+                if ($maxMatching > 0)
+                    $profileData['matching_percentage'] = round(($profileData['matching_percentage'] / $maxMatching) * 100);
+                else
+                    $profileData['matching_percentage'] = 0;
+            } else {
                 $profileData['matching_percentage'] = 0;
+            }
         }
 
         $result = array_filter(array_values($data), function($d){

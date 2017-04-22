@@ -18,3 +18,4 @@ Artisan::add(new UpdateSubscriptionStatus());
 Artisan::add(new RemovedMatchingResults);
 Artisan::add(new RemoveMatchingResultsForInactiveOrganization());
 Artisan::add(new RemoveMatchingResultsForExpiredOrgs());
+Artisan::add(new JobCacheUpdate());

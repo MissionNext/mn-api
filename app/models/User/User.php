@@ -148,6 +148,12 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         return $this;
     }
 
+    public function setLastLogin() {
+        $this->last_login = date('Y-m-d H:i:s');
+
+        return $this;
+    }
+
     /**
      * @param Application $application
      *
