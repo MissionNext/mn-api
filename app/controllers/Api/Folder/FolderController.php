@@ -119,20 +119,19 @@ class FolderController extends BaseController
 
     public function roleWithUser($role, $userId)
     {
-        $folders = Folder::where("role","=",$role)
+        $custom_folders = Folder::where("role","=",$role)
             ->where("app_id", "=", $this->securityContext()->getApp()->id())
             ->where(function($query) use ($userId) {
-                $query->where("user_id", "=", $userId)
-                    ->orWhere("user_id", "=", null);
+                $query->where("user_id", "=", $userId);
             })
-            ->orderBy("user_id", "desc")
+            ->orderBy("id", "asc")
             ->get();
 
-        $foldersIds = $folders->lists('id') ? : [0];
+        $foldersIds = $custom_folders->lists('id') ? : [0];
 
         $foldersTrans = (new FolderTrans())->queryFolderTrans($this->securityContext())->whereIn('folder_id', $foldersIds)->get();
 
-        $folders->each(function($f) use ($foldersTrans) {
+        $custom_folders->each(function($f) use ($foldersTrans) {
             $f->value = null;
             foreach($foldersTrans as $ft){
                 if ($f->id == $ft->folder_id){
@@ -140,6 +139,33 @@ class FolderController extends BaseController
                 }
             }
         });
+
+        $default_folders = Folder::where("role","=",$role)
+            ->where("app_id", "=", $this->securityContext()->getApp()->id())
+            ->where(function($query) use ($userId) {
+                $query->where("user_id", "=", null);
+            })
+            ->orderBy("id", "asc")
+            ->get();
+
+        $foldersIds = $default_folders->lists('id') ? : [0];
+
+        $foldersTrans = (new FolderTrans())->queryFolderTrans($this->securityContext())->whereIn('folder_id', $foldersIds)->get();
+
+        $default_folders->each(function($f) use ($foldersTrans) {
+            $f->value = null;
+            foreach($foldersTrans as $ft){
+                if ($f->id == $ft->folder_id){
+                    $f->value = $ft->value;
+                }
+            }
+        });
+
+        if ($custom_folders->count() > 0) {
+            $folders = $custom_folders->merge($default_folders);
+        } else {
+            $folders = $default_folders;
+        }
 
         return new RestResponse($folders);
     }
