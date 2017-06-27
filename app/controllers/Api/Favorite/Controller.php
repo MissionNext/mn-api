@@ -9,6 +9,8 @@ use MissionNext\Api\Response\RestResponse;
 use MissionNext\Controllers\Api\BaseController;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Favorite\Favorite;
+use MissionNext\Models\Folder\Folder;
+use MissionNext\Models\FolderApps\FolderApps;
 use MissionNext\Models\Notes\Notes;
 use MissionNext\Models\User\User;
 
@@ -30,9 +32,10 @@ class Controller extends BaseController {
     public function getByRole($user_id, $role){
 
         $cache_table = $role . "_cached_profile";
-        $folderNotesTable = (new Notes)->getTable();
+        $notesTable = (new Notes)->getTable();
+        $folderTable = (new FolderApps)->getTable();
         $query = Favorite::join($cache_table, $cache_table . ".id", "=", "favorite.target_id")
-                          ->select("favorite.id", "favorite.user_id", "favorite.target_type", "favorite.target_id" , "$cache_table.data as data", $folderNotesTable.".notes as notes");
+                          ->select("favorite.id", "favorite.user_id", "favorite.target_type", "favorite.target_id" , "$cache_table.data as data", "$notesTable.notes as notes", "$folderTable.folder as folder");
 
         if ($role === BaseDataModel::JOB) {
             $query = $query->leftJoin("organization_cached_profile",
@@ -40,13 +43,19 @@ class Controller extends BaseController {
                 ->addSelect( "organization_cached_profile.data as organization" );
         }
 
-        $data = $query->where("app_id", '=', $this->securityContext()->getApp()->id())
+        $data = $query->where("favorite.app_id", '=', $this->securityContext()->getApp()->id())
             ->where("favorite.user_id", '=', $user_id)
             ->where("favorite.target_type", '=', $role)
 
-            ->leftJoin($folderNotesTable, function($join) use ($folderNotesTable, $user_id){
-                $join->on($folderNotesTable . ".user_id", '=', 'favorite.target_id');
-                $join->on($folderNotesTable . ".for_user_id", '=', DB::raw($user_id));
+            ->leftJoin($notesTable, function($join) use ($notesTable, $user_id){
+                $join->on($notesTable . ".user_id", '=', 'favorite.target_id');
+                $join->on($notesTable . ".for_user_id", '=', DB::raw($user_id));
+            })
+            ->leftJoin($folderTable, function ($join) use ($folderTable, $user_id, $role){
+                $join->on($folderTable . ".user_id", '=', 'favorite.target_id')
+                    ->where($folderTable.".for_user_id", "=", DB::raw($user_id))
+                    ->where($folderTable.".user_type", "=", $role)
+                    ->where($folderTable.".app_id", "=", $this->securityContext()->getApp()->id());
             })
             ->get();
 
