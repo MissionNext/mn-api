@@ -34,10 +34,10 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     public  function __construct(\AuthorizeNetAIM $authorizeNet, \AuthorizeNetARB $authorizeNetARB, Application $app)
     {
         $this->recurringBilling = $authorizeNetARB;
-        $this->recurringBilling->setSandbox(false);
+        //$this->recurringBilling->setSandbox(false);
 
         $this->paymentGateWay = $authorizeNet;
-        $this->paymentGateWay->setSandbox(false);
+        //$this->paymentGateWay->setSandbox(false);
 
         $this->app = $app;
         $this->discount = (new GlobalConfig)->subscriptionDiscount();
