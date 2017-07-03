@@ -13,6 +13,7 @@ use MissionNext\Models\Application\Application as AppModel;
 use MissionNext\Models\Coupon\Coupon;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\Subscription\Partnership;
+use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\Subscription\SubscriptionRepository;
 use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
@@ -487,10 +488,15 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     private function cancelAuthorizeSubs(){
 
         $ids = array();
+        $subsForCancel = array();
 
         foreach($this->defaults as $default){
             if($default['authorize_id']){
                 $ids[] = $default['authorize_id'];
+                $subsForCancel[$default['authorize_id']] = [
+                    'app_id'    => $default['app_id'],
+                    'user_id'   => $default['user_id']
+                ];
             }
         }
 
@@ -498,7 +504,12 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
         foreach($ids as $id){
             $arb = clone $this->recurringBilling;
-            $arb->cancelSubscription($id);
+            $response = $arb->cancelSubscription($id);
+            if (($response != null) && ($response->getMessages()->getResultCode() == "Ok")) {
+                Subscription::where('app_id', $subsForCancel[$id]['app_id'])
+                    ->where('user_id', $subsForCancel[$id]['user_id'])
+                    ->update(['status' => Subscription::STATUS_CLOSED]);
+            }
         }
     }
 
