@@ -42,9 +42,10 @@ class SearchController extends BaseController
     public function postIndex($searchType, $userType, $userId)
     {
         SecurityContext::getInstance()->getToken()->setRoles([$searchType]);
-
+        $page = $this->request->get('page');
+        $offset = ($page - 1) * 500;
         $profileSearch = $this->request->get("profileData");
-        $userSearch = $this->request->except("profileData", "timestamp", "page");
+        $userSearch = $this->request->except("profileData", "timestamp");
 
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
@@ -163,7 +164,7 @@ class SearchController extends BaseController
 
             throw new SearchProfileException("No search params specified");
         }
-        $query .= " ) LIMIT 500";
+        $query .= " ) LIMIT 500 OFFSET ".$offset;
 
         $resultList = DB::select($query, $bindings);
         $result = [];
