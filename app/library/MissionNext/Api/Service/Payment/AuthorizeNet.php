@@ -149,12 +149,20 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
         $sub->amount = $price;
 
-        $sub->bankAccountNameOnAccount = $data['payment_data']['bank_name'];
-        $sub->bankAccountRoutingNumber = $data['payment_data']['aba_number'];
-        $sub->bankAccountAccountNumber = $data['payment_data']['acct_number'];
-        $sub->bankAccountAccountType = strtolower($data['payment_data']['acct_type']);
-        $sub->bankAccountBankName = $data['payment_data']['bank_name'];
-        $sub->bankAccountEcheckType = "WEB";
+        if($data['type'] == 'cc'){
+            $sub->creditCardCardNumber = $data['payment_data']['card_num'];
+            $sub->creditCardExpirationDate = $data['payment_data']['exp_date'];
+            //$sub->creditCardCardCode = $data['payment_data']['card_code'];
+        } elseif( $data['type'] == 'echeck'){
+            $sub->bankAccountNameOnAccount = $data['payment_data']['bank_name'];
+            $sub->bankAccountRoutingNumber = $data['payment_data']['aba_number'];
+            $sub->bankAccountAccountNumber = $data['payment_data']['acct_number'];
+            $sub->bankAccountAccountType = strtolower($data['payment_data']['acct_type']);
+            $sub->bankAccountBankName = $data['payment_data']['bank_name'];
+            $sub->bankAccountEcheckType = "WEB";
+        } else {
+            throw new BadDataException("Wrong payment type");
+        }
 
         $sub->startDate = Carbon::now()->day >= SubscriptionRepository::RECURRENT_DAY
             ? Carbon::now()->addMonth()->day(SubscriptionRepository::RECURRENT_DAY)->toDateString()
@@ -505,7 +513,7 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         foreach($ids as $id){
             $arb = clone $this->recurringBilling;
             $response = $arb->cancelSubscription($id);
-            if (($response != null) && ($response->getMessages()->getResultCode() == "Ok")) {
+            if (($response != null) && ($response->getResultCode() == "Ok")) {
                 Subscription::where('app_id', $subsForCancel[$id]['app_id'])
                     ->where('user_id', $subsForCancel[$id]['user_id'])
                     ->update(['status' => Subscription::STATUS_CLOSED]);
