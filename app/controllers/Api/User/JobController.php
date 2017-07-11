@@ -165,7 +165,14 @@ class JobController extends BaseController
         $str .= " and app_id = ?";
         $arrV[] = $this->securityContext()->getApp()->id();
 
-        return new RestResponse($this->jobRepo()->getModel()->whereRaw($str, $arrV)->get());
+        $jobsId = $this->jobRepo()->getModel()->whereRaw($str, $arrV)->lists('id');
+        $jobs = [];
+        foreach ($jobsId as $jobId) {
+            $jobCache = (new UserCachedRepository(BaseDataModel::JOB))->where('id', $jobId)->get();
+            $jobs[] = json_decode($jobCache[0]['data']);
+        }
+
+        return new RestResponse($jobs);
     }
 
     /**
