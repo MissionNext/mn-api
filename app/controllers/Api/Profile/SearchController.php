@@ -42,9 +42,12 @@ class SearchController extends BaseController
     public function postIndex($searchType, $userType, $userId)
     {
         SecurityContext::getInstance()->getToken()->setRoles([$searchType]);
-
-        $profileSearch = $this->request->get("profileData");
-        $userSearch = $this->request->except("profileData", "timestamp", "page");
+        $page = $this->request->get('page');
+        $offset = ($page - 1) * 500;
+        $profileSearch = $this->request->get("params")['profileData'];
+        $userSearch = $this->request->get("params");
+        unset($userSearch['profileData']);
+        unset($userSearch['timestamp']);
 
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
@@ -163,9 +166,10 @@ class SearchController extends BaseController
 
             throw new SearchProfileException("No search params specified");
         }
-        $query .= " ) LIMIT 500";
+        $countQuerySelect = $query." )";
 
-        $resultList = DB::select($query, $bindings);
+        $searchResult = DB::select($countQuerySelect, $bindings);
+        $resultList = array_slice($searchResult, $offset, 500);
         $result = [];
         foreach ($resultList as $resultItem) {
             $data           = json_decode($resultItem->data);
@@ -179,7 +183,13 @@ class SearchController extends BaseController
             }
         }
 
-        return new RestResponse( (new TransData($this->getToken()->language(), $searchType, $result))->get() );
+        $rowsCount = count($searchResult);
+        $pages = round($rowsCount / 500, 0, PHP_ROUND_HALF_UP);
+
+        return new RestResponse( [
+            'results' => (new TransData($this->getToken()->language(), $searchType, $result))->get(),
+            'count' => $pages
+        ]);
 
     }
 
