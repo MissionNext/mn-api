@@ -62,15 +62,9 @@ class SearchController extends BaseController
                   LEFT JOIN {$folderAppsTable} fA ON cp.id = fA.user_id
                    ";
 
-        if ($searchType == AppDataModel::CANDIDATE){
-            $query .= "AND fA.for_user_id = ? AND fA.user_type = ?
-                  LEFT JOIN {$favoriteTable} f ON cp.id = f.target_id
-                           AND f.user_id = ? AND f.target_type = ?";
-        } else {
-            $query .= "AND fA.for_user_id = ? AND fA.user_type = ? AND fA.app_id = ?
-                  LEFT JOIN {$favoriteTable} f ON cp.id = f.target_id
-                           AND f.user_id = ? AND f.target_type = ? AND f.app_id = ?";
-        }
+        $query .= "AND fA.for_user_id = ? AND fA.user_type = ? AND fA.app_id = ?
+              LEFT JOIN {$favoriteTable} f ON cp.id = f.target_id
+                       AND f.user_id = ? AND f.target_type = ? AND f.app_id = ?";
 
         $query .= "
             LEFT JOIN organization_cached_profile ocp ON ocp.id=(cp.data->>'organization_id')::int
@@ -81,15 +75,10 @@ class SearchController extends BaseController
         $bindings[] = $userId;
         $bindings[] = $searchType;
 
-        if ($searchType == AppDataModel::CANDIDATE) {
-            $bindings[] = $userId;
-            $bindings[] = $searchType;
-        } else {
-            $bindings[] = $this->securityContext()->getApp()->id();
-            $bindings[] = $userId;
-            $bindings[] = $searchType;
-            $bindings[] = $this->securityContext()->getApp()->id();
-        }
+        $bindings[] = $this->securityContext()->getApp()->id();
+        $bindings[] = $userId;
+        $bindings[] = $searchType;
+        $bindings[] = $this->securityContext()->getApp()->id();
 
         $where = " WHERE ( ";
 
@@ -158,10 +147,8 @@ class SearchController extends BaseController
             }
         }
         if (!empty($profileSearch) || !empty($userSearch)) {
-            if ($searchType != AppDataModel::CANDIDATE) {
-                $query .= " AND ARRAY[?] <@ json_array_text(cp.data->'app_ids') ";
-                $bindings[] = $this->securityContext()->getApp()->id();
-            }
+            $query .= " AND ARRAY[?] <@ json_array_text(cp.data->'app_ids') ";
+            $bindings[] = $this->securityContext()->getApp()->id();
         }else{
 
             throw new SearchProfileException("No search params specified");
