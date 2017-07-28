@@ -180,8 +180,13 @@ class SearchController extends BaseController
             $data           = json_decode($resultItem->data);
             $target_id = (BaseDataModel::JOB == $data->role) ? $data->organization_id : $data->id;
             $user = User::find($target_id);
-            $subscription = $user->subscriptions()->where('app_id', $this->securityContext()->getApp()->id())->first();
-            if ($user->isActiveInApp($this->securityContext()->getApp()) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED && $subscription->status != Subscription::STATUS_CLOSED) {
+            $subscription = $user->subscriptions()
+                    ->where('app_id', $this->securityContext()->getApp()->id())
+                    ->where('status', '<>', Subscription::STATUS_CLOSED)
+                    ->where('status', '<>', Subscription::STATUS_EXPIRED)
+                    ->first();
+
+            if ($user->isActiveInApp($this->securityContext()->getApp()) && $subscription) {
                 $data->notes    = $resultItem->notes;
                 $data->folder   = $resultItem->foldername;
                 $data->favorite = $resultItem->favorite;
