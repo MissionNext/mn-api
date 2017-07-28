@@ -132,8 +132,12 @@ class SearchController extends BaseController
 
                     } else {
                         $query .= $where . " ? && json_array_text(cp.data->'profileData'->'{$fieldName}') ";
-                        $value = array_map('strtolower', $value);
-                        $bindings[] = addslashes(str_replace(["[", "]"], ["{", "}"], json_encode($value)));
+                        $value = array_map(function($item) {
+                            $item = strtolower($item);
+                            $item = str_replace("/", "\\/", $item);
+                            return "\"$item\"";
+                        }, $value);
+                        $bindings[] = str_replace(["[", "]"], ["{", "}"], json_encode($value));
                     }
 
                 } else {
