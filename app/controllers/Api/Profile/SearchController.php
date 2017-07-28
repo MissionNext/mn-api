@@ -22,6 +22,7 @@ use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\FolderApps\FolderApps;
 use MissionNext\Models\Notes\Notes;
 use MissionNext\Models\SearchData\SearchData;
+use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\Field\Field;
 
@@ -178,7 +179,9 @@ class SearchController extends BaseController
         foreach ($resultList as $resultItem) {
             $data           = json_decode($resultItem->data);
             $target_id = (BaseDataModel::JOB == $data->role) ? $data->organization_id : $data->id;
-            if (User::find($target_id)->isActiveInApp($this->securityContext()->getApp())) {
+            $user = User::find($target_id);
+            $subscription = $user->subscriptions()->where('app_id', $this->securityContext()->getApp()->id())->first();
+            if ($user->isActiveInApp($this->securityContext()->getApp()) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED && $subscription->status != Subscription::STATUS_CLOSED) {
                 $data->notes    = $resultItem->notes;
                 $data->folder   = $resultItem->foldername;
                 $data->favorite = $resultItem->favorite;
