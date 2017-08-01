@@ -22,6 +22,7 @@ use MissionNext\Models\Field\FieldType;
 use MissionNext\Models\FolderApps\FolderApps;
 use MissionNext\Models\Notes\Notes;
 use MissionNext\Models\SearchData\SearchData;
+use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Models\User\User;
 use MissionNext\Repos\Field\Field;
 
@@ -42,9 +43,12 @@ class SearchController extends BaseController
     public function postIndex($searchType, $userType, $userId)
     {
         SecurityContext::getInstance()->getToken()->setRoles([$searchType]);
-
-        $profileSearch = $this->request->get("profileData");
-        $userSearch = $this->request->except("profileData", "timestamp", "page");
+        $page = $this->request->get('page');
+        $offset = ($page - 1) * 500;
+        $profileSearch = $this->request->get("params")['profileData'];
+        $userSearch = $this->request->get("params");
+        unset($userSearch['profileData']);
+        unset($userSearch['timestamp']);
 
         $bindings = [];
         $tableName = $searchType.'_cached_profile';
@@ -118,8 +122,12 @@ class SearchController extends BaseController
 
                     } else {
                         $query .= $where . " ? && json_array_text(cp.data->'profileData'->'{$fieldName}') ";
-                        $value = array_map('strtolower', $value);
-                        $bindings[] = addslashes(str_replace(["[", "]"], ["{", "}"], json_encode($value)));
+                        $value = array_map(function($item) {
+                            $item = strtolower($item);
+                            $item = str_replace("/", "\\/", $item);
+                            return "\"$item\"";
+                        }, $value);
+                        $bindings[] = str_replace(["[", "]"], ["{", "}"], json_encode($value));
                     }
 
                 } else {
@@ -150,14 +158,22 @@ class SearchController extends BaseController
 
             throw new SearchProfileException("No search params specified");
         }
-        $query .= " ) LIMIT 500";
+        $countQuerySelect = $query." )";
 
-        $resultList = DB::select($query, $bindings);
+        $searchResult = DB::select($countQuerySelect, $bindings);
+        $resultList = array_slice($searchResult, $offset, 500);
         $result = [];
         foreach ($resultList as $resultItem) {
             $data           = json_decode($resultItem->data);
             $target_id = (BaseDataModel::JOB == $data->role) ? $data->organization_id : $data->id;
-            if (User::find($target_id)->isActiveInApp($this->securityContext()->getApp())) {
+            $user = User::find($target_id);
+            $subscription = $user->subscriptions()
+                    ->where('app_id', $this->securityContext()->getApp()->id())
+                    ->where('status', '<>', Subscription::STATUS_CLOSED)
+                    ->where('status', '<>', Subscription::STATUS_EXPIRED)
+                    ->first();
+
+            if ($user->isActiveInApp($this->securityContext()->getApp()) && $subscription) {
                 $data->notes    = $resultItem->notes;
                 $data->folder   = $resultItem->foldername;
                 $data->favorite = $resultItem->favorite;
@@ -166,7 +182,13 @@ class SearchController extends BaseController
             }
         }
 
-        return new RestResponse( (new TransData($this->getToken()->language(), $searchType, $result))->get() );
+        $rowsCount = count($searchResult);
+        $pages = round($rowsCount / 500, 0, PHP_ROUND_HALF_UP);
+
+        return new RestResponse( [
+            'results' => (new TransData($this->getToken()->language(), $searchType, $result))->get(),
+            'count' => $pages
+        ]);
 
     }
 
