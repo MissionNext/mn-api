@@ -180,9 +180,11 @@ class JobController extends BaseController
      * @return RestResponse
      */
     public function findByOrgId($organizationId){
-        $jobs = $this->jobRepo()->getModel()->where('organization_id', $organizationId)->where('app_id', $this->securityContext()->getApp()->id())->get();
+        $jobs = $this->jobRepo()->getModel()
+                        ->where('organization_id', $organizationId)
+                        ->where('app_id', $this->securityContext()->getApp()->id())->get();
 
-        $output = [];
+        $new_output = $output = [];
         foreach($jobs as $job){
             $jobCache = (new UserCachedRepository(BaseDataModel::JOB))->where('id', $job['id'])->get();
             if (isset($jobCache[0])) {
@@ -190,6 +192,31 @@ class JobController extends BaseController
             }
         }
 
-        return new RestResponse($output);
+        if (count($output) > 0) {
+            usort($output, function($a, $b) {
+                return strcasecmp($a->name, $b->name);
+            });
+
+            /* second level sorting */
+            $sorted_array = [];
+            foreach ($output as $value) {
+                $sorted_array[$value->name][] = $value;
+            }
+            foreach ($sorted_array as &$title_array) {
+                usort($title_array, function ($a, $b) {
+                    return strcasecmp($a->profileData->second_title, $b->profileData->second_title);
+                });
+            }
+
+            $new_output = [];
+            foreach ($sorted_array as $title_array) {
+                foreach($title_array as $array_item) {
+                    $new_output[] = $array_item;
+                }
+            }
+        }
+
+
+        return new RestResponse($new_output);
     }
 } 
