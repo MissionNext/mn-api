@@ -135,7 +135,15 @@ class SearchController extends BaseController
                         $query .= $where . " ? && json_array_text(cp.data->'profileData'->'{$fieldName}') ";
                         $value = array_map(function($item) {
                             $item = strtolower($item);
-                            $item = str_replace("/", "\\/", $item);
+                            if (strpos($item, "'") !== false) {
+                                $item = str_replace("\\", "", $item);
+                            }
+                            if (strpos($item,'/') !== false) {
+                                $item = str_replace("/", "\\/", $item);
+                            }
+                            /*if (strpos($item, '\"') !== false) {
+                                $item = str_replace('"', '\\\"', $item);
+                            }*/
                             return "\"$item\"";
                         }, $value);
                         $bindings[] = str_replace(["[", "]"], ["{", "}"], json_encode($value));
