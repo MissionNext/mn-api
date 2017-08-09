@@ -209,8 +209,8 @@ class JobController extends BaseController
             }
 
             $new_output = [];
-            foreach ($sorted_array as $title_array) {
-                foreach($title_array as $array_item) {
+            foreach ($sorted_array as $title_array_item) {
+                foreach($title_array_item as $array_item) {
                     $new_output[] = $array_item;
                 }
             }
