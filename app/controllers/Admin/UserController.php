@@ -171,8 +171,9 @@ class UserController extends AdminBaseController {
         }
 
         $name = $user->username;
-        $user->delete($id);
-        Session::flash('info', "User <strong>$name</strong> successfully deleted.");
+        if ($user->delete($id)) {
+            Session::flash('info', "User <strong>$name</strong> successfully deleted.");
+        };
 
         return Redirect::route('users');
     }

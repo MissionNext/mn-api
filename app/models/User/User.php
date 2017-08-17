@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\CacheData\UserCachedData;
@@ -532,9 +533,16 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
             .'&username='.$this->getUsername().'&secret='.md5('Secret key for deleting wp user.'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $data = $this->curl_exec_follow($ch);
+
         curl_close($ch);
 
-        return parent::delete();
+        if (10 == $data) {
+            return parent::delete();
+        }
+
+        Session::flash('warning', 'Wordpress error. '.substr($data, 0, strlen($data) - 1));
+
+        return false;
     }
 
     function curl_exec_follow($ch, &$maxredirect = null) {
