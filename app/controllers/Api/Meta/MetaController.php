@@ -20,7 +20,7 @@ class MetaController extends BaseController {
 	{
         $affiliates = $this->getAffiliates($user_id, Affiliate::TYPE_ANY);
 
-        $ids = [];
+        $ids[] = $user_id;
         foreach ($affiliates as $item) {
             $ids[] = $item->org_id;
         }
