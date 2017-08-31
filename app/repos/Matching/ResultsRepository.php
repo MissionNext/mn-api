@@ -65,6 +65,9 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
         if (isset($job_owner)) {
             $left_join_id = $job_owner;
         }
+        if (isset($job_owner) && isset($user_id) && $job_owner != $user_id) {
+            $left_join_id = $user_id;
+        }
 
         $distinct = '';
         if (isset($sort_by) && isset($order_by)) {
@@ -91,11 +94,11 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
                          ->where("folder_apps.user_type", "=", $userType)
                          ->where("folder_apps.app_id", "=", $this->securityContext()->getApp()->id());
                  })
-                 ->leftJoin("notes", function($join) use ($forUserId, $forUserType, $userType, $left_join_id){
-                     $join->on("notes.user_id", "=", "matching_results.user_id")
+                ->leftJoin("notes", function($join) use ($forUserId, $forUserType, $userType, $left_join_id){
+                    $join->on("notes.user_id", "=", "matching_results.user_id")
                         ->where("notes.for_user_id", "=", $left_join_id)
                         ->where("notes.user_type", "=", $userType);
-                 })
+                })
                 ->leftJoin("favorite", function($join) use ($forUserId, $forUserType, $userType, $left_join_id){
                     $join->on("favorite.target_id", "=", "matching_results.user_id")
                         ->where("favorite.user_id", "=", $left_join_id)

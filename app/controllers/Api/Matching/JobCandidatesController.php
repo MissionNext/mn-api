@@ -49,7 +49,7 @@ class JobCandidatesController extends BaseController
 
             return
                 new RestResponse($this->matchingResultsRepo()
-                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId, compact('rate', 'job_owner', 'sort_by', 'order_by')));
+                    ->matchingResults(BaseDataModel::JOB, BaseDataModel::CANDIDATE, $jobId, compact('rate', 'job_owner', 'sort_by', 'order_by', 'user_id')));
         }
 
         return new RestResponse([]);

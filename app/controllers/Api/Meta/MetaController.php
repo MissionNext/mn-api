@@ -25,6 +25,11 @@ class MetaController extends BaseController {
             $ids[] = $item->org_id;
         }
 
+        $own_notes = Notes::select("user_id", "for_user_id as note_owner", "notes")
+            ->where('for_user_id', $user_id)
+            ->where('user_type', $role)
+            ->get()->toArray();
+
         $notes = Notes::select("user_id", "for_user_id as note_owner", "notes")
             ->whereIn('for_user_id', $ids)
             ->where('user_type', $role)
@@ -51,6 +56,7 @@ class MetaController extends BaseController {
         }
 
         return new RestResponse([
+            'own_notes'      => $own_notes,
             'notes'         => $notes,
             'favorites'     => $favorites,
             'folders'       => $folders,
