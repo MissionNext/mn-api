@@ -179,6 +179,14 @@ class SearchController extends BaseController
 
             throw new SearchProfileException("No search params specified");
         }
+
+        if (AppDataModel::JOB == $searchType) {
+            $date_limit = new \DateTime('now');
+            $date_limit->modify("-6 months");
+            $timelimit = $date_limit->getTimestamp();
+
+            $query .= 'AND '.DB::raw("(cp.data->>'updated_at')::date".' >= \''.date('Y-m-d', $timelimit)).'\'';
+        }
         $countQuerySelect = $query." )";
 
         $searchResult = DB::select($countQuerySelect, $bindings);

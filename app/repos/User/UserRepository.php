@@ -5,6 +5,7 @@ namespace MissionNext\Repos\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Api\Service\DataTransformers\UserCachedDataStrategy;
 use MissionNext\Api\Service\DataTransformers\UserCachedTransformer;
@@ -132,9 +133,13 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
         /** @var  $jobRepo JobRepository */
         $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
 
+        $date_limit = new \DateTime('now');
+        $date_limit->modify("-6 months");
+        $timelimit = $date_limit->getTimestamp();
 
         $builder =  $jobRepo->getModel()
                      ->select("job_cached_profile_trans.data", "notes.notes", "folder_apps.folder")
+                    ->where(DB::raw("(job_cached_profile_trans.data->>'updated_at')::date"), '>=', date('Y-m-d', $timelimit))
                      ->leftJoin("job_cached_profile_trans", "job_cached_profile_trans.id", "=", "jobs.id")
                      ->leftJoin("folder_apps", function($join) use ($user){
                             $join->on("folder_apps.user_id", "=", "jobs.id")
