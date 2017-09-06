@@ -136,6 +136,14 @@ class ResultsRepository extends AbstractRepository implements ResultsRepositoryI
             if(isset($rate))
                 $builder->where('matching_results.matching_percentage', '>=', $rate);
 
+        if ($userType === BaseDataModel::JOB) {
+            $date_limit = new \DateTime('now');
+            $date_limit->modify("-6 months");
+            $timelimit = $date_limit->getTimestamp();
+
+            $builder->where(DB::raw("(job_cached_profile.data->>'updated_at')::date"), '>=', date('Y-m-d', $timelimit));
+        }
+
             if (isset($sort_by) && isset($order_by)) {
                 switch ($sort_by) {
                     case 'matching_percentage':
