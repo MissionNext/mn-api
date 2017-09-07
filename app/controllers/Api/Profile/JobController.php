@@ -96,7 +96,7 @@ class JobController extends BaseController
         $fields = $this->fieldRepo()->modelFields()->where('symbol_key', $hash['field_name'])->get();
         $this->fieldRepo()->profileFields($job)->detach($fields[0]->id, true);
 
-        $filename = public_path().'/uploads/job'.$id.'_'.$hash['field_name'].'.pdf';
+        $filename = app_path().'/storage/uploads/job'.$id.'_'.$hash['field_name'].'.pdf';
         unlink($filename);
 
         $jobRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();

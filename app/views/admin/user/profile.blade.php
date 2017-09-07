@@ -26,7 +26,7 @@ Dashboard. User Profile
                     <th>{{ $fieldLabels[$item] }} </th>
                     <td>@if (is_string($user['profileData'][$item]))
                             @if (0 === strpos($user['profileData'][$item], $uploadFieldPrefix))
-                                <a href="/uploads/{{ $user['profileData'][$item] }}" target="_blank">
+                                <a href="/profile/file/{{ $user['profileData'][$item] }}" target="_blank">
                                     {{ $user['profileData'][$item] }}
                                 </a>
                             @else

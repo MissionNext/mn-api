@@ -488,7 +488,7 @@ class BaseController extends Controller
                 $this->fieldRepo()->profileFields($user)->detach($fileField->id, true);
                 $file = $profileValue['value'];
                 $fileName = $this->securityContext()->role().$user->id."_".$profileKey.".".$file->getClientOriginalExtension();
-                $file->move(public_path()."/uploads", $fileName );
+                $file->move(app_path()."/storage/uploads", $fileName );
                 $this->fieldRepo()->profileFields($user)->attach($fileField->id, ["value" => $fileName]);
                 $fileFields[] = $profileKey;
             }

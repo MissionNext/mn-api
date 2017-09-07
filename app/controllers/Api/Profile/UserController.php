@@ -102,7 +102,7 @@ class UserController extends BaseController
         $fields = $this->fieldRepo()->modelFields()->where('symbol_key', $hash['field_name'])->get();
         $this->fieldRepo()->profileFields($user)->detach($fields[0]->id, true);
 
-        $filename = public_path().'/uploads/'.$user->role().$id.'_'.$hash['field_name'].'.pdf';
+        $filename = app_path().'/storage/uploads/'.$user->role().$id.'_'.$hash['field_name'].'.pdf';
         unlink($filename);
 
         $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();

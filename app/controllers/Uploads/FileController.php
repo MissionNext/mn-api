@@ -22,12 +22,22 @@ class FileController extends Controller
      */
     public function getIndex($fileName)
     {
-        $fullFileName = public_path('uploads/'.$fileName);
+        $fullFileName = app_path('storage/uploads/'.$fileName);
         if (!file_exists($fullFileName)){
 
            return  View::make('uploads.404');
         }
 
         return new Response(file_get_contents($fullFileName), 200, ['Content-type' => 'application/pdf']);
+    }
+
+    public function getFile($fileName)
+    {
+        $fullPath = app_path('/storage/uploads/'.$fileName);
+        if (!file_exists($fullPath)) {
+            return  View::make('uploads.404');
+        }
+
+        return \Illuminate\Support\Facades\Response::download($fullPath);
     }
 } 
