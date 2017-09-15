@@ -8,7 +8,6 @@ services:
         image: tianon/true
         volumes:
             - ../:/var/www/api/
-            - ../../missionnextwp:/var/www/wordpress
 
 ### Workspace Utilities Container ###########################
 
@@ -38,7 +37,7 @@ services:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
             - "dockerhost:10.0.75.1"
         ports:
-           - "2222:22"
+           - "2223:22"
         tty: true
 
 ### PHP-FPM Container #######################################
@@ -69,11 +68,9 @@ services:
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
             - "dockerhost:10.0.75.1"
-            - "api.dev:10.0.75.1"
-            - "missionwp.dev:10.0.75.1"
         environment:
             # IMPORTANT: Set the Remote Interpreter entry matching name to `laravel`
-            - PHP_IDE_CONFIG=serverName=missionwp.dev
+            - PHP_IDE_CONFIG=serverName=api.dev
 
 ### Nginx Server Container ##################################
 
@@ -88,25 +85,10 @@ services:
             - ./logs/nginx/:/var/log/nginx
             - ./nginx/sites/:/etc/nginx/sites-available
         ports:
-            - "80:80"
-            - "443:443"
+            - "81:80"
+            - "444:443"
         links:
             - php-fpm
-
-### MySQL Container #########################################
-
-    mysql:
-        build:
-            context: ./mysql
-            args:
-                - MYSQL_DATABASE=missionnext
-                - MYSQL_USER=homestead
-                - MYSQL_PASSWORD=secret
-                - MYSQL_ROOT_PASSWORD=root
-        volumes:
-            - mysql:/var/lib/mysql
-        ports:
-            - "3306:3306"
 
 ### PostgreSQL Container ####################################
 
@@ -152,8 +134,6 @@ services:
 ### Volumes Setup ###########################################
 
 volumes:
-    mysql:
-        driver: "local"
     postgres:
         driver: "local"
     sessions:    ## nothing is connected to this (- ./data/sessions:/sessions)

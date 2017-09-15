@@ -11,4 +11,4 @@ Thumbs.db
 /app/storage/
 /app/config
 /app/controllers/Admin/Server.php
-/laradock/logs
+/dcapi/logs
