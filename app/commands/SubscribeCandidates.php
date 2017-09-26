@@ -4,6 +4,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use MissionNext\Api\Service\Payment\AuthorizeNet;
+use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
+use MissionNext\Repos\RepositoryContainerInterface;
 
 class SubscribeCandidates extends Command {
 
@@ -38,7 +40,8 @@ class SubscribeCandidates extends Command {
 	 */
 	public function fire()
 	{
-        $service = new AuthorizeNet( new \AuthorizeNetAIM('7b5t92TM3tW','9G6Q89y5es8fP7WC'), new \AuthorizeNetARB('7b5t92TM3tW','9G6Q89y5es8fP7WC'), new \Illuminate\Foundation\Application());
+	    $app = new \Illuminate\Foundation\Application();
+        $service = new AuthorizeNet( new \AuthorizeNetAIM('7b5t92TM3tW','9G6Q89y5es8fP7WC'), new \AuthorizeNetARB('7b5t92TM3tW','9G6Q89y5es8fP7WC'), $app);
 
         $helper = $this->getHelperSet();
         /** @var  $progress */
@@ -48,9 +51,10 @@ class SubscribeCandidates extends Command {
         $this->info("Subscriptions create ...");
 
         /** @var  $repoContainer \MissionNext\Repos\RepositoryContainer */
-        $repoContainer = $this->getLaravel()->make(\MissionNext\Repos\RepositoryContainerInterface::class);
+        $repoContainer = $this->getLaravel()->make(RepositoryContainerInterface::class);
 
-	    $subscriptionRepository = $repoContainer[\MissionNext\Repos\Subscription\SubscriptionRepositoryInterface::KEY];
+	    $subscriptionRepository = $repoContainer[SubscriptionRepositoryInterface::KEY];
+
 		$users = \MissionNext\Models\User\User::whereNotNull('old_id')
             ->join('user_roles', 'user_roles.user_id', '=', 'users.id')
             ->where('user_roles.role_id', 1)->get();
@@ -84,7 +88,7 @@ class SubscribeCandidates extends Command {
                         );
 
 
-                        $readyData = $service->processRequest($data);
+                        $readyData = $service->processRequest($data, $subscriptionRepository);
                         $subscriptionsData = $readyData['subscriptions'];
                         $subscriptionRepository->saveMany($subscriptionsData);
                     }

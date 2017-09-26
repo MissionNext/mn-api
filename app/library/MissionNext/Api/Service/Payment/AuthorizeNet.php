@@ -46,9 +46,9 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         $this->apps = $this->prepareApps(AppModel::with('configs')->with('subConfigs')->get()->toArray());
     }
 
-    public function processRequest($data){
+    public function processRequest($data, $subsRepo = null){
 
-        $this->defaults = $this->getDefaults($data['user_id']);
+        $this->defaults = $this->getDefaults($data['user_id'], $subsRepo);
 
         $user = User::find($data['user_id']);
 
@@ -463,8 +463,12 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
         return round($total);
     }
 
-    private function getDefaults($user_id){
-        $_defaults = $this->app->make(SubscriptionRepositoryInterface::class)->userSubscriptions($user_id)->toArray();
+    private function getDefaults($user_id, $subsRepo){
+        if ($subsRepo) {
+            $_defaults = $subsRepo->userSubscriptions($user_id)->toArray();
+        } else {
+            $_defaults = $this->app->make(SubscriptionRepositoryInterface::class)->userSubscriptions($user_id)->toArray();
+        }
 
         $defaults = array();
 
