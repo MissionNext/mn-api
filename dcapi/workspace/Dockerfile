@@ -20,7 +20,7 @@ MAINTAINER Mahmoud Zalt <mahmoud@zalt.me>
 #--------------------------------------------------------------------------
 #
 # Mandatory Software's such as ("php7.0-cli", "git", "vim", ....) are
-# installed on the base image 'laradock/workspace' image. If you want
+# installed on the base image 'dcapi/workspace' image. If you want
 # to add more Software's or remove existing one, you need to edit the
 # base image (https://github.com/LaraDock/workspace).
 #
@@ -62,7 +62,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Add the composer.json
 COPY ./composer.json /home/laradock/.composer/composer.json
 
-# Make sure that ~/.composer belongs to laradock
+# Make sure that ~/.composer belongs to dcapi
 RUN chown -R laradock:laradock /home/laradock/.composer
 USER laradock
 
