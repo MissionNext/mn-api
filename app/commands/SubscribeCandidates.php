@@ -88,11 +88,12 @@ class SubscribeCandidates extends Command {
                         );
 
 
-                        $readyData = $service->processRequest($data, $subscriptionRepository);
-                        $subscriptionsData = $readyData['subscriptions'];
-                        $subscriptionRepository->saveMany($subscriptionsData);
+
                     }
                 }
+                $readyData = $service->processRequest($data, $subscriptionRepository);
+                $subscriptionsData = $readyData['subscriptions'];
+                $subscriptionRepository->saveMany($subscriptionsData);
             }
             $progress->advance();
         }
