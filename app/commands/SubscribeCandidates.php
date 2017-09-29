@@ -55,8 +55,7 @@ class SubscribeCandidates extends Command {
 
 	    $subscriptionRepository = $repoContainer[SubscriptionRepositoryInterface::KEY];
 
-		$users = \MissionNext\Models\User\User::whereNotNull('old_id')
-            ->join('user_roles', 'user_roles.user_id', '=', 'users.id')
+		$users = \MissionNext\Models\User\User::join('user_roles', 'user_roles.user_id', '=', 'users.id')
             ->where('user_roles.role_id', 1)->get();
 
         $progCount = count($users);
