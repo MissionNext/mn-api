@@ -32,6 +32,7 @@ use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
 use MissionNext\Models\Subscription\GlobalSubscription;
+use MissionNext\Models\Subscription\SubConfig;
 use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\UserRepository;
@@ -484,50 +485,6 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
     public function delete()
     {
-        $user_id = $this->id;
-        $favorites = Favorite::where('user_id', '=', $user_id)->get();
-        if (count($favorites) > 0) {
-            foreach ($favorites as $item) {
-                $item->delete();
-            }
-        }
-
-        $inquires = Inquire::where('candidate_id', '=', $user_id)->get();
-        if (count($inquires) > 0) {
-            foreach ($inquires as $item) {
-                $item->delete();
-            }
-        }
-
-        $notes = Notes::where('user_id', '=', $user_id)->get();
-        if (count($notes) > 0) {
-            foreach ($notes as $item) {
-                $item->delete();
-            }
-        }
-
-        $organization_flag = false;
-        if (count($this->roles)) {
-            foreach ($this->roles as $role) {
-                if (2 == $role->id) {
-                    $organization_flag = true;
-                    break;
-                }
-            }
-        }
-
-        if ($organization_flag && count($this->jobs)) {
-            foreach ($this->jobs as $job) {
-                Results::where('user_id', $job->id)->orWhere('for_user_id', $job->id)->delete();
-                $job->delete();
-            }
-        }
-
-        UserCachedData::table($this->role())->where('id', $this->id)->delete();
-        UserCachedDataTrans::table($this->role())->where('id', $this->id)->delete();
-        DB::table($this->role().'_profile')->where('user_id', $this->id)->delete();
-
-        Results::where('user_id', $user_id)->orWhere('for_user_id', $user_id)->delete();
 
         $ch = curl_init(Config::get('app.wp_remote_url').'/wp-admin/admin-ajax.php?action=user_deleting_function&'
             .'&username='.$this->getUsername().'&secret='.md5('Secret key for deleting wp user.'));
@@ -537,6 +494,72 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         curl_close($ch);
 
         if (10 == $data) {
+            $user_id = $this->id;
+            $favorites = Favorite::where('user_id', '=', $user_id)->get();
+            if (count($favorites) > 0) {
+                foreach ($favorites as $item) {
+                    $item->delete();
+                }
+            }
+
+            $inquires = Inquire::where('candidate_id', '=', $user_id)->get();
+            if (count($inquires) > 0) {
+                foreach ($inquires as $item) {
+                    $item->delete();
+                }
+            }
+
+            $notes = Notes::where('user_id', '=', $user_id)->get();
+            if (count($notes) > 0) {
+                foreach ($notes as $item) {
+                    $item->delete();
+                }
+            }
+
+            $organization_flag = false;
+            if (count($this->roles)) {
+                foreach ($this->roles as $role) {
+                    if (2 == $role->id) {
+                        $organization_flag = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($organization_flag && count($this->jobs)) {
+                foreach ($this->jobs as $job) {
+                    Results::where('user_id', $job->id)->orWhere('for_user_id', $job->id)->delete();
+                    $job->delete();
+                }
+            }
+
+            UserCachedData::table($this->role())->where('id', $this->id)->delete();
+            UserCachedDataTrans::table($this->role())->where('id', $this->id)->delete();
+            DB::table($this->role().'_profile')->where('user_id', $this->id)->delete();
+
+            Results::where('user_id', $user_id)->orWhere('for_user_id', $user_id)->delete();
+
+            $subs = $this->subscriptions()->get();
+
+            $forceClose = true;
+            foreach ($subs as $initSub) {
+                $authorizeCode = null;
+                if ($initSub->is_recurrent && $initSub->authorize_id && $forceClose){
+                    $subscription = Subscription::where('authorize_id','=', $initSub->authorize_id)
+                        ->where('status', '<>', Subscription::STATUS_CLOSED)
+                        ->get();
+                    $response = $this->paymentGateway->getRecurringBilling()->cancelSubscription($initSub->authorize_id);
+                    //$authorizeCode = strip_tags($response->xpath('messages/message')[0]->code->asXML());
+                    $authorizeCode = $response->getMessageCode();
+                    //code -  E00003, I00001- successful,  I00002 - has already been cancelled
+                    $initSub->status = Subscription::STATUS_CLOSED;
+                    $initSub->save();
+                }else{
+                    $initSub->status = Subscription::STATUS_CLOSED;
+                    $initSub->save();
+                }
+            }
+
             return parent::delete();
         }
 
