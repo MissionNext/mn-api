@@ -12,12 +12,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use MissionNext\Facade\SecurityContext;
+use MissionNext\Models\Affiliate\Affiliate;
 use MissionNext\Models\Application\Application;
 use MissionNext\Models\CacheData\UserCachedData;
 use MissionNext\Models\CacheData\UserCachedDataTrans;
 use MissionNext\Models\DataModel\BaseDataModel;
 use MissionNext\Models\EloquentObservable;
 use MissionNext\Models\Favorite\Favorite;
+use MissionNext\Models\Folder\Folder;
+use MissionNext\Models\FolderApps\FolderApps;
 use MissionNext\Models\Inquire\Inquire;
 use MissionNext\Models\Job\Job;
 use MissionNext\Models\Matching\Results;
@@ -31,6 +34,7 @@ use MissionNext\Models\Field\Candidate as CandidateField;
 use MissionNext\Models\Field\Organization as OrganizationField;
 use MissionNext\Models\Field\Agency as AgencyField;
 use MissionNext\Models\Role\Role;
+use MissionNext\Models\SearchData\SearchData;
 use MissionNext\Models\Subscription\GlobalSubscription;
 use MissionNext\Models\Subscription\SubConfig;
 use MissionNext\Models\Subscription\Subscription;
@@ -495,26 +499,26 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
         if (10 == $data) {
             $user_id = $this->id;
-            $favorites = Favorite::where('user_id', '=', $user_id)->get();
-            if (count($favorites) > 0) {
-                foreach ($favorites as $item) {
-                    $item->delete();
-                }
-            }
+            $user_role = $this->userRole;
 
-            $inquires = Inquire::where('candidate_id', '=', $user_id)->get();
-            if (count($inquires) > 0) {
-                foreach ($inquires as $item) {
-                    $item->delete();
-                }
-            }
+            Favorite::where('user_id', '=', $user_id)
+                ->orWhere('target_id', $user_id)
+                ->where('target_type', $user_role)->delete();
 
-            $notes = Notes::where('user_id', '=', $user_id)->get();
-            if (count($notes) > 0) {
-                foreach ($notes as $item) {
-                    $item->delete();
-                }
-            }
+            Inquire::where('candidate_id', '=', $user_id)->delete();
+
+            Notes::where('user_id', $user_id)
+                ->where('user_type', $user_role)
+                ->orWhere('for_user_id', $user_id)->delete();
+
+            FolderApps::where('user_id', $user_id)
+                ->where('user_type', $user_role)
+                ->orWhere('for_user_id', $user_id)->delete();
+
+            Affiliate::where('affiliate_approver', $user_id)
+                ->orWhere('affiliate_requester')->delete();
+
+            SearchData::where('user_id', $user_id)->delete();
 
             $organization_flag = false;
             if (count($this->roles)) {
@@ -528,6 +532,17 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
             if ($organization_flag && count($this->jobs)) {
                 foreach ($this->jobs as $job) {
+                    Notes::where('user_id', $job->id)
+                        ->where('user_type', BaseDataModel::JOB)->delete();
+
+                    Favorite::where('target_id', $job->id)
+                        ->where('target_type', BaseDataModel::JOB)->delete();
+
+                    Inquire::where('job_id', $job->id)->delete();
+
+                    FolderApps::where('user_id', $job->id)
+                        ->where('user_type', BaseDataModel::JOB)->delete();
+
                     Results::where('user_id', $job->id)->orWhere('for_user_id', $job->id)->delete();
                     $job->delete();
                 }
