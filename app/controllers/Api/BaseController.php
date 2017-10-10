@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Auth\Token;
@@ -474,12 +475,13 @@ class BaseController extends Controller
     private function uploadFiles($user, $profileData) {
         $fileFields = [];
         $profileToValidate = [];
+
         foreach ($profileData as $profileKey => $profileValue) {
             if ($profileValue['value'] instanceof UploadedFile) {
                 $profileToValidate[$profileKey] = $profileValue;
             }
         }
-
+        Log::info(count($profileToValidate));
         if (count($profileToValidate) > 0) {
             $this->validateProfileData($profileToValidate);
 
