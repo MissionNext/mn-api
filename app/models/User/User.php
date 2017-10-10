@@ -495,7 +495,12 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $data = $this->curl_exec_follow($ch);
 
-        curl_close($ch);
+        if (FALSE === $data) {
+            Session::flash('warning', 'CURL error. Error #'.curl_errno($ch).' with message: '.curl_error($ch));
+            curl_close($ch);
+
+            return false;
+        }
 
         if (10 == $data) {
             $user_id = $this->id;
@@ -579,6 +584,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
         }
 
         Session::flash('warning', 'Wordpress error. '.substr($data, 0, strlen($data) - 1));
+        curl_close($ch);
 
         return false;
     }
