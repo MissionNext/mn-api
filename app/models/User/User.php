@@ -57,7 +57,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
     protected $guarded = array('id', 'password');
 
-    protected $fillable = array('username', 'email', 'is_active', 'status');
+    protected $fillable = array('username', 'email', 'is_active', 'status', 'last_login');
 
     protected $userRole;
     protected $userRoleId;
