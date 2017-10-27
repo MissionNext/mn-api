@@ -171,7 +171,7 @@ class UserController extends AdminBaseController
 
         Mail::send('admin.mail.user.status', ['user' => $user->toArray()], function(Message $message) use ($user)
         {
-            $message->from('no-reply@new.missionnext.org', 'MissionNext');
+            $message->from('no-reply@info.missionnext.org', 'MissionNext');
             $message->to($user->email, $user->username)->subject('Your access was changed');
         });
 
