@@ -109,7 +109,7 @@ class UserController extends AdminBaseController {
             $user->username = Input::get('username');
             $user->email = Input::get('email');
             $user->password = Input::get('password');
-            $user->last_login = date('Y-m-d H:i:s');
+            $user->setLastLogin();
             $user->save();
             $user->roles()->attach($role->id);
             $name = $user->username;
