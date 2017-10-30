@@ -153,9 +153,9 @@ RUN if [ ${CODEIGNITER} = true ]; then \
 ;fi
 
 #ARG CURL_EXTENSION=false
-#RUN if [ ${CURL_EXTENSION} = true ]; then \
-#    docker-php-ext-install curl \
-#;fi
+RUN if [ ${CURL_EXTENSION} = true ]; then \
+    docker-php-ext-install curl \
+;fi
 
 #
 #--------------------------------------------------------------------------
