@@ -21,6 +21,7 @@ services:
                 - INSTALL_YARN=false
                 - INSTALL_DRUSH=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
+                - INSTALL_AEROSPIKE=false
                 - INSTALL_V8JS_EXTENSION=false
                 - COMPOSER_GLOBAL_INSTALL=false
                 - INSTALL_WORKSPACE_SSH=true
@@ -31,13 +32,12 @@ services:
                 - NODE_VERSION=stable
                 - YARN_VERSION=latest
                 - TZ=UTC
+            dockerfile: Dockerfile-56
         volumes_from:
             - applications
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
             - "dockerhost:10.0.75.1"
-            - "api.app:192.168.4.1"
-            - "missionwp.app:192.168.4.1"
         ports:
            - "2223:22"
         tty: true
@@ -70,8 +70,6 @@ services:
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
             - "dockerhost:10.0.75.1"
-            - "api.app:192.168.4.1"
-            - "missionwp.app:192.168.4.1"
         environment:
             # IMPORTANT: Set the Remote Interpreter entry matching name to `laravel`
             - PHP_IDE_CONFIG=serverName=api.app
