@@ -16,7 +16,7 @@ class MetaController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function getMetaForAgeny($user_id, $role)
+	public function getMetaForAgency($user_id, $role)
 	{
         $affiliates = $this->getAffiliates($user_id, Affiliate::TYPE_ANY);
 

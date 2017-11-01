@@ -149,7 +149,7 @@ class Routing
             Route::controller('meta/notes', NotesController::class, []);
             Route::controller('meta/folder', FolderAppsController::class, []);
 
-            Route::get('meta/for/{user_id}/{role}', MetaController::class.'@getMetaForAgeny');
+            Route::get('meta/for/{user_id}/{role}', MetaController::class.'@getMetaForAgency');
             Route::resource(static::RESOURCE_FOLDER, FolderResource::class,
                 [   ]
             );
