@@ -32,22 +32,24 @@ class MetaController extends BaseController {
             ->where('user_type', $role)
             ->get()->toArray();
 
-        $notes = Notes::select("user_id", "for_user_id as note_owner", "notes")
-            ->whereIn('for_user_id', $ids)
-            ->where('user_type', $role)
-            ->get()->toArray();
+        if (count($ids) > 0) {
+            $notes = Notes::select("user_id", "for_user_id as note_owner", "notes")
+                ->whereIn('for_user_id', $ids)
+                ->where('user_type', $role)
+                ->get()->toArray();
 
-        $favorites = Favorite::select("user_id as favorite_owner", "target_id")
-            ->whereIn("user_id", $ids)
-            ->where("target_type", $role)
-            ->where("app_id", $this->securityContext()->getApp()->id())
-            ->get()->toArray();
+            $favorites = Favorite::select("user_id as favorite_owner", "target_id")
+                ->whereIn("user_id", $ids)
+                ->where("target_type", $role)
+                ->where("app_id", $this->securityContext()->getApp()->id())
+                ->get()->toArray();
 
-        $folders = FolderApps::select("user_id", "for_user_id as folder_owner", "folder")
-            ->whereIn("for_user_id", $ids)
-            ->where("user_type", $role)
-            ->where("app_id", $this->securityContext()->getApp()->id())
-            ->get()->toArray();
+            $folders = FolderApps::select("user_id", "for_user_id as folder_owner", "folder")
+                ->whereIn("for_user_id", $ids)
+                ->where("user_type", $role)
+                ->where("app_id", $this->securityContext()->getApp()->id())
+                ->get()->toArray();
+        }
 
         foreach ($affiliates as $item) {
             $affiliatesOrg[$item["organization_profile"]->id] = [
