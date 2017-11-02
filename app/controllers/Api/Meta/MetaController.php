@@ -25,6 +25,8 @@ class MetaController extends BaseController {
             $ids[] = $item->org_id;
         }
 
+        $own_notes = $notes = $favorites = $folders = $affiliatesOrg = [];
+
         $own_notes = Notes::select("user_id", "for_user_id as note_owner", "notes")
             ->where('for_user_id', $user_id)
             ->where('user_type', $role)
@@ -47,7 +49,6 @@ class MetaController extends BaseController {
             ->where("app_id", $this->securityContext()->getApp()->id())
             ->get()->toArray();
 
-        $affiliatesOrg = [];
         foreach ($affiliates as $item) {
             $affiliatesOrg[$item["organization_profile"]->id] = [
                 'id'    => $item["organization_profile"]->id,
