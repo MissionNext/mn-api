@@ -107,7 +107,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
     {
         $orgIds = $this->orgsIdsbyAgency($agency);
 
-        $jobIds = $this->jobsByOrganization($orgIds)->lists('id');
+        $jobIds = $this->jobsByOrganization($orgIds);
 
         if (in_array($inquire->job_id, $jobIds)) {
             $inquireEntity = $this->getModel()
@@ -130,7 +130,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
      */
     public function cancelInquireByOrganization(Inquire $inquire, User $org)
     {
-        $jobIds = $this->jobsByOrganization([$org->id])->lists('id');
+        $jobIds = $this->jobsByOrganization([$org->id]);
 
         if (in_array($inquire->job_id, $jobIds)) {
             $inquireEntity = $this->getModel()
@@ -154,10 +154,10 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
         /** @var  $jobRepo JobRepository */
         $jobRepo = $this->repoContainer[JobRepositoryInterface::KEY];
 
-        return $orgIds ?  $jobRepo->getModel()
+        return $orgIds ? $jobRepo->getModel()
             ->whereIn("organization_id",  $orgIds)
             ->where("app_id", "=", $this->repoContainer->securityContext()->getApp()->id())
-            ->get()
+            ->get()->lists('id')
              : [];
     }
 
@@ -213,7 +213,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
      */
     public function candidatesForOrganization(User $user)
     {
-        $jobIds =  $this->jobsByOrganization([$user->id])->lists("id");
+        $jobIds =  $this->jobsByOrganization([$user->id]);
 
         return  $jobIds ?
                   $this->candidateByJobs($jobIds)
@@ -229,7 +229,7 @@ class InquireRepository extends AbstractRepository implements ISecurityContextAw
     {
         $orgIds = $this->orgsIdsbyAgency($user);
 
-        $jobIds = $this->jobsByOrganization($orgIds)->lists('id');
+        $jobIds = $this->jobsByOrganization($orgIds);
 
         return  $jobIds ?
              $this->candidateByJobs($jobIds)
