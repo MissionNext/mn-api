@@ -186,7 +186,11 @@ class UserController extends BaseController
             throw new ValidationException($modelValidator->getErrors());
         }
 
+        $user->timestamps = false;
         foreach ($filteredData as $prop => $val) {
+            if ($user->$prop !== $val) {
+                $user->timestamps = true;
+            }
             $user->$prop = $val;
         }
 
@@ -239,6 +243,7 @@ class UserController extends BaseController
         $user = $this->userRepo()->getModel()->with('roles')->whereUsername($username)->first();
         $user && !Hash::check($password, $user->password) && $user = null;
         if($user){
+            $user->timestamps = false;
             $user->setLastLogin();
             $user->save();
             $user = $user->toArray();
