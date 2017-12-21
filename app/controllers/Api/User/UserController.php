@@ -5,6 +5,7 @@ namespace MissionNext\Controllers\Api\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use MissionNext\Api\Exceptions\UserException;
@@ -29,6 +30,7 @@ use MissionNext\Repos\Matching\ConfigRepository;
 use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Validators\User as UserValidator;
+use Monolog\Logger;
 
 /**
  * Class UserController
@@ -245,7 +247,10 @@ class UserController extends BaseController
         if($user){
             $user->timestamps = false;
             $user->setLastLogin();
+            Log::info('User: '.$user->username);
+            Log::info('Last login: '.$user->last_login);
             $user->save();
+            Log::info('Last login: '.$user->last_login);
             $user = $user->toArray();
             $user['roles'] = $user['roles'][0]['role'];
         }
