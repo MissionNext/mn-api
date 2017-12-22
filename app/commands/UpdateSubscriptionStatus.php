@@ -53,12 +53,17 @@ class UpdateSubscriptionStatus extends Command
            if  ( ( $subscription->status === Subscription::STATUS_EXPIRED || $subscription->status === Subscription::STATUS_GRACE  )
                && $subscription->price == 0
                )  {
+                   $userAppStatus = DB::table('user_apps_status')
+                       ->where('app_id', '=', $subscription->app_id)
+                       ->where('user_id', '=', $subscription->user_id)
+                       ->first();
+                   if($userAppStatus->is_active) {
+                       $subscription->end_date = $subscription->is_recurrent ? Carbon::now()->addMonth()
+                                                                            : Carbon::now()->addYear();
 
-                   $subscription->end_date = $subscription->is_recurrent ? Carbon::now()->addMonth()
-                                                                         : Carbon::now()->addYear();
-
-                   $subscription->status = Subscription::STATUS_ACTIVE;
-                   $subscription->save();
+                       $subscription->status = Subscription::STATUS_ACTIVE;
+                       $subscription->save();
+                   }
            }else {
 
                $absDaysLeft = abs($subscription->days_left);
