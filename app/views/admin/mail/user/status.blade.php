@@ -12,11 +12,15 @@
     <p>Access Granted</p>
     <p>IF REGISTERED AS AN EXPLORENEXT AGENCY OR TEACHNEXT SCHOOL:</p>
     <p>We are pleased to inform you that your request for partnership with MissionNext has been approved!  You will soon have access to our online database of potential candidates to fill your open positions. </p>
-    <p>Please log in to your account from https://new.missionnext.org/welcome/login-here/  (after choosing the appropriate service) with your username and password to make the activation payment. Once payment is received, you will receive instructions on how to set up your profile and post your jobs in order to make the most of your MissionNext partnership.</p>
+    <p>Please log in to your account from https://missionnext.org/welcome/login-here/  (after choosing the appropriate service) with your username and password to make the activation payment. Once payment is received, you will receive instructions on how to set up your profile and post your jobs in order to make the most of your MissionNext partnership.</p>
     <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
     <p>IF REGISTERED AS AN EXPLORENEXT AGENCY REP OR TEACHNEXT AGENCY TO SERVICE SCHOOLS: </p>
     <p>We are pleased to inform you that your MissionNext Rep Registration has been approved!  You will soon be able to affiliate with your mission agency and/or schools to view their posted jobs and view candidate profiles.   </p>
     <p>Please watch for an email from MissionNext with a coupon code that will allow you to activate your account without payment.  </p>
+    <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+        <p>IF FROM CANADA: </p>
+        <p>We are pleased to inform you that your partnership has been approved by MissionNext Canada!</p>
+        <p>Please log in to your account from https://canada.missionnext.org/login/ with your username and password to make the activation transaction with the coupon you were issued. Then, set up your profile and post your jobs in order to make the most of your MissionNext Canada partnership.</p>
     <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
     <p>If you have any questions, please contact us at headquarters@missionnext.org</p>
     <p>We look forward to partnering with you!</p>
