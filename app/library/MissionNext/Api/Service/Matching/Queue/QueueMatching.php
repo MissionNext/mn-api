@@ -164,7 +164,7 @@ abstract class QueueMatching
 
                 Queue::push(InsertQueue::class, $data);
             }
-
+/*
             $startData = [
                 "userId" => $userId,
                 "appId" => $app_id,
@@ -172,7 +172,7 @@ abstract class QueueMatching
                 "offset" => $offset
             ];
 
-            Queue::push($this->queueClass, $startData);
+            Queue::push($this->queueClass, $startData);*/
         }
 
         $this->job->delete();
