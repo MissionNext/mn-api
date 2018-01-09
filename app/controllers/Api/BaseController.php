@@ -322,7 +322,7 @@ class BaseController extends Controller
 
         $fields = $this->validateProfileData($profileData, $saveLater);
 
-        if (!$changedFields || ($changedFields && count($changedFields['changedFields']) > 0)) {
+        if (!isset($changedFields) || (isset($changedFields) && isset($changedFields['changedFields']) && count($changedFields['changedFields']) > 0)) {
             $user->touch();
         }
 
