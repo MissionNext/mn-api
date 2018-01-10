@@ -6,7 +6,7 @@
 	"require": {
 		"laravel/framework": "4.2.*",
         "doctrine/dbal" : "@dev",
-		"pda/pheanstalk": "^3.1",
+		"pda/pheanstalk": "~3.1",
         "cartalyst/sentry": "2.1.*",
         "davejamesmiller/laravel-breadcrumbs": "dev-master",
         "authorizenet/authorizenet": "~1.8",
