@@ -22,6 +22,9 @@
         <p>We are pleased to inform you that your partnership has been approved by MissionNext Canada!</p>
         <p>Please log in to your account from https://canada.missionnext.org/login/ with your username and password to make the activation transaction with the coupon you were issued. Then, set up your profile and post your jobs in order to make the most of your MissionNext Canada partnership.</p>
     <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+        <p>IF FROM CANADA: </p>
+        <p>We are pleased to inform you that your partnership has been approved by MissionNext Canada!  <p>Please log in to your account from https://canada.missionnext.org/login/ with your username and password to make the activation transaction with the coupon you were issued. Then, set up your profile and post your jobs in order to make the most of your MissionNext Canada partnership.</p> </p>
+    <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
     <p>If you have any questions, please contact us at headquarters@missionnext.org</p>
     <p>We look forward to partnering with you!</p>
     <p>MissionNext Partner Support Team</p>
