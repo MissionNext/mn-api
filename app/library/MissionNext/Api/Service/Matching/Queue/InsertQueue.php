@@ -15,8 +15,6 @@ class InsertQueue
 
     public function fire($job, $data)
     {
-        $start = microtime(true);
-
         $mainData = $data["mainData"];
         $matchingData = $data["matchingData"];
         $forUserType = $data["forUserType"];
@@ -77,11 +75,6 @@ class InsertQueue
         }
 
         $job->delete();
-
-        $stop = microtime(true);
-        $res = $stop - $start;
-
-        echo " # " . $res . ' #### ';
     }
 
 }
