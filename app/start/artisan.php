@@ -20,3 +20,4 @@ Artisan::add(new RemoveMatchingResultsForInactiveOrganization());
 Artisan::add(new RemoveMatchingResultsForExpiredOrgs());
 Artisan::add(new JobCacheUpdate());
 Artisan::add(new SubscribeCandidates());
+Artisan::add(new RematchUsersFromList());
