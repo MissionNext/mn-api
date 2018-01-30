@@ -21,3 +21,4 @@ Artisan::add(new RemoveMatchingResultsForExpiredOrgs());
 Artisan::add(new JobCacheUpdate());
 Artisan::add(new SubscribeCandidates());
 Artisan::add(new RematchUsersFromList());
+Artisan::add(new CheckUserProfiles());
