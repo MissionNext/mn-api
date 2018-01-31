@@ -1,1 +1,0 @@
-2017/09/12 13:18:43 [error] 7#7: *4 connect() failed (111: Connection refused) while connecting to upstream, client: 172.19.0.1, server: api.dev, request: "GET / HTTP/1.1", upstream: "fastcgi://172.19.0.5:9001", host: "api.dev:81"
