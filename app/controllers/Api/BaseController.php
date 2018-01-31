@@ -370,6 +370,18 @@ class BaseController extends Controller
             $userRepo->addUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
 
+            $checkRecord = DB::table('user_profile_completed')
+                ->where('user_id', $user->id)
+                ->where('app_id', $this->getApp()->id())->first();
+
+            if (!$checkRecord) {
+                DB::table('user_profile_completed')->insert([
+                    'user_id' => $user->id,
+                    'app_id' => $this->getApp()->id(),
+                    'completed' => true
+                ]);
+            }
+
             if (!isset($changedFields) || 'checked' == $changedFields['status'] && $this->checkMatchingFields($queueData, $changedFields)) {
                 $queueRecord = DB::table('queue_users_list')
                     ->where('userId', $user->id)

@@ -137,13 +137,13 @@ class CheckUserProfiles extends Command {
 
                     if (!$profileUnvalid) {
                         $checkRecord = \Illuminate\Support\Facades\DB::table('user_profile_completed')
-                            ->where('userId', $decodedData['id'])
-                            ->where('appId', $app_id)->first();
+                            ->where('user_id', $decodedData['id'])
+                            ->where('app_id', $app_id)->first();
 
                         if (!$checkRecord) {
                             \Illuminate\Support\Facades\DB::table('user_profile_completed')->insert([
-                                'userId' => $decodedData['id'],
-                                'appId' => $app_id,
+                                'user_id' => $decodedData['id'],
+                                'app_id' => $app_id,
                                 'completed' => true
                             ]);
                         }

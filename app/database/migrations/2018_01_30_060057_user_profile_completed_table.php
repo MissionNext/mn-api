@@ -14,8 +14,8 @@ class UserProfileCompletedTable extends Migration {
 	{
         Schema::create('user_profile_completed', function(Blueprint $table)
         {
-            $table->bigInteger('userId');
-            $table->integer('appId');
+            $table->bigInteger('user_id');
+            $table->integer('app_id');
             $table->boolean('completed');
         });
 	}
