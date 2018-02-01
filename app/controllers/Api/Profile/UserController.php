@@ -123,4 +123,12 @@ class UserController extends BaseController
 
         return new RestResponse(['profile_completed' => false]);
     }
+
+    public function deleteCompletedProfilesChecks($role) {
+        DB::table('user_profile_completed')
+            ->where('app_id', $this->getApp()->id())
+            ->where('role', $role)->delete();
+
+        return new RestResponse(['deleted' => true]);
+    }
 }
