@@ -134,7 +134,7 @@ class Routing
                 Route::post('password/reset', UserController::class.'@passwordReset');
             });
 
-
+            Route::get('check/profile/{user_id}', UserProfileController::class.'@checkCompletedProfile');
 
             Route::resource(static::RESOURCE_PROFILE, UserProfileController::class,
                 [  'except' => ['index','create',  'edit'] ]

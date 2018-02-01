@@ -43,6 +43,8 @@ class CheckUserProfiles extends Command {
             'agency'
         ];
 
+        \Illuminate\Support\Facades\DB::table('user_profile_completed')->delete();
+
         ini_set('memory_limit', '1024M');
 
         /** @var  $repoContainer \MissionNext\Repos\RepositoryContainer */
@@ -144,6 +146,7 @@ class CheckUserProfiles extends Command {
                             \Illuminate\Support\Facades\DB::table('user_profile_completed')->insert([
                                 'user_id' => $decodedData['id'],
                                 'app_id' => $app_id,
+                                'role'  => $decodedData['role'],
                                 'completed' => true
                             ]);
                         }

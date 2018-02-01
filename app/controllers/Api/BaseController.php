@@ -378,6 +378,7 @@ class BaseController extends Controller
                 DB::table('user_profile_completed')->insert([
                     'user_id' => $user->id,
                     'app_id' => $this->getApp()->id(),
+                    'role'  => $user->role(),
                     'completed' => true
                 ]);
             }

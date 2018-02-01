@@ -2,6 +2,7 @@
 namespace MissionNext\Controllers\Api\Profile;
 
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Queue;
 use MissionNext\Api\Exceptions\ProfileException;
@@ -109,5 +110,17 @@ class UserController extends BaseController
         $userRepo->addUserCachedData($user);
 
         return new RestResponse(["status" => "success", "message" => "File deleted successfully."]);
+    }
+
+    public function checkCompletedProfile($user_id) {
+        $row = DB::table('user_profile_completed')
+            ->where('user_id', $user_id)
+            ->where('app_id', $this->getApp()->id())->first();
+
+        if ($row) {
+            return new RestResponse(['profile_completed' => true]);
+        }
+
+        return new RestResponse(['profile_completed' => false]);
     }
 }
