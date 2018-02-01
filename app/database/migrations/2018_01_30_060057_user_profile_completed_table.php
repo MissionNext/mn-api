@@ -16,6 +16,7 @@ class UserProfileCompletedTable extends Migration {
         {
             $table->bigInteger('user_id');
             $table->integer('app_id');
+            $table->string('role');
             $table->boolean('completed');
         });
 	}
