@@ -76,8 +76,6 @@ class Routing
 
             Route::get('/test', BaseController::class.'@testApi');
 
-            Route::get('/check/queue/{user_id}', BaseController::class.'@checkQueue');
-
             Route::controller('administrator', AdminController::class);
 
 
