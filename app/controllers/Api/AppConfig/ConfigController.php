@@ -26,6 +26,8 @@ class ConfigController extends BaseController
         $key = $this->request->request->get('key');
         $value = $this->request->request->get('value');
 
+        $value = str_replace("\\", "&#92;", $value);
+
         $attributes = ['app_id' => $this->getApp()->id(), 'key' => $key];
         $values = array_merge($attributes, ['value' => $value]);
         AppConfigs::updateOrCreate( $attributes, $values );
