@@ -41,7 +41,7 @@ if (!@empty($_COOKIE['tubePauseSeconds'])) {
                 }
                 ?>
                 <li class="divider"></li>
-                <li><a href="./?action=manageSamples">Manage samples</a></li>
+                <li><a href="./index.php?action=manageSamples">Manage samples</a></li>
                 <?php
             } else {
                 ?>

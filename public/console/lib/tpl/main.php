@@ -53,7 +53,7 @@ $servers = $console->getServers();
                                         <?php echo $server ?> <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="./?">All servers</a></li>
+                                        <li><a href="./index.php?">All servers</a></li>
                                         <?php foreach (array_diff($servers, array($server)) as $serverItem): ?>
                                             <li><a href="./index.php?server=<?php echo $serverItem ?>"><?php echo $serverItem ?></a></li>
                                         <?php endforeach ?>
@@ -76,7 +76,7 @@ $servers = $console->getServers();
                                         <?php echo $server ?> <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="./?">All servers</a></li>
+                                        <li><a href="./index.php?">All servers</a></li>
                                         <?php foreach (array_diff($servers, array($server)) as $serverItem): ?>
                                             <li><a href="./index.php?server=<?php echo $serverItem ?>"><?php echo $serverItem ?></a></li>
                                         <?php endforeach ?>
@@ -129,7 +129,7 @@ $servers = $console->getServers();
                                         ?>
                                         <li><a href="#clear-tubes" role="button" data-toggle="modal">Clear multiple tubes</a></li>
     <?php } ?>
-                                    <li><a href="./?action=manageSamples" role="button">Manage samples</a></li>
+                                    <li><a href="./index.php?action=manageSamples" role="button">Manage samples</a></li>
                                     <li class="divider"></li>
                                     <li><a href="#settings" role="button" data-toggle="modal">Edit settings</a></li>
                                 </ul>

@@ -56,7 +56,7 @@ if (!empty($servers)):
                                 <td colspan="<?php echo count($visible) ?>" class="row-full">&nbsp;</td>
                             <?php endif ?>
                             <td><?php if (array_intersect(array($server), $cookieServers)): ?>
-                                    <a class="btn btn-xs btn-danger" title="Remove from list" href="./?action=serversRemove&removeServer=<?php echo $server ?>"><span
+                                    <a class="btn btn-xs btn-danger" title="Remove from list" href="./index.php?action=serversRemove&removeServer=<?php echo $server ?>"><span
                                             class="glyphicon glyphicon-minus"></span></a>
                                     <?php endif; ?>
                             </td>

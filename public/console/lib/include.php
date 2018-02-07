@@ -555,7 +555,7 @@ class Console {
                     $job['tubes'] = $_POST['tubes'];
                     $job['data'] = htmlspecialchars_decode($_POST['jobdata']);
                     if ($storage->saveJob($job)) {
-                        header('Location: ./?action=manageSamples');
+                        header('Location: ./index.php?action=manageSamples');
                     } else {
                         $storage->saveJob($oldjob);
                         $this->_tplVars['error'] = $storage->getError();
@@ -609,7 +609,7 @@ class Console {
                 $job['tubes'] = $_POST['tubes'];
                 $job['data'] = htmlspecialchars_decode($_POST['jobdata']);
                 if ($storage->saveJob($job)) {
-                    header('Location: ./?action=manageSamples');
+                    header('Location: ./index.php?action=manageSamples');
                 } else {
                     $this->_tplVars['error'] = $storage->getError();
                 }
@@ -651,7 +651,7 @@ class Console {
                 $storage->delete($key);
             }
         }
-        header('Location: ./?action=manageSamples');
+        header('Location: ./index.php?action=manageSamples');
         exit();
     }
 
