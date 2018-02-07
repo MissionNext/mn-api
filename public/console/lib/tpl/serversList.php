@@ -46,7 +46,7 @@ if (!empty($servers)):
                             <?php if (empty($stats)): ?>
                                 <td style="white-space: nowrap;"><?php echo $label ?></td>
                             <?php else: ?>
-                                <td  style="white-space: nowrap;"><a href="./?server=<?php echo $server ?>"><?php echo $label; ?></a></td>
+                                <td  style="white-space: nowrap;"><a href="./index.php?server=<?php echo $server ?>"><?php echo $label; ?></a></td>
                             <?php endif ?>
                             <?php foreach ($stats as $key => $item): ?>
                                 <td class="<?php if (!in_array($key, $visible)) echo 'hide' ?>"
