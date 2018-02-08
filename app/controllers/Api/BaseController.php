@@ -290,7 +290,7 @@ class BaseController extends Controller
      *
      * @return ProfileInterface
      */
-    protected function updateUserProfile(ProfileInterface $user, array $profileData = null, $changedFields = null, $saveLater = null)
+    protected function updateUserProfile(ProfileInterface $user, array $profileData = null, $changedFields = null, $saveLater = null, $newUser = false)
     {
 //        $this->userRepo()->updateUserCachedData($user);
 //        return true;
@@ -355,18 +355,21 @@ class BaseController extends Controller
             $userRepo->addUserCachedData($user);
             $queueData = ["userId"=>$user->id, "appId"=>$this->getApp()->id(), "role" => $this->securityContext()->role()];
 
-            $checkRecord = DB::table('user_profile_completed')
+            if (!$newUser) {
+                $checkRecord = DB::table('user_profile_completed')
                 ->where('user_id', $user->id)
                 ->where('app_id', $this->getApp()->id())->first();
 
-            if (!$checkRecord) {
-                DB::table('user_profile_completed')->insert([
-                    'user_id' => $user->id,
-                    'app_id' => $this->getApp()->id(),
-                    'role'  => $user->role(),
-                    'completed' => true
-                ]);
+                if (!$checkRecord) {
+                    DB::table('user_profile_completed')->insert([
+                        'user_id' => $user->id,
+                        'app_id' => $this->getApp()->id(),
+                        'role'  => $user->role(),
+                        'completed' => true
+                    ]);
+                }
             }
+
 
             if (!isset($changedFields) || 'checked' == $changedFields['status'] && $this->checkMatchingFields($queueData, $changedFields)) {
                 $queueRecord = DB::table('queue_users_list')

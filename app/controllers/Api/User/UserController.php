@@ -132,7 +132,7 @@ class UserController extends BaseController
        // $user->addApp($this->getApp());
 
 
-        $this->updateUserProfile($user, $profileData);
+        $this->updateUserProfile($user, $profileData, null, null, true);
 
 
         return new RestResponse($user);
