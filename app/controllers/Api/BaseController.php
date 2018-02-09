@@ -373,15 +373,15 @@ class BaseController extends Controller
 
             if (!isset($changedFields) || 'checked' == $changedFields['status'] && $this->checkMatchingFields($queueData, $changedFields)) {
                 $queueRecord = DB::table('queue_users_list')
-                    ->where('userId', $user->id)
-                    ->where('appId', $this->getApp()->id())
+                    ->where('user_id', $user->id)
+                    ->where('app_id', $this->getApp()->id())
                     ->where('role', $this->securityContext()->role())->first();
 
                 if (!$queueRecord) {
                     DB::table('queue_users_list')
                         ->insert(array(
-                            'userId' => $user->id,
-                            'appId' => $this->getApp()->id(),
+                            'user_id' => $user->id,
+                            'app_id' => $this->getApp()->id(),
                             'role'  => $this->securityContext()->role()
                         ));
                 }

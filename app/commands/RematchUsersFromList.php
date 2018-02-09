@@ -41,14 +41,14 @@ class RematchUsersFromList extends Command {
 
 	    foreach ($rematchRecords as $record) {
             \MissionNext\Api\Service\Matching\Queue\Master\ProfileUpdateMatching::run([
-                "userId"=> $record->userId,
-                "appId"=> $record->appId,
+                "user_id"=> $record->userId,
+                "app_id"=> $record->appId,
                 "role" => $record->role
             ]);
 
             DB::table('queue_users_list')
-                ->where('userId', $record->userId)
-                ->where('appId', $record->appId)
+                ->where('user_id', $record->userId)
+                ->where('app_id', $record->appId)
                 ->where('role', $record->role)->delete();
 
         }
