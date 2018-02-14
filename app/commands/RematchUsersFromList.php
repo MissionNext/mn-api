@@ -41,8 +41,8 @@ class RematchUsersFromList extends Command {
 
 	    foreach ($rematchRecords as $record) {
             \MissionNext\Api\Service\Matching\Queue\Master\ProfileUpdateMatching::run([
-                "user_id"=> $record->user_id,
-                "app_id"=> $record->app_id,
+                "userId"=> $record->user_id,
+                "appId"=> $record->app_id,
                 "role" => $record->role
             ]);
 
