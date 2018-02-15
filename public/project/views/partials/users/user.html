@@ -77,8 +77,8 @@
         <th>Global Status</th>
         <td><span style="text-transform: uppercase;"><% userStatusMessage %></span><hr>
             <p>
-            <button ng-click="setActive($event)" type="button" class="btn btn-success btn-xs"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
-            <button ng-click="setDisabled($event)" type="button" class="btn btn-danger btn-xs" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
+                <button ng-click="setActive($event)" type="button" class="btn btn-success btn-xs"  ng-disabled="(user.status != 1) &&  user.is_active" >Grant Access</button>
+                <button ng-click="setDisabled($event)" type="button" class="btn btn-danger btn-xs" ng-disabled="(user.status != 1) && (!user.is_active)">Deny Access</button>
             </p>
             <p class="help-block"><span style="font-weight: bold;">Note:</span> User is notified by email on status changes.</p>
         </td>
@@ -89,89 +89,86 @@
     <a class="btn btn-default"  href="/dashboard/user/profile/<% user.id %>">Full Profile</a>
     <button class="btn btn-danger" ng-click="modalDelete = !modalDelete;">Delete this user from the system completely</button>
 
-    <div ng-show="user.role !== 'candidate'">
-        <h3>Subscriptions:</h3>
-        <p ng-hide="subscriptions.length">No subscriptions</p>
+    <h3>Subscriptions:</h3>
+    <p ng-hide="subscriptions.length">No subscriptions</p>
+    <table ng-show="subscriptions.length" class="table table-hover" >
+        <thead>
+        <tr>
+            <th>Website </th>
 
-        <table ng-show="subscriptions.length" class="table table-hover" >
+            <th ng-show="showLevel">Level</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Price $</th>
+            <th>Paid $</th>
+            <th>Days Left</th>
+            <th>Status</th>
+            <th>Comment</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody ng-repeat="sub in subscriptions | orderBy:'id'">
+        <tr  ng-hide="sub.status == 'closed'">
+            <td><% sub.app.name %> </td>
+            <td ng-show="showLevel"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <label for='is_active_site<% $index %>'><span style="font-weight: 100;">Is active on site</span></label>
+                <input  ng-click='toggleModal(!sub.app.is_active, sub)' id="is_active_site<% $index %>" type="checkbox" ng-model="sub.app.is_active"  ng-checked="sub.app.is_active" />
+            </td>
+            <td></td>
+        </tr>
+        <tr  ng-hide="sub.status == 'closed'">
+            <td></td>
+            <td ng-show="showLevel" >
+
+                <select style="width: auto !important;" class="form-control" ng-change="updateSub(sub, 'partnership')" ng-model="sub.partnership" ng-options="level for level in sub.partnership_levels"></select>
+            </td>
+            <td><input style="width: 100px !important;" class="form-control" ng-change="updateSub(sub, 'start_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.start_date"></td>
+            <td><input style="width: 100px !important;" class="form-control" ng-change="updateSub(sub, 'end_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.end_date"></td>
+            <td><% sub.price | currency  %></td>
+            <td> <input type="number" min="0" ng-change="updateSub(sub, 'paid')" class="form-control" style="width: 80px !important;"  ng-model="sub.paid" ></td>
+            <td><% sub.days_left  %></td>
+            <td><% sub.status  %>
+                <!--<select style="width: auto !important;" class="form-control" ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>-->
+            </td>
+            <td><textarea ng-model="sub.comment" ng-change="updateSub(sub, 'comment')" class="form-control"><% sub.comment %></textarea>
+            </td>
+            <td>
+                <button ng-click="toggleModalCancelSub(sub)" type="button" class="btn btn-danger btn-sm">Cancel <br>Subscription</button>
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+    <button  ng-init="showHistory = false;" type="button" ng-click="showHistory = !showHistory;" class="btn btn-default"><% showHistory  && 'Hide' || 'Show'  %> History</button>
+
+    <div ng-show="showHistory" class="transaction-history">
+        <h3>Transactions</h3><a name="transaction-history"></a>
+        <p ng-hide="transactions.length">No Transactions</p>
+        <table  ng-show="transactions.length"   class="table table-hover">
             <thead>
             <tr>
-                <th>Website </th>
-
-                <th ng-show="showLevel">Level</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Price $</th>
-                <th>Paid $</th>
-                <th>Days Left</th>
-                <th>Status</th>
+                <th>Created Date </th>
+                <th>Amount $</th>
                 <th>Comment</th>
-                <th></th>
+                <th>Transaction ID</th>
             </tr>
             </thead>
-
-            <tbody ng-repeat="sub in subscriptions | orderBy:'id'">
-            <tr  ng-hide="sub.status == 'closed'">
-                <td><% sub.app.name %> </td>
-                <td ng-show="showLevel"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <label for='is_active_site<% $index %>'><span style="font-weight: 100;">Is active on site</span></label>
-                    <input  ng-click='toggleModal(!sub.app.is_active, sub)' id="is_active_site<% $index %>" type="checkbox" ng-model="sub.app.is_active"  ng-checked="sub.app.is_active" />
-                </td>
-                <td></td>
+            <tbody ng-repeat="transaction in transactions">
+            <tr>
+                <td><% transaction.created_at %> </td>
+                <td><% transaction.amount %></td>
+                <td><% transaction.comment %></td>
+                <td><% transaction.transaction_id %></td>
             </tr>
-            <tr  ng-hide="sub.status == 'closed'">
-                <td></td>
-                <td ng-show="showLevel" >
-
-                    <select style="width: auto !important;" class="form-control" ng-change="updateSub(sub, 'partnership')" ng-model="sub.partnership" ng-options="level for level in sub.partnership_levels"></select>
-                </td>
-                <td><input style="width: 100px !important;" class="form-control" ng-change="updateSub(sub, 'start_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.start_date"></td>
-                <td><input style="width: 100px !important;" class="form-control" ng-change="updateSub(sub, 'end_date')" ui-date="dateOptions" ui-date-format="yy-mm-dd" ng-model="sub.end_date"></td>
-                <td><% sub.price | currency  %></td>
-                <td> <input type="number" min="0" ng-change="updateSub(sub, 'paid')" class="form-control" style="width: 80px !important;"  ng-model="sub.paid" ></td>
-                <td><% sub.days_left  %></td>
-                <td><% sub.status  %>
-                    <!--<select style="width: auto !important;" class="form-control" ng-change="updateSub(sub, 'status')" ng-model="sub.status" ng-options="status for status in sub.statuses" ></select>-->
-                </td>
-                <td><textarea ng-model="sub.comment" ng-change="updateSub(sub, 'comment')" class="form-control"><% sub.comment %></textarea>
-                </td>
-                <td>
-                    <button ng-click="toggleModalCancelSub(sub)" type="button" class="btn btn-danger btn-sm">Cancel <br>Subscription</button>
-                </td>
-            </tr>
-
             </tbody>
-
         </table>
-        <button  ng-init="showHistory = false;" type="button" ng-click="showHistory = !showHistory;" class="btn btn-default"><% showHistory  && 'Hide' || 'Show'  %> History</button>
-
-        <div ng-show="showHistory" class="transaction-history">
-            <h3>Transactions</h3><a name="transaction-history"></a>
-            <p ng-hide="transactions.length">No Transactions</p>
-            <table  ng-show="transactions.length"   class="table table-hover">
-                <thead>
-                <tr>
-                    <th>Created Date </th>
-                    <th>Amount $</th>
-                    <th>Comment</th>
-                    <th>Transaction ID</th>
-                </tr>
-                </thead>
-                <tbody ng-repeat="transaction in transactions">
-                <tr>
-                    <td><% transaction.created_at %> </td>
-                    <td><% transaction.amount %></td>
-                    <td><% transaction.comment %></td>
-                    <td><% transaction.transaction_id %></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 
     <div id="myModal" class="modal">
