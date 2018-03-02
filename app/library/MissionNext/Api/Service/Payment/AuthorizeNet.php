@@ -37,11 +37,9 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     {
         $this->recurringBilling = $authorizeNetARB;
         $this->recurringBilling->setSandbox(Config::get('app.set_sandbox'));
-        $this->recurringBilling->setLogFile(storage_path().'/logs/recurring-authorize.log');
 
         $this->paymentGateWay = $authorizeNet;
         $this->paymentGateWay->setSandbox(Config::get('app.set_sandbox'));
-        $this->paymentGateWay->setLogFile(storage_path().'/logs/gateway-authorize.log');
 
         $this->app = $app;
         $this->discount = (new GlobalConfig)->subscriptionDiscount();
