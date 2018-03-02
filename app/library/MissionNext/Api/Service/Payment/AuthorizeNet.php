@@ -5,6 +5,7 @@ namespace MissionNext\Api\Service\Payment;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Config;
 use MissionNext\Api\Auth\ISecurityContextAware;
 use MissionNext\Api\Exceptions\AuthorizeException;
 use MissionNext\Api\Exceptions\BadDataException;
@@ -35,10 +36,10 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
     public  function __construct(\AuthorizeNetAIM $authorizeNet, \AuthorizeNetARB $authorizeNetARB, Application $app)
     {
         $this->recurringBilling = $authorizeNetARB;
-        $this->recurringBilling->setSandbox(false);
+        $this->recurringBilling->setSandbox(Config::get('app.set_sandbox'));
 
         $this->paymentGateWay = $authorizeNet;
-        $this->paymentGateWay->setSandbox(false);
+        $this->paymentGateWay->setSandbox(Config::get('app.set_sandbox'));
 
         $this->app = $app;
         $this->discount = (new GlobalConfig)->subscriptionDiscount();
