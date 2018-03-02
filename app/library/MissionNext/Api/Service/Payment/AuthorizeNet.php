@@ -136,7 +136,9 @@ class AuthorizeNet extends AbstractPaymentGateway implements ISecurityContextAwa
 
             return $response;
         } else {
-            throw new AuthorizeException($response->response_reason_text);
+            $error_message = !empty($response->response_reason_text) ? $response->response_reason_text : $response->error_message;
+
+            throw new AuthorizeException($error_message);
         }
     }
 
