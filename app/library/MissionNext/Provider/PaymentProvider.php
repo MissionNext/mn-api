@@ -16,7 +16,7 @@ class PaymentProvider extends ServiceProvider
         $api_id = Config::get('app.api_login_id');
         $key = Config::get('app.transaction_key');
 
-        $this->app->bind(PaymentGatewayInterface::class, function(Application $app, $api_id, $key)
+        $this->app->bind(PaymentGatewayInterface::class, function(Application $app) use ($api_id, $key)
         {
             return (new SecurityContextResolver( new AuthorizeNet( new \AuthorizeNetAIM($api_id, $key), new \AuthorizeNetARB($api_id, $key), $app )))->getResolvedObject();
         });
