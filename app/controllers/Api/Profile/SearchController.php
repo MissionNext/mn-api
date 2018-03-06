@@ -176,6 +176,10 @@ class SearchController extends BaseController
         }
         $countQuerySelect = $query." )";
 
+        if (AppDataModel::CANDIDATE == $searchType) {
+            $countQuerySelect .= " ORDER BY (cp.data->>'last_login')::date DESC";
+        }
+
         $searchResult = DB::select($countQuerySelect, $bindings);
         $resultList = array_slice($searchResult, $offset, 500);
         $result = [];
