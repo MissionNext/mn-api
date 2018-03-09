@@ -3,6 +3,7 @@
 namespace MissionNext\Controllers\Api;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use MissionNext\Api\Exceptions\UserException;
 use MissionNext\Controllers\Api\BaseController;
 use Illuminate\Support\Facades\Input;
@@ -140,8 +141,12 @@ class JobController extends BaseController
         if ($user->organization->id != $organizationId){
             throw new UserException("Can't delete job, owner invalid");
         }
+
+        Log::info("User $organizationId deleted job with id $user->id");
+
         $user->delete();
         Results::where('user_id', $user->id)->orWhere('for_user_id', $user->id)->delete();
+
 
         return new RestResponse($user);
     }
