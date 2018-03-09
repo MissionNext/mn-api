@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use MissionNext\Facade\SecurityContext;
 use MissionNext\Models\Affiliate\Affiliate;
@@ -548,6 +549,9 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
                         ->where('user_type', BaseDataModel::JOB)->delete();
 
                     Results::where('user_id', $job->id)->orWhere('for_user_id', $job->id)->delete();
+
+                    Log::info("User $user_id deleted job with id $job->id");
+
                     $job->delete();
                 }
             }
