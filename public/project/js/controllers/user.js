@@ -34,6 +34,7 @@
     userControllers.controller("UserListCtl",['$scope', '$http', '$sce', '$timeout', 'filterFilter', function($scope, $http, $sce, $timeout, filterFilter){
 
         $scope.search = {};
+        $scope.delayTimer;
 
         $scope.sortUser = {
             p : 'created_at',
@@ -61,7 +62,10 @@
         };
 
         $scope.customFiltering = function() {
-            getResultsPage(1);
+            clearTimeout($scope.delayTimer);
+            $scope.delayTimer = setTimeout(function () {
+                getResultsPage(1);
+            }, 1000);
         };
 
 
