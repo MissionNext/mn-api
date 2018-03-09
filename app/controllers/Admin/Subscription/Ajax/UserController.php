@@ -68,7 +68,9 @@ class UserController extends AdminBaseController
 
         $usersQuery = $profileFilter ? $usersQuery->where( function($query) use ($profileFilter){
             $query->where('username', 'LIKE', '%'.$profileFilter.'%' )
-                ->orWhere('email', 'LIKE', '%'.$profileFilter.'%');
+                ->orWhere('email', 'LIKE', '%'.$profileFilter.'%')
+                ->orWhere('username', 'LIKE', '%'.strtolower($profileFilter).'%' )
+                ->orWhere('email', 'LIKE', '%'.strtolower($profileFilter).'%');
         }) : $usersQuery;
 
         $usersQuery = $appFilter ?  $usersQuery->leftJoin('user_apps', 'user_apps.user_id','=', 'users.id')
