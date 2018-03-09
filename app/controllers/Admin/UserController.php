@@ -1,7 +1,10 @@
 <?php
 namespace MissionNext\Controllers\Admin;
 
+use Cartalyst\Sentry\Sentry;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
@@ -162,6 +165,9 @@ class UserController extends AdminBaseController {
     }
 
     public function delete($id) {
+        $admin = $this->sentry->getUser()->id;
+        Log::info("Admin $admin delete user $id.");
+
         $user = User::find($id);
 
         if (is_null($user)) {
@@ -173,6 +179,7 @@ class UserController extends AdminBaseController {
         $name = $user->username;
         if ($user->delete($id)) {
             Session::flash('info', "User <strong>$name</strong> successfully deleted.");
+            Log::info("Admin $admin successfully deleted delete user $id.");
         };
 
         return Redirect::route('users');
