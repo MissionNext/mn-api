@@ -267,7 +267,7 @@ class UserController extends BaseController
         $message = 'Error occured on password reset.';
         $password = Request::input('password');
         $username = Request::input('username');
-        $user = $this->userRepo()->getModel()->with('roles')->whereUsername($username)->first();
+        $user = $this->userRepo()->getModel()->with('roles')->whereRaw("lower(username)=?", array(strtolower($username)))->first();
         if($user){
             $user->setPassword($password);
             $user->save();
