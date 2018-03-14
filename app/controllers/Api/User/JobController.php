@@ -137,12 +137,19 @@ class JobController extends BaseController
      */
     public function delete($id, $organizationId)
     {
+        $old_login = Input::get('old_login');
+
         $user = $this->jobRepo()->find($id);
         if ($user->organization->id != $organizationId){
             throw new UserException("Can't delete job, owner invalid");
         }
 
-        Log::info("User $organizationId deleted job with id $user->id");
+        if ($old_login) {
+            Log::info("Admin $old_login deleted job with id $user->id");
+        } else {
+            Log::info("User $organizationId deleted job with id $user->id");
+        }
+
 
         $user->delete();
         Results::where('user_id', $user->id)->orWhere('for_user_id', $user->id)->delete();
