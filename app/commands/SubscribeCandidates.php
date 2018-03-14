@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use MissionNext\Api\Service\Payment\AuthorizeNet;
 use MissionNext\Repos\Subscription\SubscriptionRepositoryInterface;
 use MissionNext\Repos\RepositoryContainerInterface;
+use Illuminate\Support\Facades\Config;
 
 class SubscribeCandidates extends Command {
 
@@ -40,8 +41,10 @@ class SubscribeCandidates extends Command {
 	 */
 	public function fire()
 	{
+        $api_id = Config::get('app.api_login_id');
+        $key = Config::get('app.transaction_key');
 	    $app = new \Illuminate\Foundation\Application();
-        $service = new AuthorizeNet( new \AuthorizeNetAIM('7b5t92TM3tW','9G6Q89y5es8fP7WC'), new \AuthorizeNetARB('7b5t92TM3tW','9G6Q89y5es8fP7WC'), $app);
+        $service = new AuthorizeNet( new \AuthorizeNetAIM($api_id,$key), new \AuthorizeNetARB($api_id,$key), $app);
 
         $helper = $this->getHelperSet();
         /** @var  $progress */
