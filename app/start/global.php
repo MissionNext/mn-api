@@ -103,3 +103,5 @@ require app_path().'/filters.php';
 //            return Response::view('errors/other', compact('message'), $code);
 //    }
 //});
+
+require_once app_path('logger.php');
