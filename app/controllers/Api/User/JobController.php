@@ -145,15 +145,13 @@ class JobController extends BaseController
         }
 
         if ($old_login) {
-            Log::info("Admin $old_login deleted job with id $user->id");
+            $this->logger('job', 'delete', "Admin $old_login deleted job with id $user->id");
         } else {
-            Log::info("User $organizationId deleted job with id $user->id");
+            $this->logger('job', 'delete', "User $organizationId deleted job with id $user->id");
         }
-
 
         $user->delete();
         Results::where('user_id', $user->id)->orWhere('for_user_id', $user->id)->delete();
-
 
         return new RestResponse($user);
     }

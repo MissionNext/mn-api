@@ -166,7 +166,7 @@ class UserController extends AdminBaseController {
 
     public function delete($id) {
         $admin = $this->sentry->getUser()->id;
-        Log::info("Admin $admin delete user $id.");
+        $this->logger('user', 'delete', "Admin $admin delete user $id.");
 
         $user = User::find($id);
 
@@ -179,7 +179,7 @@ class UserController extends AdminBaseController {
         $name = $user->username;
         if ($user->delete($id)) {
             Session::flash('info', "User <strong>$name</strong> successfully deleted.");
-            Log::info("Admin $admin successfully deleted delete user $id.");
+            $this->logger('user', 'delete', "Admin $admin successfully deleted user $id.");
         };
 
         return Redirect::route('users');
