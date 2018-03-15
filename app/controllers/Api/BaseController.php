@@ -48,6 +48,8 @@ use MissionNext\Repos\User\UserRepositoryInterface;
 use MissionNext\Repos\ViewField\ViewFieldRepository;
 use MissionNext\Repos\ViewField\ViewFieldRepositoryInterface;
 use MissionNext\Custom\Validators\ValidatorResolver;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use MissionNext\Controllers\traits\Controller as SecurityTraits;
 
@@ -516,5 +518,14 @@ class BaseController extends Controller
         }
 
         return $profileData;
+    }
+
+    protected function logger($log_type, $action, $message){
+        $view_log = new Logger('View Logs');
+        $view_log->pushHandler(new StreamHandler(storage_path().'/logs/custom_logs/'. $log_type.'_'. date('Y-m-d').'.txt', Logger::INFO));
+        $view_log->info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+        $view_log->info('Action: '. $action);
+        $view_log->addInfo($message);
+        $view_log->info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
     }
 } 

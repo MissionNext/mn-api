@@ -247,10 +247,8 @@ class UserController extends BaseController
         if($user){
             $user->timestamps = false;
             $user->setLastLogin();
-            Log::info('User: '.$user->username);
-            Log::info('Last login: '.$user->last_login);
             $user->save();
-            Log::info('Last login: '.$user->last_login);
+            $this->logger('user', 'login', 'User: '.$user->username.'Last login: '.$user->last_login);
             $user = $user->toArray();
             $user['roles'] = $user['roles'][0]['role'];
         }

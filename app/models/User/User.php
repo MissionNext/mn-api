@@ -42,6 +42,8 @@ use MissionNext\Models\Subscription\Subscription;
 use MissionNext\Repos\RepositoryContainerInterface;
 use MissionNext\Repos\User\UserRepository;
 use MissionNext\Repos\User\UserRepositoryInterface;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class User extends ModelObservable implements UserInterface, RemindableInterface, ProfileInterface
 {
@@ -550,7 +552,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
 
                     Results::where('user_id', $job->id)->orWhere('for_user_id', $job->id)->delete();
 
-                    Log::info("User $user_id deleted job with id $job->id");
+                    $this->logger('user', 'delete', "User $user_id deleted job with id $job->id");
 
                     $job->delete();
                 }
@@ -661,5 +663,14 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
             }
         }
         return curl_exec($ch);
+    }
+
+    private function logger($log_type, $action, $message){
+        $view_log = new Logger('View Logs');
+        $view_log->pushHandler(new StreamHandler(storage_path().'/logs/custom_logs/'. $log_type.'_'. date('Y-m-d').'.txt', Logger::INFO));
+        $view_log->info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+        $view_log->info('Action: '. $action);
+        $view_log->addInfo($message);
+        $view_log->info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
     }
 }
