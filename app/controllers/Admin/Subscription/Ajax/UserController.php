@@ -177,6 +177,8 @@ class UserController extends AdminBaseController
             $message->to($user->email, $user->username)->subject('Your access was changed');
         });
 
+        $this->logger('mail', 'sent', "Mail sent from admin to user $user->username. Access changed.");
+
         /** @var  $userRepo UserRepository */
         $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
         $userRepo->addUserCachedData($user);

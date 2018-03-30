@@ -522,7 +522,7 @@ class BaseController extends Controller
 
     protected function logger($log_type, $action, $message){
         $view_log = new Logger('View Logs');
-        $view_log->pushHandler(new StreamHandler(storage_path().'/logs/custom_logs/'. $log_type.'_'. date('Y-m-d').'.txt', Logger::INFO));
+        $view_log->pushHandler(new StreamHandler(storage_path().'/logs/custom_logs/'. $log_type.'/'. date('Y-m-d').'.txt', Logger::INFO));
         $view_log->info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
         $view_log->info('Action: '. $action);
         $view_log->addInfo($message);
