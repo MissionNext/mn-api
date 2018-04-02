@@ -12,3 +12,4 @@ Thumbs.db
 /app/config
 /app/controllers/Admin/Server.php
 /dcapi
+/app/logger.php
