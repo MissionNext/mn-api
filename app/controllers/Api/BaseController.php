@@ -498,7 +498,6 @@ class BaseController extends Controller
                 $profileToValidate[$profileKey] = $profileValue;
             }
         }
-        Log::info(count($profileToValidate));
         if (count($profileToValidate) > 0) {
             $this->validateProfileData($profileToValidate);
 
