@@ -130,8 +130,12 @@ abstract class QueueMatching
                         $organization_id = $data['id'];
                         $user = User::find($organization_id);
                         if ($user) {
-                            $subscription = $user->subscriptions()->where('app_id', $app_id)->first();
-                            if ($user->isActive() && $user->isActiveInApp(Application::find($app_id)) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED) {
+                            $subscription = $user->subscriptions()
+                                ->where('status', '<>', Subscription::STATUS_CLOSED)
+                                ->where('status', '<>', Subscription::STATUS_EXPIRED)
+                                ->where('app_id', $app_id)->first();
+
+                            if ($user->isActive() && $user->isActiveInApp(Application::find($app_id)) && $subscription) {
                                 $tempMatchData[] = $data;
                             }
                         }
@@ -140,8 +144,12 @@ abstract class QueueMatching
                         $organization_id = $data['organization']['id'];
                         $organization = User::find($organization_id);
                         if ($organization) {
-                            $subscription = $organization->subscriptions()->where('app_id', $app_id)->first();
-                            if ($organization->isActive() && $organization->isActiveInApp(Application::find($app_id)) && $subscription && $subscription->status != Subscription::STATUS_EXPIRED) {
+                            $subscription = $organization->subscriptions()
+                                ->where('status', '<>', Subscription::STATUS_CLOSED)
+                                ->where('status', '<>', Subscription::STATUS_EXPIRED)
+                                ->where('app_id', $app_id)->first();
+
+                            if ($organization->isActive() && $organization->isActiveInApp(Application::find($app_id)) && $subscription) {
                                 $tempMatchData[] = $data;
                             }
                         }
