@@ -31,8 +31,7 @@ class OrganizationCandidates extends QueueMatching
         $application = Application::find($appId);
         if ($user) {
             $subscription = $user->subscriptions()
-                ->where('status', '<>', Subscription::STATUS_CLOSED)
-                ->where('status', '<>', Subscription::STATUS_EXPIRED)
+                ->where('status', Subscription::STATUS_ACTIVE)
                 ->where('app_id', $appId)->first();
 
             if ($user->isActive() && $user->isActiveInApp($application) && $subscription) {

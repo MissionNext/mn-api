@@ -32,8 +32,7 @@ class JobCandidates extends QueueMatching
             $organization = User::find($jobItem['organization_id']);
             if ($organization) {
                 $subscription = $organization->subscriptions()
-                    ->where('status', '<>', Subscription::STATUS_CLOSED)
-                    ->where('status', '<>', Subscription::STATUS_EXPIRED)
+                    ->where('status', Subscription::STATUS_ACTIVE)
                     ->where('app_id', $data["appId"])->first();
 
                 if ($organization->isActive() && $organization->isActiveInApp($application) && $subscription) {

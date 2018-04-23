@@ -131,8 +131,7 @@ abstract class QueueMatching
                         $user = User::find($organization_id);
                         if ($user) {
                             $subscription = $user->subscriptions()
-                                ->where('status', '<>', Subscription::STATUS_CLOSED)
-                                ->where('status', '<>', Subscription::STATUS_EXPIRED)
+                                ->where('status', Subscription::STATUS_ACTIVE)
                                 ->where('app_id', $app_id)->first();
 
                             if ($user->isActive() && $user->isActiveInApp(Application::find($app_id)) && $subscription) {
@@ -145,8 +144,7 @@ abstract class QueueMatching
                         $organization = User::find($organization_id);
                         if ($organization) {
                             $subscription = $organization->subscriptions()
-                                ->where('status', '<>', Subscription::STATUS_CLOSED)
-                                ->where('status', '<>', Subscription::STATUS_EXPIRED)
+                                ->where('status', Subscription::STATUS_ACTIVE)
                                 ->where('app_id', $app_id)->first();
 
                             if ($organization->isActive() && $organization->isActiveInApp(Application::find($app_id)) && $subscription) {
