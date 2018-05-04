@@ -38,6 +38,8 @@ class ClearLogs extends Command {
 	public function fire()
 	{
 	    $storage_path = storage_path();
+	    $plugin_logs_path = $storage_path.'/../../../'.\Illuminate\Support\Facades\Config::get('app.wordpress_logs');
+
         $date = date_create("-14 days");
 
         $log_file_template = $date->format('Y-m-d');
@@ -73,6 +75,10 @@ class ClearLogs extends Command {
 
         if (file_exists($storage_path.'/logs/log-cli-'.$log_file_template.'.txt')) {
             unlink($storage_path.'/logs/log-cli-'.$log_file_template.'.txt');
+        }
+
+        if (file_exists($plugin_logs_path.'/logs_'.$log_file_template.'.txt')) {
+            unlink($plugin_logs_path.'/logs_'.$log_file_template.'.txt');
         }
 	}
 
