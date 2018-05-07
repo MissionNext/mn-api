@@ -213,6 +213,12 @@ class JobController extends BaseController
                 $sorted_array[$value->name][] = $value;
             }
             foreach ($sorted_array as &$title_array) {
+                for ($i = 0; $i < count($title_array); $i++) {
+                    if (!isset($title_array[$i]->profileData->second_title)) {
+                        $title_array[$i]->profileData->second_title = '';
+                    }
+                }
+
                 usort($title_array, function ($a, $b) {
                     return strcasecmp($a->profileData->second_title, $b->profileData->second_title);
                 });
