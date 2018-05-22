@@ -40,7 +40,7 @@ class ClearLogs extends Command {
 	    $storage_path = storage_path();
 	    $plugin_logs_path = $storage_path.'/../../../'.\Illuminate\Support\Facades\Config::get('app.wordpress_logs');
 
-        $date = date_create("-14 days");
+        $date = date_create("-10 days");
 
         $log_file_template = $date->format('Y-m-d');
 
