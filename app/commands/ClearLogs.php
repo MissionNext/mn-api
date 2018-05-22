@@ -18,7 +18,7 @@ class ClearLogs extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Delete logs files older 14 days.';
+	protected $description = 'Delete logs files older 10 days.';
 
 	/**
 	 * Create a new command instance.
