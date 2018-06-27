@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use MissionNext\Models\Application\Application;
+use MissionNext\Models\Subscription\SubConfig;
 
 class ApplicationController extends AdminBaseController {
 
@@ -49,6 +50,22 @@ class ApplicationController extends AdminBaseController {
             $newApp->public_key = Input::get('public_key');
             $newApp->private_key = Input::get('private_key');
             $newApp->save();
+
+            $configs = SubConfig::defConfig();
+            foreach($configs as $config){
+                foreach($config['partnership'] as $p ) {
+                    SubConfig::updateOrCreate([
+                        'app_id' => $newApp->id(),
+                        'partnership' => $p['level'],
+                        'role' => $config['role']['key']
+                    ],[
+                        "price_month" => $p['price_month'],
+                        "price_year" => $p['price_year'],
+                        "partnership_status" => $p["partnership_status"],
+                    ]);
+                }
+            }
+
             $name = $newApp->name;
             Session::flash('info', "application <strong>$name</strong> successfully created");
 
