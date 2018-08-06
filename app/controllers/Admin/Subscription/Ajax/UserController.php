@@ -6,9 +6,11 @@ namespace MissionNext\Controllers\Admin\Subscription\Ajax;
 
 use Illuminate\Mail\Message;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
 use MissionNext\Controllers\Admin\AdminBaseController;
 use MissionNext\Helpers\Language;
 use MissionNext\Models\Application\Application;
@@ -22,6 +24,9 @@ use MissionNext\Repos\CachedData\UserCachedRepository;
 use MissionNext\Repos\CachedData\UserCachedRepositoryInterface;
 use MissionNext\Repos\User\ProfileRepositoryFactory;
 use MissionNext\Repos\User\UserRepository;
+use SparkPost\SparkPost;
+use GuzzleHttp\Client;
+use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 class UserController extends AdminBaseController
 {
@@ -171,13 +176,36 @@ class UserController extends AdminBaseController
         $user->status = 0;
         $user->save();
 
-        Mail::send('admin.mail.user.status', ['user' => $user->toArray()], function(Message $message) use ($user)
-        {
-            $message->from('no-reply@info.missionnext.org', 'MissionNext');
-            $message->to($user->email, $user->username)->subject('Your access was changed');
-        });
+        $httpClient = new GuzzleAdapter(new Client());
+        $sparky = new SparkPost($httpClient, ['key' => Config::get('mail.password')]);
 
-        $this->logger('mail', 'sent', "Mail sent from admin to user $user->username. Access changed.");
+        $view = View::make('admin.mail.user.status', ['user' => $user->toArray()]);
+        $content = $view->render();
+
+        $promise = $sparky->transmissions->post([
+            'content' => [
+                'from'  => [
+                    'name'  => 'MissionNext',
+                    'email' => 'no-reply@info.missionnext.org',
+                ],
+                'subject'   => 'Your access was changed',
+                'html'      => $content,
+            ],
+            'substitution_data' => ['name' => $user->username],
+            'recipients'    => [
+                [
+                    'address'   => [
+                        'name'  => $user->username,
+                        'email' => $user->email,
+                    ],
+                ],
+            ],
+        ]);
+        $response = $promise->wait();
+
+        if (200 == $response->getStatusCode()) {
+            $this->logger('mail', 'sent', "Mail sent from admin to user $user->username. Access changed.");
+        }
 
         /** @var  $userRepo UserRepository */
         $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();
