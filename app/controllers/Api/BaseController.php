@@ -342,7 +342,7 @@ class BaseController extends Controller
             $this->fieldRepo()->profileFields($user)->detach($key, true);
             if (is_array($map['value'])) {
                 foreach ($map['value'] as $k => $val) {
-                    $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $val, "dictionary_id" => $map['dictionary_id'][$k] ? : null]);
+                    $this->fieldRepo()->profileFields($user)->attach($key, ["value" => $val, "dictionary_id" => isset($map['dictionary_id'][$k]) ? $map['dictionary_id'][$k] : null]);
                 }
             } else{
                 $this->fieldRepo()->profileFields($user)->attach($key, $map);
