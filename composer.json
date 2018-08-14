@@ -10,7 +10,10 @@
         "cartalyst/sentry": "2.1.*",
         "davejamesmiller/laravel-breadcrumbs": "dev-master",
         "authorizenet/authorizenet": "~1.8",
-        "shuber/curl": "dev-master"
+        "shuber/curl": "dev-master",
+		"guzzlehttp/guzzle": "^6.3",
+		"php-http/guzzle6-adapter": "^1.1",
+		"sparkpost/sparkpost": "^2.1"
 	},
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
