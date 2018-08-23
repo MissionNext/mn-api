@@ -104,4 +104,4 @@ require app_path().'/filters.php';
 //    }
 //});
 
-require_once app_path('logger.php');
+//require_once app_path('logger.php');
