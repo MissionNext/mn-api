@@ -367,8 +367,9 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
      */
     public function isActiveInApp(Application $application)
     {
+        $model = $this->appStatus($application)->first();
 
-        return $this->appStatus($application)->firstOrFail()->pivot->is_active;
+        return !(is_null($model)) ? $model->pivot->is_active : false;
     }
 
     /**
