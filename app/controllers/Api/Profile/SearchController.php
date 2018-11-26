@@ -203,7 +203,7 @@ class SearchController extends BaseController
         }
 
         $rowsCount = count($searchResult);
-        $pages = round($rowsCount / 500, 0, PHP_ROUND_HALF_UP);
+        $pages = ceil($rowsCount / 500);
 
         return new RestResponse( [
             'results' => (new TransData($this->getToken()->language(), $searchType, $result))->get(),
