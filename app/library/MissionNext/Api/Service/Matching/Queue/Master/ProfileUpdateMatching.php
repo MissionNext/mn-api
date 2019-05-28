@@ -24,8 +24,8 @@ class ProfileUpdateMatching extends MasterMatching
                 return
                     function($data)
                     {
-                        $this->clearCache($data['userId'], 'candidate', 'organization');
-                        $this->clearCache($data['userId'], 'candidate', 'job');
+                        $this->clearCache($data['appId'], $data['userId'], 'candidate', 'organization');
+                        $this->clearCache($data['appId'], $data['userId'], 'candidate', 'job');
                         Queue::push(CanOrgsQueue::class, $data);
                         Queue::push(CanJobsQueue::class, $data);
                     };
@@ -33,14 +33,14 @@ class ProfileUpdateMatching extends MasterMatching
             case BaseDataModel::ORGANIZATION:
                 return
                     function($data){
-                        $this->clearCache($data['userId'], 'organization', 'candidate');
+                        $this->clearCache($data['appId'], $data['userId'], 'organization', 'candidate');
                         Queue::push(OrgCandidatesQueue::class, $data);
                     };
                 break;
             case BaseDataModel::JOB:
                 return
                     function($data){
-                        $this->clearCache($data['userId'], 'job', 'candidate');
+                        $this->clearCache($data['appId'], $data['userId'], 'job', 'candidate');
                         Queue::push(JobCandidatesQueue::class, $data);
                     };
                 break;
