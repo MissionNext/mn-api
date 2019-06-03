@@ -69,15 +69,17 @@ abstract class MasterMatching
      * @param $forUserType
      * @param $userType
      */
-    protected function clearCache($userId, $forUserType, $userType)
+    protected function clearCache($appId, $userId, $forUserType, $userType)
     {
-        $builder =  Results::where("for_user_id","=", $userId)
+        $builder =  Results::where("app_id","=",$appId)
+            ->where("for_user_id","=", $userId)
             ->where("for_user_type","=", $forUserType)
             ->where("user_type","=", $userType);
 
         $builder->delete();
 
-        $oppositeBuilder = Results::where("user_id", $userId)
+        $oppositeBuilder = Results::where("app_id","=", $appId)
+            ->where("user_id", $userId)
             ->where("for_user_type", $userType)
             ->where("user_type", $forUserType);
 

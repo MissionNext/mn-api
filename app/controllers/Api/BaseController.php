@@ -377,14 +377,14 @@ class BaseController extends Controller
                 $queueRecord = DB::table('queue_users_list')
                     ->where('user_id', $user->id)
                     ->where('app_id', $this->getApp()->id())
-                    ->where('role', $this->securityContext()->role())->first();
+                    ->where('role', $user->role())->first();
 
                 if (!$queueRecord) {
                     DB::table('queue_users_list')
                         ->insert(array(
                             'user_id' => $user->id,
                             'app_id' => $this->getApp()->id(),
-                            'role'  => $this->securityContext()->role()
+                            'role'  => $user->role()
                         ));
                 }
             }
