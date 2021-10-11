@@ -61,7 +61,6 @@ class Controller extends BaseController
             $form->save();
         }
 
-
         return new RestResponse($this->syncGroupFields($reqGroups, $form));
 
     }
@@ -90,7 +89,6 @@ class Controller extends BaseController
         /** @var  $formRepo FormRepository */
         $formRepo = $this->repoContainer[FormRepositoryInterface::KEY];
 
-
         return new RestResponse($formRepo->structuredGroupFields($form));
     }
 
@@ -102,6 +100,7 @@ class Controller extends BaseController
      */
     protected function syncGroupFields(array $reqGroups, BaseForm $form)
     {
+
         $timestamp = (new \DateTime)->format("Y-m-d H:i:s");
         $groupSymbolKeys = array_fetch($reqGroups, "symbol_key");
 
@@ -123,11 +122,9 @@ class Controller extends BaseController
 
         $form->groups()->insert($groupsInsert);
 
-        $formGroups = array_replace_recursive($reqGroups, $form->groups()->whereIn('symbol_key', $groupSymbolKeys)->get()->toArray());
+        $formGroups = array_replace_recursive($reqGroups, $form->groups()->whereIn('symbol_key', $groupSymbolKeys)->orderBy('id')->get()->toArray());
 
         $timestamp = (new \DateTime)->format("Y-m-d H:i:s");
-
-
 
         foreach ($formGroups as $group) {
 
@@ -160,7 +157,6 @@ class Controller extends BaseController
             }, $group["fields"]);
 
             //   print_r($fieldsToIns); exit;
-
 
             FieldGroup::insert($fieldsToIns);
         }
