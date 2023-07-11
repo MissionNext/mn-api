@@ -2,9 +2,9 @@
     margin-top: 15%;
 }
 .custom-form input[type=submit] {
-    display: block;
-    margin: 15px auto;
-    width: 33%;
+    display: block!important;
+    margin: 15px auto!important;
+    width: 33%!important;
 }
 .navbar {
     margin-top: 10px;

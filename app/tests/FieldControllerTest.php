@@ -254,7 +254,7 @@ class FieldControllerTest extends TestCase
         $ids = ['ids' => [ 1, 2]];
         $response =  $this->authorizedCall('DELETE', $candidate.'/field',[], $ids);
 
-        $this->assertNotContains([1, 2], array_fetch($response->getData()->data->list, 'id'));
+        $this->assertNotContains([1, 2], array_pluck($response->getData()->data->list, 'id'));
         $this->assertTrue((bool)$response->getData()->status);
 
     }
@@ -346,4 +346,4 @@ class FieldControllerTest extends TestCase
         $this->assertGreaterThan( 2,  count($responseData->data->list) );
         $this->assertTrue((bool)$responseData->status);
     }
-} 
+}

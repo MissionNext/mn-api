@@ -1,0 +1,79 @@
+<?php
+/**
+ * Created by WyTcorp.
+ * User: WyTcorp
+ * Date: 07.10.22
+ * Site: lockit.com.ua
+ * Email: wild.savedo@gmail.com
+ */
+
+namespace App\Modules\Pub\Auth\Controllers\Api;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
+use App\Models\Authorize\Renewal;
+use App\Models\Subscription\Subscription;
+use App\Models\Subscription\Transaction;
+
+class AuthorizeController extends \Illuminate\Routing\Controller
+{
+
+
+    public function index()
+    {
+        Log::info('Before Renewal Class', array('callback_data' => json_encode(Input::all())));
+
+        $renewal = new Renewal(Input::all());
+
+        if ($renewal->x_subscription_id) {
+
+            Log::info('Monthly', array('callback_data' => var_export(Input::all(), true)));
+
+        } else {
+            Log::info('Annually', array('callback_data' => var_export(Input::all(), true)));
+
+        }
+
+        $subscriptionsQuery = Subscription::where('authorize_id', '=', $renewal->x_subscription_id)
+            ->where('status', '<>', Subscription::STATUS_CLOSED);
+
+        $oldSubs = $subscriptionsQuery->get();
+
+        if (!$renewal->x_subscription_id || !$oldSubs->count()) {
+
+            return;
+        }
+
+        Subscription::whereIn('id', $oldSubs->pluck('id'))->update(['status' => Subscription::STATUS_CLOSED]);
+
+        if ($renewal->isApproved()) {
+            $subs = [];
+
+            $oldSubs->each(function ($sub) use (&$subs) {
+
+                $notChangedData = array_only($sub->toArray(), ['partnership', 'price', 'user_id', 'app_id', 'comment', 'authorize_id', 'paid', 'is_recurrent']);
+                $changedData = [
+                    'start_date' => Carbon::now()->toDateTimeString(),
+                    'end_date' => Carbon::now()->addMonth()->toDateTimeString(),
+                    'status' => Subscription::STATUS_ACTIVE,
+                ];
+                $subData = array_merge($notChangedData, $changedData);
+                $subs[] = Subscription::create($subData);
+
+            });
+
+            $subs = new Collection($subs);
+            $transaction = new Transaction();
+            $transactionData = [
+                'amount' => $renewal->x_amount,
+                'transaction_id' => $renewal->x_trans_id,
+                'comment' => $renewal->x_description,
+            ];
+            $transaction = $transaction->create($transactionData);
+            $transaction->subscriptions()->sync($subs->pluck('id'));
+        }
+
+    }
+
+}

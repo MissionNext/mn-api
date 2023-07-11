@@ -1,56 +1,71 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
-	"license": "MIT",
-	"require": {
-		"laravel/framework": "4.2.*",
-        "doctrine/dbal" : "@dev",
-		"pda/pheanstalk": "2.0.*",
-        "cartalyst/sentry": "2.1.*",
-        "davejamesmiller/laravel-breadcrumbs": "dev-master",
-        "authorizenet/authorizenet": "~1.8",
-        "shuber/curl": "dev-master",
-		"guzzlehttp/guzzle": "^6.3",
-		"php-http/guzzle6-adapter": "^1.1",
-		"sparkpost/sparkpost": "^2.1"
-	},
-    "require-dev": {
-        "mockery/mockery": "dev-master@dev",
-         "apigen/apigen" : "2.8.1"
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "require": {
+        "php": "^7.3|^8.0",
+        "authorizenet/authorizenet": "*",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "laravel/framework": "^8.75",
+        "laravel/helpers": "^1.6",
+        "laravel/passport": "*",
+        "laravel/sanctum": "^2.11",
+        "laravel/tinker": "^2.5",
+        "laravel/ui": "*",
+        "lavary/laravel-menu": "^1.8",
+        "pda/pheanstalk": "4.0.*"
     },
-	"autoload": {
-		"classmap": [
-			"app/commands",
-			"app/database/migrations",
-			"app/database/seeds",
-			"app/tests/TestCase.php"
-		],
-        "psr-0": {
-            "MissionNext": "app/library"
-        },
+    "require-dev": {
+        "facade/ignition": "^2.5",
+        "fakerphp/faker": "^1.9.1",
+        "laravel/sail": "^1.0.1",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^5.10",
+        "phpunit/phpunit": "^9.5.10"
+    },
+    "autoload": {
         "psr-4": {
-            "MissionNext\\Repos\\": "app/repos",
-            "MissionNext\\Models\\": "app/models",
-            "MissionNext\\Custom\\Validators\\": "app/validators",
-            "MissionNext\\Controllers\\": "app/controllers"
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-update-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-create-project-cmd": [
-			"php artisan key:generate"
-		]
-	},
-	"config": {
-		"preferred-install": "dist"
-	},
-	"minimum-stability": "stable"
+    },
+    "autoload-dev": {
+        "classmap": [
+            "app/Console/Commands"
+        ],
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

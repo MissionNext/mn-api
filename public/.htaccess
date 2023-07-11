@@ -1,3 +1,5 @@
+DirectoryIndex index.php
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews
@@ -5,14 +7,15 @@
 
     RewriteEngine On
 
-    # Redirect Trailing Slashes...
-    RewriteRule ^(.*)/$ /$1 [L,R=301]
+    RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+    RewriteRule ^(.*) - [E=BASE:%1]
 
-    # Handle Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+    RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    RewriteRule ^index\.php(/(.*)|$) %{ENV:BASE}/$2 [R=301,L]
+
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule .? - [L]
+
+    RewriteRule .? %{ENV:BASE}/index.php [L]
+
 </IfModule>
-
-
-

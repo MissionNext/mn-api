@@ -16,7 +16,7 @@ class UserControllerTest extends TestCase
         $response = $this->authorizedCall('PUT', 'profile/4', ["birth_date" => "1900-11-11"], [],
             ["resume" => $file]);
         $responseData = $response->getData();
-        dd($responseData);
+       // dd($responseData);
 
 
         $this->assertTrue((bool)$responseData->status);
