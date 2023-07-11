@@ -31,6 +31,8 @@
                 {{ Form::close() }}
             </div>
         </div>
+<p align="center">Caution: Any new application must be added to both the production AND stage site. </p>
+<p align="center">Needed to be sure applicaiton IDs are identical. (Note added by Nelson Aug 2018)</p>
 
 @endsection
 

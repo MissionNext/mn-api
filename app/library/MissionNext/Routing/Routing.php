@@ -30,7 +30,7 @@ use MissionNext\Controllers\Api\User\UserController;
 use MissionNext\Controllers\Api\Profile\UserController as UserProfileController;
 use MissionNext\Controllers\Api\Field\Controller as FieldController;
 use MissionNext\Controllers\Api\Form\Controller as FormController;
-use MissionNext\Controllers\Api\JobController;
+use MissionNext\Controllers\Api\User\JobController;
 use MissionNext\Controllers\Api\Profile\JobController as JobProfileController;
 use MissionNext\Controllers\Api\Matching\CandidateJobsController as MatchCandidateJobsController;
 use MissionNext\Controllers\Api\Matching\CandidateOrganizationsController as MatchCandidateOrgsController;

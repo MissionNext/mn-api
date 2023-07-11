@@ -1,6 +1,6 @@
 <?php
 
-namespace MissionNext\Controllers\Api;
+namespace MissionNext\Controllers\Api\User;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +24,7 @@ use MissionNext\Validators\Job as JobValidator;
 
 /**
  * Class JobController
- * @package MissionNext\Controllers\Api
+ * @package MissionNext\Controllers\Api\User
  */
 class JobController extends BaseController
 {
