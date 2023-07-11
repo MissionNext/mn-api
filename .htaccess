@@ -1,0 +1,12 @@
+#RewriteEngine on
+#RewriteRule ^$ public/ [L]
+#RewriteRule ((?s).*) public/$1 [L]
+
+RewriteEngine on
+
+# serve existing files in the /public folder as if they were in /
+RewriteCond %{DOCUMENT_ROOT}public%{REQUEST_URI} -f
+RewriteRule (.+) /public/ [L]
+
+# route everything else to /public/index.php
+RewriteRule ^ /public/index.php [L]
