@@ -1,6 +1,7 @@
 <?php
 
 define('LARAVEL_START', microtime(true));
+define('MB_OVERLOAD_STRING', 2);
 
 /*
 |--------------------------------------------------------------------------
