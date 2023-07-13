@@ -430,13 +430,13 @@ class BaseController extends Controller
                 foreach ($candidateOrg as $item) {
                     if (in_array($item['candidate_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue 2;
+                        break 2;
                     }
                 }
                 foreach ($canJob as $item) {
                     if (in_array($item['candidate_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue 2;
+                        break 2;
                     }
                 }
                 break;
@@ -448,7 +448,7 @@ class BaseController extends Controller
                 foreach ($orgCandidate as $item) {
                     if (in_array($item['organization_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue 2;
+                        break 2;
                     }
                 }
                 break;
@@ -460,7 +460,7 @@ class BaseController extends Controller
                 foreach ($jobCandidate as $item) {
                     if (in_array($item['job_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue 2;
+                        break 2;
                     }
                 }
                 break;
