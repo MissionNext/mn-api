@@ -52,16 +52,16 @@ class UserController extends BaseController
      * @return RestResponse
      * @throws \MissionNext\Api\Exceptions\ProfileException
      */
-    public function update($id)
+    public function update($profile)
     {
         /** @var  $request Req */
         $request = Request::instance();
-        $hash = $request->request->get('profile');
+        $hash = $request->request->get('profileData');
         $changedFields = $request->request->get('changedData');
         $saveLater = $request->request->get('saveLater');
 
         /** @var  $user UserModel */
-        $user = $this->userRepo()->findOrFail($id);
+        $user = $this->userRepo()->findOrFail($profile);
         $user->setObserver(new UserObserver());
         if (empty($saveLater)) {
             $user->addApp($this->getApp());
@@ -79,7 +79,7 @@ class UserController extends BaseController
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $cacheData->findOrFail($id);
+        $cacheData->findOrFail($profile);
 
         return new RestResponse( $cacheData->transData($this->getToken()->language()));
     }
