@@ -38,11 +38,11 @@ class UserController extends BaseController
      *
      * @return RestResponse
      */
-    public function show($id)
+    public function show($profile)
     {
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $cacheData->findOrFail($id);
+        $cacheData->findOrFail($profile);
 
         return new RestResponse($cacheData->transData($this->getToken()->language()));
     }
@@ -91,9 +91,9 @@ class UserController extends BaseController
      *
      * @return RestResponse
      */
-    public function destroy($id)
+    public function destroy($profile)
     {
-        $user = $this->userRepo()->findOrFail($id);
+        $user = $this->userRepo()->findOrFail($profile);
         $user->setObserver(new UserObserver());
         $user->addApp($this->getApp());
 
