@@ -78,12 +78,12 @@ class AdminRouting
                     'as' => 'ajaxUser',
                     'uses' => AjaxAdminController::class . '@getIndex'
                 ))->where('user', '[0-9]+');
-                Route::get('user/{status}/{user}', array(
+                Route::get('user/{isActive}/{userId}', array(
                     'as' => 'ajaxStatusUser',
                     'uses' => AjaxAdminController::class . '@setStatus'
                 ))->where(['user' => '[0-9]+', 'status' => '(enable|disable)']);
 
-                Route::get('user/app/{status}/{user}/{app}', array(
+                Route::get('user/app/{isActive}/{userId}/{appId}', array(
                     'as' => 'ajaxSetAppStatus',
                     'uses' => AjaxAdminController::class . '@setAppStatus'
                 ))->where(['user' => '[0-9]+', 'status' => '(enable|disable)']);
@@ -99,7 +99,7 @@ class AdminRouting
 
                 $this->router->get('subscription/manager/{user}', SubscriptionControllerAjax::class.'@getIndex')->where(['user' => '[0-9]+']);
                 $this->router->get('subscription/manager/transactions/{user}', SubscriptionControllerAjax::class.'@getTransactions')->where(['user' => '[0-9]+']);
-                $this->router->put('subscription/{subscription}', SubscriptionControllerAjax::class.'@updateIndex')->where(['user' => '[0-9]+']);
+                $this->router->put('subscription/{subId}', SubscriptionControllerAjax::class.'@updateIndex')->where(['subId' => '[0-9]+']);
                 // ------------------- END Subscription -----------------------
 
                 // ------------ FILTER --------------------------------
@@ -173,7 +173,7 @@ class AdminRouting
                 'as' => 'users',
                 'uses' => 'MissionNext\Controllers\Admin\UserController@index'
             ));
-            Route::get('/user/profile/{user}', array(
+            Route::get('/user/profile/{userId}', array(
                 'as' => 'userProfile',
                 'uses' => 'MissionNext\Controllers\Admin\UserController@profile'
             ));
