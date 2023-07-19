@@ -30,7 +30,7 @@ use MissionNext\Controllers\Api\User\UserController;
 use MissionNext\Controllers\Api\Profile\UserController as UserProfileController;
 use MissionNext\Controllers\Api\Field\Controller as FieldController;
 use MissionNext\Controllers\Api\Form\Controller as FormController;
-use MissionNext\Controllers\Api\JobController;
+use MissionNext\Controllers\Api\User\JobController;
 use MissionNext\Controllers\Api\Profile\JobController as JobProfileController;
 use MissionNext\Controllers\Api\Matching\CandidateJobsController as MatchCandidateJobsController;
 use MissionNext\Controllers\Api\Matching\CandidateOrganizationsController as MatchCandidateOrgsController;
@@ -116,8 +116,8 @@ class Routing
                 'names' => ['store' => static::ROUTE_CREATE_USER]
             ]);
 
-            Route::resource(static::RESOURCE_JOB, JobController::class, [
-                'names' => ['store' => static::ROUTE_CREATE_JOB], 'except' => ['create','edit', 'destroy']
+            Route::resource(static::RESOURCE_JOB, JobController::class, 
+                [ 'names' => ['store' => static::ROUTE_CREATE_JOB], 'except' => ['create','edit', 'destroy']
             ]);
 
             Route::group(array('prefix' => static::RESOURCE_JOB), function () {

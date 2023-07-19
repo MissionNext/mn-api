@@ -1,6 +1,6 @@
 <?php
 
-namespace MissionNext\Controllers\Api;
+namespace MissionNext\Controllers\Api\User;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +24,7 @@ use MissionNext\Validators\Job as JobValidator;
 
 /**
  * Class JobController
- * @package MissionNext\Controllers\Api
+ * @package MissionNext\Controllers\Api\User
  */
 class JobController extends BaseController
 {
@@ -90,29 +90,29 @@ class JobController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int $job
      *
      * @return RestResponse
      */
-    public function show($id)
+    public function show($job)
     {
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $cacheData->findOrFail($id);
+        $cacheData->findOrFail($job);
 
         return new RestResponse($cacheData->transData($this->getToken()->language()));    }
 
     /**
-     * @param $id
+     * @param $job
      *
      * @return RestResponse
      *
      * @throws \MissionNext\Api\Exceptions\ValidationException
      */
-    public function update($id)
+    public function update($job)
     {
-        $user = $this->jobRepo()->find($id);
+        $user = $this->jobRepo()->find($job);
         $data = Request::only(["name", "symbol_key", "organization_id"]);
         $filteredData = array_filter($data);
         $jobValidator = new JobValidator(Request::instance());
