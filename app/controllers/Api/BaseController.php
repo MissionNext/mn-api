@@ -527,4 +527,10 @@ class BaseController extends Controller
         $view_log->addInfo($message);
         $view_log->info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
     }
+
+
+    public function callAction($method, $parameters)
+	{
+    	return parent::callAction($method, array_values($parameters));
+	}
 } 
