@@ -76,16 +76,16 @@ class InquireController extends BaseController
     }
 
     /**
-     * @param User $candidate
+     * @param int $candidate
      *
      * @return RestResponse
      */
-    public function getJobs(User $candidate)
+    public function getJobs($candidate)
     {
         /** @var  $repo InquireRepository */
         $repo =  $this->repoContainer[InquireRepositoryInterface::KEY];
 
-        return new RestResponse($repo->jobs($candidate));
+        return new RestResponse($repo->jobs($this->userRepo()->findOrFail($candidate)));
     }
 
     /**
