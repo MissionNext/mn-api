@@ -153,11 +153,11 @@ class UserController extends AdminBaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getIndex($user)
+    public function getIndex($id)
     {
         /** @var  $repo UserCachedRepository */
         $repo = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $repo->findOrFail($user);
+        $repo->findOrFail($id);
 
         return Response::json(["user" => $repo->getModel()->getData()]);
     }
