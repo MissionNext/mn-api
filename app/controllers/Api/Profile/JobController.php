@@ -28,33 +28,33 @@ class JobController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  Job $job
+     * @param  int $id
      *
      * @return RestResponse
      */
-    public function show($job)
+    public function show($id)
     {
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $cacheData->findOrFail($job);
+        $cacheData->findOrFail($id);
 
         return new RestResponse($cacheData->transData($this->getToken()->language()));
     }
 
 
     /**
-     * @param $job
+     * @param $id
      *
      * @return RestResponse
      *
      * @throws \MissionNext\Api\Exceptions\ProfileException
      */
-    public function update($job)
+    public function update($id)
     {
-        $jobObj = $this->jobRepo()->with('organization')->find($job);
-        $jobObj->setObserver(new UserObserver());
-        $jobObj->addApp($this->getApp());
+        $job = $this->jobRepo()->with('organization')->find($id);
+        $job->setObserver(new UserObserver());
+        $job->addApp($this->getApp());
         /** @var  $request Req */
         $request = Request::instance();
         $hash = $request->request->get('profile');
@@ -68,11 +68,11 @@ class JobController extends BaseController
 
             throw new ProfileException("No values specified", ProfileException::ON_UPDATE);
         }
-        $this->updateUserProfile($jobObj, $hash, $changedFields);
+        $this->updateUserProfile($job, $hash, $changedFields);
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $cacheData->findOrFail($job);
+        $cacheData->findOrFail($id);
 
         return new RestResponse( $cacheData->transData($this->getToken()->language()));
     }

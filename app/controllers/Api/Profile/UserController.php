@@ -38,11 +38,11 @@ class UserController extends BaseController
      *
      * @return RestResponse
      */
-    public function show($profile)
+    public function show($id)
     {
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $cacheData->findOrFail($profile);
+        $cacheData->findOrFail($id);
 
         return new RestResponse($cacheData->transData($this->getToken()->language()));
     }
@@ -52,16 +52,16 @@ class UserController extends BaseController
      * @return RestResponse
      * @throws \MissionNext\Api\Exceptions\ProfileException
      */
-    public function update($profile)
+    public function update($id)
     {
         /** @var  $request Req */
         $request = Request::instance();
-        $hash = $request->request->get('profileData');
+        $hash = $request->request->get('profile');
         $changedFields = $request->request->get('changedData');
         $saveLater = $request->request->get('saveLater');
 
         /** @var  $user UserModel */
-        $user = $this->userRepo()->findOrFail($profile);
+        $user = $this->userRepo()->findOrFail($id);
         $user->setObserver(new UserObserver());
         if (empty($saveLater)) {
             $user->addApp($this->getApp());
@@ -79,7 +79,7 @@ class UserController extends BaseController
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $cacheData->findOrFail($profile);
+        $cacheData->findOrFail($id);
 
         return new RestResponse( $cacheData->transData($this->getToken()->language()));
     }
@@ -91,9 +91,9 @@ class UserController extends BaseController
      *
      * @return RestResponse
      */
-    public function destroy($profile)
+    public function destroy($id)
     {
-        $user = $this->userRepo()->findOrFail($profile);
+        $user = $this->userRepo()->findOrFail($id);
         $user->setObserver(new UserObserver());
         $user->addApp($this->getApp());
 

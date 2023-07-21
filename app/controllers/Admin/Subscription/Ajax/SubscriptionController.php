@@ -19,12 +19,12 @@ class SubscriptionController extends AdminBaseController
      * @param $userId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getIndex($user)
+    public function getIndex($userId)
     {
         /** @var  $repo SubscriptionRepository */
         $repo = $this->repoContainer[SubscriptionRepositoryInterface::KEY];
 
-        return Response::json($repo->userSubscriptions($user));
+        return Response::json($repo->userSubscriptions($userId));
     }
 
     /**
@@ -32,10 +32,10 @@ class SubscriptionController extends AdminBaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getTransactions($user)
+    public function getTransactions($userId)
     {
 
-        return Response::json((new User)->transactions($user));
+        return Response::json((new User)->transactions($userId));
     }
 
     /**

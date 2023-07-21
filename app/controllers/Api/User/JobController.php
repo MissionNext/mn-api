@@ -90,29 +90,29 @@ class JobController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int $job
+     * @param  int $id
      *
      * @return RestResponse
      */
-    public function show($job)
+    public function show($id)
     {
 
         /** @var  $cacheData UserCachedRepository */
         $cacheData = $this->repoContainer[UserCachedRepositoryInterface::KEY];
-        $cacheData->findOrFail($job);
+        $cacheData->findOrFail($id);
 
         return new RestResponse($cacheData->transData($this->getToken()->language()));    }
 
     /**
-     * @param $job
+     * @param $id
      *
      * @return RestResponse
      *
      * @throws \MissionNext\Api\Exceptions\ValidationException
      */
-    public function update($job)
+    public function update($id)
     {
-        $user = $this->jobRepo()->find($job);
+        $user = $this->jobRepo()->find($id);
         $data = Request::only(["name", "symbol_key", "organization_id"]);
         $filteredData = array_filter($data);
         $jobValidator = new JobValidator(Request::instance());

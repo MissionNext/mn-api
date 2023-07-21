@@ -95,20 +95,20 @@ class Routing
               [  'only' => ['show','update', 'destroy'] ]
             );
 
-            Route::controller('{type}/{formName}/form', FormController::class);
+            Route::controller('{type}/{form}/form', FormController::class);
 
             Route::controller('match/candidate/jobs/{candidate_id}', MatchCandidateJobsController::class);
             Route::controller('match/candidate/organizations/{candidate_id}', MatchCandidateOrgsController::class);
             Route::controller('match/job/candidates/{jobId}', MatchJobCandidatesController::class);
             Route::controller('match/organization/candidates/{organizationId}', MatchOrgCandidatesController::class);
 
-            Route::pattern('requesterId', '\d+');
-            Route::pattern('approverId', '\d+');
-            Route::pattern('affiliateId', '\d+');
-            Route::pattern('affiliateType', '('.Affiliate::TYPE_APPROVER.'|'.Affiliate::TYPE_REQUESTER.'|'.Affiliate::TYPE_ANY.')');
-            Route::controller('affiliate/{requesterId}/to/{approverId}', AffiliateController::class);
-            Route::get('affiliate/{affiliateId}/as/{affiliateType}', AffiliateController::class.'@getAffiliates');
-            Route::get('affiliate/{affiliateId}/jobs', AffiliateController::class.'@getAgencyJobs');
+            Route::pattern('requester_id', '\d+');
+            Route::pattern('approver_id', '\d+');
+            Route::pattern('affiliate_id', '\d+');
+            Route::pattern('affiliate_type', '('.Affiliate::TYPE_APPROVER.'|'.Affiliate::TYPE_REQUESTER.'|'.Affiliate::TYPE_ANY.')');
+            Route::controller('affiliate/{requester_id}/to/{approver_id}', AffiliateController::class);
+            Route::get('affiliate/{affiliate_id}/as/{affiliate_type}', AffiliateController::class.'@getAffiliates');
+            Route::get('affiliate/{affiliate_id}/jobs', AffiliateController::class.'@getAgencyJobs');
 
             Route::post('user/deactivate/{id}', UserController::class.'@deactivateUser');
 
@@ -116,14 +116,14 @@ class Routing
                 'names' => ['store' => static::ROUTE_CREATE_USER]
             ]);
 
-            Route::resource(static::RESOURCE_JOB, JobController::class, 
-                [ 'names' => ['store' => static::ROUTE_CREATE_JOB], 'except' => ['create','edit', 'destroy']
+            Route::resource(static::RESOURCE_JOB, JobController::class, [
+                'names' => ['store' => static::ROUTE_CREATE_JOB], 'except' => ['create','edit', 'destroy']
             ]);
 
             Route::group(array('prefix' => static::RESOURCE_JOB), function () {
                 Route::post('find', JobController::class.'@find');
-                Route::post('find/{organizationId}', JobController::class.'@findByOrgId');
-                Route::delete('{id}/{organizationId}', JobController::class.'@delete');
+                Route::post('find/{organization_id}', JobController::class.'@findByOrgId');
+                Route::delete('{id}/{organization_id}', JobController::class.'@delete');
             });
 
             Route::group(array('prefix' => static::RESOURCE_USER), function () {
@@ -141,7 +141,7 @@ class Routing
 
 //            Route::post('search/{searchType}', SearchController::class.'@search');
             Route::delete('search/{searchId}/{forUserId}', SearchController::class.'@delete');
-            Route::controller('search/{searchType}/for/{userType}/{userId}', SearchController::class, [
+            Route::controller('search/{searchType}/for/{userType}/{id}', SearchController::class, [
 
             ]);
             //NOTES FOLDER CONTROLLER
@@ -174,8 +174,8 @@ class Routing
                 Route::get('inquire/candidates/for/organization/{organization}', InquireController::class.'@getCandidatesForOrganization');
                 Route::get('inquire/candidates/for/agency/{agency}', InquireController::class.'@getCandidatesForAgency');
                 Route::get('inquire/jobs/for/{candidate}', InquireController::class.'@getJobs');
-                Route::post('inquire/cancel/{inquireId}/by/agency/{agency}', InquireController::class.'@postCancelInquireByAgency');
-                Route::post('inquire/cancel/{inquireId}/by/organization/{organization}', InquireController::class.'@postCancelInquireByOrganization');
+                Route::post('inquire/cancel/{inquire_id}/by/agency/{agency}', InquireController::class.'@postCancelInquireByAgency');
+                Route::post('inquire/cancel/{inquire_id}/by/organization/{organization}', InquireController::class.'@postCancelInquireByOrganization');
                 Route::controller('inquire/{candidate}/for/{job}', InquireController::class);
                 //END
                 Route::get('organization/select/names', OrganizationController::class.'@getOrganizationNames');
