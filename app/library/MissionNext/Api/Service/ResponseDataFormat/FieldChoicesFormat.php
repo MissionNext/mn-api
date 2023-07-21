@@ -16,15 +16,19 @@ class FieldChoicesFormat extends AbstractFormat
     {
         $collection->each(function($el){
             if  (!empty($el->choices)){
+		//var_dump($el->choices);
+		//var_dump($el->dictionary_meta);
                 $fieldChoiceCollection = new Collection();
                 foreach($el->choices as $key=>$choice){
-                    $choiceObject = new FieldChoices();
+		    if ($el->dictionary_meta !== NULL) {
+		    $choiceObject = new FieldChoices();
                     $choiceObject->setDefaultValue($choice);
                     $choiceObject->setMeta($el->dictionary_meta[$key]);
                     $choiceObject->setValue('');
                     $choiceObject->setId($el->dictionary_id[$key]);
                     $choiceObject->setDictionaryOrder($el->dictionary_order[$key]);
                     $fieldChoiceCollection->push($choiceObject);
+		    }
                 }
                 $el->choices = $fieldChoiceCollection->toArray();
             }
