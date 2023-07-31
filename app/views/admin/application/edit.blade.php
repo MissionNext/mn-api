@@ -28,8 +28,13 @@ Dashboard. Editing application
         <input type="submit" value="Save" class="btn btn-sm btn-info pull-right">
 
         {{ Form::close() }}
-
+		
     </div>
+
+</div>
+<div class="row">
+<p align="center">Caution: Do not alter this private key without a group discussion. </p>
+<p align="center">Editing can cause unintended consequences. (Note added by Nelson Aug 2018)</p>
 </div>
 @endsection
 

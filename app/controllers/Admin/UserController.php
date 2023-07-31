@@ -209,6 +209,6 @@ class UserController extends AdminBaseController {
     {
         Artisan::call('profile:update-cache', array());
 
-        return Response::json(['status' => 'success', 'data' => 'Profile cahce update successful']);
+        return Response::json(['status' => 'success', 'data' => 'Profile cache update successful']);
     }
 }
