@@ -176,36 +176,13 @@ class UserController extends AdminBaseController
         $user->status = 0;
         $user->save();
 
-        $httpClient = new GuzzleAdapter(new Client());
-        $sparky = new SparkPost($httpClient, ['key' => Config::get('mail.password')]);
+        $to_name = $user->username;
+        $to_email = $user->email;
 
-        $view = View::make('admin.mail.user.status', ['user' => $user->toArray()]);
-        $content = $view->render();
-
-        $promise = $sparky->transmissions->post([
-            'content' => [
-                'from'  => [
-                    'name'  => 'MissionNext',
-                    'email' => 'no-reply@info.missionnext.org',
-                ],
-                'subject'   => 'Your access was changed',
-                'html'      => $content,
-            ],
-            'substitution_data' => ['name' => $user->username],
-            'recipients'    => [
-                [
-                    'address'   => [
-                        'name'  => $user->username,
-                        'email' => $user->email,
-                    ],
-                ],
-            ],
-        ]);
-        $response = $promise->wait();
-
-        if (200 == $response->getStatusCode()) {
-            $this->logger('mail', 'sent', "Mail sent from admin to user $user->username. Access changed.");
-        }
+        Mail::send('admin.mail.user.status', ['user' => $user->toArray()], function($message) use ($to_name, $to_email) {
+            $message->to($to_email, $to_name)->subject('Your access was changed');
+            $message->from('do_not_reply@missionnext.org', 'MissionNext Staff',);
+        });
 
         /** @var  $userRepo UserRepository */
         $userRepo = $this->repoContainer[ProfileRepositoryFactory::KEY]->profileRepository();

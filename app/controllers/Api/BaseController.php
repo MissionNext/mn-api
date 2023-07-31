@@ -231,6 +231,7 @@ class BaseController extends Controller
                     ("custom_marital" == $ownerFieldType && "Married" != $ownerFieldValue) ||
                     (!empty($ownerFieldOption) && $ownerFieldValue != $ownerFieldOption)
                 ) {
+                    
                     $fieldNames = array_diff($fieldNames, $field->symbol_keys);
                 }
             }
@@ -399,9 +400,16 @@ class BaseController extends Controller
      */
     protected function checkFile(array $files, array &$hash)
     {
+        
         if (!empty($files)){
-            foreach($files as $symbolKey => $file){
-                $hash[$symbolKey]['value'] = $file;
+            $formatedFiles = [];
+            foreach($files as $symbolKey => $file) {
+                foreach($file as $fieldName => $fieldValue) {
+                    $formatedFiles[$fieldName][$symbolKey] = $fieldValue;
+                }
+            }
+            foreach($formatedFiles as $symbolKey => $file){
+                $hash[$symbolKey]['value'] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['size'], $file['error']);
                 $hash[$symbolKey]['dictionary_id'] = null;
                 $hash[$symbolKey]['type'] = 'field';
             }
@@ -430,13 +438,13 @@ class BaseController extends Controller
                 foreach ($candidateOrg as $item) {
                     if (in_array($item['candidate_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue 2;
+                        break 2;
                     }
                 }
                 foreach ($canJob as $item) {
                     if (in_array($item['candidate_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue 2;
+                        break 2;
                     }
                 }
                 break;
@@ -448,7 +456,7 @@ class BaseController extends Controller
                 foreach ($orgCandidate as $item) {
                     if (in_array($item['organization_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue 2;
+                        break 2;
                     }
                 }
                 break;
@@ -460,7 +468,7 @@ class BaseController extends Controller
                 foreach ($jobCandidate as $item) {
                     if (in_array($item['job_key'], $changedFields['changedFields'])) {
                         $matchedFlag = true;
-                        continue 2;
+                        break 2;
                     }
                 }
                 break;
@@ -527,4 +535,10 @@ class BaseController extends Controller
         $view_log->addInfo($message);
         $view_log->info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
     }
+
+
+    public function callAction($method, $parameters)
+	{
+    	return parent::callAction($method, array_values($parameters));
+	}
 } 

@@ -59,7 +59,7 @@ class RoleChecker
                         if ($model->hasRole($this->roleAliases[$role])){
 
                             $this->router->setParameter($param, $model);
-                            continue 2;
+                            break 2;
                         }
                     }
                 }

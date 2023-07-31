@@ -5,9 +5,10 @@
  * @link http://kr.github.com/beanstalkd/
  * @author Petr Trofimov, Sergey Lysenko
  */
-function __autoload($class) {
+
+spl_autoload_register(function ($class) {
     require_once str_replace('_', '/', $class) . '.php';
-}
+});
 
 session_start();
 require_once 'Pheanstalk/ClassLoader.php';
