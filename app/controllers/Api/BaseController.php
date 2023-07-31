@@ -231,6 +231,7 @@ class BaseController extends Controller
                     ("custom_marital" == $ownerFieldType && "Married" != $ownerFieldValue) ||
                     (!empty($ownerFieldOption) && $ownerFieldValue != $ownerFieldOption)
                 ) {
+                    
                     $fieldNames = array_diff($fieldNames, $field->symbol_keys);
                 }
             }
@@ -399,9 +400,16 @@ class BaseController extends Controller
      */
     protected function checkFile(array $files, array &$hash)
     {
+        
         if (!empty($files)){
-            foreach($files as $symbolKey => $file){
-                $hash[$symbolKey]['value'] = $file;
+            $formatedFiles = [];
+            foreach($files as $symbolKey => $file) {
+                foreach($file as $fieldName => $fieldValue) {
+                    $formatedFiles[$fieldName][$symbolKey] = $fieldValue;
+                }
+            }
+            foreach($formatedFiles as $symbolKey => $file){
+                $hash[$symbolKey]['value'] = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['size'], $file['error']);
                 $hash[$symbolKey]['dictionary_id'] = null;
                 $hash[$symbolKey]['type'] = 'field';
             }
