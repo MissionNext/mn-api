@@ -5,20 +5,26 @@
  </head>
  <body>
   <div>
-   <p>Hello From MissionNext, <font color="#ffffff">Account Username: {{ $user['username'] }}</font></p>
+   <p>Hello From MissionNext with Account Username: {{ $user['username'] }},</p>
    <p>Your MissionNext network status changed</p>
-   <p>Your current status is now:</p>
+   <p>Current status is now:</p>
    @if ($user['is_active'])
     <p>Access Granted</p>
-    <p>IF REGISTERED AS A MISSIONNEXT AGENCY OR SCHOOL:</p>
+    <p>IF REGISTERED AS AN EXPLORENEXT AGENCY OR TEACHNEXT SCHOOL:</p>
     <p>We are pleased to inform you that your request for partnership with MissionNext has been approved!  You will soon have access to our online database of potential candidates to fill your open positions. </p>
-    <p>Please watch for an email from MissionNext with instructions for making your payment and setting up your profile.</p>
+    <p>Please log in to your account from https://missionnext.org/welcome/login-here/  (after choosing the appropriate service) with your username and password to make the activation payment. Once payment is received, you will receive instructions on how to set up your profile and post your jobs in order to make the most of your MissionNext partnership.</p>
     <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
-    <p>IF REGISTERED AS AN JOURNEY AGENCY REP OR EDUCATION AGENCY TO SERVICE SCHOOLS: </p>
-    <p>We are pleased to inform you that your MissionNext Registration has been approved!  You will soon be able to affiliate with your mission agency and/or schools to view their posted jobs and view candidate profiles.  </p>
+    <p>IF REGISTERED AS AN EXPLORENEXT AGENCY REP OR TEACHNEXT AGENCY TO SERVICE SCHOOLS: </p>
+    <p>We are pleased to inform you that your MissionNext Rep Registration has been approved!  You will soon be able to affiliate with your mission agency and/or schools to view their posted jobs and view candidate profiles.   </p>
     <p>Please watch for an email from MissionNext with a coupon code that will allow you to activate your account without payment.  </p>
     <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
-<p> </p>
+        <p>IF FROM CANADA: </p>
+        <p>We are pleased to inform you that your partnership has been approved by MissionNext Canada!</p>
+        <p>Please log in to your account from https://canada.missionnext.org/login/ with your username and password to make the activation transaction with the coupon you were issued. Then, set up your profile and post your jobs in order to make the most of your MissionNext Canada partnership.</p>
+    <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+        <p>IF FROM CANADA: </p>
+        <p>We are pleased to inform you that your partnership has been approved by MissionNext Canada!  <p>Please log in to your account from https://canada.missionnext.org/login/ with your username and password to make the activation transaction with the coupon you were issued. Then, set up your profile and post your jobs in order to make the most of your MissionNext Canada partnership.</p> </p>
+    <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
     <p>If you have any questions, please contact us at headquarters@missionnext.org</p>
     <p>We look forward to partnering with you!</p>
     <p>MissionNext Partner Support Team</p>
