@@ -505,7 +505,7 @@ class User extends ModelObservable implements UserInterface, RemindableInterface
             return false;
         }
 
-        if (10 == $data || "User does not exist" == substr($data, 0, strlen($data) - 1)) {
+        if ("User deleted successfully" == substr($data, 0, strlen($data)) || "User does not exist" == substr($data, 0, strlen($data))) {
             $user_id = $this->id;
             $user_role = $this->userRole;
 
