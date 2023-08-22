@@ -68,7 +68,7 @@ class Pheanstalk_Socket_StreamFunctions
 	{
 		// Warnings (e.g. connection refused) suppressed;
 		// return value, $errno and $errstr should be checked instead.
-		return @fsockopen($hostname, $port, $errno, $errstr, $timeout);
+		return @fsockopen($hostname, (int)$port, $errno, $errstr, $timeout);
 	}
 
 	public function fwrite($handle, $string, $length = null)

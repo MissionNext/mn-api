@@ -6,7 +6,7 @@ namespace MissionNext\Api\Service\Matching\Data;
 use MissionNext\Api\Service\Matching\Data\Type\AbstractDataType;
 use MissionNext\Api\Service\Matching\Data\Type\Date;
 use MissionNext\Api\Service\Matching\Data\Type\Numeric;
-use MissionNext\Api\Service\Matching\Data\Type\String;
+use MissionNext\Api\Service\Matching\Data\Type\StringObject;
 use MissionNext\Api\Service\Matching\Type\Matching as MatchType;
 
 

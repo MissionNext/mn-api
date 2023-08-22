@@ -3,7 +3,7 @@
 namespace MissionNext\Api\Service\Matching\Data\Type;
 
 
-class String extends AbstractDataType
+class StringObject extends AbstractDataType
 {
     /**
      * @return bool
