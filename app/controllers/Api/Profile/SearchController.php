@@ -248,7 +248,7 @@ class SearchController extends BaseController
     {
         $data = SearchData::findData($searchType, $userType, $userId)->get();
 
-        $data->each(function(&$d){
+        $data->each(function($d){
             $d->data = json_decode($d->data);
         });
 
