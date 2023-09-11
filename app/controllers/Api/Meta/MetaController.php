@@ -107,7 +107,7 @@ class MetaController extends BaseController {
             $query = $baseQuery->where("affiliate_" . $affiliateType, '=', $affiliateId);
         }
 
-        $res = $query->get()->each(function (&$el) use ($affiliateId) {
+        $res = $query->get()->each(function ($el) use ($affiliateId) {
             $el->organization_profile = json_decode($el->organization_profile);
             $el->org_id = $el->organization_profile->id;
         });
