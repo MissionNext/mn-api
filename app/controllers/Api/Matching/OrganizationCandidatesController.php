@@ -30,10 +30,10 @@ class OrganizationCandidatesController extends BaseController
     {
 
         $old_updates = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $organizationId, 'key' => 'last_login'])->first();
-        $old_updates = $old_updates['value'];
+        $old_updates = $old_updates ? $old_updates['value'] : 0;
 
         $old_rate = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $organizationId, 'key' => 'can_rate'])->first();
-        $old_rate = $old_rate['value'];
+        $old_rate = $old_rate ? $old_rate['value'] : 0;
 
         $rate = $this->request->get('rate');
         $updates = $this->request->get('updates');

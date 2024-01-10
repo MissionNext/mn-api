@@ -32,7 +32,7 @@ class JobCandidatesController extends BaseController
         $order_by = $this->request->get('order_by');
 
         $old_rate = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $user_id, 'key' => 'can_job_rate'])->first();
-        $old_rate = $old_rate['value'];
+        $old_rate = $old_rate ? $old_rate['value'] : 0;
 
         $rate = $this->request->get('rate');
 

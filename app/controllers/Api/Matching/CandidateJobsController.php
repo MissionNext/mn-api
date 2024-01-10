@@ -29,7 +29,7 @@ class CandidateJobsController extends BaseController
     public function getIndex($candidate_id)
     {
         $old_rate = UserConfigs::where(['app_id' => $this->securityContext()->getApp()->id, 'user_id' => $candidate_id, 'key' => 'job_can_rate'])->first();
-        $old_rate = $old_rate['value'];
+        $old_rate = $old_rate ? $old_rate['value'] : 0;
 
         $rate = $this->request->get('rate');
 
